@@ -1,0 +1,291 @@
+package com.shopify.shopifyapp.addresssection.viewmodels
+
+import android.os.Handler
+import android.os.Looper
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+
+import com.shopify.buy3.GraphCallResult
+import com.shopify.buy3.GraphResponse
+import com.shopify.buy3.MutationGraphCall
+import com.shopify.buy3.QueryGraphCall
+import com.shopify.buy3.Storefront
+import com.shopify.graphql.support.Error
+import com.shopify.graphql.support.ID
+import com.shopify.shopifyapp.addresssection.models.Address
+import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
+import com.shopify.shopifyapp.repositories.Repository
+import com.shopify.shopifyapp.shopifyqueries.MutationQuery
+import com.shopify.shopifyapp.shopifyqueries.Query
+import com.shopify.shopifyapp.utils.GraphQLResponse
+import com.shopify.shopifyapp.utils.Status
+
+class AddressModel(private val repository: Repository) : ViewModel() {
+    private var addr: Address? = null
+    private var msg: String? = null
+    private var data: CustomerTokenData? = null
+    var addresscursor :String= "nocursor"
+        set(addresscursor) {
+            field = addresscursor
+            getAddressList()
+        }
+    val message = MutableLiveData<String>()
+    val sheet = MutableLiveData<Boolean>()
+    val editaddress = MutableLiveData<Address>()
+    private val address = MutableLiveData<MutableList<Storefront.MailingAddressEdge>>()
+    val addresses: MutableLiveData<MutableList<Storefront.MailingAddressEdge>>
+        get() {
+            getAddressList()
+            return address
+        }
+
+    private fun getAddressList() {
+        try {
+            val runnable = object : Runnable {
+                override fun run() {
+                    data = repository.accessToken[0]
+                    val call = repository.graphClient.queryGraph(Query.getAddressList(data!!.customerAccessToken, addresscursor))
+                    call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+                }
+
+                private operator fun invoke(result: GraphCallResult<Storefront.QueryRoot>): Unit {
+                    if (result is GraphCallResult.Success<*>) {
+                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+                    } else {
+                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure))
+                    }
+                    return Unit
+                }
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun consumeResponse(reponse: GraphQLResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    message.setValue(errormessage.toString())
+                } else {
+                    address.setValue(result.data!!.customer.addresses.edges)
+                }
+            }
+            Status.ERROR -> message.setValue(reponse.error!!.error.message)
+            else -> {
+            }
+        }
+    }
+
+    fun setSheet() {
+        sheet.value = true
+    }
+
+    fun deleteAddress(msg: String, adress: Address) {
+        try {
+            this.msg = msg
+            val call = repository.graphClient.mutateGraph(MutationQuery.deleteCustomerAddress(data!!.customerAccessToken, adress.address_id))
+            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.deleteAddressinvoke(graphCallResult) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun deleteAddressinvoke(graphCallResult: GraphCallResult<Storefront.Mutation>): Unit {
+        try {
+            if (graphCallResult is GraphCallResult.Success<*>) {
+                consumeAddressResponse(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
+            } else {
+                consumeAddressResponse(GraphQLResponse.error(graphCallResult as GraphCallResult.Failure))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return Unit
+    }
+
+    private fun consumeAddressResponse(reponse: GraphQLResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    message.setValue(errormessage.toString())
+                } else {
+                    val errors = result.data!!.customerAddressDelete.customerUserErrors
+                    if (errors.size > 0) {
+                        val iterator = errors.iterator()
+                        var err = ""
+                        while (iterator.hasNext()) {
+                            val error = iterator.next() as Storefront.CustomerUserError
+                            err += error.message
+                        }
+                        message.setValue(err)
+                    } else {
+                        message.setValue(msg)
+                        repository.graphClient.clearCache()
+                    }
+                }
+            }
+            Status.ERROR -> message.setValue(reponse.error!!.error.message)
+            else -> {
+            }
+        }
+    }
+
+    fun addAddress(input: Storefront.MailingAddressInput) {
+        try {
+            val call = repository.graphClient.mutateGraph(MutationQuery.addAddress(input, data!!.customerAccessToken))
+            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.addAddressinvoke(graphCallResult) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun addAddressinvoke(graphCallResult: GraphCallResult<Storefront.Mutation>): Unit {
+        try {
+            if (graphCallResult is GraphCallResult.Success<*>) {
+                consumeAddAddressResponse(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
+            } else {
+                consumeAddAddressResponse(GraphQLResponse.error(graphCallResult as GraphCallResult.Failure))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return Unit
+    }
+
+    private fun consumeAddAddressResponse(reponse: GraphQLResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    message.setValue(errormessage.toString())
+                } else {
+                    val errors = result.data!!.customerAddressCreate.customerUserErrors
+                    if (errors.size > 0) {
+                        val iterator = errors.iterator()
+                        var err = ""
+                        while (iterator.hasNext()) {
+                            val error = iterator.next() as Storefront.CustomerUserError
+                            err += error.message
+                        }
+                        message.setValue(err)
+                    } else {
+                        repository.graphClient.clearCache()
+                        addresscursor = "nocursor"
+                    }
+                }
+            }
+            Status.ERROR -> message.setValue(reponse.error!!.error.message)
+            else -> {
+            }
+        }
+    }
+
+    fun setAddress(address: Address) {
+        addr = address
+        editaddress.value = address
+    }
+
+    fun updateAddress(input: Storefront.MailingAddressInput, address_id: ID?) {
+        try {
+            val call = repository.graphClient.mutateGraph(MutationQuery.updateAddress(input, data!!.customerAccessToken, address_id))
+            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.updateAddressinvoke(graphCallResult) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun updateAddressinvoke(graphCallResult: GraphCallResult<Storefront.Mutation>): Unit {
+        try {
+            if (graphCallResult is GraphCallResult.Success<*>) {
+                consumeUpdateAddressResponse(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
+            } else {
+                consumeUpdateAddressResponse(GraphQLResponse.error(graphCallResult as GraphCallResult.Failure))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return Unit
+    }
+
+    private fun consumeUpdateAddressResponse(reponse: GraphQLResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    message.setValue(errormessage.toString())
+                } else {
+                    val errors = result.data!!.customerAddressUpdate.customerUserErrors
+                    if (errors.size > 0) {
+                        val iterator = errors.iterator()
+                        var err = ""
+                        while (iterator.hasNext()) {
+                            val error = iterator.next() as Storefront.CustomerUserError
+                            err += error.message
+                        }
+                        message.setValue(err)
+                    } else {
+                        repository.graphClient.clearCache()
+                        val address = result.data!!.customerAddressUpdate.customerAddress
+                        addr!!.firstName = address.firstName
+                        addr!!.lastName = address.lastName
+                        addr!!.address1 = address.address1
+                        addr!!.address2 = address.address2
+                        addr!!.city = address.city
+                        addr!!.province = address.province
+                        addr!!.country = address.country
+                        addr!!.zip = address.zip
+                        addr!!.phone = address.phone
+                        addr!!.address_id = address.id
+                    }
+                }
+            }
+            Status.ERROR -> message.setValue(reponse.error!!.error.message)
+            else -> {
+            }
+        }
+    }
+}

@@ -1,0 +1,50 @@
+package com.shopify.shopifyapp.basesection.adapters
+import android.app.Activity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
+import com.shopify.buy3.Storefront
+import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.databinding.MListitemBinding
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewholders.ListItem
+import javax.inject.Inject
+class RecylerAdapter @Inject  constructor() : RecyclerView.Adapter<ListItem>() {
+    private var layoutInflater: LayoutInflater? = null
+    private var currencies: List<Storefront.CurrencyCode>? = null
+    private var activity: Activity? = null
+    fun setData(currencies: List<Storefront.CurrencyCode>, activity: Activity) {
+        this.currencies = currencies
+        this.activity = activity
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListItem {
+        if (layoutInflater == null) {
+            layoutInflater = LayoutInflater.from(parent.context)
+        }
+        val binding = DataBindingUtil.inflate<MListitemBinding>(layoutInflater!!, R.layout.m_listitem, parent, false)
+        return ListItem(binding)
+    }
+
+    override fun onBindViewHolder(holder: ListItem, position: Int) {
+        val data = ListData()
+        data.textdata = currencies!![position].toString()
+        holder.binding.listdata = data
+        holder.binding.handler = ClickHandler()
+    }
+
+    override fun getItemCount(): Int {
+        return currencies!!.size
+    }
+
+    inner class ClickHandler {
+        fun setCurrency(view: View, data: ListData) {
+            (activity as NewBaseActivity).closePopUp()
+            val model = (activity as NewBaseActivity).model
+            model!!.setCurrencyData(data.textdata)
+        }
+    }
+}
