@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.cartsection.models
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
+import com.shopify.graphql.support.ID
 
 class CartBottomData : BaseObservable() {
     var subtotal: String? = null
@@ -14,7 +15,7 @@ class CartBottomData : BaseObservable() {
             field = subtotaltext
             notifyPropertyChanged(BR.subtotaltext)
         }
-    var checkoutId: String? = null
+    var checkoutId:ID? = null
 
     var checkouturl: String? = null
 

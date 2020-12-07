@@ -1,41 +1,31 @@
 package com.shopify.shopifyapp.basesection.viewmodels
 
-import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.InstanceIdResult
 import com.google.firebase.messaging.FirebaseMessaging
 import com.shopify.buy3.GraphCallResult
-import com.shopify.buy3.GraphResponse
-import com.shopify.buy3.MutationGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
-import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.utils.*
-
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SplashViewModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
@@ -47,12 +37,20 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
         get() = repository.isLogin
 
     fun Response(shop:String): MutableLiveData<LocalDbResponse> {
-        connectFirebaseForTrial(shop)
+        val handler = Handler()
+        handler.postDelayed({ // Do something after 5s = 5000ms
+            connectFirebaseForTrial(shop)
+        }, 2000)
+
         return responseLiveData
     }
 
     fun firebaseResponse(): MutableLiveData<FireBaseResponse> {
-        connectFireBaseForSplashData()
+        val handler = Handler()
+        handler.postDelayed({ // Do something after 5s = 5000ms
+            connectFireBaseForSplashData()
+        }, 2000)
+
         return fireBaseResponseMutableLiveData
     }
 

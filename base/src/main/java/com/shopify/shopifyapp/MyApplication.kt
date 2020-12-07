@@ -58,7 +58,7 @@ class MyApplication : MultiDexApplication() {
         private var mFirebaseInstance: FirebaseDatabase? = null
         private var mFirebaseSecondanyInstance: FirebaseDatabase? = null
         private var database: DatabaseReference? = null
-
+        var flag:Boolean= false;
         fun getmFirebaseInstance(): FirebaseDatabase {
             if (mFirebaseInstance == null) {
                 mFirebaseInstance = FirebaseDatabase.getInstance()

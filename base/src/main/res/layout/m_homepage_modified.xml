@@ -20,6 +20,8 @@
                 android:background="@color/main_color_gray_lt"
                 android:id="@+id/personalisedsection"
                 android:visibility="gone">
+
+
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/personalisedyext"
                     android:layout_width="wrap_content"

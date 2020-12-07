@@ -25,7 +25,9 @@ import com.shopify.shopifyapp.utils.CurrencyFormatter
 import org.json.JSONObject
 import java.math.BigDecimal
 import javax.inject.Inject
-class ProductListSliderAdapter @Inject
+class
+
+ProductListSliderAdapter @Inject
  constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
     private var layoutInflater: LayoutInflater? = null
     private var products: List<Storefront.Product>?=null

@@ -7,24 +7,18 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
-import android.webkit.SslErrorHandler
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.databinding.MWebpageBinding
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
 import com.shopify.shopifyapp.checkoutsection.viewmodels.CheckoutWebLinkViewModel
+import com.shopify.shopifyapp.databinding.MWebpageBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.utils.ViewModelFactory
-
-import java.net.URLEncoder
-
+import java.util.*
 import javax.inject.Inject
 
 class CheckoutWeblink : BaseActivity() {
@@ -51,15 +45,44 @@ class CheckoutWeblink : BaseActivity() {
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.loadWithOverviewMode = true
         webView!!.settings.useWideViewPort = true
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            CookieManager.getInstance().removeAllCookies(null)
+            CookieManager.getInstance().flush()
+        } else {
+            val cookieSyncMngr = CookieSyncManager.createInstance(this)
+            cookieSyncMngr.startSync()
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.removeAllCookie()
+            cookieManager.removeSessionCookie()
+            cookieSyncMngr.stopSync()
+            cookieSyncMngr.sync()
+        }
+
         setUpWebViewDefaults(webView!!)
         if (model!!.isLoggedIn) {
             try {
-                val checkouturl = "https://" + resources.getString(R.string.shopdomain) + "/account/login"
+
+                /* String parts[]=  currentUrl.split("/");
+                String checkouturl="https://"+getResources().getString(R.string.shopdomain)+"/account/login";
+                postData = "form_type=" + URLEncoder.encode("customer_login", "UTF-8")
+                        + "&customer[email]=" + URLEncoder.encode(data.getEmail(), "UTF-8")
+                        + "&order=" + URLEncoder.encode(parts[parts.length-1], "UTF-8");
+                webView.postUrl(checkouturl,postData.getBytes());*/
+
+                val map = HashMap<String, String?>()
+                map.put("X-Shopify-Customer-Access-Token", model?.customeraccessToken?.customerAccessToken)
+               /* val checkouturl = "https://" + resources.getString(R.string.shopdomain) + "/account/login"
                 postData = ("checkout_url=" + URLEncoder.encode(currentUrl!!.replace("https://" + resources.getString(R.string.shopdomain), ""), "UTF-8") +
                         "&form_type=" + URLEncoder.encode("customer_login", "UTF-8")
-                        + "&customer[email]=" + URLEncoder.encode(model!!.data!!.email, "UTF-8")
-                        + "&customer[password]=" + URLEncoder.encode(model!!.data!!.password, "UTF-8"))
-                webView!!.postUrl(checkouturl, postData!!.toByteArray())
+                        + "&customer[email]=" + URLEncoder.encode("asd@asd.com", "UTF-8")
+                        + "&customer[password]=" + URLEncoder.encode("asdcxzasd", "UTF-8"))
+
+                Log.i("checkout", checkouturl)
+                Log.i("checkout", postData)
+
+                webView!!.postUrl(checkouturl, postData!!.toByteArray())*/
+                webView!!.loadUrl(currentUrl,map)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

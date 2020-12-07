@@ -4,11 +4,12 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.productsection.fragments.ImageFragment
 
-class ImagSlider(fm: FragmentManager, behavior: Int) : FragmentPagerAdapter(fm, behavior) {
+class ImagSlider(fm: FragmentManager, behavior: Int) : FragmentStatePagerAdapter(fm, behavior) {
     private var images: List<Storefront.ImageEdge>? = null
     fun setData(images: List<Storefront.ImageEdge>) {
         this.images = images

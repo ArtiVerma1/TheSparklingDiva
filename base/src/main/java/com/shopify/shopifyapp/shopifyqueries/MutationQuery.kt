@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.shopifyqueries
 
 import com.shopify.buy3.Storefront
+import com.shopify.buy3.Storefront.*
 import com.shopify.graphql.support.ID
 
 object MutationQuery {
@@ -116,4 +117,22 @@ object MutationQuery {
             }
         }
     }
+
+    fun checkoutCustomerAssociateV2(checkoutId: ID?, customerAccessToken: String?): Storefront.MutationQuery {
+        return mutation { mutation: Storefront.MutationQuery ->
+            mutation
+                    .checkoutCustomerAssociateV2(checkoutId, customerAccessToken
+                    ) { query: CheckoutCustomerAssociateV2PayloadQuery ->
+                        query
+                                .checkout {check-> check.webUrl() }
+                                .userErrors { userError: UserErrorQuery ->
+                                    userError
+                                            .field()
+                                            .message()
+                                }
+                    }
+        }
+    }
+
 }
+

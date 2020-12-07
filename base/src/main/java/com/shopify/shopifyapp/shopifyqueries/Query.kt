@@ -192,15 +192,15 @@ object Query {
         }
     }
     private val collectiondef: Storefront.CollectionConnectionQueryDefinition
-    get() = Storefront.CollectionConnectionQueryDefinition { collect ->
-        collect
-                .edges({ edge ->
-                    edge
-                            .cursor()
-                            .node({ node -> node.title().image({ image -> image.originalSrc().transformedSrc() }) })
-                })
-                .pageInfo(Storefront.PageInfoQueryDefinition { it.hasNextPage() })
-    }
+        get() = Storefront.CollectionConnectionQueryDefinition { collect ->
+            collect
+                    .edges({ edge ->
+                        edge
+                                .cursor()
+                                .node({ node -> node.title().image({ image -> image.originalSrc().transformedSrc() }) })
+                    })
+                    .pageInfo(Storefront.PageInfoQueryDefinition { it.hasNextPage() })
+        }
 
     fun getProductById(product_id: String): Storefront.QueryRootQuery {
         return Storefront.query { root -> root.node(ID(product_id)) { rootnode -> rootnode.onProduct(productQuery) } }
@@ -320,7 +320,7 @@ object Query {
         return Storefront.query { root ->
             root
                     .products(
-                                Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(barcode).first(1).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
+                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(barcode).first(1).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
         }
     }
 

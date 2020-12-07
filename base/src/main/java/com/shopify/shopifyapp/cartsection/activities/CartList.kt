@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.*
 import android.widget.RadioButton
 import android.widget.TextView
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonElement
 import com.shopify.buy3.Storefront
+import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MCartlistBinding
@@ -145,7 +147,7 @@ class CartList : BaseActivity() {
     private fun setBottomData(checkout: Storefront.Checkout) {
         try {
             val bottomData = CartBottomData()
-            bottomData.checkoutId = checkout.id.toString()
+            bottomData.checkoutId = checkout.id
             bottomData.subtotaltext = resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
             bottomData.subtotal = CurrencyFormatter.setsymbol(checkout.subtotalPriceV2.amount, checkout.subtotalPriceV2.currencyCode.toString())
             if (checkout.taxExempt!!) {
@@ -186,10 +188,14 @@ class CartList : BaseActivity() {
         fun loadCheckout(view: View, data: CartBottomData) {
             try {
                 if (model!!.isLoggedIn) {
-                    val intent = Intent(view.context, CheckoutWeblink::class.java)
-                    intent.putExtra("link", data.checkouturl)
-                    intent.putExtra("id", data.checkoutId)
-                    view.context.startActivity(intent)
+
+                    Log.i("herer"," "+data.checkoutId)
+                    Log.i("herer","token : "+model?.customeraccessToken?.customerAccessToken)
+
+                    model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
+                    model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })
+
+
                 } else {
                     showPopUp(data)
                 }
@@ -197,6 +203,14 @@ class CartList : BaseActivity() {
                 e.printStackTrace()
             }
 
+        }
+
+        private fun getResonse(it: Storefront.Checkout?) {
+
+            val intent = Intent(this@CartList, CheckoutWeblink::class.java)
+            intent.putExtra("link", it?.webUrl)
+            intent.putExtra("id", it?.id.toString())
+            startActivity(intent)
         }
 
         private fun showPopUp(data: CartBottomData) {

@@ -17,11 +17,13 @@ import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.cartsection.models.CartListItem
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
+import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.dependecyinjection.InnerData
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Mutation
+import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
@@ -44,6 +46,11 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val api = MutableLiveData<ApiResponse>()
     private val youmayapi = MutableLiveData<ApiResponse>()
     private val disposables = CompositeDisposable()
+    private val responsedata = MutableLiveData<Storefront.Checkout>()
+    var customeraccessToken: CustomerTokenData
+        get() {
+            return repository.accessToken[0]        }
+        set(value) {}
     val message = MutableLiveData<String>()
     val cartCount: Int
         get() {
@@ -134,6 +141,66 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     fun getYouMAyAPiResponse(): MutableLiveData<ApiResponse> {
         return youmayapi
     }
+    fun getassociatecheckoutResponse(): MutableLiveData<Storefront.Checkout> {
+         return responsedata
+    }
+
+
+
+    fun associatecheckout(checkoutId: ID?, customerAccessToken: String?)
+    {
+        try {
+            val call = repository.graphClient.mutateGraph(MutationQuery.checkoutCustomerAssociateV2(checkoutId, customerAccessToken))
+            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.invoke(graphCallResult) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun invoke(graphCallResult: GraphCallResult<Storefront.Mutation>) {
+        if (graphCallResult is GraphCallResult.Success<*>) {
+            consumeResponseassociate(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
+        } else {
+            consumeResponseassociate(GraphQLResponse.error(graphCallResult as GraphCallResult.Failure))
+        }
+        return Unit
+    }
+
+    private fun consumeResponseassociate(response: GraphQLResponse) {
+        when (response.status) {
+            Status.SUCCESS -> {
+                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    /*this.errormessage.setValue(errormessage.toString())*/
+                } else {
+                   /* val payload = result.data!!.checkoutCreate
+                    if (payload.checkoutUserErrors.size > 0) {
+                        val iterator = payload.checkoutUserErrors.iterator()
+                        var error: Storefront.CheckoutUserError? = null
+                        while (iterator.hasNext()) {
+                            error = iterator.next() as Storefront.CheckoutUserError
+                            message.setValue(error.message)
+                        }
+                        *//*errormessage.setValue(err)*//*
+                    } else {*/
+                        responsedata.setValue(result.data!!.getCheckoutCustomerAssociateV2().getCheckout())
+                    /*}*/
+                }
+            }
+            /*Status.ERROR -> errormessage.setValue(response.error!!.error.message)*/
+            else -> {
+            }
+        }
+    }
+
     fun prepareCart() {
         try {
             val runnable = object : Runnable {
@@ -247,11 +314,11 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
 
     }
 
-    private fun consumeResponse(reponse: GraphQLResponse) {
+    private fun consumeResponse(response: GraphQLResponse) {
         try {
-            when (reponse.status) {
+            when (response.status) {
                 Status.SUCCESS -> {
-                    val result = (reponse.data as GraphCallResult.Success<Storefront.Mutation>).response
+                    val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
                     if (result.hasErrors) {
                         val errors = result.errors
                         val iterator = errors.iterator()
@@ -279,7 +346,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                         }
                     }
                 }
-                Status.ERROR -> message.setValue(reponse.error!!.error.message)
+                Status.ERROR -> message.setValue(response.error!!.error.message)
                 else -> {
                 }
             }

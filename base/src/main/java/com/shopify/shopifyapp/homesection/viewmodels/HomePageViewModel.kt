@@ -227,6 +227,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     var adp= HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
                     binding!!.bannerss.adapter =adp
                     adp.notifyDataSetChanged()
+
                     binding.bannersection.backgroundTintList= ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
                     binding!!.bannerss.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
                         override fun onPageScrollStateChanged(state: Int) {

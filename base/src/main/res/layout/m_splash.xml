@@ -18,6 +18,7 @@
             bind:layout_constraintBottom_toBottomOf="parent"
             bind:imageUrl="@{commonmodel.imageurl}"
             android:adjustViewBounds="true"
+            android:scaleType="fitXY"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

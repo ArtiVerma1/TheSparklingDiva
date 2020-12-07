@@ -2,6 +2,7 @@ package com.shopify.shopifyapp.checkoutsection.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.UserLocalData
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.utils.ApiResponse
@@ -16,6 +17,10 @@ import io.reactivex.schedulers.Schedulers
 class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<ApiResponse>()
+    var customeraccessToken: CustomerTokenData
+        get() {
+            return repository.accessToken[0]        }
+        set(value) {}
     val isLoggedIn: Boolean
         get() = repository.isLogin
     val data: UserLocalData?

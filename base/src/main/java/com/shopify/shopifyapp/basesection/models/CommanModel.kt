@@ -96,6 +96,7 @@ class CommanModel :BaseObservable(){
         set(imageurl) {
             field = imageurl
             notifyPropertyChanged(BR.imageurl)
+
         }
 
 

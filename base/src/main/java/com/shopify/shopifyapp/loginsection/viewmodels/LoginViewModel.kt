@@ -2,14 +2,9 @@ package com.shopify.shopifyapp.loginsection.viewmodels
 
 import android.os.Handler
 import android.os.Looper
-
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import com.shopify.buy3.GraphCallResult
-import com.shopify.buy3.GraphResponse
-import com.shopify.buy3.MutationGraphCall
-import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
@@ -85,6 +80,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                         errormessage.setValue(err)
                     } else {
                         responsedata.setValue(result.data!!.customerAccessTokenCreate.customerAccessToken)
+
                     }
                 }
             }
