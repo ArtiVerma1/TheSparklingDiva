@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -33,6 +34,7 @@ import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.basesection.fragments.LeftMenu
 import com.shopify.shopifyapp.databinding.*
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.dependecyinjection.Body
@@ -1026,10 +1028,21 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     Log.i("MageNatyive","ERROR"+errormessage.toString())
                     message.setValue(errormessage.toString())
                 } else {
-                    val edge = result.data!!.node as Storefront.Product
-                    edges.add(edge)
-                    if(edges.size == jsonArray.length()){
-                        filterProduct(edges , productdata, jsonArray, jsonObject)
+                    try {
+                        val edge = result.data!!.node as Storefront.Product
+                        edges.add(edge)
+                        if (edges.size == jsonArray.length()) {
+                            filterProduct(edges, productdata, jsonArray, jsonObject)
+                        }
+                    }
+                    catch (e: Exception) {
+                        e.printStackTrace()
+                        when(context!!.getPackageName()) {
+                            "com.shopify.shopifyapp" -> {
+                                Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
                     }
                 }
             }

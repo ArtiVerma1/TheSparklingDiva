@@ -3,11 +3,13 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
@@ -66,10 +68,21 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
                     Log.i("MageNatyive", "ERROR" + errormessage.toString())
                     // message.setValue(errormessage.toString())
                 } else {
-                    val edge = result.data!!.node as Storefront.Product
-                    edges.add(edge)
-                    if (edges.size == data.length()) {
-                        filterProduct(edges, recyler, adapter, presentmentcurrency)
+                    try {
+                        val edge = result.data!!.node as Storefront.Product
+                        edges.add(edge)
+                        if (edges.size == data.length()) {
+                            filterProduct(edges, recyler, adapter, presentmentcurrency)
+                        }
+                    }
+                    catch (e:Exception)
+                    {
+                        e.printStackTrace()
+                        when(context!!.getPackageName()) {
+                            "com.shopify.shopifyapp" -> {
+                                Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
+                            }
+                        }
                     }
                 }
             }

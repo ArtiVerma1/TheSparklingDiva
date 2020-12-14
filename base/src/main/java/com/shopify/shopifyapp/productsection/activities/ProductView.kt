@@ -2,6 +2,8 @@ package com.shopify.shopifyapp.productsection.activities
 
 import android.content.Intent
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LevelListDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -12,34 +14,29 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-
+import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.databinding.MProductviewBinding
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.cartsection.activities.CartList
+import com.shopify.shopifyapp.databinding.MProductviewBinding
+import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
+import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.productsection.adapters.ImagSlider
 import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
-
-import java.math.BigDecimal
-
-import javax.inject.Inject
-
-import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.google.gson.JsonElement
-import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
-import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.utils.*
 import org.json.JSONObject
+import java.math.BigDecimal
+import javax.inject.Inject
 
 class ProductView : BaseActivity() {
     private var binding: MProductviewBinding? = null
@@ -177,7 +174,29 @@ class ProductView : BaseActivity() {
             binding!!.images.adapter = slider
             binding!!.indicator.setViewPager(binding!!.images)
             data!!.textdata = productedge.title
-            data!!.descriptionhmtl = Html.fromHtml(productedge.descriptionHtml)
+            Log.i("here",productedge.descriptionHtml)
+            data!!.descriptionhmtl = Html.fromHtml(productedge.description)
+            /*Html.fromHtml(productedge.descriptionHtml)*/
+            /*
+            * Testing Code for images in HTML
+            * */
+           /* data!!.descriptionhmtl = Html.fromHtml(productedge.descriptionHtml, object : Html.ImageGetter {
+                override fun getDrawable(source: String): Drawable? {
+
+                    Log.i("here",source)
+                    *//*val bmp: Drawable? = Drawable.createFromPath(source)
+                    bmp?.setBounds(0, 0, bmp.getIntrinsicWidth(), bmp.getIntrinsicHeight())
+                    return bmp*//*
+                    val d = LevelListDrawable()
+                    val empty = resources.getDrawable(R.mipmap.ic_launcher)
+                    d.addLevel(0, 0, empty)
+                    d.setBounds(0, 0, empty.intrinsicWidth, empty.intrinsicHeight)
+
+                    LoadImage().execute(source, d)
+
+                    return d
+                }
+            }, null)*/
             data!!.addtowish = resources.getString(R.string.addtowish)
             if (model!!.presentmentCurrency == "nopresentmentcurrency") {
                 data!!.regularprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())

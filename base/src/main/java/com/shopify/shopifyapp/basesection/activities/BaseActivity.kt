@@ -60,7 +60,11 @@ open class BaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInteractio
 
             MyApplication.dataBaseReference.child("additional_info").child("appthemecolor").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val value = dataSnapshot.getValue(String::class.java)!!
+                    var value = dataSnapshot.getValue(String::class.java)!!
+                    if (!value.contains("#"))
+                    {
+                        value= "#"+value
+                    }
                     toolbar.setBackgroundColor(Color.parseColor(value))
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
