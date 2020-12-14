@@ -57,6 +57,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="2dp"
+                    android:maxLines="2"
                     android:text="@{listdata.textdata}"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall"
                     android:gravity="center" />
