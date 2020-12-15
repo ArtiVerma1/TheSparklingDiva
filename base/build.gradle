@@ -13,7 +13,7 @@ android {
         applicationId "com.shopify.shopifyapp"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 32
+        versionCode 34
         versionName "3.2"
     }
     buildTypes {

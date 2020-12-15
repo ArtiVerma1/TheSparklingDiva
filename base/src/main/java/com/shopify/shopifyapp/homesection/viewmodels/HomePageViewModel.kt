@@ -26,7 +26,6 @@ import androidx.viewpager.widget.ViewPager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.shopify.buy3.GraphCallResult
@@ -34,9 +33,8 @@ import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.fragments.LeftMenu
-import com.shopify.shopifyapp.databinding.*
 import com.shopify.shopifyapp.basesection.models.CommanModel
+import com.shopify.shopifyapp.databinding.*
 import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.dependecyinjection.InnerData
 import com.shopify.shopifyapp.homesection.activities.HomePage
@@ -51,13 +49,10 @@ import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.utils.Urls
-import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Predicate
-import io.reactivex.internal.operators.observable.ObservableBlockingSubscribe.subscribe
 import io.reactivex.schedulers.Schedulers
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import org.json.JSONArray
@@ -445,6 +440,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     productSlider.headertextvisibility = View.GONE
                 }
                 context.setLayout(binding!!.productdata, "horizontal")
+                slideradapter= CollectionSliderAdapter()
                 slideradapter!!.setData(jsonObject!!.getJSONArray("items"), context, jsonObject!!)
                 binding!!.productdata.adapter = slideradapter
                 slideradapter!!.notifyDataSetChanged()
@@ -710,7 +706,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createCollectionGrid(jsonObject: JSONObject) {
         Handler(Looper.getMainLooper()).post {
-            var binding: MCollectionlgridBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionlgrid, null, false)
+            val binding: MCollectionlgridBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionlgrid, null, false)
             context.setLayout(binding!!.categorylist, "3grid")
             try {
                 repository.getJSonArray(JsonParser().parse(jsonObject!!.getString("items")).asJsonArray)
@@ -724,6 +720,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             }
 
                             override fun onSuccess(list: List<JsonElement>) {
+                                adapter = CollectionGridAdapter()
                                 adapter!!.setData(list, context, jsonObject!!)
                                 binding!!.categorylist.adapter = adapter
                                 adapter!!.notifyDataSetChanged()
@@ -837,10 +834,13 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createProductSlider(jsonObject: JSONObject) {
         try {
+            var obj = JSONObject(jsonObject.toString())
+
             Handler(Looper.getMainLooper()).post {
                 val binding: MProductSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_slider, null, false)
-                var productSlider = ProductSlider()
-                updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("item_value"), " ", jsonObject)
+                val productSlider = ProductSlider()
+
+                updateDataInRecylerView(binding.productdata, obj.getJSONArray("item_value"), " ", obj)
                 var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
                 var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
                 var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
@@ -968,6 +968,8 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
             Thread(runnable).start()
+
+
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -1069,6 +1071,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             when(jsonObject.getString("type")){
                                 "fixed-customisable-layout"->{
                                     if(jsonObject.getString("item_layout_type").equals("list")){
+                                        productListAdapter = ProductListSliderAdapter()
                                         productListAdapter!!.presentmentcurrency = presentmentCurrency
                                         context.setLayout(productdata!!, "vertical")
                                         productListAdapter!!.setData(list, context, jsonObject)
@@ -1076,12 +1079,14 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                     }else{
                                         when(jsonObject.getString("item_in_a_row")){
                                             "2"->{
+                                                gridtwo = ProductSliderListAdapter()
                                                 gridtwo!!.presentmentcurrency = presentmentCurrency
                                                 context.setLayout(productdata!!, "grid")
                                                 gridtwo!!.setData(list, context, jsonObject)
                                                 productdata!!.adapter = gridtwo
                                             }
                                             "3"->{
+                                                gridAdapter= ProductSliderGridAdapter()
                                                 gridAdapter!!.presentmentcurrency = presentmentCurrency
                                                 context.setLayout(productdata!!, "customisablegrid")
                                                 gridAdapter!!.setData(list, context, jsonObject)
@@ -1091,6 +1096,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                     }
                                 }else->{
                                     Log.i("MageNatyive","Data"+list.size)
+                                    homeadapter = ProductSliderListAdapter()
                                     homeadapter!!.presentmentcurrency = presentmentCurrency
                                     context.setLayout(productdata!!, "horizontal")
                                     homeadapter!!.setData(list, context, jsonObject)
