@@ -1,8 +1,11 @@
 package com.shopify.shopifyapp.basesection.models
+import android.app.Activity
+import android.app.Application
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -17,6 +20,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.target.Target
+import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import io.reactivex.Observable
@@ -114,13 +118,12 @@ class CommanModel :BaseObservable(){
 
                         override fun onNext(s: String) {
                             Log.i("Magenative ","Developer image url "+s)
-
-                            Glide.with(view.context)
-                                    .asBitmap()
-                                    .load(s)
-                                    //.thumbnail(0.5f)
-                                   // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
-                                    .into(view)
+                                Glide.with(context)
+                                        .asBitmap()
+                                        .load(s)
+                                        //.thumbnail(0.5f)
+                                        // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
+                                        .into(view)
 
                         }
 

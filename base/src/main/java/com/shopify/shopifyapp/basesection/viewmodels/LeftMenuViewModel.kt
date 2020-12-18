@@ -5,14 +5,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shopify.buy3.GraphCallResult
-import com.shopify.buy3.GraphResponse
-import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
-import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.dbconnection.entities.LivePreviewData
-import com.shopify.shopifyapp.dbconnection.entities.UserLocalData
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.ApiResponse

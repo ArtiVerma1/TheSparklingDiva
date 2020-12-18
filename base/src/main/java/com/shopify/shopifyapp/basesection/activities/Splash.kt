@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.basesection.activities
+
 import android.annotation.SuppressLint
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
@@ -15,9 +16,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.ktx.Firebase
 import com.shopify.shopifyapp.MyApplication
+import com.shopify.shopifyapp.MyApplication.Companion.context
+import com.shopify.shopifyapp.MyApplication.Companion.dataBaseReference
+import com.shopify.shopifyapp.MyApplication.Companion.firebaseapp
+import com.shopify.shopifyapp.MyApplication.Companion.getmFirebaseSecondanyInstance
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MSplashBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
@@ -26,31 +35,24 @@ import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.trialsection.activities.TrialExpired
-import com.shopify.shopifyapp.utils.FireBaseResponse
-import com.shopify.shopifyapp.utils.LocalDbResponse
-import com.shopify.shopifyapp.utils.Status
-import com.shopify.shopifyapp.utils.ViewModelFactory
+import com.shopify.shopifyapp.utils.*
 import javax.inject.Inject
+
 class Splash : AppCompatActivity() {
     @Inject
-    lateinit  var viewModelFactory: ViewModelFactory
+    lateinit var viewModelFactory: ViewModelFactory
     private var splashmodel: SplashViewModel? = null
     private var binding: MSplashBinding? = null
     private var product_id: String? = null
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_splash, null, false)
         setContentView(binding!!.root)
         (application as MyApplication).mageNativeAppComponent!!.doSplashInjection(this)
         splashmodel = ViewModelProvider(this, viewModelFactory).get(SplashViewModel::class.java)
-        if (splashmodel!!.isLogin) {
-            splashmodel!!.refreshTokenIfRequired()
-        }
-        splashmodel!!.firebaseResponse().observe(this, Observer<FireBaseResponse> { this.consumeResponse(it) })
-        splashmodel!!.Response(resources.getString(R.string.shopdomain)).observe(this, Observer<LocalDbResponse> { this.consumeResponse(it) })
-        splashmodel!!.errorMessageResponse.observe(this, Observer<String> { this.consumeErrorResponse(it) })
-        @SuppressLint("HardwareIds") val deviceId = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
-        splashmodel!!.sendTokenToServer(deviceId)
+        initializeFirebase();
         val mServiceComponent = ComponentName(this, com.shopify.shopifyapp.jobservicessection.JobScheduler::class.java)
         val builder = JobInfo.Builder(101, mServiceComponent)
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
@@ -63,10 +65,10 @@ class Splash : AppCompatActivity() {
         builder.setExtras(extras)
         val tm = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         tm.schedule(builder.build())
-        if (intent != null){
+        if (intent != null) {
             val appLinkIntent = intent
             val appLinkAction = appLinkIntent.action
-            if(appLinkIntent.data != null){
+            if (appLinkIntent.data != null) {
                 if (appLinkIntent.data!!.getQueryParameters("pid") != null) {
                     product_id = appLinkIntent.data!!.getQueryParameters("pid")[0]
                 }
@@ -74,9 +76,39 @@ class Splash : AppCompatActivity() {
         }
     }
 
+    private fun initializeFirebase() {
+        auth = Firebase.auth(firebaseapp!!)
+        auth.signInWithEmailAndPassword("sudhanshshah@magenative.com", "asdcxzasd")
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        val user = auth.currentUser
+
+                        dataBaseReference = getmFirebaseSecondanyInstance().getReference(Urls(context).shopdomain.replace(".myshopify.com", ""))
+                        if (splashmodel!!.isLogin) {
+                            splashmodel!!.refreshTokenIfRequired()
+                        }
+                        splashmodel!!.firebaseResponse().observe(this, Observer<FireBaseResponse> { this.consumeResponse(it) })
+                        splashmodel!!.Response(resources.getString(R.string.shopdomain)).observe(this, Observer<LocalDbResponse> { this.consumeResponse(it) })
+                        splashmodel!!.errorMessageResponse.observe(this, Observer<String> { this.consumeErrorResponse(it) })
+                        @SuppressLint("HardwareIds") val deviceId = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+                        splashmodel!!.sendTokenToServer(deviceId)
+
+                       /* Toast.makeText(baseContext, "Authentication success",
+                                Toast.LENGTH_SHORT).show()*/
+                    } else {
+
+                    /*    Toast.makeText(baseContext, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show()*/
+                    }
+
+                }
+    }
+
     private fun consumeErrorResponse(error: String) {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
     }
+
     private fun consumeResponse(reponse: LocalDbResponse) {
         when (reponse.status) {
             Status.SUCCESS -> renderSuccessResponse(reponse.data!!)
@@ -86,6 +118,7 @@ class Splash : AppCompatActivity() {
             }
         }
     }
+
     private fun consumeResponse(reponse: FireBaseResponse) {
         when (reponse.status) {
             Status.SUCCESS -> renderSuccessResponse(reponse.data!!)
@@ -95,6 +128,7 @@ class Splash : AppCompatActivity() {
             }
         }
     }
+
     private fun renderSuccessResponse(data: AppLocalData) {
         val intent: Array<Intent?>
         if (!data.isIstrialexpire) {
@@ -112,9 +146,12 @@ class Splash : AppCompatActivity() {
             val homepage = Intent(this@Splash, HomePage::class.java)
             intent[0] = homepage
         }
-        Handler().postDelayed(Runnable {startActivities(intent)
-            finish()  },1000)
+        Handler().postDelayed(Runnable {
+            startActivities(intent)
+            finish()
+        }, 1000)
     }
+
     private fun renderSuccessResponse(data: DataSnapshot) {
         try {
             val value = data.getValue(String::class.java)
