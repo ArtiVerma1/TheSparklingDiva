@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -48,7 +49,12 @@ class ProductList : BaseActivity() {
             super.onScrolled(recyclerView, dx, dy)
             val visibleItemCount = recyclerView.layoutManager!!.childCount
             val totalItemCount = recyclerView.layoutManager!!.itemCount
-            val firstVisibleItemPosition = (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+            var firstVisibleItemPosition = 0
+            if (recyclerView.layoutManager is LinearLayoutManager) {
+                firstVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+            } else if (recyclerView.layoutManager is GridLayoutManager) {
+                firstVisibleItemPosition = (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+            }
             if (!recyclerView.canScrollVertically(1)) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0
                         && totalItemCount >= products!!.size) {
@@ -68,7 +74,9 @@ class ProductList : BaseActivity() {
         sheet = BottomSheetBehavior.from(binding!!.root.findViewById<View>(R.id.bottom_sheet))
         sortselction = binding!!.root.findViewById(R.id.sortselction)
         showBackButton()
-        showTittle(intent.getStringExtra("tittle"))
+        if (intent.hasExtra("tittle") && intent.getStringExtra("tittle") != null) {
+            showTittle(intent.getStringExtra("tittle"))
+        }
         (application as MyApplication).mageNativeAppComponent!!.doProductListInjection(this)
         productListModel = ViewModelProvider(this, factory).get(ProductListModel::class.java)
         if (intent.getStringExtra("ID") != null) {
