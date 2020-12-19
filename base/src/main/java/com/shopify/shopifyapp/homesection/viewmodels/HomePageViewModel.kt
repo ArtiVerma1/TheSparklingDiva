@@ -834,13 +834,10 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createProductSlider(jsonObject: JSONObject) {
         try {
-            var obj = JSONObject(jsonObject.toString())
-
             Handler(Looper.getMainLooper()).post {
                 val binding: MProductSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_slider, null, false)
-                val productSlider = ProductSlider()
-
-                updateDataInRecylerView(binding.productdata, obj.getJSONArray("item_value"), " ", obj)
+                var productSlider = ProductSlider()
+                updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("item_value"), " ", jsonObject)
                 var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
                 var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
                 var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
@@ -968,8 +965,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
             Thread(runnable).start()
-
-
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
