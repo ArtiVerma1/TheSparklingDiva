@@ -44,6 +44,9 @@ constructor() : RecyclerView.Adapter<VariantItem>() {
         data.data = this.data
         data.model = this.model
         setVariants(data, holder, variants!![position].node.selectedOptions)
+        if(variants!!.size==1){
+           data.blockClick(holder.binding.mainView,data)
+        }
     }
 
     private fun setVariants(data: VariantData, holder: VariantItem, selectedOptions: List<Storefront.SelectedOption>) {
