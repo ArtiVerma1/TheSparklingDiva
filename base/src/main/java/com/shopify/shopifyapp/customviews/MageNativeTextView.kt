@@ -67,9 +67,9 @@ class MageNativeTextView : AppCompatTextView {
         val a = context.obtainStyledAttributes(attrs, R.styleable.MageNativeTextView)
         val type = a.getString(R.styleable.MageNativeTextView_texttype)
         when (Objects.requireNonNull<String>(type)) {
-            "bold" -> textSize = 13f
-            "normal" -> textSize = 11f
-            "whitetext" -> textSize = 11f
+            "bold" -> textSize = 15f
+            "normal" -> textSize = 13f
+            "whitetext" -> textSize = 13f
         }
         a.recycle()
     }

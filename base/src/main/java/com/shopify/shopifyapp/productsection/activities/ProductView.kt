@@ -175,7 +175,7 @@ class ProductView : BaseActivity() {
             binding!!.indicator.setViewPager(binding!!.images)
             data!!.textdata = productedge.title
             Log.i("here",productedge.descriptionHtml)
-            data!!.descriptionhmtl = Html.fromHtml(productedge.description)
+           /* data!!.descriptionhmtl = Html.fromHtml(productedge.description)*/
             /*Html.fromHtml(productedge.descriptionHtml)*/
             /*
             * Testing Code for images in HTML
@@ -197,6 +197,7 @@ class ProductView : BaseActivity() {
                     return d
                 }
             }, null)*/
+            binding?.description?.loadData(productedge.descriptionHtml,"text/html", "utf-8")
             data!!.addtowish = resources.getString(R.string.addtowish)
             if (model!!.presentmentCurrency == "nopresentmentcurrency") {
                 data!!.regularprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
