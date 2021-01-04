@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.basesection.activities
+
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
@@ -61,12 +62,12 @@ open class BaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInteractio
             MyApplication.dataBaseReference.child("additional_info").child("appthemecolor").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     var value = dataSnapshot.getValue(String::class.java)!!
-                    if (!value.contains("#"))
-                    {
-                        value= "#"+value
+                    if (!value.contains("#")) {
+                        value = "#" + value
                     }
                     toolbar.setBackgroundColor(Color.parseColor(value))
                 }
+
                 override fun onCancelled(databaseError: DatabaseError) {
                     Log.i("DBConnectionError", "" + databaseError.details)
                     Log.i("DBConnectionError", "" + databaseError.message)
@@ -77,6 +78,7 @@ open class BaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInteractio
             e.printStackTrace()
         }
     }
+
     init {
         updateConfig(this)
     }
@@ -88,6 +90,7 @@ open class BaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInteractio
         configuration.setLocale(dLocale)
         wrapper.applyOverrideConfiguration(configuration)
     }
+
     private fun setToggle() {
         mDrawerToggle = object : ActionBarDrawerToggle(this@BaseActivity, drawer_layout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerOpened(drawerView: View) {
@@ -144,20 +147,28 @@ open class BaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInteractio
             "horizontal" -> {
                 manager.orientation = RecyclerView.HORIZONTAL
                 view.layoutManager = manager
-                view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(2), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(2), true))
+                }
             }
             "vertical" -> {
                 manager.orientation = RecyclerView.VERTICAL
                 view.layoutManager = manager
-                view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(2), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(2), true))
+                }
             }
             "grid" -> {
                 view.layoutManager = GridLayoutManager(this, 2)
-                view.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(2), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(2), true))
+                }
             }
             "3grid" -> {
                 view.layoutManager = GridLayoutManager(this, 3)
-                view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(2), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(2), true))
+                }
             }
         }
         return view
