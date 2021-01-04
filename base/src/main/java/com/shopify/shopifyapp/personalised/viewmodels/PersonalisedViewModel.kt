@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.personalised.viewmodels
+
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
@@ -25,12 +26,12 @@ import java.nio.charset.Charset
 
 class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
 
-    fun setPersonalisedData(data:JSONArray,adapter:PersonalisedAdapter,presentmentcurrency: String,recyler:RecyclerView){
+    fun setPersonalisedData(data: JSONArray, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView) {
         try {
-            val edges= mutableListOf<Storefront.Product>()
+            val edges = mutableListOf<Storefront.Product>()
             var runnable = Runnable {
-                for(i in 0..data.length()-1){
-                    getProductById(data.getJSONObject(i).getString("product_id"), adapter, presentmentcurrency, recyler,edges,data)
+                for (i in 0..data.length() - 1) {
+                    getProductById(data.getJSONObject(i).getString("product_id"), adapter, presentmentcurrency, recyler, edges, data)
                 }
             }
             Thread(runnable).start()
@@ -38,14 +39,15 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
             ex.printStackTrace()
         }
     }
-    fun getProductById(id:String,adapter:PersonalisedAdapter,presentmentcurrency: String,recyler:RecyclerView,edges:MutableList<Storefront.Product>,data:JSONArray) {
+
+    fun getProductById(id: String, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView, edges: MutableList<Storefront.Product>, data: JSONArray) {
         try {
             val call = repository.graphClient.queryGraph(Query.getProductById(getID(id)))
             call.enqueue(Handler(Looper.getMainLooper())) { result ->
                 if (result is GraphCallResult.Success<*>) {
-                    consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), adapter, presentmentcurrency, recyler,edges,data)
+                    consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), adapter, presentmentcurrency, recyler, edges, data)
                 } else {
-                    consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure),  adapter, presentmentcurrency, recyler,edges,data)
+                    consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), adapter, presentmentcurrency, recyler, edges, data)
                 }
             }
         } catch (e: Exception) {
@@ -53,7 +55,8 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
-    private fun consumeResponse(reponse: GraphQLResponse,  adapter:PersonalisedAdapter,presentmentcurrency: String,recyler:RecyclerView,edges:MutableList<Storefront.Product>,data:JSONArray) {
+
+    private fun consumeResponse(reponse: GraphQLResponse, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView, edges: MutableList<Storefront.Product>, data: JSONArray) {
         when (reponse.status) {
             Status.SUCCESS -> {
                 val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
@@ -75,11 +78,9 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
                         if (edges.size == data.length()) {
                             filterProduct(edges, recyler, adapter, presentmentcurrency)
                         }
-                    }
-                    catch (e:Exception)
-                    {
+                    } catch (e: Exception) {
                         e.printStackTrace()
-                        when(MyApplication.context!!.getPackageName()) {
+                        when (MyApplication.context!!.getPackageName()) {
                             "com.shopify.shopifyapp" -> {
                                 Toast.makeText(MyApplication.context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
                             }
@@ -92,7 +93,8 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
             }
         }
     }
-    private fun filterProduct(list: List<Storefront.Product>, productdata: RecyclerView?, adapter:PersonalisedAdapter, currency: String) {
+
+    private fun filterProduct(list: List<Storefront.Product>, productdata: RecyclerView?, adapter: PersonalisedAdapter, currency: String) {
         try {
             repository.getProductListSlider(list)
                     .subscribeOn(Schedulers.io())
@@ -102,11 +104,16 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
                     .subscribe(object : SingleObserver<List<Storefront.Product>> {
                         override fun onSubscribe(d: Disposable) {
                         }
+
                         override fun onSuccess(list: List<Storefront.Product>) {
                             adapter!!.presentmentcurrency = currency
+                            if (!adapter.hasObservers()) {
+                                adapter!!.setHasStableIds(true)
+                            }
                             adapter!!.setData(list)
                             productdata!!.adapter = adapter
                         }
+
                         override fun onError(e: Throwable) {
                             e.printStackTrace()
                         }
@@ -115,8 +122,9 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
             e.printStackTrace()
         }
     }
-    fun getID(id:String):String{
+
+    fun getID(id: String): String {
         val data = Base64.encode(("gid://shopify/Product/" + id).toByteArray(), Base64.DEFAULT)
-         return String(data, Charset.defaultCharset()).trim { it <= ' ' }
+        return String(data, Charset.defaultCharset()).trim { it <= ' ' }
     }
 }

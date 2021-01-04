@@ -23,7 +23,6 @@ class PersonalisedAdapter @Inject
     var presentmentcurrency: String? = null
     fun setData(products: List<Storefront.Product>) {
         this.products = products
-        setHasStableIds(true)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItem {
         if (layoutInflater == null) {
