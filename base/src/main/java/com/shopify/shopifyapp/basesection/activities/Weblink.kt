@@ -25,7 +25,9 @@ class Weblink : BaseActivity() {
         binding = DataBindingUtil.inflate<MWebpageBinding>(getLayoutInflater(), R.layout.m_webpage, content, true)
         webView = binding!!.webview
         showBackButton()
-        showTittle(getIntent().getStringExtra("name"))
+        if(getIntent().hasExtra("name") && getIntent().getStringExtra("name") !=null){
+            showTittle(getIntent().getStringExtra("name"))
+        }
         Log.i("MageNative", "Link :" + getIntent().getStringExtra("link")!!)
         if (getIntent().getStringExtra("link")!!.contains("https")) {
             currentUrl = getIntent().getStringExtra("link")
