@@ -19,6 +19,7 @@ import io.reactivex.Single
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
+import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -27,17 +28,17 @@ class Repository {
     private val apiCallInterface: ApiCallInterface
     private val appdatabase: AppDatabase
     var graphClient: GraphClient
-    get() {
-        return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey,{
-            httpClient = requestHeader
-            httpCache(context.cacheDir, {
-                cacheMaxSizeBytes = 1024 * 1024 * 10
-                defaultCachePolicy = Constant.policy
+        get() {
+            return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey, {
+                httpClient = requestHeader
+                httpCache(context.cacheDir, {
+                    cacheMaxSizeBytes = 1024 * 1024 * 10
+                    defaultCachePolicy = Constant.policy
+                    Unit
+                })
                 Unit
-            })
-            Unit
-        },Constant.locale)
-    }
+            }, Constant.locale)
+        }
     internal val requestHeader: OkHttpClient
         get() {
             val httpClient = OkHttpClient.Builder()
@@ -46,16 +47,18 @@ class Repository {
                 val request = original.newBuilder().build()
                 chain.proceed(request)
             }
-            .connectTimeout(100, TimeUnit.SECONDS)
-            .writeTimeout(100, TimeUnit.SECONDS)
-            .readTimeout(300, TimeUnit.SECONDS)
+                    .connectTimeout(100, TimeUnit.SECONDS)
+                    .writeTimeout(100, TimeUnit.SECONDS)
+                    .readTimeout(300, TimeUnit.SECONDS)
             return httpClient.build()
         }
-    constructor(apiCallInterface: ApiCallInterface,  appdatabase: AppDatabase, graphClient: GraphClient){
-        this.apiCallInterface=apiCallInterface
-        this.appdatabase=appdatabase
-        this.graphClient=graphClient
+
+    constructor(apiCallInterface: ApiCallInterface, appdatabase: AppDatabase, graphClient: GraphClient) {
+        this.apiCallInterface = apiCallInterface
+        this.appdatabase = appdatabase
+        this.graphClient = graphClient
     }
+
     val localData: List<AppLocalData>
         get() = appdatabase.appLocalDataDaoDao().all
     val wishListData: List<ItemData>
@@ -76,14 +79,16 @@ class Repository {
     fun getMenus(mid: String): Single<JsonElement> {
         return apiCallInterface.getMenus(mid)
     }
+
     fun getRecommendation(body: Body): Single<JsonElement> {
-        Log.i("MageNative","Cross-sell-3"+body)
-        return apiCallInterface.getRecommendations(Urls(context).shopdomain,Urls.CLIENT,Urls.TOKEN,"application/json",body)
+        Log.i("MageNative", "Cross-sell-3" + body)
+        return apiCallInterface.getRecommendations(Urls(context).shopdomain, Urls.CLIENT, Urls.TOKEN, "application/json", body)
     }
 
     fun getHomePage(mid: String): Single<JsonElement> {
         return apiCallInterface.getHomePage(mid)
     }
+
     fun setDevice(mid: String, device_id: String, email: String, type: String, unique_id: String): Single<JsonElement> {
         return apiCallInterface.setDevices(mid, device_id, email, type, unique_id)
     }
@@ -99,12 +104,15 @@ class Repository {
     fun getProductList(list: List<Storefront.ProductEdge>): Observable<Storefront.ProductEdge> {
         return Observable.fromIterable(list)
     }
+
     fun getProductListSlider(list: List<Storefront.Product>): Observable<Storefront.Product> {
         return Observable.fromIterable(list)
     }
+
     fun getJSonArray(list: JsonArray): Observable<JsonElement> {
         return Observable.fromIterable(list)
     }
+
     fun insertData(data: AppLocalData) {
         appdatabase.appLocalDataDaoDao().insert(data)
     }
@@ -174,13 +182,17 @@ class Repository {
         appdatabase.appLocalDataDaoDao().deletealldata()
         appdatabase.appLocalDataDaoDao().deleteall()
     }
+
     fun insertPreviewData(data: LivePreviewData) {
         appdatabase.getLivePreviewDao().insert(data)
     }
+
     fun updatePreviewData(data: LivePreviewData) {
         appdatabase.getLivePreviewDao().update(data)
     }
+
     fun getPreviewData(): List<LivePreviewData> {
         return appdatabase.getLivePreviewDao().getPreviewDetails
     }
+
 }

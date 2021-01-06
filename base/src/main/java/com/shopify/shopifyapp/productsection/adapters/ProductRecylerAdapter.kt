@@ -19,8 +19,9 @@ import com.shopify.shopifyapp.productsection.viewholders.ProductItem
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import java.math.BigDecimal
 import javax.inject.Inject
+
 class ProductRecylerAdapter @Inject
- constructor() : RecyclerView.Adapter<ProductItem>() {
+constructor() : RecyclerView.Adapter<ProductItem>() {
     private var layoutInflater: LayoutInflater? = null
     lateinit var products: MutableList<Storefront.ProductEdge>
     private var activity: Activity? = null
@@ -57,7 +58,7 @@ class ProductRecylerAdapter @Inject
     override fun onBindViewHolder(holder: ProductItem, position: Int) {
         val variant = this.products[position].node.variants.edges[0].node
         val data = ListData()
-        Log.i("MageNative","Product ID"+this.products[position].node.id)
+        Log.i("MageNative", "Product ID" + this.products[position].node.id)
         data.product = this.products[position].node
         data.textdata = this.products[position].node.title
         data.description = this.products[position].node.description
@@ -113,7 +114,9 @@ class ProductRecylerAdapter @Inject
         }
         holder.binding!!.listdata = data
         val model = CommanModel()
-        model.imageurl = this.products[position].node.images.edges[0].node.transformedSrc
+        if (this.products[position].node.images.edges.size > 0) {
+            model.imageurl = this.products[position].node.images.edges[0].node.transformedSrc
+        }
         holder.binding!!.commondata = model
         holder.binding!!.clickproduct = Product()
     }

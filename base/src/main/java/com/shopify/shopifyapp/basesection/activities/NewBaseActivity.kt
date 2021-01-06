@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.basesection.activities
+
 import android.app.Dialog
 import android.app.PendingIntent
 import android.content.Intent
@@ -66,36 +67,44 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
     @BindView(R2.id.toolbar)
     lateinit var toolbar: Toolbar
+
     @BindView(R2.id.fab)
     lateinit var fab: FloatingActionButton
+
     @BindView(R2.id.toolimage)
     lateinit var toolimage: ImageView
+
     @BindView(R2.id.tooltext)
     lateinit var tooltext: MageNativeTextView
+
     @BindView(R2.id.searchsection)
     lateinit var searchsection: RelativeLayout
+
     @BindView(R2.id.drawer_layout)
     lateinit var drawer_layout: DrawerLayout
+
     @BindView(R2.id.search)
     lateinit var search: MageNativeTextView
     private var mDrawerToggle: ActionBarDrawerToggle? = null
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     var model: LeftMenuViewModel? = null
-     var wishtextView:TextView?=null
-    var textView:TextView?=null
-    private set
+    var wishtextView: TextView? = null
+    var textView: TextView? = null
+        private set
+
     @Inject
     lateinit var adapter: RecylerAdapter
     private var listDialog: Dialog? = null
-     val cartCount: Int
+    val cartCount: Int
         get() {
             Log.i("MageNative", "Cart Count : " + model!!.cartCount)
             return model!!.cartCount
         }
-   lateinit var item:MenuItem
-   lateinit var wishitem:MenuItem
-   lateinit var cartitem:MenuItem
+    lateinit var item: MenuItem
+    lateinit var wishitem: MenuItem
+    lateinit var cartitem: MenuItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_newbaseactivity)
@@ -109,22 +118,24 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         tooltext!!.textSize = 14f
         showHumburger()
         fab.setOnClickListener {
-            var builder =  CustomTabsIntent.Builder()
+            var builder = CustomTabsIntent.Builder()
             var customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(this, Uri.parse("https://cedcommerce.com/magenativeapp.html?name="+resources.getString(R.string.app_name)));
+            customTabsIntent.launchUrl(this, Uri.parse("https://cedcommerce.com/magenativeapp.html?name=" + resources.getString(R.string.app_name)));
         }
     }
+
     init {
         updateConfig(this)
     }
 
     fun updateConfig(wrapper: ContextThemeWrapper) {
-        var dLocale =Locale(Constant.locale)
+        var dLocale = Locale(Constant.locale)
         Locale.setDefault(dLocale)
         val configuration = Configuration()
         configuration.setLocale(dLocale)
         wrapper.applyOverrideConfiguration(configuration)
     }
+
     private fun setToggle() {
         mDrawerToggle = object : ActionBarDrawerToggle(this@NewBaseActivity, drawer_layout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerOpened(drawerView: View) {
@@ -232,24 +243,38 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             "horizontal" -> {
                 manager.orientation = RecyclerView.HORIZONTAL
                 view.layoutManager = manager
-                view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(1), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(1), true))
+                }
+
             }
             "vertical" -> {
                 manager.orientation = RecyclerView.VERTICAL
                 view.layoutManager = manager
-                view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(2), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(2), true))
+                }
+
             }
             "grid" -> {
                 view.layoutManager = GridLayoutManager(this, 2)
-                view.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(0), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(0), true))
+                }
+
             }
             "3grid" -> {
                 view.layoutManager = GridLayoutManager(this, 3)
-                view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(4), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(4), true))
+                }
+
             }
-            "customisablegrid"->{
+            "customisablegrid" -> {
                 view.layoutManager = GridLayoutManager(this, 3)
-                view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(4), true))
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(4), true))
+                }
             }
         }
         return view
@@ -278,7 +303,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             startActivity(searchpage)
         }
         val notifCount = cartitem.actionView
-         textView = notifCount.findViewById<TextView>(R.id.count)
+        textView = notifCount.findViewById<TextView>(R.id.count)
         textView!!.text = "" + cartCount
         notifCount.setOnClickListener {
             val mycartlist = Intent(this, CartList::class.java)
@@ -293,41 +318,45 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         }
         return true
     }
+
     override fun onResume() {
         super.onResume()
-        when(getPackageName()){
-            "com.shopify.shopifyapp"->{
-               fab.visibility=View.VISIBLE
-            }else->{
-               fab.visibility=View.GONE
+        when (getPackageName()) {
+            "com.shopify.shopifyapp" -> {
+                fab.visibility = View.VISIBLE
+            }
+            else -> {
+                fab.visibility = View.GONE
             }
         }
     }
-    fun setSearchOption(type:String,placeholder:String){
-        when(type){
-            "middle-width-search"->{
+
+    fun setSearchOption(type: String, placeholder: String) {
+        when (type) {
+            "middle-width-search" -> {
                 item.setVisible(false)
-                toolimage.visibility=View.GONE
-                searchsection.visibility=View.VISIBLE
-                search.text=placeholder
+                toolimage.visibility = View.GONE
+                searchsection.visibility = View.VISIBLE
+                search.text = placeholder
                 search.setOnClickListener {
                     val searchpage = Intent(this@NewBaseActivity, AutoSearch::class.java)
                     startActivity(searchpage)
                 }
             }
-            "full-width-search"->{
+            "full-width-search" -> {
                 item.setVisible(false)
-                toolimage.visibility=View.VISIBLE
-                searchsection.visibility=View.GONE
+                toolimage.visibility = View.VISIBLE
+                searchsection.visibility = View.GONE
             }
-            else->{
+            else -> {
                 item.setVisible(true)
-                toolimage.visibility=View.VISIBLE
-                searchsection.visibility=View.GONE
+                toolimage.visibility = View.VISIBLE
+                searchsection.visibility = View.GONE
             }
         }
     }
-    fun setWishList(visiblity:String) {
+
+    fun setWishList(visiblity: String) {
         when (visiblity) {
             "1" -> {
                 wishitem.setVisible(true)
@@ -337,9 +366,10 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             }
         }
     }
-    fun setLogoImage(url:String){
-        if(!this.isDestroyed){
-            Log.i("MageNative","Image URL"+url)
+
+    fun setLogoImage(url: String) {
+        if (!this.isDestroyed) {
+            Log.i("MageNative", "Image URL" + url)
             Glide.with(this)
                     .load(url)
                     .thumbnail(0.5f)
@@ -347,10 +377,12 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                     .into(toolimage)
         }
     }
-    fun setPanelBackgroundColor(color:String){
+
+    fun setPanelBackgroundColor(color: String) {
         toolbar.setBackgroundColor(Color.parseColor(color.toUpperCase()))
     }
-    fun setIconColors(countback:String,counttext:String,iconcolor:String){
+
+    fun setIconColors(countback: String, counttext: String, iconcolor: String) {
         val wishview = wishitem.actionView
         val cartview = cartitem.actionView
         val searchview = item.actionView
@@ -360,8 +392,8 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         val cartrelative = cartview.findViewById<RelativeLayout>(R.id.back)
         val carttext = cartview.findViewById<TextView>(R.id.count)
         val carticon = cartview.findViewById<FontTextView>(R.id.cart_icon)
-        wishrelative.backgroundTintList=ColorStateList.valueOf(Color.parseColor(countback))
-        cartrelative.backgroundTintList=ColorStateList.valueOf(Color.parseColor(countback))
+        wishrelative.backgroundTintList = ColorStateList.valueOf(Color.parseColor(countback))
+        cartrelative.backgroundTintList = ColorStateList.valueOf(Color.parseColor(countback))
         wishtext.setTextColor(Color.parseColor(counttext))
         carttext.setTextColor(Color.parseColor(counttext))
         wishicon.setTextColor(Color.parseColor(iconcolor))
@@ -370,13 +402,15 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         searchicon.setTextColor(Color.parseColor(iconcolor))
         mDrawerToggle!!.getDrawerArrowDrawable().setColor(Color.parseColor(iconcolor));
     }
-    fun setSearchOptions(searchback:String,searchtext:String,searhcborder:String){
+
+    fun setSearchOptions(searchback: String, searchtext: String, searhcborder: String) {
         var draw: GradientDrawable = search.background as GradientDrawable
         draw.setColor(Color.parseColor(searchback))
         search.setTextColor(Color.parseColor(searchtext))
         search.setHintTextColor(Color.parseColor(searchtext))
         draw.setStroke(5, Color.parseColor(searhcborder));
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
@@ -385,23 +419,23 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                 Toast.makeText(this, "" + resources.getString(R.string.noresultfound), Toast.LENGTH_LONG).show()
                 finish()
             } else {
-                when(result.formatName){
-                    "QR_CODE"->{
-                        try{
+                when (result.formatName) {
+                    "QR_CODE" -> {
+                        try {
                             AESEnDecryption().data()
-                            var json=JSONObject(result.contents)
-                            if(json.has("mid")){
-                                Log.i("MageNative","Barcode"+result)
-                                Log.i("MageNative","Barcode"+result.contents)
+                            var json = JSONObject(result.contents)
+                            if (json.has("mid")) {
+                                Log.i("MageNative", "Barcode" + result)
+                                Log.i("MageNative", "Barcode" + result.contents)
 
                                 model!!.insertPreviewData(json)
                                 model!!.logOut()
-                                var intent =Intent(this,Splash::class.java)
+                                var intent = Intent(this, Splash::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
                             }
-                        }catch (ex:Exception){
+                        } catch (ex: Exception) {
                             ex.printStackTrace()
                         }
                     }
