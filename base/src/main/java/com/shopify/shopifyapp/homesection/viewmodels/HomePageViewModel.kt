@@ -723,7 +723,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                 adapter = CollectionGridAdapter()
                                 adapter!!.setData(list, context, jsonObject!!)
                                 binding!!.categorylist.adapter = adapter
-                                adapter!!.notifyDataSetChanged()
+                             //   adapter!!.notifyDataSetChanged()
                             }
                             override fun onError(e: Throwable) {
                                 e.printStackTrace()
