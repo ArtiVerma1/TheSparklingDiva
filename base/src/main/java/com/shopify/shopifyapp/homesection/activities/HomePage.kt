@@ -50,10 +50,10 @@ class HomePage : NewBaseActivity() {
             homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
             homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
         }
-        GlobalScope.launch(Dispatchers.Main) {
+       // GlobalScope.launch(Dispatchers.Main) {
             homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })
             homemodel!!.getHomePageData().observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
-        }
+        //}
     }
     fun consumeResponse(data:String){
         Toast.makeText(this,data,Toast.LENGTH_LONG).show()
