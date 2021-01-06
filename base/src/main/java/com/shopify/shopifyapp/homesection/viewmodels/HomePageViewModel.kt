@@ -21,6 +21,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.database.DataSnapshot
@@ -70,25 +72,33 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
     val message = MutableLiveData<String>()
     private val disposables = CompositeDisposable()
     val homepagedata = MutableLiveData<HashMap<String, View>>()
+
     @Inject
     lateinit var homeadapter: ProductSliderListAdapter
+
     @Inject
     lateinit var gridtwo: ProductSliderListAdapter
+
     @Inject
     lateinit var productListAdapter: ProductListSliderAdapter
+
     @Inject
     lateinit var adapter: CollectionGridAdapter
+
     @Inject
     lateinit var slideradapter: CollectionSliderAdapter
+
     @Inject
     lateinit var gridAdapter: ProductSliderGridAdapter
     lateinit var context: HomePage
     fun getHomePageData(): MutableLiveData<HashMap<String, View>> {
         return homepagedata
     }
+
     fun getToastMessage(): MutableLiveData<String> {
         return message;
     }
+
     private fun setPresentmentCurrencyForModel() {
         try {
             val runnable = Runnable {
@@ -103,8 +113,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             e.printStackTrace()
         }
     }
+
     //***************************************************************NEW hompage changes*************************************************//
-    internal fun connectFirebaseForHomePageData(context: HomePage,homepage:LinearLayoutCompat) {
+    internal fun connectFirebaseForHomePageData(context: HomePage, homepage: LinearLayoutCompat) {
         try {
             setPresentmentCurrencyForModel()
             this.context = context
@@ -113,7 +124,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val downloadlink = dataSnapshot.getValue(String::class.java)!!
                     Log.i("MageNative", "DownloadLink " + downloadlink)
-                    if(homepage.childCount>0){
+                    if (homepage.childCount > 0) {
                         homepage.removeAllViews()
                         homepage.invalidate()
                     }
@@ -142,7 +153,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     var part = names[data].toString().split("_")
                     var key: String = names[data].toString().replace(part.get(part.size - 1), "")
                     when (key) {
-                        "top-bar_","top-bar-without-slider_" -> {
+                        "top-bar_", "top-bar-without-slider_" -> {
                             topbar(obj.getJSONObject(names[data].toString()))
                         }
                         "category-circle_" -> {
@@ -161,13 +172,13 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             createCollectionGrid(obj.getJSONObject(names[data].toString()))
                         }
                         "standalone-banner_" -> {
-                           createStandAloneBanner(obj.getJSONObject(names[data].toString()))
+                            createStandAloneBanner(obj.getJSONObject(names[data].toString()))
                         }
                         "three-product-hv-layout_" -> {
-                           createHvLayout(obj.getJSONObject(names[data].toString()))
+                            createHvLayout(obj.getJSONObject(names[data].toString()))
                         }
                         "fixed-customisable-layout_" -> {
-                           createFixedCustomisableLayout(obj.getJSONObject(names[data].toString()))
+                            createFixedCustomisableLayout(obj.getJSONObject(names[data].toString()))
                         }
                         "collection-list-slider_" -> {
                             createCollectionListSlider(obj.getJSONObject(names[data].toString()))
@@ -182,12 +193,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private fun topbar(jsonObject: JSONObject) {
-        try{
+        try {
             Handler(Looper.getMainLooper()).post {
-                var binding:MTopbarBinding=DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
-                context.setSearchOption(jsonObject.getString("search_position"),jsonObject.getString("search_placeholder"))
+                var binding: MTopbarBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
+                context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
                 context.setWishList(jsonObject.getString("wishlist"))
-                if(jsonObject.has("logo_image_url")){
+                if (jsonObject.has("logo_image_url")) {
                     context.setLogoImage(jsonObject.getString("logo_image_url"))
                 }
                 binding.root.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
@@ -197,17 +208,17 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
                         JSONObject(jsonObject.getString("icon_color")).getString("color")
                 )
-                when(jsonObject.getString("search_position")){
-                    "middle-width-search"->{
+                when (jsonObject.getString("search_position")) {
+                    "middle-width-search" -> {
                         context.setSearchOptions(
                                 JSONObject(jsonObject.getString("search_background_color")).getString("color"),
                                 JSONObject(jsonObject.getString("search_text_color")).getString("color"),
                                 JSONObject(jsonObject.getString("search_border_color")).getString("color")
                         )
                     }
-                    "full-width-search"->{
-                        binding.fullsearch.visibility=View.VISIBLE
-                        binding.fullsearch.text=jsonObject.getString("search_placeholder")
+                    "full-width-search" -> {
+                        binding.fullsearch.visibility = View.VISIBLE
+                        binding.fullsearch.text = jsonObject.getString("search_placeholder")
                         binding.fullsearch.setOnClickListener {
                             val searchpage = Intent(context, AutoSearch::class.java)
                             context.startActivity(searchpage)
@@ -219,30 +230,30 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         draw.setStroke(5, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
                     }
                 }
-                if(jsonObject.has("item_banner")&&jsonObject.getString("item_banner").equals("1")){
-                    var common=CommanModel()
-                    var adp= HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
-                    binding!!.bannerss.adapter =adp
+                if (jsonObject.has("item_banner") && jsonObject.getString("item_banner").equals("1")) {
+                    var common = CommanModel()
+                    var adp = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
+                    binding!!.bannerss.adapter = adp
                     adp.notifyDataSetChanged()
 
-                    binding.bannersection.backgroundTintList= ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-                    binding!!.bannerss.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+                    binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                    binding!!.bannerss.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                         override fun onPageScrollStateChanged(state: Int) {
 
                         }
 
                         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                                               }
+                        }
 
                         override fun onPageSelected(position: Int) {
-                            common.imageurl=jsonObject.getJSONArray("items").getJSONObject(position).getString("image_url")
+                            common.imageurl = jsonObject.getJSONArray("items").getJSONObject(position).getString("image_url")
                         }
 
                     })
-                    binding.bannersection.backgroundTintList= ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-                    if(jsonObject.getString("shape").equals("square")){
-                        binding.card.radius=0f
-                        binding.card.cardElevation=0f
+                    binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                    if (jsonObject.getString("shape").equals("square")) {
+                        binding.card.radius = 0f
+                        binding.card.cardElevation = 0f
                     }
                     if (jsonObject.getString("item_dots").equals("1")) {
                         var background = JSONObject(jsonObject.getString("active_dot_color"))
@@ -251,15 +262,15 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         binding!!.indicators.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
                         binding!!.indicators.setViewPager(binding!!.bannerss)
                     }
-                    common.imageurl=jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-                    binding.commondata=common
-                    binding.bannersection.visibility=View.VISIBLE
-                    binding.backImage.visibility=View.VISIBLE
-                    binding.overlay.visibility=View.VISIBLE
+                    common.imageurl = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+                    binding.commondata = common
+                    binding.bannersection.visibility = View.VISIBLE
+                    binding.backImage.visibility = View.VISIBLE
+                    binding.overlay.visibility = View.VISIBLE
                 }
                 homepagedata.setValue(hashMapOf("top-bar_" to binding.root))
             }
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
@@ -267,10 +278,10 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
     private fun createFixedCustomisableLayout(jsonObject: JSONObject) {
         try {
             Handler(Looper.getMainLooper()).post {
-                var binding:MFixedcustomisableBinding=DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_fixedcustomisable, null, false)
+                var binding: MFixedcustomisableBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_fixedcustomisable, null, false)
                 var productSlider = ProductSlider()
                 updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), " ", jsonObject)
-               // updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), "152927698980", jsonObject)
+                // updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), "152927698980", jsonObject)
                 var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
                 var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
                 binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
@@ -280,7 +291,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     productSlider.headertext = jsonObject.getString("header_title_text")
                     var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
                     binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
-                    binding.headertext.textSize=20f
+                    binding.headertext.textSize = 20f
                     val face: Typeface
                     when (jsonObject.getString("header_title_font_weight")) {
                         "bold" -> {
@@ -323,12 +334,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
                         productSlider.timertextmessage = jsonObject.getString("item_deal_message")
                         var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
-                        var sdf =  SimpleDateFormat(DATE_FORMAT);
+                        var sdf = SimpleDateFormat(DATE_FORMAT);
                         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        var item_deal_start_date = sdf.format( Date())
-                        Log.i("MageNative","item_deal_start_date "+item_deal_start_date)
+                        var item_deal_start_date = sdf.format(Date())
+                        Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
                         var item_deal_end_date = jsonObject.getString("item_deal_end_date")
-                        Log.i("MageNative","item_deal_end_date "+item_deal_end_date)
+                        Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
                         var startdate: Date?
                         var enddate: Date?
                         try {
@@ -337,12 +348,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             var oldLong = startdate.getTime()
                             var NewLong = enddate.getTime()
                             var diff = NewLong - oldLong
-                            Log.i("MageNative","Long"+diff)
-                            if(diff>0){
-                               // var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
+                            Log.i("MageNative", "Long" + diff)
+                            if (diff > 0) {
+                                // var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
                                 var counter = MyCount(diff, 1000, productSlider, ":");
                                 counter.start()
-                            }else{
+                            } else {
                                 productSlider.timericon = View.GONE
                             }
                         } catch (ex: ParseException) {
@@ -382,7 +393,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 binding.productslider = productSlider
                 homepagedata.setValue(hashMapOf("fixed-customisable-layout_" to binding.root))
             }
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
@@ -402,7 +413,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     productSlider.headertextvisibility = View.VISIBLE
                     productSlider.headertext = jsonObject.getString("header_title_text")
                     binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
-                    binding.headertext.textSize=20f
+                    binding.headertext.textSize = 20f
                     val face: Typeface
                     when (jsonObject.getString("header_title_font_weight")) {
                         "bold" -> {
@@ -440,21 +451,21 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     productSlider.headertextvisibility = View.GONE
                 }
                 context.setLayout(binding!!.productdata, "horizontal")
-                slideradapter= CollectionSliderAdapter()
+                slideradapter = CollectionSliderAdapter()
                 slideradapter!!.setData(jsonObject!!.getJSONArray("items"), context, jsonObject!!)
                 binding!!.productdata.adapter = slideradapter
                 slideradapter!!.notifyDataSetChanged()
                 binding.productslider = productSlider
                 homepagedata.setValue(hashMapOf("collection-list-slider_" to binding.root))
             }
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
     private fun createHvLayout(jsonObject: JSONObject) {
-        try{
-            Handler(Looper.getMainLooper()).post{
+        try {
+            Handler(Looper.getMainLooper()).post {
                 var binding: MProductHvLayoutBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_hv_layout, null, false)
                 var productSlider = ProductSlider()
                 var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
@@ -468,7 +479,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
                 if (jsonObject.getString("header").equals("1")) {
                     productSlider.headertextvisibility = View.VISIBLE
-                    binding.headertext.textSize=20f
+                    binding.headertext.textSize = 20f
                     productSlider.headertext = jsonObject.getString("header_title_text")
                     binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
                     val face: Typeface
@@ -511,12 +522,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
                         productSlider.timertextmessage = jsonObject.getString("item_deal_message")
                         var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
-                        var sdf =  SimpleDateFormat(DATE_FORMAT)
+                        var sdf = SimpleDateFormat(DATE_FORMAT)
                         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        var item_deal_start_date = sdf.format( Date())
-                        Log.i("MageNative","item_deal_start_date "+item_deal_start_date)
+                        var item_deal_start_date = sdf.format(Date())
+                        Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
                         var item_deal_end_date = jsonObject.getString("item_deal_end_date")
-                        Log.i("MageNative","item_deal_end_date "+item_deal_end_date)
+                        Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
                         var startdate: Date?
                         var enddate: Date?
                         try {
@@ -525,12 +536,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             var oldLong = startdate.getTime()
                             var NewLong = enddate.getTime()
                             var diff = NewLong - oldLong
-                            Log.i("MageNative","Long"+diff)
-                            if(diff>0){
+                            Log.i("MageNative", "Long" + diff)
+                            if (diff > 0) {
                                 //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                                 var counter = MyCount(diff, 1000, productSlider, ":");
+                                var counter = MyCount(diff, 1000, productSlider, ":");
                                 counter.start()
-                            }else{
+                            } else {
                                 productSlider.timericon = View.GONE
                             }
                         } catch (ex: ParseException) {
@@ -567,47 +578,47 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 }
 
                 /**************first hv***************************/
-                productSlider.hvimageone=jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-               // productSlider.hvimageone="https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
-                productSlider.hvnameone=jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-                productSlider.hvtypeone=jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-                productSlider.hvvalueone=jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+                productSlider.hvimageone = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+                // productSlider.hvimageone="https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
+                productSlider.hvnameone = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+                productSlider.hvtypeone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+                productSlider.hvvalueone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
                 /**************second hv***************************/
-                productSlider.hvimagetwo=jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+                productSlider.hvimagetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
                 //productSlider.hvimagetwo="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
-                productSlider.hvnametwo=jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-                productSlider.hvtypetwo=jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-                productSlider.hvvaluetwo=jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+                productSlider.hvnametwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+                productSlider.hvtypetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+                productSlider.hvvaluetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
                 /**************third hv***************************/
-                productSlider.hvimagethree=jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+                productSlider.hvimagethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
                 //productSlider.hvimagethree="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
-                productSlider.hvnamethree=jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-                productSlider.hvtypethree=jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-                productSlider.hvvaluethree=jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
-                when(jsonObject.getString("item_text_alignment")){
-                    "left"->{
-                        productSlider.textaligment=Gravity.START
+                productSlider.hvnamethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+                productSlider.hvtypethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+                productSlider.hvvaluethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+                when (jsonObject.getString("item_text_alignment")) {
+                    "left" -> {
+                        productSlider.textaligment = Gravity.START
                     }
-                    "right"->{
-                        productSlider.textaligment=Gravity.END
+                    "right" -> {
+                        productSlider.textaligment = Gravity.END
                     }
                 }
-                if(jsonObject.getString("item_shape").equals("rounded")){
-                    binding.firsthvsection.cardElevation=8f
-                    binding.firsthvsection.radius=10f
-                    binding.secondhvcard.cardElevation=8f
-                    binding.secondhvcard.radius=10f
-                    binding.thirdhvcard.cardElevation=8f
-                    binding.thirdhvcard.radius=10f
+                if (jsonObject.getString("item_shape").equals("rounded")) {
+                    binding.firsthvsection.cardElevation = 8f
+                    binding.firsthvsection.radius = 10f
+                    binding.secondhvcard.cardElevation = 8f
+                    binding.secondhvcard.radius = 10f
+                    binding.thirdhvcard.cardElevation = 8f
+                    binding.thirdhvcard.radius = 10f
                 }
-                if(jsonObject.getString("item_border").equals("1")){
+                if (jsonObject.getString("item_border").equals("1")) {
                     var background = JSONObject(jsonObject.getString("item_border_color"))
                     binding.firsthvsection.setCardBackgroundColor(Color.parseColor(background.getString("color")))
                     binding.secondhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
                     binding.thirdhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.hvimagOne.setPadding(8,8,8,8)
-                    binding.hvimagtwo.setPadding(8,8,8,8)
-                    binding.hvimagthree.setPadding(8,8,8,8)
+                    binding.hvimagOne.setPadding(8, 8, 8, 8)
+                    binding.hvimagtwo.setPadding(8, 8, 8, 8)
+                    binding.hvimagthree.setPadding(8, 8, 8, 8)
                 }
                 val face: Typeface
                 when (jsonObject.getString("item_title_font_weight")) {
@@ -629,27 +640,28 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 binding.productslider = productSlider
                 homepagedata.setValue(hashMapOf("three-product-hv-layout_" to binding.root))
             }
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
+
     private fun createStandAloneBanner(jsonObject: JSONObject) {
         Handler(Looper.getMainLooper()).post {
             var binding: MStandlonebannerBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_standlonebanner, null, false)
-            var runnable=Runnable {
-                var stand=StandAloneBanner()
-                stand.image=jsonObject.getString("banner_url")
+            var runnable = Runnable {
+                var stand = StandAloneBanner()
+                stand.image = jsonObject.getString("banner_url")
                 Handler(Looper.getMainLooper()).post {
-                    when(jsonObject.getString("item_button_position")){
-                        "no-btn"->{
-                            binding.sectionOne.visibility=View.GONE
-                            binding.sectionTwo.visibility=View.GONE
-                            stand.bannerlink=jsonObject.getString("banner_link_value")
-                            stand.bannertype=jsonObject.getString("banner_link_type")
+                    when (jsonObject.getString("item_button_position")) {
+                        "no-btn" -> {
+                            binding.sectionOne.visibility = View.GONE
+                            binding.sectionTwo.visibility = View.GONE
+                            stand.bannerlink = jsonObject.getString("banner_link_value")
+                            stand.bannertype = jsonObject.getString("banner_link_type")
                         }
-                        "bottom"->{
-                            var buttononeparams= (binding.sectionOne.layoutParams as ConstraintLayout.LayoutParams)
-                            var buttontwoparams= (binding.sectionTwo.layoutParams as ConstraintLayout.LayoutParams)
+                        "bottom" -> {
+                            var buttononeparams = (binding.sectionOne.layoutParams as ConstraintLayout.LayoutParams)
+                            var buttontwoparams = (binding.sectionTwo.layoutParams as ConstraintLayout.LayoutParams)
                             buttononeparams.topToTop = ConstraintSet.GONE
                             buttontwoparams.topToTop = ConstraintSet.GONE
                         }
@@ -688,7 +700,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             binding.buttonOne.setTypeface(binding.buttonOne.getTypeface(), Typeface.ITALIC);
                             binding.buttonTwo.setTypeface(binding.buttonTwo.getTypeface(), Typeface.ITALIC);
                         }
-                        if(jsonObject.has("banner_link_value")){
+                        if (jsonObject.has("banner_link_value")) {
                             stand.bannerlink = jsonObject.getString("banner_link_value")
                         }
                         stand.buttononetype = jsonObject.getString("first_button_link_type")
@@ -697,7 +709,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         stand.buttontwolink = jsonObject.getString("second_button_link_value")
                     }
                 }
-                binding.stand=stand
+                binding.stand = stand
             }
             Thread(runnable).start()
             homepagedata.setValue(hashMapOf("standalone-banner_" to binding.root))
@@ -711,7 +723,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             try {
                 repository.getJSonArray(JsonParser().parse(jsonObject!!.getString("items")).asJsonArray)
                         .subscribeOn(Schedulers.io())
-                        .filter{x->x.asJsonObject.get("link_type").asString.isNotEmpty()}
+                        .filter { x -> x.asJsonObject.get("link_type").asString.isNotEmpty() }
                         .toList()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(object : SingleObserver<List<JsonElement>> {
@@ -723,8 +735,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                 adapter = CollectionGridAdapter()
                                 adapter!!.setData(list, context, jsonObject!!)
                                 binding!!.categorylist.adapter = adapter
-                             //   adapter!!.notifyDataSetChanged()
+                                //   adapter!!.notifyDataSetChanged()
                             }
+
                             override fun onError(e: Throwable) {
                                 e.printStackTrace()
                             }
@@ -745,16 +758,16 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             binding.category = category
             when (jsonObject.getString("item_shape")) {
                 "square" -> {
-                    binding.cardOne.cardElevation=0f
-                    binding.cardOne.radius=0f
-                    binding.cardTwo.cardElevation=0f
-                    binding.cardTwo.radius=0f
-                    binding.cardThree.cardElevation=0f
-                    binding.cardThree.radius=0f
-                    binding.cardFour.cardElevation=0f
-                    binding.cardFour.radius=0f
-                    binding.cardFive.cardElevation=0f
-                    binding.cardFive.radius=0f
+                    binding.cardOne.cardElevation = 0f
+                    binding.cardOne.radius = 0f
+                    binding.cardTwo.cardElevation = 0f
+                    binding.cardTwo.radius = 0f
+                    binding.cardThree.cardElevation = 0f
+                    binding.cardThree.radius = 0f
+                    binding.cardFour.cardElevation = 0f
+                    binding.cardFour.radius = 0f
+                    binding.cardFive.cardElevation = 0f
+                    binding.cardFive.radius = 0f
                 }
             }
             var background = JSONObject(jsonObject.getString("panel_background_color"))
@@ -822,9 +835,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
             category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
             category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
-            if(jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")){
+            if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
                 category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
-            }else{
+            } else {
                 category.cat_value_five = "list_collection"
             }
             category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
@@ -869,7 +882,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         productSlider.actiontextvisibity = View.VISIBLE
                         productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
                         productSlider.actiontext = jsonObject.getString("header_action_text")
-                        binding.headertext.textSize=20f
+                        binding.headertext.textSize = 20f
                         binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
                         binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
                         val face: Typeface
@@ -917,12 +930,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
                         productSlider.timertextmessage = jsonObject.getString("item_deal_message")
                         var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
-                        var sdf =  SimpleDateFormat(DATE_FORMAT)
+                        var sdf = SimpleDateFormat(DATE_FORMAT)
                         sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
-                        var item_deal_start_date = sdf.format( Date())
-                        Log.i("MageNative","item_deal_start_date "+item_deal_start_date)
+                        var item_deal_start_date = sdf.format(Date())
+                        Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
                         var item_deal_end_date = jsonObject.getString("item_deal_end_date")
-                        Log.i("MageNative","item_deal_end_date "+item_deal_end_date)
+                        Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
                         var startdate: Date?
                         var enddate: Date?
                         try {
@@ -931,12 +944,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             var oldLong = startdate.getTime()
                             var NewLong = enddate.getTime()
                             var diff = NewLong - oldLong
-                            Log.i("MageNative","Long"+diff)
-                            if(diff>0){
+                            Log.i("MageNative", "Long" + diff)
+                            if (diff > 0) {
                                 //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
                                 var counter = MyCount(diff, 1000, productSlider, ":");
                                 counter.start()
-                            }else{
+                            } else {
                                 productSlider.timericon = View.GONE
                             }
                         } catch (ex: ParseException) {
@@ -958,10 +971,10 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun updateDataInRecylerView(productdata: RecyclerView?, jsonArray: JSONArray, cat_id: String, jsonObject: JSONObject) {
         try {
-            val edges= mutableListOf<Storefront.Product>()
+            val edges = mutableListOf<Storefront.Product>()
             var runnable = Runnable {
-                for(i in 0..jsonArray.length()-1){
-                    getProductsById(jsonArray.getString(i), productdata, jsonArray, jsonObject,edges)
+                for (i in 0..jsonArray.length() - 1) {
+                    getProductsById(jsonArray.getString(i), productdata, jsonArray, jsonObject, edges)
                 }
             }
             Thread(runnable).start()
@@ -970,14 +983,14 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getProductsById(id: String, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject,edges:MutableList<Storefront.Product>) {
+    fun getProductsById(id: String, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
         try {
             val call = repository.graphClient.queryGraph(Query.getProductById(getProductID(id)!!))
             call.enqueue(Handler(Looper.getMainLooper())) { result ->
                 if (result is GraphCallResult.Success<*>) {
-                    consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject,edges)
+                    consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
                 } else {
-                    consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject,edges)
+                    consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
                 }
             }
         } catch (e: Exception) {
@@ -990,13 +1003,14 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
         try {
             val data = Base64.encode(("gid://shopify/Product/" + id!!).toByteArray(), Base64.DEFAULT)
             cat_id = String(data, Charset.defaultCharset()).trim { it <= ' ' }
-            Log.i("MageNatyive","ProductSliderID :$id "+cat_id)
+            Log.i("MageNatyive", "ProductSliderID :$id " + cat_id)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
         return cat_id
     }
+
     private fun getcategoryID(id: String?): String? {
         var cat_id: String? = null
         try {
@@ -1009,7 +1023,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
         return cat_id
     }
 
-    private fun consumeResponse(reponse: GraphQLResponse, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject,edges:MutableList<Storefront.Product>) {
+    private fun consumeResponse(reponse: GraphQLResponse, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
         when (reponse.status) {
             Status.SUCCESS -> {
                 val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
@@ -1022,7 +1036,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         error = iterator.next()
                         errormessage.append(error.message())
                     }
-                    Log.i("MageNatyive","ERROR"+errormessage.toString())
+                    Log.i("MageNatyive", "ERROR" + errormessage.toString())
                     message.setValue(errormessage.toString())
                 } else {
                     try {
@@ -1031,10 +1045,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         if (edges.size == jsonArray.length()) {
                             filterProduct(edges, productdata, jsonArray, jsonObject)
                         }
-                    }
-                    catch (e: Exception) {
+                    } catch (e: Exception) {
                         e.printStackTrace()
-                        when(context!!.getPackageName()) {
+                        when (context!!.getPackageName()) {
                             "com.shopify.shopifyapp" -> {
                                 Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
                             }
@@ -1044,7 +1057,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
             Status.ERROR -> {
-                Log.i("MageNatyive","ERROR-1"+reponse.error!!.error.message)
+                Log.i("MageNatyive", "ERROR-1" + reponse.error!!.error.message)
                 message.setValue(reponse.error!!.error.message)
             }
         }
@@ -1063,25 +1076,25 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         }
 
                         override fun onSuccess(list: List<Storefront.Product>) {
-                            when(jsonObject.getString("type")){
-                                "fixed-customisable-layout"->{
-                                    if(jsonObject.getString("item_layout_type").equals("list")){
+                            when (jsonObject.getString("type")) {
+                                "fixed-customisable-layout" -> {
+                                    if (jsonObject.getString("item_layout_type").equals("list")) {
                                         productListAdapter = ProductListSliderAdapter()
                                         productListAdapter!!.presentmentcurrency = presentmentCurrency
                                         context.setLayout(productdata!!, "vertical")
                                         productListAdapter!!.setData(list, context, jsonObject)
                                         productdata!!.adapter = productListAdapter
-                                    }else{
-                                        when(jsonObject.getString("item_in_a_row")){
-                                            "2"->{
+                                    } else {
+                                        when (jsonObject.getString("item_in_a_row")) {
+                                            "2" -> {
                                                 gridtwo = ProductSliderListAdapter()
                                                 gridtwo!!.presentmentcurrency = presentmentCurrency
                                                 context.setLayout(productdata!!, "grid")
                                                 gridtwo!!.setData(list, context, jsonObject)
                                                 productdata!!.adapter = gridtwo
                                             }
-                                            "3"->{
-                                                gridAdapter= ProductSliderGridAdapter()
+                                            "3" -> {
+                                                gridAdapter = ProductSliderGridAdapter()
                                                 gridAdapter!!.presentmentcurrency = presentmentCurrency
                                                 context.setLayout(productdata!!, "customisablegrid")
                                                 gridAdapter!!.setData(list, context, jsonObject)
@@ -1089,8 +1102,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                             }
                                         }
                                     }
-                                }else->{
-                                    Log.i("MageNatyive","Data"+list.size)
+                                }
+                                else -> {
+                                    Log.i("MageNatyive", "Data" + list.size)
                                     homeadapter = ProductSliderListAdapter()
                                     homeadapter!!.presentmentcurrency = presentmentCurrency
                                     context.setLayout(productdata!!, "horizontal")
@@ -1099,6 +1113,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                 }
                             }
                         }
+
                         override fun onError(e: Throwable) {
                             e.printStackTrace()
                         }
@@ -1133,7 +1148,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 var binding: MBannerSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_banner_slider, null, false)
                 binding!!.banners.adapter = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
                 if (jsonObject.getString("item_dots").equals("1")) {
-                    binding!!.indicator.visibility=View.VISIBLE
+                    binding!!.indicator.visibility = View.VISIBLE
                     var background = JSONObject(jsonObject.getString("active_dot_color"))
                     var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
                     binding!!.indicator.setDotIndicatorColor(Color.parseColor(background.getString("color")))
@@ -1184,19 +1199,19 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
                     }
                 }
-                if(jsonObject.getString("item_border").equals("1")){
+                if (jsonObject.getString("item_border").equals("1")) {
                     var item_border_color = JSONObject(jsonObject.getString("item_border_color"))
-                    binding.imageOne.tag=item_border_color.getString("color")
-                    binding.imageTwo.tag=item_border_color.getString("color")
-                    binding.imageThree.tag=item_border_color.getString("color")
-                    binding.imageFour.tag=item_border_color.getString("color")
-                    binding.imageFive.tag=item_border_color.getString("color")
-                }else{
-                    binding.imageOne.tag=background.getString("color")
-                    binding.imageTwo.tag=background.getString("color")
-                    binding.imageThree.tag=background.getString("color")
-                    binding.imageFour.tag=background.getString("color")
-                    binding.imageFive.tag=background.getString("color")
+                    binding.imageOne.tag = item_border_color.getString("color")
+                    binding.imageTwo.tag = item_border_color.getString("color")
+                    binding.imageThree.tag = item_border_color.getString("color")
+                    binding.imageFour.tag = item_border_color.getString("color")
+                    binding.imageFive.tag = item_border_color.getString("color")
+                } else {
+                    binding.imageOne.tag = background.getString("color")
+                    binding.imageTwo.tag = background.getString("color")
+                    binding.imageThree.tag = background.getString("color")
+                    binding.imageFour.tag = background.getString("color")
+                    binding.imageFive.tag = background.getString("color")
                 }
                 category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
                 category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
@@ -1211,9 +1226,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
                 category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
                 category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
-                if(jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")){
+                if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
                     category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
-                }else{
+                } else {
                     category.cat_value_five = "list_collection"
                 }
                 category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
@@ -1242,35 +1257,39 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             productSlider.timertext = hms
         }
     }
+
     private val api = MutableLiveData<ApiResponse>()
     private val bestapi = MutableLiveData<ApiResponse>()
     fun getApiResponse(): MutableLiveData<ApiResponse> {
-        getRecommendations("trending",api)
+        getRecommendations("trending", api)
         return api
     }
+
     fun getBestApiResponse(): MutableLiveData<ApiResponse> {
-        getRecommendations("bestsellers",bestapi)
+        getRecommendations("bestsellers", bestapi)
         return bestapi
     }
-    fun getRecommendations(recommendationType:String,api:MutableLiveData<ApiResponse>){
+
+    fun getRecommendations(recommendationType: String, api: MutableLiveData<ApiResponse>) {
         RetrofitUrlManager.getInstance().putDomain("douban", Urls.PERSONALISED);
         try {
-            var query= InnerData()
-            query.id=recommendationType
-            query.maxRecommendations=12
-            query.recommendationType=recommendationType
-            var body= Body()
-            body.queries= mutableListOf(query)
+            var query = InnerData()
+            query.id = recommendationType
+            query.maxRecommendations = 12
+            query.recommendationType = recommendationType
+            var body = Body()
+            body.queries = mutableListOf(query)
             disposables.add(repository.getRecommendation(body)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->  api.setValue(ApiResponse.success(result))},
+                    .subscribe({ result -> api.setValue(ApiResponse.success(result)) },
                             { throwable -> api.setValue(ApiResponse.error(throwable)) }
                     ))
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
     override fun onCleared() {
         disposables.clear()
     }
