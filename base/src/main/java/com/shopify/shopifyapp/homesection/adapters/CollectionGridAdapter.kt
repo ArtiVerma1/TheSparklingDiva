@@ -113,7 +113,9 @@ class CollectionGridAdapter @Inject
         }
     }
     override fun getItemCount(): Int {
+        Log.i("TEST",""+collectionEdges.size)
         return collectionEdges.size
+
     }
 
 }

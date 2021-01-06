@@ -211,6 +211,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                         if (presentCurrency != "nopresentmentcurrency") {
                             val currencyCode = Storefront.CurrencyCode.valueOf(presentCurrency)
                             input.presentmentCurrencyCode = currencyCode
+
                         }
                         val call = repository.graphClient.mutateGraph(Mutation.createCheckout(input))
                         call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.Mutation> -> this.invoke(result) }

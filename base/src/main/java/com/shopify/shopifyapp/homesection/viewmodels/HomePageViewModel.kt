@@ -161,13 +161,13 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             createCollectionGrid(obj.getJSONObject(names[data].toString()))
                         }
                         "standalone-banner_" -> {
-                           createStandAloneBanner(obj.getJSONObject(names[data].toString()))
+                            createStandAloneBanner(obj.getJSONObject(names[data].toString()))
                         }
                         "three-product-hv-layout_" -> {
-                           createHvLayout(obj.getJSONObject(names[data].toString()))
+                            createHvLayout(obj.getJSONObject(names[data].toString()))
                         }
                         "fixed-customisable-layout_" -> {
-                           createFixedCustomisableLayout(obj.getJSONObject(names[data].toString()))
+                            createFixedCustomisableLayout(obj.getJSONObject(names[data].toString()))
                         }
                         "collection-list-slider_" -> {
                             createCollectionListSlider(obj.getJSONObject(names[data].toString()))
@@ -232,7 +232,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         }
 
                         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                                               }
+                        }
 
                         override fun onPageSelected(position: Int) {
                             common.imageurl=jsonObject.getJSONArray("items").getJSONObject(position).getString("image_url")
@@ -270,7 +270,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 var binding:MFixedcustomisableBinding=DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_fixedcustomisable, null, false)
                 var productSlider = ProductSlider()
                 updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), " ", jsonObject)
-               // updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), "152927698980", jsonObject)
+                // updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), "152927698980", jsonObject)
                 var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
                 var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
                 binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
@@ -339,7 +339,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             var diff = NewLong - oldLong
                             Log.i("MageNative","Long"+diff)
                             if(diff>0){
-                               // var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
+                                // var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
                                 var counter = MyCount(diff, 1000, productSlider, ":");
                                 counter.start()
                             }else{
@@ -528,7 +528,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             Log.i("MageNative","Long"+diff)
                             if(diff>0){
                                 //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                                 var counter = MyCount(diff, 1000, productSlider, ":");
+                                var counter = MyCount(diff, 1000, productSlider, ":");
                                 counter.start()
                             }else{
                                 productSlider.timericon = View.GONE
@@ -568,7 +568,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
                 /**************first hv***************************/
                 productSlider.hvimageone=jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-               // productSlider.hvimageone="https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
+                // productSlider.hvimageone="https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
                 productSlider.hvnameone=jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
                 productSlider.hvtypeone=jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
                 productSlider.hvvalueone=jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
@@ -723,7 +723,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                 adapter = CollectionGridAdapter()
                                 adapter!!.setData(list, context, jsonObject!!)
                                 binding!!.categorylist.adapter = adapter
-                                adapter!!.notifyDataSetChanged()
+                            //    adapter!!.notifyDataSetChanged()
                             }
                             override fun onError(e: Throwable) {
                                 e.printStackTrace()
@@ -1090,13 +1090,13 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                         }
                                     }
                                 }else->{
-                                    Log.i("MageNatyive","Data"+list.size)
-                                    homeadapter = ProductSliderListAdapter()
-                                    homeadapter!!.presentmentcurrency = presentmentCurrency
-                                    context.setLayout(productdata!!, "horizontal")
-                                    homeadapter!!.setData(list, context, jsonObject)
-                                    productdata!!.adapter = homeadapter
-                                }
+                                Log.i("MageNatyive","Data"+list.size)
+                                homeadapter = ProductSliderListAdapter()
+                                homeadapter!!.presentmentcurrency = presentmentCurrency
+                                context.setLayout(productdata!!, "horizontal")
+                                homeadapter!!.setData(list, context, jsonObject)
+                                productdata!!.adapter = homeadapter
+                            }
                             }
                         }
                         override fun onError(e: Throwable) {
