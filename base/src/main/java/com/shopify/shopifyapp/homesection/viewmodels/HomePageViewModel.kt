@@ -1153,7 +1153,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
         var binding: MCategoryCircleBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_circle, null, false)
         var category = CategoryCircle()
         binding.category = category
-        var runnable = Runnable {
             var background = JSONObject(jsonObject.getString("panel_background_color"))
 
             binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
@@ -1219,7 +1218,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             }
             category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
             homepagedata.setValue(hashMapOf("category-circle_" to binding.root))
-        }
     }
 
     class MyCount : CountDownTimer {
