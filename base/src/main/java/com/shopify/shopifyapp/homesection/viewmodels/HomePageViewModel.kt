@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.homesection.viewmodels
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -51,6 +52,8 @@ import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.utils.Urls
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -72,6 +75,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
     val message = MutableLiveData<String>()
     private val disposables = CompositeDisposable()
     val homepagedata = MutableLiveData<HashMap<String, View>>()
+    private val TAG = "HomePageViewModel"
 
     @Inject
     lateinit var homeadapter: ProductSliderListAdapter
@@ -143,133 +147,138 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun dowloadJson(downloadlink: String) {
-        val runnable = Runnable {
-            val apiResponse = URL(downloadlink).readText()
-            Log.i("MageNative", "apiResponse " + apiResponse)
-            try {
-                var obj = JSONObject(apiResponse)
-                var names: JSONArray = obj.getJSONObject("sort_order").names()!!
-                for (data in 0..names.length() - 1) {
-                    var part = names[data].toString().split("_")
-                    var key: String = names[data].toString().replace(part.get(part.size - 1), "")
-                    when (key) {
-                        "top-bar_", "top-bar-without-slider_" -> {
-                            topbar(obj.getJSONObject(names[data].toString()))
-                        }
-                        "category-circle_" -> {
-                            createCategoryCircle(obj.getJSONObject(names[data].toString()))
-                        }
-                        "banner-slider_" -> {
-                            createBannerSlider(obj.getJSONObject(names[data].toString()))
-                        }
-                        "product-list-slider_" -> {
-                            createProductSlider(obj.getJSONObject(names[data].toString()))
-                        }
-                        "category-square_" -> {
-                            createCategorySquare(obj.getJSONObject(names[data].toString()))
-                        }
-                        "collection-grid-layout_" -> {
-                            createCollectionGrid(obj.getJSONObject(names[data].toString()))
-                        }
-                        "standalone-banner_" -> {
-                            createStandAloneBanner(obj.getJSONObject(names[data].toString()))
-                        }
-                        "three-product-hv-layout_" -> {
-                            createHvLayout(obj.getJSONObject(names[data].toString()))
-                        }
-                        "fixed-customisable-layout_" -> {
-                            createFixedCustomisableLayout(obj.getJSONObject(names[data].toString()))
-                        }
-                        "collection-list-slider_" -> {
-                            createCollectionListSlider(obj.getJSONObject(names[data].toString()))
-                        }
+        Observable.create(ObservableOnSubscribe<String> { emitter ->
+            emitter.onNext(URL(downloadlink).readText())
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result -> parseResponse(result) },
+                        { throwable -> throwable.printStackTrace() }
+                )
+    }
+
+    private fun parseResponse(apiResponse: String) {
+        try {
+            var obj = JSONObject(apiResponse)
+            var names: JSONArray = obj.getJSONObject("sort_order").names()!!
+            for (data in 0..names.length() - 1) {
+                var part = names[data].toString().split("_")
+                var key: String = names[data].toString().replace(part.get(part.size - 1), "")
+                Log.d(TAG, "parseResponse: " + key)
+                when (key) {
+                    "top-bar_", "top-bar-without-slider_" -> {
+                        topbar(obj.getJSONObject(names[data].toString()))
+                    }
+                    "category-circle_" -> {
+                        createCategoryCircle(obj.getJSONObject(names[data].toString()))
+                    }
+                    "banner-slider_" -> {
+                        createBannerSlider(obj.getJSONObject(names[data].toString()))
+                    }
+                    "product-list-slider_" -> {
+                        createProductSlider(obj.getJSONObject(names[data].toString()))
+                    }
+                    "category-square_" -> {
+                        createCategorySquare(obj.getJSONObject(names[data].toString()))
+                    }
+                    "collection-grid-layout_" -> {
+                        createCollectionGrid(obj.getJSONObject(names[data].toString()))
+                    }
+                    "standalone-banner_" -> {
+                        createStandAloneBanner(obj.getJSONObject(names[data].toString()))
+                    }
+                    "three-product-hv-layout_" -> {
+                        createHvLayout(obj.getJSONObject(names[data].toString()))
+                    }
+                    "fixed-customisable-layout_" -> {
+                        createFixedCustomisableLayout(obj.getJSONObject(names[data].toString()))
+                    }
+                    "collection-list-slider_" -> {
+                        createCollectionListSlider(obj.getJSONObject(names[data].toString()))
                     }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        Thread(runnable).start()
     }
 
     private fun topbar(jsonObject: JSONObject) {
         try {
-            Handler(Looper.getMainLooper()).post {
-                var binding: MTopbarBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
-                context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
-                context.setWishList(jsonObject.getString("wishlist"))
-                if (jsonObject.has("logo_image_url")) {
-                    context.setLogoImage(jsonObject.getString("logo_image_url"))
-                }
-                binding.root.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-                context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
-                context.setIconColors(
-                        JSONObject(jsonObject.getString("count_color")).getString("color"),
-                        JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
-                        JSONObject(jsonObject.getString("icon_color")).getString("color")
-                )
-                when (jsonObject.getString("search_position")) {
-                    "middle-width-search" -> {
-                        context.setSearchOptions(
-                                JSONObject(jsonObject.getString("search_background_color")).getString("color"),
-                                JSONObject(jsonObject.getString("search_text_color")).getString("color"),
-                                JSONObject(jsonObject.getString("search_border_color")).getString("color")
-                        )
-                    }
-                    "full-width-search" -> {
-                        binding.fullsearch.visibility = View.VISIBLE
-                        binding.fullsearch.text = jsonObject.getString("search_placeholder")
-                        binding.fullsearch.setOnClickListener {
-                            val searchpage = Intent(context, AutoSearch::class.java)
-                            context.startActivity(searchpage)
-                        }
-                        var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
-                        draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
-                        binding.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        binding.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        draw.setStroke(5, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
-                    }
-                }
-                if (jsonObject.has("item_banner") && jsonObject.getString("item_banner").equals("1")) {
-                    var common = CommanModel()
-                    var adp = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
-                    binding!!.bannerss.adapter = adp
-                    adp.notifyDataSetChanged()
-
-                    binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-                    binding!!.bannerss.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                        override fun onPageScrollStateChanged(state: Int) {
-
-                        }
-
-                        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                        }
-
-                        override fun onPageSelected(position: Int) {
-                            common.imageurl = jsonObject.getJSONArray("items").getJSONObject(position).getString("image_url")
-                        }
-
-                    })
-                    binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-                    if (jsonObject.getString("shape").equals("square")) {
-                        binding.card.radius = 0f
-                        binding.card.cardElevation = 0f
-                    }
-                    if (jsonObject.getString("item_dots").equals("1")) {
-                        var background = JSONObject(jsonObject.getString("active_dot_color"))
-                        var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
-                        binding!!.indicators.setDotIndicatorColor(Color.parseColor(background.getString("color")))
-                        binding!!.indicators.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
-                        binding!!.indicators.setViewPager(binding!!.bannerss)
-                    }
-                    common.imageurl = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-                    binding.commondata = common
-                    binding.bannersection.visibility = View.VISIBLE
-                    binding.backImage.visibility = View.VISIBLE
-                    binding.overlay.visibility = View.VISIBLE
-                }
-                homepagedata.setValue(hashMapOf("top-bar_" to binding.root))
+            var binding: MTopbarBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
+            context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
+            context.setWishList(jsonObject.getString("wishlist"))
+            if (jsonObject.has("logo_image_url")) {
+                context.setLogoImage(jsonObject.getString("logo_image_url"))
             }
+            binding.root.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+            context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
+            context.setIconColors(
+                    JSONObject(jsonObject.getString("count_color")).getString("color"),
+                    JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
+                    JSONObject(jsonObject.getString("icon_color")).getString("color")
+            )
+            when (jsonObject.getString("search_position")) {
+                "middle-width-search" -> {
+                    context.setSearchOptions(
+                            JSONObject(jsonObject.getString("search_background_color")).getString("color"),
+                            JSONObject(jsonObject.getString("search_text_color")).getString("color"),
+                            JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                    )
+                }
+                "full-width-search" -> {
+                    binding.fullsearch.visibility = View.VISIBLE
+                    binding.fullsearch.text = jsonObject.getString("search_placeholder")
+                    binding.fullsearch.setOnClickListener {
+                        val searchpage = Intent(context, AutoSearch::class.java)
+                        context.startActivity(searchpage)
+                    }
+                    var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
+                    draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
+                    binding.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                    binding.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                    draw.setStroke(5, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+                }
+            }
+            if (jsonObject.has("item_banner") && jsonObject.getString("item_banner").equals("1")) {
+                var common = CommanModel()
+                var adp = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
+                binding!!.bannerss.adapter = adp
+                adp.notifyDataSetChanged()
+
+                binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                binding!!.bannerss.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                    override fun onPageScrollStateChanged(state: Int) {
+
+                    }
+
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    }
+
+                    override fun onPageSelected(position: Int) {
+                        common.imageurl = jsonObject.getJSONArray("items").getJSONObject(position).getString("image_url")
+                    }
+
+                })
+                binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                if (jsonObject.getString("shape").equals("square")) {
+                    binding.card.radius = 0f
+                    binding.card.cardElevation = 0f
+                }
+                if (jsonObject.getString("item_dots").equals("1")) {
+                    var background = JSONObject(jsonObject.getString("active_dot_color"))
+                    var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
+                    binding!!.indicators.setDotIndicatorColor(Color.parseColor(background.getString("color")))
+                    binding!!.indicators.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
+                    binding!!.indicators.setViewPager(binding!!.bannerss)
+                }
+                common.imageurl = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+                binding.commondata = common
+                binding.bannersection.visibility = View.VISIBLE
+                binding.backImage.visibility = View.VISIBLE
+                binding.overlay.visibility = View.VISIBLE
+            }
+            homepagedata.setValue(hashMapOf("top-bar_" to binding.root))
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -277,351 +286,22 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createFixedCustomisableLayout(jsonObject: JSONObject) {
         try {
-            Handler(Looper.getMainLooper()).post {
-                var binding: MFixedcustomisableBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_fixedcustomisable, null, false)
-                var productSlider = ProductSlider()
-                updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), " ", jsonObject)
-                // updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), "152927698980", jsonObject)
-                var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
-                var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
-                binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-                binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
-                if (jsonObject.getString("header").equals("1")) {
-                    productSlider.headertextvisibility = View.VISIBLE
-                    productSlider.headertext = jsonObject.getString("header_title_text")
-                    var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
-                    binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
-                    binding.headertext.textSize = 20f
-                    val face: Typeface
-                    when (jsonObject.getString("header_title_font_weight")) {
-                        "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                        }
-                        else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                        }
-                    }
-                    binding.headertext.setTypeface(face)
-                    if (jsonObject.getString("item_header_font_style").equals("italic")) {
-                        binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
-                    }
-                    if (jsonObject.getString("header_subtitle").equals("1")) {
-                        productSlider.subheadertextvisibity = View.VISIBLE
-                        productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                        var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
-                        binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
-                        val face: Typeface
-                        when (jsonObject.getString("header_subtitle_font_weight")) {
-                            "bold" -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            }
-                            else -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                            }
-                        }
-                        binding.subheadertext.setTypeface(face)
-                        if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
-                            binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
-                        }
-                    } else {
-                        productSlider.subheadertextvisibity = View.GONE
-                    }
-                    if (jsonObject.getString("header_deal").equals("1")) {
-                        productSlider.timericon = View.VISIBLE
-                        var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
-                        binding.timer.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        productSlider.timertextmessage = jsonObject.getString("item_deal_message")
-                        var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
-                        var sdf = SimpleDateFormat(DATE_FORMAT);
-                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        var item_deal_start_date = sdf.format(Date())
-                        Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
-                        var item_deal_end_date = jsonObject.getString("item_deal_end_date")
-                        Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
-                        var startdate: Date?
-                        var enddate: Date?
-                        try {
-                            startdate = sdf.parse(item_deal_start_date)
-                            enddate = sdf.parse(item_deal_end_date)
-                            var oldLong = startdate.getTime()
-                            var NewLong = enddate.getTime()
-                            var diff = NewLong - oldLong
-                            Log.i("MageNative", "Long" + diff)
-                            if (diff > 0) {
-                                // var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                                var counter = MyCount(diff, 1000, productSlider, ":");
-                                counter.start()
-                            } else {
-                                productSlider.timericon = View.GONE
-                            }
-                        } catch (ex: ParseException) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        productSlider.timericon = View.GONE
-                    }
-                    if (jsonObject.getString("header_action").equals("1")) {
-                        productSlider.actiontextvisibity = View.VISIBLE
-                        productSlider.action_id = getcategoryID(jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value"))
-                        productSlider.actiontext = jsonObject.getString("header_action_text")
-                        var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
-                        var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
-                        binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
-                        binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
-                        val face: Typeface
-                        when (jsonObject.getString("header_action_font_weight")) {
-                            "bold" -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            }
-                            else -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                            }
-                        }
-                        binding.actiontext.setTypeface(face)
-                        if (jsonObject.getString("header_action_title_font_style").equals("italic")) {
-                            binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
-                        }
-
-                    } else {
-                        productSlider.actiontextvisibity = View.GONE
-                    }
-                } else {
-                    productSlider.headertextvisibility = View.GONE
-                }
-                binding.productslider = productSlider
-                homepagedata.setValue(hashMapOf("fixed-customisable-layout_" to binding.root))
-            }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-    }
-
-    private fun createCollectionListSlider(jsonObject: JSONObject) {
-        try {
-            Handler(Looper.getMainLooper()).post {
-                var binding: MCollectionsliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionslider, null, false)
-                var productSlider = ProductSlider()
-                var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
-                var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
+            var binding: MFixedcustomisableBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_fixedcustomisable, null, false)
+            var productSlider = ProductSlider()
+            updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), " ", jsonObject)
+            // updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), "152927698980", jsonObject)
+            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
+            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
+            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            if (jsonObject.getString("header").equals("1")) {
+                productSlider.headertextvisibility = View.VISIBLE
+                productSlider.headertext = jsonObject.getString("header_title_text")
                 var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
-                var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
-                binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-                binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
-                if (jsonObject.getString("header").equals("1")) {
-                    productSlider.headertextvisibility = View.VISIBLE
-                    productSlider.headertext = jsonObject.getString("header_title_text")
-                    binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
-                    binding.headertext.textSize = 20f
-                    val face: Typeface
-                    when (jsonObject.getString("header_title_font_weight")) {
-                        "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                        }
-                        else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                        }
-                    }
-                    binding.headertext.setTypeface(face)
-                    if (jsonObject.getString("header_title_font_style").equals("italic")) {
-                        binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
-                    }
-                    if (jsonObject.getString("header_subtitle").equals("1")) {
-                        productSlider.subheadertextvisibity = View.VISIBLE
-                        productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                        binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
-                        val face: Typeface
-                        when (jsonObject.getString("header_subtitle_font_weight")) {
-                            "bold" -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            }
-                            else -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                            }
-                        }
-                        binding.subheadertext.setTypeface(face)
-                        if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
-                            binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
-                        }
-                    } else {
-                        productSlider.subheadertextvisibity = View.GONE
-                    }
-                } else {
-                    productSlider.headertextvisibility = View.GONE
-                }
-                context.setLayout(binding!!.productdata, "horizontal")
-                slideradapter = CollectionSliderAdapter()
-                slideradapter!!.setData(jsonObject!!.getJSONArray("items"), context, jsonObject!!)
-                binding!!.productdata.adapter = slideradapter
-                slideradapter!!.notifyDataSetChanged()
-                binding.productslider = productSlider
-                homepagedata.setValue(hashMapOf("collection-list-slider_" to binding.root))
-            }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-    }
-
-    private fun createHvLayout(jsonObject: JSONObject) {
-        try {
-            Handler(Looper.getMainLooper()).post {
-                var binding: MProductHvLayoutBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_hv_layout, null, false)
-                var productSlider = ProductSlider()
-                var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
-                var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
-                var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
-                var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
-                var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
-                var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
-                var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
-                binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-                binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
-                if (jsonObject.getString("header").equals("1")) {
-                    productSlider.headertextvisibility = View.VISIBLE
-                    binding.headertext.textSize = 20f
-                    productSlider.headertext = jsonObject.getString("header_title_text")
-                    binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
-                    val face: Typeface
-                    when (jsonObject.getString("header_title_font_weight")) {
-                        "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                        }
-                        else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                        }
-                    }
-                    binding.headertext.setTypeface(face)
-                    if (jsonObject.getString("header_title_font_style").equals("italic")) {
-                        binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
-                    }
-                    if (jsonObject.getString("header_subtitle").equals("1")) {
-                        productSlider.subheadertextvisibity = View.VISIBLE
-                        productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                        binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
-                        val face: Typeface
-                        when (jsonObject.getString("header_subtitle_font_weight")) {
-                            "bold" -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            }
-                            else -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                            }
-                        }
-                        binding.subheadertext.setTypeface(face)
-                        if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
-                            binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
-                        }
-                    } else {
-                        productSlider.subheadertextvisibity = View.GONE
-                    }
-                    if (jsonObject.getString("header_deal").equals("1")) {
-                        productSlider.timericon = View.VISIBLE
-                        binding.timer.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        productSlider.timertextmessage = jsonObject.getString("item_deal_message")
-                        var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
-                        var sdf = SimpleDateFormat(DATE_FORMAT)
-                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        var item_deal_start_date = sdf.format(Date())
-                        Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
-                        var item_deal_end_date = jsonObject.getString("item_deal_end_date")
-                        Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
-                        var startdate: Date?
-                        var enddate: Date?
-                        try {
-                            startdate = sdf.parse(item_deal_start_date)
-                            enddate = sdf.parse(item_deal_end_date)
-                            var oldLong = startdate.getTime()
-                            var NewLong = enddate.getTime()
-                            var diff = NewLong - oldLong
-                            Log.i("MageNative", "Long" + diff)
-                            if (diff > 0) {
-                                //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                                var counter = MyCount(diff, 1000, productSlider, ":");
-                                counter.start()
-                            } else {
-                                productSlider.timericon = View.GONE
-                            }
-                        } catch (ex: ParseException) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        productSlider.timericon = View.GONE
-                    }
-                    if (jsonObject.getString("header_action").equals("1")) {
-                        productSlider.actiontextvisibity = View.VISIBLE
-                        //productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
-                        productSlider.actiontext = jsonObject.getString("header_action_text")
-                        binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
-                        binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
-                        val face: Typeface
-                        when (jsonObject.getString("header_action_font_weight")) {
-                            "bold" -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            }
-                            else -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                            }
-                        }
-                        binding.actiontext.setTypeface(face)
-                        if (jsonObject.getString("header_action_font_style").equals("italic")) {
-                            binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
-                        }
-
-                    } else {
-                        productSlider.actiontextvisibity = View.GONE
-                    }
-                } else {
-                    productSlider.headertextvisibility = View.GONE
-                }
-
-                /**************first hv***************************/
-                productSlider.hvimageone = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-                // productSlider.hvimageone="https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
-                productSlider.hvnameone = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-                productSlider.hvtypeone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-                productSlider.hvvalueone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
-                /**************second hv***************************/
-                productSlider.hvimagetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
-                //productSlider.hvimagetwo="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
-                productSlider.hvnametwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-                productSlider.hvtypetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-                productSlider.hvvaluetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
-                /**************third hv***************************/
-                productSlider.hvimagethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
-                //productSlider.hvimagethree="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
-                productSlider.hvnamethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-                productSlider.hvtypethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-                productSlider.hvvaluethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
-                when (jsonObject.getString("item_text_alignment")) {
-                    "left" -> {
-                        productSlider.textaligment = Gravity.START
-                    }
-                    "right" -> {
-                        productSlider.textaligment = Gravity.END
-                    }
-                }
-                if (jsonObject.getString("item_shape").equals("rounded")) {
-                    binding.firsthvsection.cardElevation = 8f
-                    binding.firsthvsection.radius = 10f
-                    binding.secondhvcard.cardElevation = 8f
-                    binding.secondhvcard.radius = 10f
-                    binding.thirdhvcard.cardElevation = 8f
-                    binding.thirdhvcard.radius = 10f
-                }
-                if (jsonObject.getString("item_border").equals("1")) {
-                    var background = JSONObject(jsonObject.getString("item_border_color"))
-                    binding.firsthvsection.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.secondhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.thirdhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.hvimagOne.setPadding(8, 8, 8, 8)
-                    binding.hvimagtwo.setPadding(8, 8, 8, 8)
-                    binding.hvimagthree.setPadding(8, 8, 8, 8)
-                }
+                binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
+                binding.headertext.textSize = 20f
                 val face: Typeface
-                when (jsonObject.getString("item_title_font_weight")) {
+                when (jsonObject.getString("header_title_font_weight")) {
                     "bold" -> {
                         face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
                     }
@@ -629,243 +309,598 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
                     }
                 }
-                binding.hvnameone.setTypeface(face)
-                binding.hvnametwo.setTypeface(face)
-                binding.hvnamethree.setTypeface(face)
-                if (jsonObject.getString("item_title_font_style").equals("italic")) {
-                    binding.hvnameone.setTypeface(binding.hvnameone.getTypeface(), Typeface.ITALIC);
-                    binding.hvnametwo.setTypeface(binding.hvnametwo.getTypeface(), Typeface.ITALIC);
-                    binding.hvnamethree.setTypeface(binding.hvnamethree.getTypeface(), Typeface.ITALIC);
+                binding.headertext.setTypeface(face)
+                if (jsonObject.getString("item_header_font_style").equals("italic")) {
+                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
                 }
-                binding.productslider = productSlider
-                homepagedata.setValue(hashMapOf("three-product-hv-layout_" to binding.root))
+                if (jsonObject.getString("header_subtitle").equals("1")) {
+                    productSlider.subheadertextvisibity = View.VISIBLE
+                    productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
+                    var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
+                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    val face: Typeface
+                    when (jsonObject.getString("header_subtitle_font_weight")) {
+                        "bold" -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        }
+                        else -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        }
+                    }
+                    binding.subheadertext.setTypeface(face)
+                    if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
+                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
+                    }
+                } else {
+                    productSlider.subheadertextvisibity = View.GONE
+                }
+                if (jsonObject.getString("header_deal").equals("1")) {
+                    productSlider.timericon = View.VISIBLE
+                    var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
+                    binding.timer.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    productSlider.timertextmessage = jsonObject.getString("item_deal_message")
+                    var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
+                    var sdf = SimpleDateFormat(DATE_FORMAT);
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    var item_deal_start_date = sdf.format(Date())
+                    Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
+                    var item_deal_end_date = jsonObject.getString("item_deal_end_date")
+                    Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
+                    var startdate: Date?
+                    var enddate: Date?
+                    try {
+                        startdate = sdf.parse(item_deal_start_date)
+                        enddate = sdf.parse(item_deal_end_date)
+                        var oldLong = startdate.getTime()
+                        var NewLong = enddate.getTime()
+                        var diff = NewLong - oldLong
+                        Log.i("MageNative", "Long" + diff)
+                        if (diff > 0) {
+                            // var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
+                            var counter = MyCount(diff, 1000, productSlider, ":");
+                            counter.start()
+                        } else {
+                            productSlider.timericon = View.GONE
+                        }
+                    } catch (ex: ParseException) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    productSlider.timericon = View.GONE
+                }
+                if (jsonObject.getString("header_action").equals("1")) {
+                    productSlider.actiontextvisibity = View.VISIBLE
+                    productSlider.action_id = getcategoryID(jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value"))
+                    productSlider.actiontext = jsonObject.getString("header_action_text")
+                    var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
+                    var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
+                    binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
+                    binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
+                    val face: Typeface
+                    when (jsonObject.getString("header_action_font_weight")) {
+                        "bold" -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        }
+                        else -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        }
+                    }
+                    binding.actiontext.setTypeface(face)
+                    if (jsonObject.getString("header_action_title_font_style").equals("italic")) {
+                        binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
+                    }
+
+                } else {
+                    productSlider.actiontextvisibity = View.GONE
+                }
+            } else {
+                productSlider.headertextvisibility = View.GONE
             }
+            binding.productslider = productSlider
+            homepagedata.setValue(hashMapOf("fixed-customisable-layout_" to binding.root))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    private fun createCollectionListSlider(jsonObject: JSONObject) {
+        try {
+            var binding: MCollectionsliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionslider, null, false)
+            var productSlider = ProductSlider()
+            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
+            var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
+            var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
+            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
+            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            if (jsonObject.getString("header").equals("1")) {
+                productSlider.headertextvisibility = View.VISIBLE
+                productSlider.headertext = jsonObject.getString("header_title_text")
+                binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
+                binding.headertext.textSize = 20f
+                val face: Typeface
+                when (jsonObject.getString("header_title_font_weight")) {
+                    "bold" -> {
+                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    }
+                    else -> {
+                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                    }
+                }
+                binding.headertext.setTypeface(face)
+                if (jsonObject.getString("header_title_font_style").equals("italic")) {
+                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
+                }
+                if (jsonObject.getString("header_subtitle").equals("1")) {
+                    productSlider.subheadertextvisibity = View.VISIBLE
+                    productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
+                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    val face: Typeface
+                    when (jsonObject.getString("header_subtitle_font_weight")) {
+                        "bold" -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        }
+                        else -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        }
+                    }
+                    binding.subheadertext.setTypeface(face)
+                    if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
+                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
+                    }
+                } else {
+                    productSlider.subheadertextvisibity = View.GONE
+                }
+            } else {
+                productSlider.headertextvisibility = View.GONE
+            }
+            context.setLayout(binding!!.productdata, "horizontal")
+            slideradapter = CollectionSliderAdapter()
+            slideradapter!!.setData(jsonObject!!.getJSONArray("items"), context, jsonObject!!)
+            binding!!.productdata.adapter = slideradapter
+            slideradapter!!.notifyDataSetChanged()
+            binding.productslider = productSlider
+            homepagedata.setValue(hashMapOf("collection-list-slider_" to binding.root))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    private fun createHvLayout(jsonObject: JSONObject) {
+        try {
+            var binding: MProductHvLayoutBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_hv_layout, null, false)
+            var productSlider = ProductSlider()
+            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
+            var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
+            var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
+            var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
+            var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
+            var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
+            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
+            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            if (jsonObject.getString("header").equals("1")) {
+                productSlider.headertextvisibility = View.VISIBLE
+                binding.headertext.textSize = 20f
+                productSlider.headertext = jsonObject.getString("header_title_text")
+                binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
+                val face: Typeface
+                when (jsonObject.getString("header_title_font_weight")) {
+                    "bold" -> {
+                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    }
+                    else -> {
+                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                    }
+                }
+                binding.headertext.setTypeface(face)
+                if (jsonObject.getString("header_title_font_style").equals("italic")) {
+                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
+                }
+                if (jsonObject.getString("header_subtitle").equals("1")) {
+                    productSlider.subheadertextvisibity = View.VISIBLE
+                    productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
+                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    val face: Typeface
+                    when (jsonObject.getString("header_subtitle_font_weight")) {
+                        "bold" -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        }
+                        else -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        }
+                    }
+                    binding.subheadertext.setTypeface(face)
+                    if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
+                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
+                    }
+                } else {
+                    productSlider.subheadertextvisibity = View.GONE
+                }
+                if (jsonObject.getString("header_deal").equals("1")) {
+                    productSlider.timericon = View.VISIBLE
+                    binding.timer.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    productSlider.timertextmessage = jsonObject.getString("item_deal_message")
+                    var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
+                    var sdf = SimpleDateFormat(DATE_FORMAT)
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    var item_deal_start_date = sdf.format(Date())
+                    Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
+                    var item_deal_end_date = jsonObject.getString("item_deal_end_date")
+                    Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
+                    var startdate: Date?
+                    var enddate: Date?
+                    try {
+                        startdate = sdf.parse(item_deal_start_date)
+                        enddate = sdf.parse(item_deal_end_date)
+                        var oldLong = startdate.getTime()
+                        var NewLong = enddate.getTime()
+                        var diff = NewLong - oldLong
+                        Log.i("MageNative", "Long" + diff)
+                        if (diff > 0) {
+                            //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
+                            var counter = MyCount(diff, 1000, productSlider, ":");
+                            counter.start()
+                        } else {
+                            productSlider.timericon = View.GONE
+                        }
+                    } catch (ex: ParseException) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    productSlider.timericon = View.GONE
+                }
+                if (jsonObject.getString("header_action").equals("1")) {
+                    productSlider.actiontextvisibity = View.VISIBLE
+                    //productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
+                    productSlider.actiontext = jsonObject.getString("header_action_text")
+                    binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
+                    binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
+                    val face: Typeface
+                    when (jsonObject.getString("header_action_font_weight")) {
+                        "bold" -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        }
+                        else -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        }
+                    }
+                    binding.actiontext.setTypeface(face)
+                    if (jsonObject.getString("header_action_font_style").equals("italic")) {
+                        binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
+                    }
+
+                } else {
+                    productSlider.actiontextvisibity = View.GONE
+                }
+            } else {
+                productSlider.headertextvisibility = View.GONE
+            }
+
+            /**************first hv***************************/
+            productSlider.hvimageone = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+            // productSlider.hvimageone="https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
+            productSlider.hvnameone = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+            productSlider.hvtypeone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+            productSlider.hvvalueone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+            /**************second hv***************************/
+            productSlider.hvimagetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+            //productSlider.hvimagetwo="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
+            productSlider.hvnametwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+            productSlider.hvtypetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+            productSlider.hvvaluetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+            /**************third hv***************************/
+            productSlider.hvimagethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+            //productSlider.hvimagethree="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
+            productSlider.hvnamethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+            productSlider.hvtypethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+            productSlider.hvvaluethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+            when (jsonObject.getString("item_text_alignment")) {
+                "left" -> {
+                    productSlider.textaligment = Gravity.START
+                }
+                "right" -> {
+                    productSlider.textaligment = Gravity.END
+                }
+            }
+            if (jsonObject.getString("item_shape").equals("rounded")) {
+                binding.firsthvsection.cardElevation = 8f
+                binding.firsthvsection.radius = 10f
+                binding.secondhvcard.cardElevation = 8f
+                binding.secondhvcard.radius = 10f
+                binding.thirdhvcard.cardElevation = 8f
+                binding.thirdhvcard.radius = 10f
+            }
+            if (jsonObject.getString("item_border").equals("1")) {
+                var background = JSONObject(jsonObject.getString("item_border_color"))
+                binding.firsthvsection.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.secondhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.thirdhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.hvimagOne.setPadding(8, 8, 8, 8)
+                binding.hvimagtwo.setPadding(8, 8, 8, 8)
+                binding.hvimagthree.setPadding(8, 8, 8, 8)
+            }
+            val face: Typeface
+            when (jsonObject.getString("item_title_font_weight")) {
+                "bold" -> {
+                    face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                }
+                else -> {
+                    face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                }
+            }
+            binding.hvnameone.setTypeface(face)
+            binding.hvnametwo.setTypeface(face)
+            binding.hvnamethree.setTypeface(face)
+            if (jsonObject.getString("item_title_font_style").equals("italic")) {
+                binding.hvnameone.setTypeface(binding.hvnameone.getTypeface(), Typeface.ITALIC);
+                binding.hvnametwo.setTypeface(binding.hvnametwo.getTypeface(), Typeface.ITALIC);
+                binding.hvnamethree.setTypeface(binding.hvnamethree.getTypeface(), Typeface.ITALIC);
+            }
+            binding.productslider = productSlider
+            homepagedata.setValue(hashMapOf("three-product-hv-layout_" to binding.root))
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
     private fun createStandAloneBanner(jsonObject: JSONObject) {
+        var binding: MStandlonebannerBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_standlonebanner, null, false)
+        var stand = StandAloneBanner()
+        stand.image = jsonObject.getString("banner_url")
         Handler(Looper.getMainLooper()).post {
-            var binding: MStandlonebannerBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_standlonebanner, null, false)
-            var runnable = Runnable {
-                var stand = StandAloneBanner()
-                stand.image = jsonObject.getString("banner_url")
-                Handler(Looper.getMainLooper()).post {
-                    when (jsonObject.getString("item_button_position")) {
-                        "no-btn" -> {
-                            binding.sectionOne.visibility = View.GONE
-                            binding.sectionTwo.visibility = View.GONE
-                            stand.bannerlink = jsonObject.getString("banner_link_value")
-                            stand.bannertype = jsonObject.getString("banner_link_type")
-                        }
-                        "bottom" -> {
-                            var buttononeparams = (binding.sectionOne.layoutParams as ConstraintLayout.LayoutParams)
-                            var buttontwoparams = (binding.sectionTwo.layoutParams as ConstraintLayout.LayoutParams)
-                            buttononeparams.topToTop = ConstraintSet.GONE
-                            buttontwoparams.topToTop = ConstraintSet.GONE
-                        }
+            when (jsonObject.getString("item_button_position")) {
+                "no-btn" -> {
+                    binding.sectionOne.visibility = View.GONE
+                    binding.sectionTwo.visibility = View.GONE
+                    stand.bannerlink = jsonObject.getString("banner_link_value")
+                    stand.bannertype = jsonObject.getString("banner_link_type")
+                }
+                "bottom" -> {
+                    var buttononeparams = (binding.sectionOne.layoutParams as ConstraintLayout.LayoutParams)
+                    var buttontwoparams = (binding.sectionTwo.layoutParams as ConstraintLayout.LayoutParams)
+                    buttononeparams.topToTop = ConstraintSet.GONE
+                    buttontwoparams.topToTop = ConstraintSet.GONE
+                }
+            }
+            if (binding.sectionOne.visibility == View.VISIBLE) {
+                binding.image.setOnClickListener(null)
+                when (jsonObject.getString("item_text_alignment")) {
+                    "left" -> {
+                        binding.buttonOne.gravity = Gravity.START
+                        binding.buttonTwo.gravity = Gravity.START
                     }
-                    if (binding.sectionOne.visibility == View.VISIBLE) {
-                        binding.image.setOnClickListener(null)
-                        when (jsonObject.getString("item_text_alignment")) {
-                            "left" -> {
-                                binding.buttonOne.gravity = Gravity.START
-                                binding.buttonTwo.gravity = Gravity.START
-                            }
-                            "right" -> {
-                                binding.buttonOne.gravity = Gravity.END
-                                binding.buttonTwo.gravity = Gravity.END
-                            }
-                        }
-                        if (jsonObject.has("first_button_text")) {
-                            stand.text_one = jsonObject.getString("first_button_text")
-                            stand.text_two = jsonObject.getString("second_button_text")
-                        }
-                        var background = JSONObject(jsonObject.getString("button_background_color"))
-                        var button_border_color = JSONObject(jsonObject.getString("button_border_color"))
-                        var button_text_color = JSONObject(jsonObject.getString("button_text_color"))
-                        binding.buttonOne.setBackgroundColor(Color.parseColor(background.getString("color")))
-                        binding.buttonTwo.setBackgroundColor(Color.parseColor(background.getString("color")))
-                        binding.borderOne.setBackgroundColor(Color.parseColor(button_border_color.getString("color")))
-                        binding.borderTwo.setBackgroundColor(Color.parseColor(button_border_color.getString("color")))
-                        binding.buttonOne.setTextColor(Color.parseColor(button_text_color.getString("color")))
-                        binding.buttonTwo.setTextColor(Color.parseColor(button_text_color.getString("color")))
-                        if (jsonObject.getString("item_font_weight").equals("bold")) {
-                            val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            binding.buttonOne.setTypeface(face)
-                            binding.buttonTwo.setTypeface(face)
-                        }
-                        if (jsonObject.getString("item_font_style").equals("italic")) {
-                            binding.buttonOne.setTypeface(binding.buttonOne.getTypeface(), Typeface.ITALIC);
-                            binding.buttonTwo.setTypeface(binding.buttonTwo.getTypeface(), Typeface.ITALIC);
-                        }
-                        if (jsonObject.has("banner_link_value")) {
-                            stand.bannerlink = jsonObject.getString("banner_link_value")
-                        }
-                        stand.buttononetype = jsonObject.getString("first_button_link_type")
-                        stand.buttononelink = jsonObject.getString("first_button_link_value")
-                        stand.buttontwotype = jsonObject.getString("second_button_link_type")
-                        stand.buttontwolink = jsonObject.getString("second_button_link_value")
+                    "right" -> {
+                        binding.buttonOne.gravity = Gravity.END
+                        binding.buttonTwo.gravity = Gravity.END
                     }
                 }
-                binding.stand = stand
+                if (jsonObject.has("first_button_text")) {
+                    stand.text_one = jsonObject.getString("first_button_text")
+                    stand.text_two = jsonObject.getString("second_button_text")
+                }
+                var background = JSONObject(jsonObject.getString("button_background_color"))
+                var button_border_color = JSONObject(jsonObject.getString("button_border_color"))
+                var button_text_color = JSONObject(jsonObject.getString("button_text_color"))
+                binding.buttonOne.setBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.buttonTwo.setBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.borderOne.setBackgroundColor(Color.parseColor(button_border_color.getString("color")))
+                binding.borderTwo.setBackgroundColor(Color.parseColor(button_border_color.getString("color")))
+                binding.buttonOne.setTextColor(Color.parseColor(button_text_color.getString("color")))
+                binding.buttonTwo.setTextColor(Color.parseColor(button_text_color.getString("color")))
+                if (jsonObject.getString("item_font_weight").equals("bold")) {
+                    val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    binding.buttonOne.setTypeface(face)
+                    binding.buttonTwo.setTypeface(face)
+                }
+                if (jsonObject.getString("item_font_style").equals("italic")) {
+                    binding.buttonOne.setTypeface(binding.buttonOne.getTypeface(), Typeface.ITALIC);
+                    binding.buttonTwo.setTypeface(binding.buttonTwo.getTypeface(), Typeface.ITALIC);
+                }
+                if (jsonObject.has("banner_link_value")) {
+                    stand.bannerlink = jsonObject.getString("banner_link_value")
+                }
+                stand.buttononetype = jsonObject.getString("first_button_link_type")
+                stand.buttononelink = jsonObject.getString("first_button_link_value")
+                stand.buttontwotype = jsonObject.getString("second_button_link_type")
+                stand.buttontwolink = jsonObject.getString("second_button_link_value")
             }
-            Thread(runnable).start()
-            homepagedata.setValue(hashMapOf("standalone-banner_" to binding.root))
         }
+        binding.stand = stand
+        homepagedata.setValue(hashMapOf("standalone-banner_" to binding.root))
     }
 
     private fun createCollectionGrid(jsonObject: JSONObject) {
-        Handler(Looper.getMainLooper()).post {
-            val binding: MCollectionlgridBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionlgrid, null, false)
-            context.setLayout(binding!!.categorylist, "3grid")
-            try {
-                repository.getJSonArray(JsonParser().parse(jsonObject!!.getString("items")).asJsonArray)
-                        .subscribeOn(Schedulers.io())
-                        .filter { x -> x.asJsonObject.get("link_type").asString.isNotEmpty() }
-                        .toList()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(object : SingleObserver<List<JsonElement>> {
-                            override fun onSubscribe(d: Disposable) {
+        val binding: MCollectionlgridBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionlgrid, null, false)
+        context.setLayout(binding!!.categorylist, "3grid")
+        try {
+            repository.getJSonArray(JsonParser().parse(jsonObject!!.getString("items")).asJsonArray)
+                    .subscribeOn(Schedulers.io())
+                    .filter { x -> x.asJsonObject.get("link_type").asString.isNotEmpty() }
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<List<JsonElement>> {
+                        override fun onSubscribe(d: Disposable) {
 
-                            }
+                        }
 
-                            override fun onSuccess(list: List<JsonElement>) {
-                                adapter = CollectionGridAdapter()
-                                adapter!!.setData(list, context, jsonObject!!)
-                                binding!!.categorylist.adapter = adapter
-                                //   adapter!!.notifyDataSetChanged()
-                            }
+                        override fun onSuccess(list: List<JsonElement>) {
+                            adapter = CollectionGridAdapter()
+                            adapter!!.setData(list, context, jsonObject!!)
+                            binding!!.categorylist.adapter = adapter
+                        }
 
-                            override fun onError(e: Throwable) {
-                                e.printStackTrace()
-                            }
-                        })
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            var background = JSONObject(jsonObject.getString("panel_background_color"))
-            binding.categorylist.setBackgroundColor(Color.parseColor(background.getString("color")))
-            homepagedata.setValue(hashMapOf("collection-grid-layout_" to binding.root))
+                        override fun onError(e: Throwable) {
+                            e.printStackTrace()
+                        }
+                    })
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        var background = JSONObject(jsonObject.getString("panel_background_color"))
+        binding.categorylist.setBackgroundColor(Color.parseColor(background.getString("color")))
+        homepagedata.setValue(hashMapOf("collection-grid-layout_" to binding.root))
     }
 
     private fun createCategorySquare(jsonObject: JSONObject) {
-        Handler(Looper.getMainLooper()).post {
-            var binding: MCategorySquareBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_square, null, false)
-            var category = CategoryCircle()
-            binding.category = category
-            when (jsonObject.getString("item_shape")) {
-                "square" -> {
-                    binding.cardOne.cardElevation = 0f
-                    binding.cardOne.radius = 0f
-                    binding.cardTwo.cardElevation = 0f
-                    binding.cardTwo.radius = 0f
-                    binding.cardThree.cardElevation = 0f
-                    binding.cardThree.radius = 0f
-                    binding.cardFour.cardElevation = 0f
-                    binding.cardFour.radius = 0f
-                    binding.cardFive.cardElevation = 0f
-                    binding.cardFive.radius = 0f
-                }
+        var binding: MCategorySquareBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_square, null, false)
+        var category = CategoryCircle()
+        binding.category = category
+        when (jsonObject.getString("item_shape")) {
+            "square" -> {
+                binding.cardOne.cardElevation = 0f
+                binding.cardOne.radius = 0f
+                binding.cardTwo.cardElevation = 0f
+                binding.cardTwo.radius = 0f
+                binding.cardThree.cardElevation = 0f
+                binding.cardThree.radius = 0f
+                binding.cardFour.cardElevation = 0f
+                binding.cardFour.radius = 0f
+                binding.cardFive.cardElevation = 0f
+                binding.cardFive.radius = 0f
             }
-            var background = JSONObject(jsonObject.getString("panel_background_color"))
-            binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
-            if (jsonObject.getString("item_title").equals("1")) {
-                category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-                category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-                category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-                category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
-                category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
-                var item_color = JSONObject(jsonObject.getString("item_title_color"))
-                binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextThree.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
-                if (jsonObject.getString("item_font_weight").equals("bold")) {
-                    val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                    binding.catTextOne.setTypeface(face)
-                    binding.catTextTwo.setTypeface(face)
-                    binding.catTextThree.setTypeface(face)
-                    binding.catTextFour.setTypeface(face)
-                    binding.catTextFive.setTypeface(face)
-                } else {
-                    val face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                    binding.catTextOne.setTypeface(face)
-                    binding.catTextTwo.setTypeface(face)
-                    binding.catTextThree.setTypeface(face)
-                    binding.catTextFour.setTypeface(face)
-                    binding.catTextFive.setTypeface(face)
-                }
-                if (jsonObject.getString("item_font_style").equals("italic")) {
-                    binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
-                    binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
-                    binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
-                    binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
-                    binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
-                }
-            }
-            if (jsonObject.getString("item_border").equals("1")) {
-                Handler(Looper.getMainLooper()).post {
-                    var background = JSONObject(jsonObject.getString("item_border_color"))
-                    binding.cardOne.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.cardTwo.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.cardThree.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.cardFour.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.cardFive.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                    binding.cardOne.setContentPadding(2, 2, 2, 2)
-                    binding.cardTwo.setContentPadding(2, 2, 2, 2)
-                    binding.cardThree.setContentPadding(2, 2, 2, 2)
-                    binding.cardFour.setContentPadding(2, 2, 2, 2)
-                    binding.cardFive.setContentPadding(2, 2, 2, 2)
-                }
-            }
-            category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-            category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
-            category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-            category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
-            category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
-            category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-            category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
-            category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
-            category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-            category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
-            category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
-            category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
-            category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
-            if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
-                category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
-            } else {
-                category.cat_value_five = "list_collection"
-            }
-            category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
-            homepagedata.setValue(hashMapOf("category-square_" to binding.root))
         }
+        var background = JSONObject(jsonObject.getString("panel_background_color"))
+        binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
+        if (jsonObject.getString("item_title").equals("1")) {
+            category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+            category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+            category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+            category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
+            category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
+            var item_color = JSONObject(jsonObject.getString("item_title_color"))
+            binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextThree.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
+            if (jsonObject.getString("item_font_weight").equals("bold")) {
+                val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                binding.catTextOne.setTypeface(face)
+                binding.catTextTwo.setTypeface(face)
+                binding.catTextThree.setTypeface(face)
+                binding.catTextFour.setTypeface(face)
+                binding.catTextFive.setTypeface(face)
+            } else {
+                val face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                binding.catTextOne.setTypeface(face)
+                binding.catTextTwo.setTypeface(face)
+                binding.catTextThree.setTypeface(face)
+                binding.catTextFour.setTypeface(face)
+                binding.catTextFive.setTypeface(face)
+            }
+            if (jsonObject.getString("item_font_style").equals("italic")) {
+                binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
+                binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
+                binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
+                binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
+                binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
+            }
+        }
+        if (jsonObject.getString("item_border").equals("1")) {
+            Handler(Looper.getMainLooper()).post {
+                var background = JSONObject(jsonObject.getString("item_border_color"))
+                binding.cardOne.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.cardTwo.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.cardThree.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.cardFour.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.cardFive.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+                binding.cardOne.setContentPadding(2, 2, 2, 2)
+                binding.cardTwo.setContentPadding(2, 2, 2, 2)
+                binding.cardThree.setContentPadding(2, 2, 2, 2)
+                binding.cardFour.setContentPadding(2, 2, 2, 2)
+                binding.cardFive.setContentPadding(2, 2, 2, 2)
+            }
+        }
+        category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+        category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+        category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+        category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+        category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+        category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+        category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+        category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+        category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+        category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
+        category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
+        category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
+        category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
+        if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
+            category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
+        } else {
+            category.cat_value_five = "list_collection"
+        }
+        category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
+        homepagedata.setValue(hashMapOf("category-square_" to binding.root))
     }
 
     private fun createProductSlider(jsonObject: JSONObject) {
         try {
-            Handler(Looper.getMainLooper()).post {
-                val binding: MProductSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_slider, null, false)
-                var productSlider = ProductSlider()
-                updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("item_value"), " ", jsonObject)
-                var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
-                var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
-                var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
-                var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
-                var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
-                var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
-                var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
-                binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-                binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
-                if (jsonObject.getString("header").equals("1")) {
-                    productSlider.headertextvisibility = View.VISIBLE
-                    productSlider.headertext = jsonObject.getString("header_title_text")
-                    binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
+            val binding: MProductSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_slider, null, false)
+            var productSlider = ProductSlider()
+            Log.d(TAG, "createProductSlider: " + jsonObject.getJSONArray("item_value"))
+            updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("item_value"), " ", jsonObject)
+            var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
+            var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
+            var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
+            var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
+            var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
+            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
+            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
+            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            if (jsonObject.getString("header").equals("1")) {
+                productSlider.headertextvisibility = View.VISIBLE
+                productSlider.headertext = jsonObject.getString("header_title_text")
+                binding.headertext.setTextColor(Color.parseColor(header_title_color.getString("color")))
+                val face: Typeface
+                when (jsonObject.getString("item_header_font_weight")) {
+                    "bold" -> {
+                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    }
+                    else -> {
+                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                    }
+
+                }
+                binding.headertext.setTypeface(face)
+                if (jsonObject.getString("item_header_font_style").equals("italic")) {
+                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
+                }
+                if (jsonObject.getString("header_action").equals("1")) {
+                    productSlider.actiontextvisibity = View.VISIBLE
+                    productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
+                    productSlider.actiontext = jsonObject.getString("header_action_text")
+                    binding.headertext.textSize = 20f
+                    binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
+                    binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
                     val face: Typeface
-                    when (jsonObject.getString("item_header_font_weight")) {
+                    when (jsonObject.getString("header_action_font_weight")) {
+                        "bold" -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        }
+                        else -> {
+                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        }
+                    }
+                    binding.actiontext.setTypeface(face)
+                    if (jsonObject.getString("header_action_font_style").equals("italic")) {
+                        binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
+                    }
+
+                } else {
+                    productSlider.actiontextvisibity = View.GONE
+                }
+                if (jsonObject.getString("header_subtitle").equals("1")) {
+                    productSlider.subheadertextvisibity = View.VISIBLE
+                    productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
+                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    val face: Typeface
+                    when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
                             face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
                         }
@@ -874,96 +909,53 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                         }
 
                     }
-                    binding.headertext.setTypeface(face)
-                    if (jsonObject.getString("item_header_font_style").equals("italic")) {
-                        binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
-                    }
-                    if (jsonObject.getString("header_action").equals("1")) {
-                        productSlider.actiontextvisibity = View.VISIBLE
-                        productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
-                        productSlider.actiontext = jsonObject.getString("header_action_text")
-                        binding.headertext.textSize = 20f
-                        binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
-                        binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
-                        val face: Typeface
-                        when (jsonObject.getString("header_action_font_weight")) {
-                            "bold" -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            }
-                            else -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                            }
-                        }
-                        binding.actiontext.setTypeface(face)
-                        if (jsonObject.getString("header_action_font_style").equals("italic")) {
-                            binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
-                        }
-
-                    } else {
-                        productSlider.actiontextvisibity = View.GONE
-                    }
-                    if (jsonObject.getString("header_subtitle").equals("1")) {
-                        productSlider.subheadertextvisibity = View.VISIBLE
-                        productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                        binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
-                        val face: Typeface
-                        when (jsonObject.getString("header_subtitle_font_weight")) {
-                            "bold" -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                            }
-                            else -> {
-                                face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                            }
-
-                        }
-                        binding.subheadertext.setTypeface(face)
-                        if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
-                            binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
-                        }
-                    } else {
-                        productSlider.subheadertextvisibity = View.GONE
-                    }
-                    if (jsonObject.getString("header_deal").equals("1")) {
-                        productSlider.timericon = View.VISIBLE
-                        binding.timer.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
-                        productSlider.timertextmessage = jsonObject.getString("item_deal_message")
-                        var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
-                        var sdf = SimpleDateFormat(DATE_FORMAT)
-                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
-                        var item_deal_start_date = sdf.format(Date())
-                        Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
-                        var item_deal_end_date = jsonObject.getString("item_deal_end_date")
-                        Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
-                        var startdate: Date?
-                        var enddate: Date?
-                        try {
-                            startdate = sdf.parse(item_deal_start_date)
-                            enddate = sdf.parse(item_deal_end_date)
-                            var oldLong = startdate.getTime()
-                            var NewLong = enddate.getTime()
-                            var diff = NewLong - oldLong
-                            Log.i("MageNative", "Long" + diff)
-                            if (diff > 0) {
-                                //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                                var counter = MyCount(diff, 1000, productSlider, ":");
-                                counter.start()
-                            } else {
-                                productSlider.timericon = View.GONE
-                            }
-                        } catch (ex: ParseException) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        productSlider.timericon = View.GONE
+                    binding.subheadertext.setTypeface(face)
+                    if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
+                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
                     }
                 } else {
-                    productSlider.headertextvisibility = View.GONE
+                    productSlider.subheadertextvisibity = View.GONE
                 }
-                binding.productslider = productSlider
-                homepagedata.setValue(hashMapOf("product-list-slider_" to binding.root))
+                if (jsonObject.getString("header_deal").equals("1")) {
+                    productSlider.timericon = View.VISIBLE
+                    binding.timer.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
+                    productSlider.timertextmessage = jsonObject.getString("item_deal_message")
+                    var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
+                    var sdf = SimpleDateFormat(DATE_FORMAT)
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
+                    var item_deal_start_date = sdf.format(Date())
+                    Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
+                    var item_deal_end_date = jsonObject.getString("item_deal_end_date")
+                    Log.i("MageNative", "item_deal_end_date " + item_deal_end_date)
+                    var startdate: Date?
+                    var enddate: Date?
+                    try {
+                        startdate = sdf.parse(item_deal_start_date)
+                        enddate = sdf.parse(item_deal_end_date)
+                        var oldLong = startdate.getTime()
+                        var NewLong = enddate.getTime()
+                        var diff = NewLong - oldLong
+                        Log.i("MageNative", "Long" + diff)
+                        if (diff > 0) {
+                            //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
+                            var counter = MyCount(diff, 1000, productSlider, ":");
+                            counter.start()
+                        } else {
+                            productSlider.timericon = View.GONE
+                        }
+                    } catch (ex: ParseException) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    productSlider.timericon = View.GONE
+                }
+            } else {
+                productSlider.headertextvisibility = View.GONE
             }
+            binding.productslider = productSlider
+            homepagedata.setValue(hashMapOf("product-list-slider_" to binding.root))
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -972,12 +964,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
     private fun updateDataInRecylerView(productdata: RecyclerView?, jsonArray: JSONArray, cat_id: String, jsonObject: JSONObject) {
         try {
             val edges = mutableListOf<Storefront.Product>()
-            var runnable = Runnable {
-                for (i in 0..jsonArray.length() - 1) {
-                    getProductsById(jsonArray.getString(i), productdata, jsonArray, jsonObject, edges)
-                }
+            for (i in 0..jsonArray.length() - 1) {
+                getProductsById(jsonArray.getString(i), productdata, jsonArray, jsonObject, edges)
             }
-            Thread(runnable).start()
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -1144,98 +1133,91 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createBannerSlider(jsonObject: JSONObject) {
         try {
-            Handler(Looper.getMainLooper()).post {
-                var binding: MBannerSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_banner_slider, null, false)
-                binding!!.banners.adapter = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
-                if (jsonObject.getString("item_dots").equals("1")) {
-                    binding!!.indicator.visibility = View.VISIBLE
-                    var background = JSONObject(jsonObject.getString("active_dot_color"))
-                    var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
-                    binding!!.indicator.setDotIndicatorColor(Color.parseColor(background.getString("color")))
-                    binding!!.indicator.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
-                    binding!!.indicator.setViewPager(binding!!.banners)
-                }
-                homepagedata.setValue(hashMapOf("banner-slider_" to binding.root))
+            var binding: MBannerSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_banner_slider, null, false)
+            binding!!.banners.adapter = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
+            if (jsonObject.getString("item_dots").equals("1")) {
+                binding!!.indicator.visibility = View.VISIBLE
+                var background = JSONObject(jsonObject.getString("active_dot_color"))
+                var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
+                binding!!.indicator.setDotIndicatorColor(Color.parseColor(background.getString("color")))
+                binding!!.indicator.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
+                binding!!.indicator.setViewPager(binding!!.banners)
             }
+            homepagedata.setValue(hashMapOf("banner-slider_" to binding.root))
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
     private fun createCategoryCircle(jsonObject: JSONObject) {
-        Handler(Looper.getMainLooper()).post {
-            var binding: MCategoryCircleBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_circle, null, false)
-            var category = CategoryCircle()
-            binding.category = category
-            var runnable = Runnable {
-                var background = JSONObject(jsonObject.getString("panel_background_color"))
+        var binding: MCategoryCircleBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_circle, null, false)
+        var category = CategoryCircle()
+        binding.category = category
+            var background = JSONObject(jsonObject.getString("panel_background_color"))
 
-                binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
-                if (jsonObject.getString("item_title").equals("1")) {
-                    category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-                    category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-                    category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-                    category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
-                    category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
-                    var item_color = JSONObject(jsonObject.getString("item_title_color"))
-                    binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
-                    binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
-                    binding.catTextThree.setTextColor(Color.parseColor(item_color.getString("color")))
-                    binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
-                    binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
-                    if (jsonObject.getString("item_font_weight").equals("bold")) {
-                        val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                        binding.catTextOne.setTypeface(face)
-                        binding.catTextTwo.setTypeface(face)
-                        binding.catTextThree.setTypeface(face)
-                        binding.catTextFour.setTypeface(face)
-                        binding.catTextFive.setTypeface(face)
-                    }
-                    if (jsonObject.getString("item_font_style").equals("italic")) {
-                        binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
-                        binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
-                        binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
-                        binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
-                        binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
-                    }
+            binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
+            if (jsonObject.getString("item_title").equals("1")) {
+                category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+                category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+                category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+                category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
+                category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
+                var item_color = JSONObject(jsonObject.getString("item_title_color"))
+                binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
+                binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
+                binding.catTextThree.setTextColor(Color.parseColor(item_color.getString("color")))
+                binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
+                binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
+                if (jsonObject.getString("item_font_weight").equals("bold")) {
+                    val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    binding.catTextOne.setTypeface(face)
+                    binding.catTextTwo.setTypeface(face)
+                    binding.catTextThree.setTypeface(face)
+                    binding.catTextFour.setTypeface(face)
+                    binding.catTextFive.setTypeface(face)
                 }
-                if (jsonObject.getString("item_border").equals("1")) {
-                    var item_border_color = JSONObject(jsonObject.getString("item_border_color"))
-                    binding.imageOne.tag = item_border_color.getString("color")
-                    binding.imageTwo.tag = item_border_color.getString("color")
-                    binding.imageThree.tag = item_border_color.getString("color")
-                    binding.imageFour.tag = item_border_color.getString("color")
-                    binding.imageFive.tag = item_border_color.getString("color")
-                } else {
-                    binding.imageOne.tag = background.getString("color")
-                    binding.imageTwo.tag = background.getString("color")
-                    binding.imageThree.tag = background.getString("color")
-                    binding.imageFour.tag = background.getString("color")
-                    binding.imageFive.tag = background.getString("color")
+                if (jsonObject.getString("item_font_style").equals("italic")) {
+                    binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
+                    binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
+                    binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
+                    binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
+                    binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
                 }
-                category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-                category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
-                category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-                category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
-                category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
-                category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-                category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
-                category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
-                category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-                category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
-                category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
-                category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
-                category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
-                if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
-                    category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
-                } else {
-                    category.cat_value_five = "list_collection"
-                }
-                category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
             }
-            Thread(runnable).start()
+            if (jsonObject.getString("item_border").equals("1")) {
+                var item_border_color = JSONObject(jsonObject.getString("item_border_color"))
+                binding.imageOne.tag = item_border_color.getString("color")
+                binding.imageTwo.tag = item_border_color.getString("color")
+                binding.imageThree.tag = item_border_color.getString("color")
+                binding.imageFour.tag = item_border_color.getString("color")
+                binding.imageFive.tag = item_border_color.getString("color")
+            } else {
+                binding.imageOne.tag = background.getString("color")
+                binding.imageTwo.tag = background.getString("color")
+                binding.imageThree.tag = background.getString("color")
+                binding.imageFour.tag = background.getString("color")
+                binding.imageFive.tag = background.getString("color")
+            }
+            category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+            category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+            category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+            category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+            category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+            category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+            category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+            category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+            category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+            category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
+            category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
+            category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
+            category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
+            if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
+                category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
+            } else {
+                category.cat_value_five = "list_collection"
+            }
+            category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
             homepagedata.setValue(hashMapOf("category-circle_" to binding.root))
-        }
     }
 
     class MyCount : CountDownTimer {

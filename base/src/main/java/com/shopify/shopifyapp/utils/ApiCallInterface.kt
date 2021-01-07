@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.utils
+
 import com.google.gson.JsonElement
 import io.reactivex.Single
 import org.json.JSONObject
@@ -21,5 +22,6 @@ interface ApiCallInterface {
 
     @Headers(Urls.HEADER) // Add the Domain-Name header
     @POST(Urls.RECOMMENDATION)
-    fun getRecommendations(@Header("X-SHOP") shop: String,@Header("X-CLIENT") client: String,@Header("X-ACCESS-TOKEN") token: String,@Header("Content-Type") content_tyepe: String,@Body body:com.shopify.shopifyapp.dependecyinjection.Body): Single<JsonElement>
+    fun getRecommendations(@Header("X-SHOP") shop: String, @Header("X-CLIENT") client: String, @Header("X-ACCESS-TOKEN") token: String, @Header("Content-Type") content_tyepe: String, @Body body: com.shopify.shopifyapp.dependecyinjection.Body): Single<JsonElement>
+
 }
