@@ -205,7 +205,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun topbar(jsonObject: JSONObject) {
         try {
-            //  Handler(Looper.getMainLooper()).post {
             var binding: MTopbarBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
             context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
             context.setWishList(jsonObject.getString("wishlist"))
@@ -280,7 +279,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 binding.overlay.visibility = View.VISIBLE
             }
             homepagedata.setValue(hashMapOf("top-bar_" to binding.root))
-            //   }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -288,7 +286,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createFixedCustomisableLayout(jsonObject: JSONObject) {
         try {
-            //   Handler(Looper.getMainLooper()).post {
             var binding: MFixedcustomisableBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_fixedcustomisable, null, false)
             var productSlider = ProductSlider()
             updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), " ", jsonObject)
@@ -403,7 +400,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             }
             binding.productslider = productSlider
             homepagedata.setValue(hashMapOf("fixed-customisable-layout_" to binding.root))
-            //  }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -411,7 +407,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createCollectionListSlider(jsonObject: JSONObject) {
         try {
-            //  Handler(Looper.getMainLooper()).post {
             var binding: MCollectionsliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionslider, null, false)
             var productSlider = ProductSlider()
             var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
@@ -468,7 +463,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             slideradapter!!.notifyDataSetChanged()
             binding.productslider = productSlider
             homepagedata.setValue(hashMapOf("collection-list-slider_" to binding.root))
-            // }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -476,7 +470,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createHvLayout(jsonObject: JSONObject) {
         try {
-            //   Handler(Looper.getMainLooper()).post {
             var binding: MProductHvLayoutBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_hv_layout, null, false)
             var productSlider = ProductSlider()
             var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
@@ -650,16 +643,13 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             }
             binding.productslider = productSlider
             homepagedata.setValue(hashMapOf("three-product-hv-layout_" to binding.root))
-            // }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
     private fun createStandAloneBanner(jsonObject: JSONObject) {
-        //  Handler(Looper.getMainLooper()).post {
         var binding: MStandlonebannerBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_standlonebanner, null, false)
-        // var runnable = Runnable {
         var stand = StandAloneBanner()
         stand.image = jsonObject.getString("banner_url")
         Handler(Looper.getMainLooper()).post {
@@ -721,14 +711,10 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             }
         }
         binding.stand = stand
-        //  }
-        //  Thread(runnable).start()
         homepagedata.setValue(hashMapOf("standalone-banner_" to binding.root))
-        //    }
     }
 
     private fun createCollectionGrid(jsonObject: JSONObject) {
-        //  Handler(Looper.getMainLooper()).post {
         val binding: MCollectionlgridBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionlgrid, null, false)
         context.setLayout(binding!!.categorylist, "3grid")
         try {
@@ -746,7 +732,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                             adapter = CollectionGridAdapter()
                             adapter!!.setData(list, context, jsonObject!!)
                             binding!!.categorylist.adapter = adapter
-                            //   adapter!!.notifyDataSetChanged()
                         }
 
                         override fun onError(e: Throwable) {
@@ -759,11 +744,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
         var background = JSONObject(jsonObject.getString("panel_background_color"))
         binding.categorylist.setBackgroundColor(Color.parseColor(background.getString("color")))
         homepagedata.setValue(hashMapOf("collection-grid-layout_" to binding.root))
-        //   }
     }
 
     private fun createCategorySquare(jsonObject: JSONObject) {
-        //    Handler(Looper.getMainLooper()).post {
         var binding: MCategorySquareBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_square, null, false)
         var category = CategoryCircle()
         binding.category = category
@@ -853,12 +836,10 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
         }
         category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
         homepagedata.setValue(hashMapOf("category-square_" to binding.root))
-        //  }
     }
 
     private fun createProductSlider(jsonObject: JSONObject) {
         try {
-            //   Handler(Looper.getMainLooper()).post {
             val binding: MProductSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_slider, null, false)
             var productSlider = ProductSlider()
             Log.d(TAG, "createProductSlider: " + jsonObject.getJSONArray("item_value"))
@@ -975,7 +956,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             }
             binding.productslider = productSlider
             homepagedata.setValue(hashMapOf("product-list-slider_" to binding.root))
-            // }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -984,12 +964,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
     private fun updateDataInRecylerView(productdata: RecyclerView?, jsonArray: JSONArray, cat_id: String, jsonObject: JSONObject) {
         try {
             val edges = mutableListOf<Storefront.Product>()
-            // var runnable = Runnable {
             for (i in 0..jsonArray.length() - 1) {
                 getProductsById(jsonArray.getString(i), productdata, jsonArray, jsonObject, edges)
             }
-            //}
-            //Thread(runnable).start()
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -1054,9 +1031,9 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                     try {
                         val edge = result.data!!.node as Storefront.Product
                         edges.add(edge)
-                        //  if (edges.size == jsonArray.length()) {
-                        filterProduct(edges, productdata, jsonArray, jsonObject)
-                        //}
+                        if (edges.size == jsonArray.length()) {
+                            filterProduct(edges, productdata, jsonArray, jsonObject)
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
                         when (context!!.getPackageName()) {
@@ -1156,7 +1133,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     private fun createBannerSlider(jsonObject: JSONObject) {
         try {
-            //Handler(Looper.getMainLooper()).post {
             var binding: MBannerSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_banner_slider, null, false)
             binding!!.banners.adapter = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
             if (jsonObject.getString("item_dots").equals("1")) {
@@ -1168,14 +1144,12 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 binding!!.indicator.setViewPager(binding!!.banners)
             }
             homepagedata.setValue(hashMapOf("banner-slider_" to binding.root))
-            //}
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
     private fun createCategoryCircle(jsonObject: JSONObject) {
-        //   Handler(Looper.getMainLooper()).post {
         var binding: MCategoryCircleBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_circle, null, false)
         var category = CategoryCircle()
         binding.category = category
@@ -1244,8 +1218,6 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                 category.cat_value_five = "list_collection"
             }
             category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
-            //  }
-            //Thread(runnable).start()
             homepagedata.setValue(hashMapOf("category-circle_" to binding.root))
         }
     }
