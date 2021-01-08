@@ -97,7 +97,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     @Inject
     lateinit var adapter: RecylerAdapter
     private var listDialog: Dialog? = null
-    val cartCount: Int
+    var cartCount: Int = 0
         get() {
             Log.i("MageNative", "Cart Count : " + model!!.cartCount)
             return model!!.cartCount
@@ -329,6 +329,9 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                 fab.visibility = View.GONE
             }
         }
+        cartCount = model!!.cartCount
+
+
     }
 
     fun setSearchOption(type: String, placeholder: String) {

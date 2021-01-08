@@ -25,7 +25,7 @@ class JobScheduler : JobService() {
                 if (isAppIsInBackground(applicationContext)) {
                     showCartNotification()
                 }
-                jobFinished(jobParameters, true)
+                jobFinished(jobParameters, false)
             } else {
                 Log.i("MageNative", "No Cart")
             }
