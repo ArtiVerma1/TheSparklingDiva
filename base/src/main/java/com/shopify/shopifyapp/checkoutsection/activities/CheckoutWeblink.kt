@@ -6,6 +6,7 @@ import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.databinding.DataBindingUtil
@@ -45,6 +46,8 @@ class CheckoutWeblink : BaseActivity() {
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.loadWithOverviewMode = true
         webView!!.settings.useWideViewPort = true
+        webView!!.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             CookieManager.getInstance().removeAllCookies(null)
