@@ -64,6 +64,8 @@
                         android:onClick="@{handler::cancelAction}"
                         android:id="@+id/cancel_action"
                         android:src="@drawable/ic_cancel"/>
+
+
                     <com.shopify.shopifyapp.customviews.MageNativeEditText
                         android:id="@+id/firstname"
                         android:layout_width="0dp"
