@@ -14,7 +14,7 @@ object Query {
 
         }
     private val productDefinition: Storefront.ProductConnectionQueryDefinition
-        get() = Storefront.ProductConnectionQueryDefinition{ productdata ->
+        get() = Storefront.ProductConnectionQueryDefinition { productdata ->
             productdata
                     .edges({ edges ->
                         edges
@@ -40,10 +40,18 @@ object Query {
                                                 )
                                             }
                                             )
-                                            .media({m->m.first(10)},{me->me.edges({e->e.node({n->n
-                                                    .onModel3d({md->md
-                                                            .sources({s->s.url()})
-                                                            .previewImage({p->p.originalSrc()})})})})})
+                                            .media({ m -> m.first(10) }, { me ->
+                                                me.edges({ e ->
+                                                    e.node({ n ->
+                                                        n
+                                                                .onModel3d({ md ->
+                                                                    md
+                                                                            .sources({ s -> s.url() })
+                                                                            .previewImage({ p -> p.originalSrc() })
+                                                                })
+                                                    })
+                                                })
+                                            })
                                             .availableForSale()
                                             .descriptionHtml()
                                             .description()
@@ -83,7 +91,7 @@ object Query {
                     )
         }
     private val productQuery: Storefront.ProductQueryDefinition
-        get() = Storefront.ProductQueryDefinition{ product ->
+        get() = Storefront.ProductQueryDefinition { product ->
             product
                     .title()
                     .images({ img -> img.first(10) }, { imag ->
@@ -113,7 +121,7 @@ object Query {
                                                         .presentmentPrices({ a -> a.first(50) }, { pre -> pre.edges({ ed -> ed.node({ n -> n.price({ p -> p.currencyCode().amount() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }).cursor() }) })
                                                         .selectedOptions({ select -> select.name().value() })
                                                         .compareAtPriceV2({ c -> c.amount().currencyCode() })
-                                                        .image(Storefront.ImageQueryDefinition { it.originalSrc().transformedSrc()})
+                                                        .image(Storefront.ImageQueryDefinition { it.originalSrc().transformedSrc() })
                                                         .availableForSale()
                                             }
                                             )
@@ -121,9 +129,17 @@ object Query {
                                 )
                     }
                     )
-                    .media({m->m.first(10)}, {me->me.edges({e->e.node({n->n.onModel3d({md->md
-                        .sources({s->s.url().format()})
-                        .previewImage({p->p.originalSrc()})})})})})
+                    .media({ m -> m.first(10) }, { me ->
+                        me.edges({ e ->
+                            e.node({ n ->
+                                n.onModel3d({ md ->
+                                    md
+                                            .sources({ s -> s.url().format() })
+                                            .previewImage({ p -> p.originalSrc() })
+                                })
+                            })
+                        })
+                    })
                     .onlineStoreUrl()
                     .options({ op ->
                         op.name()
@@ -135,9 +151,9 @@ object Query {
     fun getProductsById(cat_id: String?, cursor: String, sortby_key: Storefront.ProductCollectionSortKeys, direction: Boolean, number: Int): Storefront.QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
-            definition =  Storefront.CollectionQuery.ProductsArgumentsDefinition{ args -> args.first(number).sortKey(sortby_key).reverse(direction) }
+            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args -> args.first(number).sortKey(sortby_key).reverse(direction) }
         } else {
-            definition =  Storefront.CollectionQuery.ProductsArgumentsDefinition{ args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
+            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
         }
         return Storefront.query { root ->
             root
@@ -164,9 +180,9 @@ object Query {
     fun getProductsByHandle(handle: String, cursor: String, sortby_key: Storefront.ProductCollectionSortKeys, direction: Boolean, number: Int): Storefront.QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
-            definition =  Storefront.CollectionQuery.ProductsArgumentsDefinition{ args -> args.first(number).sortKey(sortby_key).reverse(direction) }
+            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args -> args.first(number).sortKey(sortby_key).reverse(direction) }
         } else {
-            definition =  Storefront.CollectionQuery.ProductsArgumentsDefinition{ args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
+            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
         }
         return Storefront.query { root -> root.collectionByHandle(handle) { collect -> collect.products(definition, productDefinition) } }
     }
@@ -174,9 +190,9 @@ object Query {
     fun getAllProducts(cursor: String, sortby_key: Storefront.ProductSortKeys, direction: Boolean, number: Int): Storefront.QueryRootQuery {
         val shoppro: Storefront.QueryRootQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
-            shoppro =  Storefront.QueryRootQuery.ProductsArgumentsDefinition{ args -> args.first(number).sortKey(sortby_key).reverse(direction) }
+            shoppro = Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.first(number).sortKey(sortby_key).reverse(direction) }
         } else {
-            shoppro = Storefront.QueryRootQuery.ProductsArgumentsDefinition{ args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
+            shoppro = Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
         }
         return Storefront.query { root -> root.products(shoppro, productDefinition) }
     }
@@ -184,13 +200,15 @@ object Query {
     fun getCollections(cursor: String): Storefront.QueryRootQuery {
         val definition: Storefront.QueryRootQuery.CollectionsArgumentsDefinition
         if (cursor == "nocursor") {
-            definition = Storefront.QueryRootQuery.CollectionsArgumentsDefinition{ args -> args.first(250) }
+            definition = Storefront.QueryRootQuery.CollectionsArgumentsDefinition { args -> args.first(250) }
         } else {
-            definition = Storefront.QueryRootQuery.CollectionsArgumentsDefinition{ args -> args.first(250).after(cursor) }
+            definition = Storefront.QueryRootQuery.CollectionsArgumentsDefinition { args -> args.first(250).after(cursor) }
         }
-        return Storefront.query { root -> root.collections(definition,collectiondef )
+        return Storefront.query { root ->
+            root.collections(definition, collectiondef)
         }
     }
+
     private val collectiondef: Storefront.CollectionConnectionQueryDefinition
         get() = Storefront.CollectionConnectionQueryDefinition { collect ->
             collect
@@ -235,16 +253,16 @@ object Query {
     fun getOrderList(accesstoken: String?, cursor: String): Storefront.QueryRootQuery {
         val definition: Storefront.CustomerQuery.OrdersArgumentsDefinition
         if (cursor == "nocursor") {
-            definition = Storefront.CustomerQuery.OrdersArgumentsDefinition{ args -> args.first(10) }
+            definition = Storefront.CustomerQuery.OrdersArgumentsDefinition { args -> args.first(10) }
         } else {
-            definition = Storefront.CustomerQuery.OrdersArgumentsDefinition{ args -> args.first(10).after(cursor) }
+            definition = Storefront.CustomerQuery.OrdersArgumentsDefinition { args -> args.first(10).after(cursor) }
         }
         return Storefront.query { root ->
             root
                     .customer(accesstoken
                     ) { customer ->
                         customer
-                                .orders({definition}, { order ->
+                                .orders({ definition }, { order ->
                                     order
                                             .edges({ edge ->
                                                 edge
@@ -290,16 +308,11 @@ object Query {
     }
 
     fun getAddressList(accesstoken: String?, cursor: String): Storefront.QueryRootQuery {
-        val definitions: Storefront.CustomerQuery.AddressesArgumentsDefinition
-        if (cursor == "nocursor")
-            definitions = Storefront.CustomerQuery.AddressesArgumentsDefinition{ args -> args.first(10) }
-        else
-            definitions = Storefront.CustomerQuery.AddressesArgumentsDefinition{ args -> args.first(10).after(cursor) }
         return Storefront.query { root ->
             root
                     .customer(accesstoken) { customer ->
                         customer
-                                .addresses({definitions}, { address ->
+                                .addresses({ arg -> address_list(arg, cursor) }, { address ->
                                     address
                                             .edges({ edge ->
                                                 edge
@@ -316,6 +329,17 @@ object Query {
                     }
         }
     }
+
+    private fun address_list(arg: Storefront.CustomerQuery.AddressesArguments, cursor: String): Storefront.CustomerQuery.AddressesArguments {
+        val definitions: Storefront.CustomerQuery.AddressesArguments
+        if (cursor == "nocursor")
+            definitions = arg!!.first(10)
+        else
+            definitions = arg!!.first(10).after(cursor)
+
+        return definitions
+    }
+
     fun getProductByBarcode(barcode: String): Storefront.QueryRootQuery {
         return Storefront.query { root ->
             root
