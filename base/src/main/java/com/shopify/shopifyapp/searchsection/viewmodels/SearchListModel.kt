@@ -31,8 +31,10 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<GraphQLResponse>()
     val message = MutableLiveData<String>()
-    val filteredproducts = MutableLiveData<List<Storefront.ProductEdge>>()
+    var filteredproducts: MutableLiveData<MutableList<Storefront.ProductEdge>>? = MutableLiveData<MutableList<Storefront.ProductEdge>>()
     private val avc = MutableLiveData<GraphQLResponse>()
+    var searchcursor: String = "nocursor"
+
     private val mSearchResultsSubject: PublishSubject<String>
 
     init {
@@ -70,7 +72,7 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
 
     public fun getProductsByKeywords(keyword: String): Unit {
         try {
-            val call = repository.graphClient.queryGraph(Query.getSearchProducts(keyword))
+            val call = repository.graphClient.queryGraph(Query.getSearchProducts(keyword, searchcursor))
             call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -100,14 +102,14 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
                         error = iterator.next()
                         errormessage.append(error.message())
                     }
-                    Log.i("MageNative","1"+errormessage);
+                    Log.i("MageNative", "1" + errormessage);
                     message.setValue(errormessage.toString())
                 } else {
                     filterProduct(result.data!!.products.edges)
                 }
             }
             Status.ERROR -> {
-                Log.i("MageNative","2"+reponse.error!!.error.message);
+                Log.i("MageNative", "2" + reponse.error!!.error.message);
                 message.setValue(reponse.error!!.error.message)
             }
             else -> {
@@ -115,14 +117,14 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun filterProduct(list: List<Storefront.ProductEdge>) {
+    fun filterProduct(list: MutableList<Storefront.ProductEdge>) {
         try {
             disposables.add(repository.getProductList(list)
                     .subscribeOn(Schedulers.io())
                     .filter { x -> x.node.availableForSale }
                     .toList()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { result -> filteredproducts.setValue(result) })
+                    .subscribe { result -> filteredproducts!!.value = result })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -136,7 +138,8 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
     fun setSearchData(data: String?) {
         mSearchResultsSubject.onNext(data!!)
     }
-    fun searchResultforscanner(barcode:String){
+
+    fun searchResultforscanner(barcode: String) {
         try {
             val call = repository.graphClient.queryGraph(Query.getProductByBarcode(barcode))
             call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }

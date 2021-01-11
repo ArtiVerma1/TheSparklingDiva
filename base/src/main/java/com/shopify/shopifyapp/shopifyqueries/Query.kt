@@ -228,13 +228,24 @@ object Query {
         return Storefront.query { root -> root.productByHandle(handle, productQuery) }
     }
 
-    fun getSearchProducts(keyword: String): Storefront.QueryRootQuery {
+    fun getSearchProducts(keyword: String, cursor: String): Storefront.QueryRootQuery {
+
         return Storefront.query { root ->
             root
                     .products(
-                           // Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query("title:$keyword").first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
-                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(keyword).first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
+                            //   Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(keyword).first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
+                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> product_list(args, cursor).query(keyword).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
         }
+    }
+
+    private fun product_list(args: Storefront.QueryRootQuery.ProductsArguments?, cursor: String): Storefront.QueryRootQuery.ProductsArguments {
+        var defination: Storefront.QueryRootQuery.ProductsArguments? = null
+        if (cursor == "nocursor") {
+            defination = args!!.first(10)
+        } else {
+            defination = args!!.first(10).after(cursor)
+        }
+        return defination
     }
 
     fun getCustomerDetails(customeraccestoken: String): Storefront.QueryRootQuery {
@@ -252,18 +263,13 @@ object Query {
     }
 
     fun getOrderList(accesstoken: String?, cursor: String): Storefront.QueryRootQuery {
-        val definition: Storefront.CustomerQuery.OrdersArgumentsDefinition
-        if (cursor == "nocursor") {
-            definition = Storefront.CustomerQuery.OrdersArgumentsDefinition { args -> args.first(10) }
-        } else {
-            definition = Storefront.CustomerQuery.OrdersArgumentsDefinition { args -> args.first(10).after(cursor) }
-        }
+
         return Storefront.query { root ->
             root
                     .customer(accesstoken
                     ) { customer ->
                         customer
-                                .orders({ definition }, { order ->
+                                .orders({ args -> order_list(args, cursor) }, { order ->
                                     order
                                             .edges({ edge ->
                                                 edge
@@ -306,6 +312,16 @@ object Query {
                                 )
                     }
         }
+    }
+
+    private fun order_list(arg: Storefront.CustomerQuery.OrdersArguments, cursor: String): Storefront.CustomerQuery.OrdersArguments {
+        val definition: Storefront.CustomerQuery.OrdersArguments
+        if (cursor == "nocursor") {
+            definition = arg!!.first(10)
+        } else {
+            definition = arg!!.first(10).after(cursor)
+        }
+        return definition
     }
 
     fun getAddressList(accesstoken: String?, cursor: String): Storefront.QueryRootQuery {

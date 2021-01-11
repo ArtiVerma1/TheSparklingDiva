@@ -25,11 +25,11 @@ import javax.inject.Inject
 class SearchRecylerAdapter @Inject
  constructor() : RecyclerView.Adapter<SearechItem>() {
     private var layoutInflater: LayoutInflater? = null
-    var products: List<Storefront.ProductEdge>?=null
+    var products: MutableList<Storefront.ProductEdge>?=null
     private var activity: Activity? = null
     var presentmentcurrency: String? = null
     fun setData(products: List<Storefront.ProductEdge>, activity: Activity) {
-        this.products = products
+        this.products = products as MutableList<Storefront.ProductEdge>
         this.activity = activity
     }
 

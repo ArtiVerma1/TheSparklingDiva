@@ -3,12 +3,19 @@ package com.shopify.shopifyapp.loginsection.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
@@ -23,6 +30,7 @@ import javax.inject.Inject
 
 class RegistrationActivity : BaseActivity() {
     private var binding: MRegistrationpageBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: RegistrationViewModel? = null
@@ -37,7 +45,24 @@ class RegistrationActivity : BaseActivity() {
         model!!.Response().observe(this, Observer<Storefront.Customer> { this.consumeResponse(it) })
         model!!.LoginResponse().observe(this, Observer<Storefront.CustomerAccessToken> { this.consumeLoginResponse(it) })
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
-        binding!!.handlers = MyClickHandlers(this)
+        var hand= MyClickHandlers(this)
+        try {
+            MyApplication.dataBaseReference.child("additional_info").child("login").addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val value = dataSnapshot.getValue(String::class.java)!!
+                    hand.image=value
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.i("DBConnectionError", "" + databaseError.details)
+                    Log.i("DBConnectionError", "" + databaseError.message)
+                    Log.i("DBConnectionError", "" + databaseError.code)
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        binding!!.handlers=hand
     }
 
     private fun showToast(msg: String) {
@@ -58,7 +83,15 @@ class RegistrationActivity : BaseActivity() {
         model!!.insertUserData(customer)
     }
 
-    inner class MyClickHandlers(private val context: Context) {
+    inner class MyClickHandlers(private val context: Context) : BaseObservable() {
+
+        @get:Bindable
+        var image: String? = null
+            set(image) {
+                field = image
+                notifyPropertyChanged(BR.image)
+            }
+
         fun RegistrationRequest(view: View) {
             if (binding!!.includedlregistartion.firstname.text!!.toString().isEmpty()) {
                 binding!!.includedlregistartion.firstname.error = resources.getString(R.string.empty)

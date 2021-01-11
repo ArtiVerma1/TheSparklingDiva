@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.ml.vision.FirebaseVision
@@ -37,27 +38,56 @@ import javax.inject.Inject
 
 class AutoSearch : BaseActivity() {
     private var binding: MAutosearchBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: SearchListModel? = null
+    private var search_cursor: String? = null
+    private var search_string: String? = ""
+
     @Inject
     lateinit var adapter: SearchRecylerAdapter
     private var viewlist: RecyclerView? = null
     private lateinit var camera: Camera
     private val PERMISSION_REQUEST_CODE = 1
-    var image: FirebaseVisionImage?=null
-    lateinit var  labeler: FirebaseVisionImageLabeler
+    var image: FirebaseVisionImage? = null
+    var scrolling: Boolean = false
+    private val TAG = "AutoSearch"
+    lateinit var labeler: FirebaseVisionImageLabeler
+    private var search_product: MutableList<Storefront.ProductEdge>? = null
+
+    private val recyclerViewOnScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            val visibleItemCount = recyclerView.layoutManager!!.childCount
+            val totalItemCount = recyclerView.layoutManager!!.itemCount
+            val firstVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+            if (!recyclerView.canScrollVertically(1)) {
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0
+                        && totalItemCount >= search_product!!.size) {
+                    model!!.searchcursor = search_cursor!!
+                    model!!.setSearchData(search_string)
+                    scrolling = true
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_autosearch, group, true)
         showBackButton()
         showTittle(resources.getString(R.string.search))
-        val secondary=FirebaseApp.getInstance("MageNative")
+        val secondary = FirebaseApp.getInstance("MageNative")
         val localModel = FirebaseAutoMLLocalModel.Builder()
                 .setAssetFilePath("manifest.json")
                 .build()
-        val optionsBuilder= FirebaseVisionOnDeviceAutoMLImageLabelerOptions.Builder(localModel)
+        val optionsBuilder = FirebaseVisionOnDeviceAutoMLImageLabelerOptions.Builder(localModel)
         val options = optionsBuilder.setConfidenceThreshold(0.5f).build()
         labeler = FirebaseVision.getInstance(secondary).getOnDeviceAutoMLImageLabeler(options)
         camera = Camera.Builder()
@@ -69,15 +99,17 @@ class AutoSearch : BaseActivity() {
                 .setCompression(75)//6
                 .build(this)
         viewlist = setLayout(binding!!.searchlist, "vertical")
+        viewlist!!.addOnScrollListener(recyclerViewOnScrollListener)
         (application as MyApplication).mageNativeAppComponent!!.doAutoSearchActivityInjection(this)
         model = ViewModelProviders.of(this, factory).get(SearchListModel::class.java)
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
         model!!.setPresentmentCurrencyForModel()
-        model!!.filteredproducts.observe(this, Observer<List<Storefront.ProductEdge>> { this.setRecylerData(it) })
+        model!!.filteredproducts!!.observe(this, Observer<MutableList<Storefront.ProductEdge>> { this.setRecylerData(it) })
         binding!!.searchtext.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 model!!.setSearchData(s.toString())
+                search_string = s.toString()
             }
 
             override fun afterTextChanged(s: Editable) {}
@@ -87,21 +119,26 @@ class AutoSearch : BaseActivity() {
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
-    override fun onCreateOptionsMenu( menu: Menu?): Boolean {
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_scanner, menu)
         return true
     }
-    private fun setRecylerData(products: List<Storefront.ProductEdge>) {
+
+    private fun setRecylerData(products: MutableList<Storefront.ProductEdge>) {
         try {
             if (products.size > 0) {
-                if (adapter!!.products != null) {
-                    adapter!!.products = products
-                    adapter!!.notifyDataSetChanged()
-                } else {
-                    adapter!!.presentmentcurrency = model!!.presentmentcurrency
-                    adapter!!.setData(products, this@AutoSearch)
+                adapter!!.presentmentcurrency = model!!.presentmentcurrency
+                if (!scrolling) {
+                    search_product = products
+                    adapter!!.setData(search_product!!, this@AutoSearch)
                     viewlist!!.adapter = adapter
+                } else {
+                    adapter!!.products!!.addAll(products!!)
+                    adapter!!.notifyDataSetChanged()
                 }
+                Log.d(TAG, "setRecylerData: " + products)
+                search_cursor = products[products.size - 1].cursor
             } else {
                 showToast(resources.getString(R.string.noproducts))
             }
@@ -111,6 +148,7 @@ class AutoSearch : BaseActivity() {
         }
 
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -127,13 +165,14 @@ class AutoSearch : BaseActivity() {
                 integrator.initiateScan()
                 true
             }
-            R.id.camera->{
+            R.id.camera -> {
                 takePicture()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
@@ -143,8 +182,7 @@ class AutoSearch : BaseActivity() {
                 } else {
                     Toast.makeText(this.applicationContext, getString(R.string.picture_not_taken), Toast.LENGTH_SHORT).show()
                 }
-            }
-            else{
+            } else {
                 val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
                 if (result != null) {
                     if (result.contents == null) {
@@ -152,8 +190,8 @@ class AutoSearch : BaseActivity() {
                         finish()
                     } else {
                         try {
-                            adapter!!.products=null
-                            Log.i("MageNative","Barcode"+result.contents)
+                            adapter!!.products = null
+                            Log.i("MageNative", "Barcode" + result.contents)
                             model!!.searchResultforscanner(result.contents)
                         } catch (e: java.lang.Exception) {
                             e.printStackTrace()
@@ -161,11 +199,12 @@ class AutoSearch : BaseActivity() {
                     }
                 }
             }
-        }else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
 
     }
+
     fun takePicture() {
         if (!hasPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
                 !hasPermission(android.Manifest.permission.CAMERA)) {
@@ -182,7 +221,8 @@ class AutoSearch : BaseActivity() {
             }
         }
     }
-    private fun requestPermissions(){
+
+    private fun requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA), PERMISSION_REQUEST_CODE)
@@ -193,6 +233,7 @@ class AutoSearch : BaseActivity() {
             return
         }
     }
+
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
@@ -212,6 +253,7 @@ class AutoSearch : BaseActivity() {
             }
         }
     }
+
     private fun checkImage(bitmap: Bitmap) {
         image = FirebaseVisionImage.fromBitmap(bitmap)
         labeler.processImage(image!!)
@@ -219,11 +261,11 @@ class AutoSearch : BaseActivity() {
                     for (label in labels) {
                         val text = label.text
                         val confidence = label.confidence
-                        if(label.confidence>0.5){
+                        if (label.confidence > 0.5) {
                             model!!.getProductsByKeywords(text)
-                            Log.i("MageNative","Label : "+text)
-                            Log.i("MageNative","confidence : $confidence")
-                        }else{
+                            Log.i("MageNative", "Label : " + text)
+                            Log.i("MageNative", "confidence : $confidence")
+                        } else {
                             continue
                         }
                     }
@@ -232,6 +274,7 @@ class AutoSearch : BaseActivity() {
                     e.printStackTrace()
                 }
     }
+
     private fun hasPermission(permission: String): Boolean {
         return ActivityCompat.checkSelfPermission(this,
                 permission) == PackageManager.PERMISSION_GRANTED
