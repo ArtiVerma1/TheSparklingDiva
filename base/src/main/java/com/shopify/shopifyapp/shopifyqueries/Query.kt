@@ -232,7 +232,8 @@ object Query {
         return Storefront.query { root ->
             root
                     .products(
-                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query("title:$keyword").first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
+                           // Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query("title:$keyword").first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
+                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(keyword).first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
         }
     }
 
