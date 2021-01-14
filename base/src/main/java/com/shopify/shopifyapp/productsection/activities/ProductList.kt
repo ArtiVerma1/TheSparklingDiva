@@ -170,7 +170,6 @@ class ProductList : BaseActivity() {
                     productlist!!.adapter = adapter
                 } else {
                     this.products!!.addAll(products)
-                    adapter!!.products.addAll(products)
                     adapter!!.notifyDataSetChanged()
                 }
                 productcursor = this.products!![this.products!!.size - 1].cursor

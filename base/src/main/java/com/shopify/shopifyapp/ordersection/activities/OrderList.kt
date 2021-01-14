@@ -78,7 +78,6 @@ class OrderList : BaseActivity() {
                     orderlist!!.adapter = adapter
                 } else {
                     this.orders!!.addAll(response.edges)
-                    adapter!!.data!!.addAll(response.edges)
                     adapter!!.notifyDataSetChanged()
                 }
                 ordercursor = this.orders!![this.orders!!.size - 1].cursor

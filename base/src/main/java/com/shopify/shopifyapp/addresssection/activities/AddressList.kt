@@ -110,7 +110,6 @@ open class AddressList : BaseActivity() {
                     addresslist!!.adapter = adapter
                 } else {
                     this.mailingAddressEdges!!.addAll(mailingAddressEdges)
-                    adapter!!.data!!.addAll(mailingAddressEdges)
                     adapter!!.notifyDataSetChanged()
                 }
                 cursor = this.mailingAddressEdges!![this.mailingAddressEdges!!.size - 1].cursor
