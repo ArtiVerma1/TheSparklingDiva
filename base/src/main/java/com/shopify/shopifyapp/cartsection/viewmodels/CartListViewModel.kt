@@ -352,6 +352,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                             }
                         } else {
                             val checkout = payload.checkout
+
                             getRecommendations(checkout)
                             getYouMayRecommendations(checkout)
                             data.setValue(checkout)

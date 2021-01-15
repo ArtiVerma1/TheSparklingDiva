@@ -131,6 +131,87 @@ object MutationQuery {
                                             .message()
                                 }
                     }
+
+
+
+        }
+    }
+
+    fun checkoutDiscountCodeApply(checkoutId: ID?, discount_code: String?): Storefront.MutationQuery
+    {
+        return mutation{ mutation: Storefront.MutationQuery ->
+            mutation.checkoutDiscountCodeApplyV2(discount_code,checkoutId)
+            { query: CheckoutDiscountCodeApplyV2PayloadQuery ->
+                query
+                        .checkout {check-> check.webUrl() }
+                        .userErrors { userError: UserErrorQuery ->
+                            userError
+                                    .field()
+                                    .message()
+                        }
+            }
+
+        }
+    }
+    fun checkoutDiscountCodeRemove(checkoutId: ID?):Storefront.MutationQuery
+    {
+        return mutation{
+            mutation:Storefront.MutationQuery ->
+            mutation.checkoutDiscountCodeRemove(checkoutId)
+            {
+                query: CheckoutDiscountCodeRemovePayloadQuery ->
+                query
+                        .checkout {check-> check.webUrl() }
+                        .userErrors { userError: UserErrorQuery ->
+                            userError
+                                    .field()
+                                    .message()
+                        }
+            }
+        }
+    }
+
+
+
+
+    fun checkoutGiftCardsAppend(checkoutId: ID?, gift_card: List<String>?):Storefront.MutationQuery
+    {
+        return mutation{ mutation:Storefront.MutationQuery ->
+            mutation.checkoutGiftCardsAppend(gift_card,checkoutId)
+            { query: CheckoutGiftCardsAppendPayloadQuery ->
+                query
+                        .checkout {check-> check.webUrl()
+                                .appliedGiftCards { gc ->gc.amountUsedV2(
+                                        { a-> a.amount()
+                                                .currencyCode()
+                                        }
+                                ) }
+                            }
+                        .userErrors { userError: UserErrorQuery ->
+                            userError
+                                    .field()
+                                    .message()
+                        }
+            }
+
+
+        }
+    }
+
+    fun checkoutGiftCards(appliedGiftCardId: ID?,checkoutId: ID?):Storefront.MutationQuery
+    {
+        return mutation{
+            mutation:Storefront.MutationQuery->
+            mutation.checkoutGiftCardRemoveV2(appliedGiftCardId,checkoutId)
+            { query: CheckoutGiftCardRemoveV2PayloadQuery ->
+                query
+                        .checkout {check-> check.webUrl() }
+                        .userErrors { userError: UserErrorQuery ->
+                            userError
+                                    .field()
+                                    .message()
+                        }
+            }
         }
     }
 
