@@ -45,6 +45,9 @@ import com.shopify.shopifyapp.homesection.adapters.*
 import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import com.shopify.shopifyapp.homesection.models.ProductSlider
 import com.shopify.shopifyapp.homesection.models.StandAloneBanner
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.shopifyqueries.Query
@@ -974,14 +977,15 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
 
     fun getProductsById(id: String, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductById(getProductID(id)!!))
-            call.enqueue(Handler(Looper.getMainLooper())) { result ->
-                if (result is GraphCallResult.Success<*>) {
-                    consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
-                } else {
-                    consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+            doGraphQLQueryGraph(repository, Query.getProductById(getProductID(id)!!), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    if (result is GraphCallResult.Success<*>) {
+                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
+                    } else {
+                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+                    }
                 }
-            }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1153,71 +1157,71 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
         var binding: MCategoryCircleBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_circle, null, false)
         var category = CategoryCircle()
         binding.category = category
-            var background = JSONObject(jsonObject.getString("panel_background_color"))
+        var background = JSONObject(jsonObject.getString("panel_background_color"))
 
-            binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
-            if (jsonObject.getString("item_title").equals("1")) {
-                category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-                category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-                category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-                category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
-                category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
-                var item_color = JSONObject(jsonObject.getString("item_title_color"))
-                binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextThree.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
-                binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
-                if (jsonObject.getString("item_font_weight").equals("bold")) {
-                    val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                    binding.catTextOne.setTypeface(face)
-                    binding.catTextTwo.setTypeface(face)
-                    binding.catTextThree.setTypeface(face)
-                    binding.catTextFour.setTypeface(face)
-                    binding.catTextFive.setTypeface(face)
-                }
-                if (jsonObject.getString("item_font_style").equals("italic")) {
-                    binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
-                    binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
-                    binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
-                    binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
-                    binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
-                }
+        binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
+        if (jsonObject.getString("item_title").equals("1")) {
+            category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+            category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+            category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+            category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
+            category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
+            var item_color = JSONObject(jsonObject.getString("item_title_color"))
+            binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextThree.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
+            binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
+            if (jsonObject.getString("item_font_weight").equals("bold")) {
+                val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                binding.catTextOne.setTypeface(face)
+                binding.catTextTwo.setTypeface(face)
+                binding.catTextThree.setTypeface(face)
+                binding.catTextFour.setTypeface(face)
+                binding.catTextFive.setTypeface(face)
             }
-            if (jsonObject.getString("item_border").equals("1")) {
-                var item_border_color = JSONObject(jsonObject.getString("item_border_color"))
-                binding.imageOne.tag = item_border_color.getString("color")
-                binding.imageTwo.tag = item_border_color.getString("color")
-                binding.imageThree.tag = item_border_color.getString("color")
-                binding.imageFour.tag = item_border_color.getString("color")
-                binding.imageFive.tag = item_border_color.getString("color")
-            } else {
-                binding.imageOne.tag = background.getString("color")
-                binding.imageTwo.tag = background.getString("color")
-                binding.imageThree.tag = background.getString("color")
-                binding.imageFour.tag = background.getString("color")
-                binding.imageFive.tag = background.getString("color")
+            if (jsonObject.getString("item_font_style").equals("italic")) {
+                binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
+                binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
+                binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
+                binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
+                binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
             }
-            category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-            category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
-            category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-            category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
-            category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
-            category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-            category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
-            category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
-            category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-            category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
-            category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
-            category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
-            category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
-            if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
-                category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
-            } else {
-                category.cat_value_five = "list_collection"
-            }
-            category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
-            homepagedata.setValue(hashMapOf("category-circle_" to binding.root))
+        }
+        if (jsonObject.getString("item_border").equals("1")) {
+            var item_border_color = JSONObject(jsonObject.getString("item_border_color"))
+            binding.imageOne.tag = item_border_color.getString("color")
+            binding.imageTwo.tag = item_border_color.getString("color")
+            binding.imageThree.tag = item_border_color.getString("color")
+            binding.imageFour.tag = item_border_color.getString("color")
+            binding.imageFive.tag = item_border_color.getString("color")
+        } else {
+            binding.imageOne.tag = background.getString("color")
+            binding.imageTwo.tag = background.getString("color")
+            binding.imageThree.tag = background.getString("color")
+            binding.imageFour.tag = background.getString("color")
+            binding.imageFive.tag = background.getString("color")
+        }
+        category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+        category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+        category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+        category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+        category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+        category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+        category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+        category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+        category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+        category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
+        category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
+        category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
+        category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
+        if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
+            category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
+        } else {
+            category.cat_value_five = "list_collection"
+        }
+        category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
+        homepagedata.setValue(hashMapOf("category-circle_" to binding.root))
     }
 
     class MyCount : CountDownTimer {
@@ -1261,12 +1265,15 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
             query.recommendationType = recommendationType
             var body = Body()
             body.queries = mutableListOf(query)
-            disposables.add(repository.getRecommendation(body)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result -> api.setValue(ApiResponse.success(result)) },
-                            { throwable -> api.setValue(ApiResponse.error(throwable)) }
-                    ))
+            doRetrofitCall(repository.getRecommendation(body), disposables, customResponse = object : CustomResponse {
+                override fun onSuccessRetrofit(result: JsonElement) {
+                    api.setValue(ApiResponse.success(result))
+                }
+
+                override fun onErrorRetrofit(error: Throwable) {
+                    api.setValue(ApiResponse.error(error))
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

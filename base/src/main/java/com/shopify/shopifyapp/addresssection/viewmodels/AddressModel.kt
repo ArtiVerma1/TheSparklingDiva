@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.addresssection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 
@@ -15,6 +16,9 @@ import com.shopify.graphql.support.Error
 import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.addresssection.models.Address
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLMutateGraph
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.shopifyqueries.Query
@@ -25,11 +29,12 @@ class AddressModel(private val repository: Repository) : ViewModel() {
     private var addr: Address? = null
     private var msg: String? = null
     private var data: CustomerTokenData? = null
-    var addresscursor :String= "nocursor"
+    var addresscursor: String = "nocursor"
         set(addresscursor) {
             field = addresscursor
             getAddressList()
         }
+    lateinit var context: Context
     val message = MutableLiveData<String>()
     val sheet = MutableLiveData<Boolean>()
     val editaddress = MutableLiveData<Address>()
@@ -42,27 +47,24 @@ class AddressModel(private val repository: Repository) : ViewModel() {
 
     private fun getAddressList() {
         try {
-            val runnable = object : Runnable {
-                override fun run() {
-                    data = repository.accessToken[0]
-                    val call = repository.graphClient.queryGraph(Query.getAddressList(data!!.customerAccessToken, addresscursor))
-                    call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            data = repository.accessToken[0]
+            doGraphQLQueryGraph(repository, Query.getAddressList(data!!.customerAccessToken, addresscursor), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
                 }
-
-                private operator fun invoke(result: GraphCallResult<Storefront.QueryRoot>): Unit {
-                    if (result is GraphCallResult.Success<*>) {
-                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>))
-                    } else {
-                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure))
-                    }
-                    return Unit
-                }
-            }
-            Thread(runnable).start()
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
 
+    private operator fun invoke(result: GraphCallResult<Storefront.QueryRoot>): Unit {
+        if (result is GraphCallResult.Success<*>) {
+            consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+        return Unit
     }
 
     private fun consumeResponse(reponse: GraphQLResponse) {
@@ -96,8 +98,11 @@ class AddressModel(private val repository: Repository) : ViewModel() {
     fun deleteAddress(msg: String, adress: Address) {
         try {
             this.msg = msg
-            val call = repository.graphClient.mutateGraph(MutationQuery.deleteCustomerAddress(data!!.customerAccessToken, adress.address_id))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.deleteAddressinvoke(graphCallResult) }
+            doGraphQLMutateGraph(repository, (MutationQuery.deleteCustomerAddress(data!!.customerAccessToken, adress.address_id)), customResponse = object : CustomResponse {
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    deleteAddressinvoke(result)
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -156,8 +161,11 @@ class AddressModel(private val repository: Repository) : ViewModel() {
 
     fun addAddress(input: Storefront.MailingAddressInput) {
         try {
-            val call = repository.graphClient.mutateGraph(MutationQuery.addAddress(input, data!!.customerAccessToken))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.addAddressinvoke(graphCallResult) }
+            doGraphQLMutateGraph(repository, MutationQuery.addAddress(input, data!!.customerAccessToken), customResponse = object : CustomResponse {
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    addAddressinvoke(result)
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -221,8 +229,11 @@ class AddressModel(private val repository: Repository) : ViewModel() {
 
     fun updateAddress(input: Storefront.MailingAddressInput, address_id: ID?) {
         try {
-            val call = repository.graphClient.mutateGraph(MutationQuery.updateAddress(input, data!!.customerAccessToken, address_id))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.updateAddressinvoke(graphCallResult) }
+            doGraphQLMutateGraph(repository,MutationQuery.updateAddress(input, data!!.customerAccessToken, address_id),customResponse = object :CustomResponse{
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    updateAddressinvoke(result)
+                }
+            },context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

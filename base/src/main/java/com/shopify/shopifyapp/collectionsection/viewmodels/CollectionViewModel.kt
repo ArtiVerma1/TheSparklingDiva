@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.collectionsection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 
@@ -11,6 +12,8 @@ import com.shopify.buy3.GraphResponse
 import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.GraphQLResponse
@@ -20,6 +23,7 @@ class CollectionViewModel(private val repository: Repository) : ViewModel() {
     var cursor = "nocursor"
     private val responsedata = MutableLiveData<List<Storefront.CollectionEdge>>()
     val message = MutableLiveData<String>()
+    lateinit var context: Context
     fun Response(): MutableLiveData<List<Storefront.CollectionEdge>> {
         getCollectionData()
         return responsedata
@@ -27,8 +31,11 @@ class CollectionViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getCollectionData() {
         try {
-            val call = repository.graphClient.queryGraph(Query.getCollections(cursor))
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            doGraphQLQueryGraph(repository, Query.getCollections(cursor), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -38,6 +38,7 @@ class CheckoutWeblink : BaseActivity() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_webpage, content, true)
         (application as MyApplication).mageNativeAppComponent!!.doCheckoutWeblinkActivityInjection(this)
         model = ViewModelProviders.of(this, factory).get(CheckoutWebLinkViewModel::class.java)
+        model!!.context=this
         showTittle(resources.getString(R.string.checkout))
         showBackButton()
         webView = binding!!.webview

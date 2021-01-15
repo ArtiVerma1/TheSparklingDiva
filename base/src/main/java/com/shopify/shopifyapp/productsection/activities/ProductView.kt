@@ -67,6 +67,7 @@ class ProductView : BaseActivity() {
         variantlist = setLayout(binding!!.productvariant, "horizontal")
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
+        model!!.context=this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         if (intent.getStringExtra("handle") != null) {
             model!!.handle = intent.getStringExtra("handle")

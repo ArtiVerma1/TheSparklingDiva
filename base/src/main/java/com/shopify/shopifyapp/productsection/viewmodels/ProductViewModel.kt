@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.productsection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
@@ -7,6 +8,7 @@ import android.util.Log
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonElement
 
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.QueryGraphCall
@@ -15,6 +17,9 @@ import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.dependecyinjection.InnerData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.productsection.models.VariantData
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
@@ -37,6 +42,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<GraphQLResponse>()
+    lateinit var context: Context
     val filteredlist = MutableLiveData<List<Storefront.ProductVariantEdge>>()
     val cartCount: Int
         get() {
@@ -71,8 +77,11 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getProductsById() {
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductById(id))
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            doGraphQLQueryGraph(repository, Query.getProductById(id), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -81,8 +90,11 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getProductsByHandle() {
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductByHandle(handle))
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            doGraphQLQueryGraph(repository, Query.getProductByHandle(handle), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -126,7 +138,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         try {
             val executor = Executors.newSingleThreadExecutor()
             val callable = Callable {
-                if (repository.getSingleData(variant.variant_id!!)==null) {
+                if (repository.getSingleData(variant.variant_id!!) == null) {
                     Log.i("MageNative", "WishListCount : " + repository.wishListData.size)
                     val data = ItemData()
                     data.variant_id = variant.variant_id!!
@@ -238,30 +250,36 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
+
     private val api = MutableLiveData<ApiResponse>()
     fun getApiResponse(): MutableLiveData<ApiResponse> {
         return api
     }
-    fun getRecommendations(id: String ){
+
+    fun getRecommendations(id: String) {
         RetrofitUrlManager.getInstance().putDomain("douban", Urls.PERSONALISED);
         try {
-            var query= InnerData()
-            query.id="query1"
-            query.maxRecommendations=8
-            query.recommendationType="similar_products"
-            var list= mutableListOf<Long>( )
-            var  s =  String(Base64.decode(id,Base64.DEFAULT))
-            list.add(s.replace("gid://shopify/Product/","").toLong())
-            query.productIds= list
-            var body= Body()
-            body.queries= mutableListOf(query)
-            Log.i("Body",""+list)
-            disposables.add(repository.getRecommendation(body)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->  api.setValue(ApiResponse.success(result))},
-                            { throwable -> api.setValue(ApiResponse.error(throwable)) }
-                    ))
+            var query = InnerData()
+            query.id = "query1"
+            query.maxRecommendations = 8
+            query.recommendationType = "similar_products"
+            var list = mutableListOf<Long>()
+            var s = String(Base64.decode(id, Base64.DEFAULT))
+            list.add(s.replace("gid://shopify/Product/", "").toLong())
+            query.productIds = list
+            var body = Body()
+            body.queries = mutableListOf(query)
+            Log.i("Body", "" + list)
+            doRetrofitCall(repository.getRecommendation(body), disposables, customResponse = object : CustomResponse {
+                override fun onSuccessRetrofit(result: JsonElement) {
+                    api.setValue(ApiResponse.success(result))
+                }
+
+                override fun onErrorRetrofit(error: Throwable) {
+                    api.setValue(ApiResponse.error(error))
+                }
+            }, context = context)
+
         } catch (e: Exception) {
             e.printStackTrace()
         }

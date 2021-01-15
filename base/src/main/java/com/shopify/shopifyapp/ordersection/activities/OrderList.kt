@@ -61,6 +61,7 @@ class OrderList : BaseActivity() {
         showBackButton()
         (application as MyApplication).mageNativeAppComponent!!.doOrderListInjection(this)
         model = ViewModelProviders.of(this, factory).get(OrderListViewModel::class.java)
+        model!!.context=this
         model!!.errorResponse.observe(this, Observer<String> { this.showToast(it) })
         model!!.getResponse_().observe(this, Observer<Storefront.OrderConnection> { this.consumeResponse(it) })
     }

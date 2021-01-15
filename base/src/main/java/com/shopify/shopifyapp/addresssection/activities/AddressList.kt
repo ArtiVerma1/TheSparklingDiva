@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.addresssection.activities
+
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -20,12 +21,15 @@ import com.shopify.shopifyapp.databinding.MAddresslistBinding
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import javax.inject.Inject
+
 open class AddressList : BaseActivity() {
     internal var binding: MAddresslistBinding? = null
     private var model: AddressModel? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var addresslist: RecyclerView? = null
+
     @Inject
     lateinit var adapter: AddressListAdapter
     private var cursor: String? = null
@@ -66,6 +70,7 @@ open class AddressList : BaseActivity() {
         sheet = BottomSheetBehavior.from(binding!!.mainbottomsheet.bottomSheet)
         sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
         model = ViewModelProviders.of(this, factory).get(AddressModel::class.java)
+        model!!.context = this
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
         model!!.addresses.observe(this, Observer<MutableList<Storefront.MailingAddressEdge>> { this.listAddress(it) })
         model!!.sheet.observe(this, Observer<Boolean> { this.opensheet(it) })

@@ -1,9 +1,14 @@
 package com.shopify.shopifyapp.checkoutsection.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonElement
+import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.UserLocalData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.utils.ApiResponse
 import java.util.concurrent.Callable
@@ -17,9 +22,11 @@ import io.reactivex.schedulers.Schedulers
 class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<ApiResponse>()
+    lateinit var context: Context
     var customeraccessToken: CustomerTokenData
         get() {
-            return repository.accessToken[0]        }
+            return repository.accessToken[0]
+        }
         set(value) {}
     val isLoggedIn: Boolean
         get() = repository.isLogin
@@ -44,17 +51,19 @@ class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel()
 
     fun setOrder(mid: String, checkout_token: String?) {
         try {
-            disposables.add(repository.setOrder(mid, checkout_token)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { result -> responseLiveData.setValue(ApiResponse.success(result)) },
-                            { throwable -> responseLiveData.setValue(ApiResponse.error(throwable)) }
-                    ))
+            var postData = repository.setOrder(mid, checkout_token)
+            doRetrofitCall(postData, disposables, customResponse = object : CustomResponse {
+                override fun onSuccessRetrofit(result: JsonElement) {
+                    responseLiveData.setValue(ApiResponse.success(result))
+                }
+
+                override fun onErrorRetrofit(error: Throwable) {
+                    responseLiveData.setValue(ApiResponse.error(error))
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     fun deleteCart() {

@@ -47,6 +47,7 @@ class LoginActivity : BaseActivity() {
         sheet = BottomSheetBehavior.from(binding!!.includedforgot.bottomSheet)
         sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
         model = ViewModelProviders.of(this, factory).get(LoginViewModel::class.java)
+        model!!.context=this
         model!!.Response().observe(this, Observer<Storefront.CustomerAccessToken> { this.consumeResponse(it) })
         model!!.getResponsedata_().observe(this, Observer<Storefront.Customer> { this.MapLoginDetails(it) })
         model!!.errormessage.observe(this, Observer<String> { this.showToast(it) })

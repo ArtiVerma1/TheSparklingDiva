@@ -44,6 +44,7 @@ class HomePage : NewBaseActivity() {
         homepage=binding!!.homecontainer
         (application as MyApplication).mageNativeAppComponent!!.doHomePageInjection(this)
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
+        homemodel!!.context=this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         homemodel!!.connectFirebaseForHomePageData(this,homepage)
         if(Constant.ispersonalisedEnable){

@@ -42,6 +42,7 @@ class RegistrationActivity : BaseActivity() {
         showBackButton()
         (application as MyApplication).mageNativeAppComponent!!.doRegistrationActivityInjection(this)
         model = ViewModelProviders.of(this, factory).get(RegistrationViewModel::class.java)
+        model!!.context=this
         model!!.Response().observe(this, Observer<Storefront.Customer> { this.consumeResponse(it) })
         model!!.LoginResponse().observe(this, Observer<Storefront.CustomerAccessToken> { this.consumeLoginResponse(it) })
         model!!.message.observe(this, Observer<String> { this.showToast(it) })

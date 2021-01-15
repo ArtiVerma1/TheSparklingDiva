@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.loginsection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 
@@ -13,6 +14,8 @@ import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.UserLocalData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLMutateGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.utils.GraphQLResponse
@@ -23,6 +26,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
     private val responsedata = MutableLiveData<Storefront.Customer>()
     private val loginresponsedata = MutableLiveData<Storefront.CustomerAccessToken>()
     private var password = ""
+    lateinit var context: Context
     fun LoginResponse(): MutableLiveData<Storefront.CustomerAccessToken> {
         return loginresponsedata
     }
@@ -38,8 +42,11 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
 
     private fun registeruseer(firstname: String, lastname: String, email: String, password: String) {
         try {
-            val call = repository.graphClient.mutateGraph(MutationQuery.createaccount(firstname, lastname, email, password))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.invoke(graphCallResult) }
+            doGraphQLMutateGraph(repository,MutationQuery.createaccount(firstname, lastname, email, password),customResponse = object :CustomResponse{
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invoke(result)
+                }
+            },context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -98,8 +105,11 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getLoginData(email: String, password: String) {
         try {
-            val call = repository.graphClient.mutateGraph(MutationQuery.getLoginDetails(email, password))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.invokes(graphCallResult) }
+            doGraphQLMutateGraph(repository,MutationQuery.getLoginDetails(email, password),customResponse = object :CustomResponse{
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invokes(result)
+                }
+            },context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

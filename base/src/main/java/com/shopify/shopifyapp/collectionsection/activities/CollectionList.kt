@@ -22,9 +22,11 @@ import javax.inject.Inject
 
 class CollectionList : BaseActivity() {
     private var binding: MCollectionlistBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: CollectionViewModel? = null
+
     @Inject
     lateinit var adapter: CollectionRecylerAdapter
 
@@ -37,6 +39,7 @@ class CollectionList : BaseActivity() {
         setLayout(binding!!.categorylist, "3grid")
         (application as MyApplication).mageNativeAppComponent!!.doCollectionInjection(this)
         model = ViewModelProviders.of(this, factory).get(CollectionViewModel::class.java)
+        model!!.context = this
         model!!.Response().observe(this, Observer<List<Storefront.CollectionEdge>> { this.setRecylerData(it) })
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
     }

@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.ordersection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 
@@ -12,6 +13,8 @@ import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.GraphQLResponse
@@ -23,6 +26,7 @@ class OrderListViewModel(private val repository: Repository) : ViewModel() {
             field = cursor
             fetchOrderData()
         }
+    lateinit var context: Context
     private val response = MutableLiveData<Storefront.OrderConnection>()
     val errorResponse = MutableLiveData<String>()
     fun getResponse_(): MutableLiveData<Storefront.OrderConnection> {
@@ -35,8 +39,12 @@ class OrderListViewModel(private val repository: Repository) : ViewModel() {
             val runnable = object : Runnable {
                 override fun run() {
                     val tokenData = repository.accessToken[0]
-                    val call = repository.graphClient.queryGraph(Query.getOrderList(tokenData.customerAccessToken, cursor))
-                    call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.QueryRoot> -> this.invokes(graphCallResult) }
+                    doGraphQLQueryGraph(repository,Query.getOrderList(tokenData.customerAccessToken, cursor),customResponse = object :CustomResponse{
+                        override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                            invokes(result)
+                        }
+                    },context = context)
+
                 }
 
                 private fun invokes(graphCallResult: GraphCallResult<Storefront.QueryRoot>): Unit {

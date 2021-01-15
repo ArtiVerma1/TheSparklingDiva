@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.cartsection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
@@ -21,6 +22,8 @@ import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.dependecyinjection.InnerData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLMutateGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Mutation
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
@@ -46,10 +49,12 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val api = MutableLiveData<ApiResponse>()
     private val youmayapi = MutableLiveData<ApiResponse>()
     private val disposables = CompositeDisposable()
+    lateinit var context: Context
     private val responsedata = MutableLiveData<Storefront.Checkout>()
     var customeraccessToken: CustomerTokenData
         get() {
-            return repository.accessToken[0]        }
+            return repository.accessToken[0]
+        }
         set(value) {}
     val message = MutableLiveData<String>()
     val cartCount: Int
@@ -135,23 +140,27 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     fun Response(): MutableLiveData<Storefront.Checkout> {
         return data
     }
+
     fun getApiResponse(): MutableLiveData<ApiResponse> {
         return api
     }
+
     fun getYouMAyAPiResponse(): MutableLiveData<ApiResponse> {
         return youmayapi
     }
+
     fun getassociatecheckoutResponse(): MutableLiveData<Storefront.Checkout> {
-         return responsedata
+        return responsedata
     }
 
 
-
-    fun associatecheckout(checkoutId: ID?, customerAccessToken: String?)
-    {
+    fun associatecheckout(checkoutId: ID?, customerAccessToken: String?) {
         try {
-            val call = repository.graphClient.mutateGraph(MutationQuery.checkoutCustomerAssociateV2(checkoutId, customerAccessToken))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.invoke(graphCallResult) }
+            doGraphQLMutateGraph(repository, MutationQuery.checkoutCustomerAssociateV2(checkoutId, customerAccessToken), customResponse = object : CustomResponse {
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invoke(result)
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -181,17 +190,17 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                     }
                     /*this.errormessage.setValue(errormessage.toString())*/
                 } else {
-                   /* val payload = result.data!!.checkoutCreate
-                    if (payload.checkoutUserErrors.size > 0) {
-                        val iterator = payload.checkoutUserErrors.iterator()
-                        var error: Storefront.CheckoutUserError? = null
-                        while (iterator.hasNext()) {
-                            error = iterator.next() as Storefront.CheckoutUserError
-                            message.setValue(error.message)
-                        }
-                        *//*errormessage.setValue(err)*//*
+                    /* val payload = result.data!!.checkoutCreate
+                     if (payload.checkoutUserErrors.size > 0) {
+                         val iterator = payload.checkoutUserErrors.iterator()
+                         var error: Storefront.CheckoutUserError? = null
+                         while (iterator.hasNext()) {
+                             error = iterator.next() as Storefront.CheckoutUserError
+                             message.setValue(error.message)
+                         }
+                         *//*errormessage.setValue(err)*//*
                     } else {*/
-                        responsedata.setValue(result.data!!.getCheckoutCustomerAssociateV2().getCheckout())
+                    responsedata.setValue(result.data!!.getCheckoutCustomerAssociateV2().getCheckout())
                     /*}*/
                 }
             }
@@ -213,12 +222,14 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                             input.presentmentCurrencyCode = currencyCode
 
                         }
-                        val call = repository.graphClient.mutateGraph(Mutation.createCheckout(input))
-                        call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.Mutation> -> this.invoke(result) }
+                        doGraphQLMutateGraph(repository, Mutation.createCheckout(input), customResponse = object : CustomResponse {
+                            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                                invoke(result)
+                            }
+                        }, context = context)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-
                 }
 
                 private operator fun invoke(result: GraphCallResult<Storefront.Mutation>): Unit {
@@ -355,58 +366,61 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             e.printStackTrace()
         }
     }
-    fun getYouMayRecommendations(checkout : Storefront.Checkout){
+
+    fun getYouMayRecommendations(checkout: Storefront.Checkout) {
         RetrofitUrlManager.getInstance().putDomain("douban", Urls.PERSONALISED);
         try {
-            var query= InnerData()
-            query.id="query1"
-            query.maxRecommendations=8
-            query.recommendationType="cross_sell"
-            var list= mutableListOf<Long>( )
-            for (i in 0..checkout.lineItems.edges.size-1){
-                var  s =  String(Base64.decode(checkout.lineItems.edges.get(i).node.variant.product.id.toString(),Base64.DEFAULT))
-                list.add(s.replace("gid://shopify/Product/","").toLong())
+            var query = InnerData()
+            query.id = "query1"
+            query.maxRecommendations = 8
+            query.recommendationType = "cross_sell"
+            var list = mutableListOf<Long>()
+            for (i in 0..checkout.lineItems.edges.size - 1) {
+                var s = String(Base64.decode(checkout.lineItems.edges.get(i).node.variant.product.id.toString(), Base64.DEFAULT))
+                list.add(s.replace("gid://shopify/Product/", "").toLong())
             }
-            query.productIds= list
-            var body=Body()
-            body.queries= mutableListOf(query)
-            Log.i("Body",""+list)
+            query.productIds = list
+            var body = Body()
+            body.queries = mutableListOf(query)
+            Log.i("Body", "" + list)
             disposables.add(repository.getRecommendation(body)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->  youmayapi.setValue(ApiResponse.success(result))},
+                    .subscribe({ result -> youmayapi.setValue(ApiResponse.success(result)) },
                             { throwable -> youmayapi.setValue(ApiResponse.error(throwable)) }
                     ))
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-    fun getRecommendations(checkout : Storefront.Checkout){
+
+    fun getRecommendations(checkout: Storefront.Checkout) {
         RetrofitUrlManager.getInstance().putDomain("douban", Urls.PERSONALISED);
         try {
-            var query= InnerData()
-            query.id="query1"
-            query.maxRecommendations=8
-            query.recommendationType="bought_together"
-            var list= mutableListOf<Long>( )
-            for (i in 0..checkout.lineItems.edges.size-1){
-                var  s =  String(Base64.decode(checkout.lineItems.edges.get(i).node.variant.product.id.toString(),Base64.DEFAULT))
-                list.add(s.replace("gid://shopify/Product/","").toLong())
+            var query = InnerData()
+            query.id = "query1"
+            query.maxRecommendations = 8
+            query.recommendationType = "bought_together"
+            var list = mutableListOf<Long>()
+            for (i in 0..checkout.lineItems.edges.size - 1) {
+                var s = String(Base64.decode(checkout.lineItems.edges.get(i).node.variant.product.id.toString(), Base64.DEFAULT))
+                list.add(s.replace("gid://shopify/Product/", "").toLong())
             }
-            query.productIds= list
-            var body=Body()
-            body.queries= mutableListOf(query)
-            Log.i("Body",""+list)
+            query.productIds = list
+            var body = Body()
+            body.queries = mutableListOf(query)
+            Log.i("Body", "" + list)
             disposables.add(repository.getRecommendation(body)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->  api.setValue(ApiResponse.success(result))},
+                    .subscribe({ result -> api.setValue(ApiResponse.success(result)) },
                             { throwable -> api.setValue(ApiResponse.error(throwable)) }
                     ))
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
     override fun onCleared() {
         disposables.clear()
     }

@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.userprofilesection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 
@@ -14,6 +15,9 @@ import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.UserLocalData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLMutateGraph
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.shopifyqueries.Query
@@ -26,6 +30,7 @@ class UserProfileViewModel(private val repository: Repository) : ViewModel() {
     private var user: UserLocalData? = null
     private val response = MutableLiveData<Storefront.Customer>()
     private val password = MutableLiveData<String>()
+    lateinit var context: Context
     val errorMessageResponse = MutableLiveData<String>()
     val passwordResponse: MutableLiveData<String>
         get() {
@@ -54,12 +59,14 @@ class UserProfileViewModel(private val repository: Repository) : ViewModel() {
     private fun fetchData() {
         try {
             data = repository.accessToken[0]
-            val call = repository.graphClient.queryGraph(Query.getCustomerDetails(data!!.customerAccessToken!!))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.QueryRoot> -> this.invoke(graphCallResult) }
+            doGraphQLQueryGraph(repository, Query.getCustomerDetails(data!!.customerAccessToken!!), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     private operator fun invoke(graphCallResult: GraphCallResult<Storefront.QueryRoot>): Unit {
@@ -118,8 +125,11 @@ class UserProfileViewModel(private val repository: Repository) : ViewModel() {
         update.password = localuser.password
         user!!.password = localuser.password
         try {
-            val call = repository.graphClient.mutateGraph(MutationQuery.updateCustomer(update, data!!.customerAccessToken!!))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.invokes(graphCallResult) }
+            doGraphQLMutateGraph(repository,MutationQuery.updateCustomer(update, data!!.customerAccessToken!!),customResponse = object :CustomResponse{
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invokes(result)
+                }
+            },context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

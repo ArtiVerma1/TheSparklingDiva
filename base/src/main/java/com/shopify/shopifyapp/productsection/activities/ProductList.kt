@@ -79,6 +79,7 @@ class ProductList : BaseActivity() {
         }
         (application as MyApplication).mageNativeAppComponent!!.doProductListInjection(this)
         productListModel = ViewModelProvider(this, factory).get(ProductListModel::class.java)
+        productListModel!!.context=this
         if (intent.getStringExtra("ID") != null) {
             productListModel!!.setcategoryID(intent.getStringExtra("ID"))
         }

@@ -58,6 +58,7 @@ class CartList : BaseActivity() {
         showBackButton()
         (application as MyApplication).mageNativeAppComponent!!.doCartListActivityInjection(this)
         model = ViewModelProvider(this, factory).get(CartListViewModel::class.java)
+        model!!.context=this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         model!!.Response().observe(this, Observer<Storefront.Checkout> { this.consumeResponse(it) })
        if(Constant.ispersonalisedEnable){

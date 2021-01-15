@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.productsection.viewmodels
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 
@@ -11,6 +12,8 @@ import com.shopify.buy3.GraphResponse
 import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.GraphQLResponse
@@ -37,6 +40,7 @@ class ProductListModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
     val message = MutableLiveData<String>()
     val filteredproducts = MutableLiveData<MutableList<Storefront.ProductEdge>>()
+    lateinit var context: Context
     fun getcategoryID(): String {
         return categoryID
     }
@@ -68,8 +72,11 @@ class ProductListModel(private val repository: Repository) : ViewModel() {
 
     private fun getAllProducts() {
         try {
-            val call = repository.graphClient.queryGraph(Query.getAllProducts(cursor, keys, isDirection, number))
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            doGraphQLQueryGraph(repository,Query.getAllProducts(cursor, keys, isDirection, number),customResponse = object :CustomResponse{
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            },context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -78,8 +85,11 @@ class ProductListModel(private val repository: Repository) : ViewModel() {
 
     private fun getProductsById() {
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductsById(getcategoryID(), cursor, sortKeys, isDirection, number))
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            doGraphQLQueryGraph(repository,Query.getProductsById(getcategoryID(), cursor, sortKeys, isDirection, number),customResponse = object :CustomResponse{
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            },context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -88,8 +98,11 @@ class ProductListModel(private val repository: Repository) : ViewModel() {
 
     private fun getProductsByHandle() {
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductsByHandle(getcategoryHandle(), cursor, sortKeys, isDirection, number))
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            doGraphQLQueryGraph(repository,Query.getProductsByHandle(getcategoryHandle(), cursor, sortKeys, isDirection, number),customResponse = object :CustomResponse{
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            },context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

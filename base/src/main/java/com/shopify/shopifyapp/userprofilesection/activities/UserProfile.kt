@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 class UserProfile : BaseActivity() {
     private var binding: MUserprofileBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: UserProfileViewModel? = null
@@ -36,6 +37,7 @@ class UserProfile : BaseActivity() {
         binding!!.user = user
         binding!!.handler = ClickHandler()
         model = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
+        model!!.context=this
         model!!.getResponse_().observe(this, Observer<Storefront.Customer> { this.consumeResponse(it) })
         model!!.passwordResponse.observe(this, Observer<String> { this.consumeResponse(it) })
         model!!.errorMessageResponse.observe(this, Observer<String> { this.showToast(it) })
