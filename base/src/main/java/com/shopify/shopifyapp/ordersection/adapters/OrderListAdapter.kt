@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.ordersection.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 class OrderListAdapter @Inject
 constructor() : RecyclerView.Adapter<OrderItem>() {
-    var data: MutableList<Storefront.OrderEdge>?=null
+    var data: MutableList<Storefront.OrderEdge>? = null
     private var layoutInflater: LayoutInflater? = null
     private var model: OrderListViewModel? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderItem {
@@ -57,7 +58,14 @@ constructor() : RecyclerView.Adapter<OrderItem>() {
             order.date = time
             order.price = CurrencyFormatter.setsymbol(data?.get(position)!!.node.totalPriceV2.amount, data?.get(position)!!.node.totalPriceV2.currencyCode.toString())
             order.status = data?.get(position)!!.node.statusUrl
-            order.boughtfor = data?.get(position)!!.node.shippingAddress.firstName + " " + data?.get(position)!!.node.shippingAddress.lastName
+            if (data?.get(position)!!.node.shippingAddress != null) {
+                holder.binding.boughtfor.visibility = View.VISIBLE
+                holder.binding.boughtforheading.visibility = View.VISIBLE
+                order.boughtfor = data?.get(position)!!.node.shippingAddress.firstName + " " + data?.get(position)!!.node.shippingAddress.lastName
+            } else {
+                holder.binding.boughtfor.visibility = View.GONE
+                holder.binding.boughtforheading.visibility = View.GONE
+            }
             holder.binding.order = order
         } catch (e: Exception) {
             e.printStackTrace()
@@ -69,7 +77,7 @@ constructor() : RecyclerView.Adapter<OrderItem>() {
         return data!!.size
     }
 
-    fun setData(data: MutableList<Storefront.OrderEdge> ?, model: OrderListViewModel?) {
+    fun setData(data: MutableList<Storefront.OrderEdge>?, model: OrderListViewModel?) {
         this.data = data
         this.model = model
     }
