@@ -7,6 +7,7 @@ import com.shopify.shopifyapp.basesection.activities.Splash
 import com.shopify.shopifyapp.basesection.fragments.LeftMenu
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.checkoutsection.activities.CheckoutWeblink
+import com.shopify.shopifyapp.checkoutsection.activities.OrderSuccessActivity
 import com.shopify.shopifyapp.collectionsection.activities.CollectionList
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
@@ -47,6 +48,7 @@ interface MageNativeAppComponent {
     fun doAddressListInjection(addressList: AddressList)
     fun doHomePageInjection(home: HomePage)
     fun doHomePageModelInjection(home: HomePageViewModel)
+    fun orderSuccessInjection(orderSuccessActivity: OrderSuccessActivity)
     fun doServiceInjection(job: JobScheduler)
     fun doURlInjection(urls: Urls)
 }
