@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonElement
-import com.lesprimeurs.app.loader_section.CustomLoader
+import com.shopify.shopifyapp.loader_section.CustomLoader
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.repositories.Repository

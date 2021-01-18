@@ -1,4 +1,4 @@
-package com.lesprimeurs.app.loader_section
+package com.shopify.shopifyapp.loader_section
 
 import android.app.Dialog
 import android.content.Context
