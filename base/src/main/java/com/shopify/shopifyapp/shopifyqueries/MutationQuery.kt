@@ -124,7 +124,7 @@ object MutationQuery {
                     .checkoutCustomerAssociateV2(checkoutId, customerAccessToken
                     ) { query: CheckoutCustomerAssociateV2PayloadQuery ->
                         query
-                                .checkout {check-> check.webUrl() }
+                                .checkout { check -> check.webUrl() }
                                 .userErrors { userError: UserErrorQuery ->
                                     userError
                                             .field()
@@ -133,17 +133,23 @@ object MutationQuery {
                     }
 
 
-
         }
     }
 
-    fun checkoutDiscountCodeApply(checkoutId: ID?, discount_code: String?): Storefront.MutationQuery
-    {
-        return mutation{ mutation: Storefront.MutationQuery ->
-            mutation.checkoutDiscountCodeApplyV2(discount_code,checkoutId)
+    fun checkoutDiscountCodeApply(checkoutId: ID?, discount_code: String?): Storefront.MutationQuery {
+        return mutation { mutation: Storefront.MutationQuery ->
+            mutation.checkoutDiscountCodeApplyV2(discount_code, checkoutId)
             { query: CheckoutDiscountCodeApplyV2PayloadQuery ->
                 query
-                        .checkout {check-> check.webUrl() }
+                        .checkout { check ->
+                            check.webUrl()
+                                    .paymentDueV2({ pd -> pd.amount().currencyCode() })
+                                    .subtotalPriceV2({ st -> st.currencyCode().amount() })
+                                    .taxesIncluded()
+                                    .taxExempt()
+                                    .totalTaxV2({ tt -> tt.amount().currencyCode() })
+                                    .totalPriceV2({ tp -> tp.currencyCode().amount() })
+                        }
                         .userErrors { userError: UserErrorQuery ->
                             userError
                                     .field()
@@ -153,15 +159,21 @@ object MutationQuery {
 
         }
     }
-    fun checkoutDiscountCodeRemove(checkoutId: ID?):Storefront.MutationQuery
-    {
-        return mutation{
-            mutation:Storefront.MutationQuery ->
+
+    fun checkoutDiscountCodeRemove(checkoutId: ID?): Storefront.MutationQuery {
+        return mutation { mutation: Storefront.MutationQuery ->
             mutation.checkoutDiscountCodeRemove(checkoutId)
-            {
-                query: CheckoutDiscountCodeRemovePayloadQuery ->
+            { query: CheckoutDiscountCodeRemovePayloadQuery ->
                 query
-                        .checkout {check-> check.webUrl() }
+                        .checkout { check ->
+                            check.webUrl()
+                                    .paymentDueV2({ pd -> pd.amount().currencyCode() })
+                                    .subtotalPriceV2({ st -> st.currencyCode().amount() })
+                                    .taxesIncluded()
+                                    .taxExempt()
+                                    .totalTaxV2({ tt -> tt.amount().currencyCode() })
+                                    .totalPriceV2({ tp -> tp.currencyCode().amount() })
+                        }
                         .userErrors { userError: UserErrorQuery ->
                             userError
                                     .field()
@@ -172,40 +184,60 @@ object MutationQuery {
     }
 
 
-
-
-    fun checkoutGiftCardsAppend(checkoutId: ID?, gift_card: List<String>?):Storefront.MutationQuery
-    {
-        return mutation{ mutation:Storefront.MutationQuery ->
-            mutation.checkoutGiftCardsAppend(gift_card,checkoutId)
+    fun checkoutGiftCardsAppend(checkoutId: ID?, gift_card: List<String>?): Storefront.MutationQuery {
+        return mutation { mutation: Storefront.MutationQuery ->
+            mutation.checkoutGiftCardsAppend(gift_card, checkoutId)
             { query: CheckoutGiftCardsAppendPayloadQuery ->
                 query
-                        .checkout {check-> check.webUrl()
-                                .appliedGiftCards { gc ->gc.amountUsedV2(
-                                        { a-> a.amount()
-                                                .currencyCode()
-                                        }
-                                ) }
-                            }
+                        .checkout { check ->
+                            check.webUrl()
+                                    .paymentDueV2({ pd -> pd.amount().currencyCode() })
+                                    .subtotalPriceV2({ st -> st.currencyCode().amount() })
+                                    .taxesIncluded()
+                                    .taxExempt()
+                                    .totalTaxV2({ tt -> tt.amount().currencyCode() })
+                                    .totalPriceV2({ tp -> tp.currencyCode().amount() })
+                                    .appliedGiftCards { gc ->
+                                        gc.amountUsedV2(
+                                                { a ->
+                                                    a.amount()
+                                                            .currencyCode()
+                                                }
+                                        )
+                                    }
+                        }
                         .userErrors { userError: UserErrorQuery ->
                             userError
                                     .field()
                                     .message()
                         }
             }
-
-
         }
     }
 
-    fun checkoutGiftCards(appliedGiftCardId: ID?,checkoutId: ID?):Storefront.MutationQuery
-    {
-        return mutation{
-            mutation:Storefront.MutationQuery->
-            mutation.checkoutGiftCardRemoveV2(appliedGiftCardId,checkoutId)
+
+    fun checkoutGiftCardsRemove(appliedGiftCardId: ID?, checkoutId: ID?): Storefront.MutationQuery {
+        return mutation { mutation: Storefront.MutationQuery ->
+            mutation.checkoutGiftCardRemoveV2(appliedGiftCardId, checkoutId)
             { query: CheckoutGiftCardRemoveV2PayloadQuery ->
                 query
-                        .checkout {check-> check.webUrl() }
+                        .checkout { check ->
+                            check.webUrl()
+                                    .paymentDueV2({ pd -> pd.amount().currencyCode() })
+                                    .subtotalPriceV2({ st -> st.currencyCode().amount() })
+                                    .taxesIncluded()
+                                    .taxExempt()
+                                    .totalTaxV2({ tt -> tt.amount().currencyCode() })
+                                    .totalPriceV2({ tp -> tp.currencyCode().amount() })
+                                    .appliedGiftCards { gc ->
+                                        gc.amountUsedV2(
+                                                { a ->
+                                                    a.amount()
+                                                            .currencyCode()
+                                                }
+                                        )
+                                    }
+                        }
                         .userErrors { userError: UserErrorQuery ->
                             userError
                                     .field()

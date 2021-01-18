@@ -116,4 +116,15 @@
     <string name="continue_shopping">Continue Shopping</string>
     <string name="thank_you_order_has_been_placed_successfully">Thank you order has been placed successfully.</string>
     <string name="thank_you">Thank You</string>
+    <string name="discount_code">Discount Code</string>
+    <string name="you_can_apply_discount_code_here">You can apply discount code here.</string>
+    <string name="want_to_apply_discount_code">Want to Apply Discount Code?</string>
+    <string name="yes_apply_code">Yes, Apply Code</string>
+    <string name="no">No</string>
+    <string name="gift_card">Gift Card</string>
+    <string name="apply">Apply</string>
+    <string name="giftcard_validation">Please enter gift card</string>
+    <string name="gift_success">Gift card applied successfully</string>
+    <string name="gift_remove">Gift card removed successfully</string>
+    <string name="discount_validation">Please enter discount code</string>
 </resources>

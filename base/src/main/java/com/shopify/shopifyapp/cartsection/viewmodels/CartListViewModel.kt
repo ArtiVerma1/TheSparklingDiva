@@ -43,13 +43,18 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
+import kotlin.collections.ArrayList
 
 class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val data = MutableLiveData<Storefront.Checkout>()
+    private val giftcard = MutableLiveData<Storefront.Mutation>()
+    private val giftcardRemove = MutableLiveData<Storefront.Mutation>()
+    private val discount = MutableLiveData<Storefront.Mutation>()
     private val api = MutableLiveData<ApiResponse>()
     private val youmayapi = MutableLiveData<ApiResponse>()
     private val disposables = CompositeDisposable()
     lateinit var context: Context
+    private val TAG = "CartListViewModel"
     private val responsedata = MutableLiveData<Storefront.Checkout>()
     var customeraccessToken: CustomerTokenData
         get() {
@@ -139,6 +144,18 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
 
     fun Response(): MutableLiveData<Storefront.Checkout> {
         return data
+    }
+
+    fun getGiftCard(): MutableLiveData<Storefront.Mutation> {
+        return giftcard
+    }
+
+    fun getDiscount(): MutableLiveData<Storefront.Mutation> {
+        return discount
+    }
+
+    fun getGiftCardRemove(): MutableLiveData<Storefront.Mutation> {
+        return giftcardRemove
     }
 
     fun getApiResponse(): MutableLiveData<ApiResponse> {
@@ -352,7 +369,6 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                             }
                         } else {
                             val checkout = payload.checkout
-
                             getRecommendations(checkout)
                             getYouMayRecommendations(checkout)
                             data.setValue(checkout)
@@ -425,4 +441,161 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     override fun onCleared() {
         disposables.clear()
     }
+
+    fun applyGiftCard(gift_card: String, checkoutId: ID?) {
+        var list = ArrayList<String>()
+        list.add(gift_card)
+        doGraphQLMutateGraph(repository, MutationQuery.checkoutGiftCardsAppend(checkoutId, list), customResponse = object : CustomResponse {
+            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                invokeGift(result)
+            }
+        }, context = context)
+
+
+    }
+
+    fun invokeGift(result: GraphCallResult<Storefront.Mutation>): Unit {
+        if (result is GraphCallResult.Success<*>) {
+            consumeResponseGift(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeResponseGift(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+        return Unit
+    }
+
+    private fun consumeResponseGift(response: GraphQLResponse) {
+        when (response.status) {
+            Status.SUCCESS -> {
+                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                } else {
+                    val payload = result.data!!.checkoutGiftCardsAppend
+                    if (payload.userErrors.size > 0) {
+                        val iterator = payload.userErrors.iterator()
+                        var error: Storefront.UserError? = null
+                        while (iterator.hasNext()) {
+                            error = iterator.next() as Storefront.UserError
+                            message.setValue(error.message)
+                        }
+                    } else {
+                        giftcard.setValue(result.data)
+
+                    }
+                }
+            }
+            /*Status.ERROR -> errormessage.setValue(response.error!!.error.message)*/
+            else -> {
+            }
+        }
+    }
+
+    fun removeGiftCard(giftcardID: ID?, checkoutId: ID?) {
+        doGraphQLMutateGraph(repository, MutationQuery.checkoutGiftCardsRemove(giftcardID, checkoutId), customResponse = object : CustomResponse {
+            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                invokeGiftRemove(result)
+            }
+        }, context = context)
+
+    }
+
+    private fun invokeGiftRemove(result: GraphCallResult<Storefront.Mutation>) {
+        if (result is GraphCallResult.Success<*>) {
+            consumeResponseGiftRemove(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeResponseGiftRemove(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+    }
+
+    private fun consumeResponseGiftRemove(response: GraphQLResponse) {
+        when (response.status) {
+            Status.SUCCESS -> {
+                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                } else {
+                    val payload = result.data!!.checkoutGiftCardRemoveV2
+                    if (payload.userErrors.size > 0) {
+                        val iterator = payload.userErrors.iterator()
+                        var error: Storefront.UserError? = null
+                        while (iterator.hasNext()) {
+                            error = iterator.next() as Storefront.UserError
+                            message.setValue(error.message)
+                        }
+                    } else {
+                        giftcardRemove.setValue(result.data)
+
+                    }
+                }
+            }
+            /*Status.ERROR -> errormessage.setValue(response.error!!.error.message)*/
+            else -> {
+            }
+        }
+    }
+
+    fun applyDiscount(checkoutId: ID?, discount_code: String) {
+        doGraphQLMutateGraph(repository, MutationQuery.checkoutDiscountCodeApply(checkoutId, discount_code), customResponse = object : CustomResponse {
+            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                invokeDiscount(result)
+            }
+        }, context = context)
+    }
+
+    private fun invokeDiscount(result: GraphCallResult<Storefront.Mutation>) {
+        if (result is GraphCallResult.Success<*>) {
+            consumeResponseDiscount(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeResponseDiscount(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+    }
+
+    private fun consumeResponseDiscount(response: GraphQLResponse) {
+        when (response.status) {
+            Status.SUCCESS -> {
+                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                } else {
+                    val payload = result.data!!.checkoutDiscountCodeApplyV2
+                    if (payload.userErrors.size > 0) {
+                        val iterator = payload.userErrors.iterator()
+                        var error: Storefront.UserError? = null
+                        while (iterator.hasNext()) {
+                            error = iterator.next() as Storefront.UserError
+                            message.setValue(error.message)
+                        }
+                    } else {
+                        discount.setValue(result.data)
+                    }
+                }
+            }
+            /*Status.ERROR -> errormessage.setValue(response.error!!.error.message)*/
+            else -> {
+            }
+        }
+    }
+
+
 }

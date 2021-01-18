@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.network_transaction
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonElement
 import com.lesprimeurs.app.loader_section.CustomLoader
@@ -18,7 +19,9 @@ import kotlinx.coroutines.launch
 
 
 var customLoader: CustomLoader? = null
+private val TAG = "ApiCall"
 fun ViewModel.doGraphQLMutateGraph(repository: Repository, query: Storefront.MutationQuery, customResponse: CustomResponse, context: Context) {
+    Log.d(TAG, "doGraphQLMutateGraph: "+query)
     GlobalScope.launch(Dispatchers.Main) {
         if (customLoader != null) {
             customLoader!!.dismiss()
@@ -39,6 +42,7 @@ fun ViewModel.doGraphQLMutateGraph(repository: Repository, query: Storefront.Mut
 }
 
 fun ViewModel.doGraphQLQueryGraph(repository: Repository, query: Storefront.QueryRootQuery, customResponse: CustomResponse, context: Context) {
+    Log.d(TAG, "doGraphQLQueryGraph: "+query)
     GlobalScope.launch(Dispatchers.Main) {
         if (customLoader != null) {
             customLoader!!.dismiss()
