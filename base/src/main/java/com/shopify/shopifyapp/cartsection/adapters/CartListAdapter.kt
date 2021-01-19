@@ -21,7 +21,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
-     var data: MutableList<Storefront.CheckoutLineItemEdge>?=null
+    var data: MutableList<Storefront.CheckoutLineItemEdge>? = null
     private var layoutInflater: LayoutInflater? = null
     private var model: CartListViewModel? = null
 
@@ -45,7 +45,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         val item = CartListItem()
         item.position = position
         item.variant_id = data?.get(position)!!.node.variant.id.toString()
-        item.productname =data?.get(position)!!.node.title
+        item.productname = data?.get(position)!!.node.title
         val variant = data?.get(position)!!.node.variant
         item.normalprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
         if (variant.compareAtPriceV2 != null) {
@@ -74,7 +74,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         model.imageurl = variant.image.originalSrc
         holder.binding.commondata = model
         item.image = variant.image.originalSrc
-        item.qty =data?.get(position)!!.node.quantity!!.toString()
+        item.qty = data?.get(position)!!.node.quantity!!.toString()
         holder.binding.name.textSize = 12f
         holder.binding.specialprice.textSize = 13f
         holder.binding.regularprice.textSize = 11f
@@ -98,18 +98,20 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
             while (iterator1.hasNext()) {
                 counter = counter + 1
                 option = iterator1.next()
-                val finalvalue = option.name + " : " + option.value
-                if (counter == 1) {
-                    item.variant_one = finalvalue
-                }
-                if (counter == 2) {
-                    item.variant_two = finalvalue
-                }
-                if (counter == 3) {
-                    item.variant_three = finalvalue
-                }
-                if (counter > 3) {
-                    break
+                if (!option.value.equals("Default Title", true)) {
+                    val finalvalue = option.name + " : " + option.value
+                    if (counter == 1) {
+                        item.variant_one = finalvalue
+                    }
+                    if (counter == 2) {
+                        item.variant_two = finalvalue
+                    }
+                    if (counter == 3) {
+                        item.variant_three = finalvalue
+                    }
+                    if (counter > 3) {
+                        break
+                    }
                 }
             }
             holder.binding.variantdata = item

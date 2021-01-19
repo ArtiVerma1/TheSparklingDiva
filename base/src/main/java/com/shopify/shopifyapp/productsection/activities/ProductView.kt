@@ -40,14 +40,17 @@ import javax.inject.Inject
 
 class ProductView : BaseActivity() {
     private var binding: MProductviewBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: ProductViewModel? = null
     private var variantlist: RecyclerView? = null
+
     @Inject
     lateinit var adapter: VariantAdapter
     private var data: ListData? = null
     private var personamodel: PersonalisedViewModel? = null
+
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
     private val cartCount: Int
@@ -67,7 +70,7 @@ class ProductView : BaseActivity() {
         variantlist = setLayout(binding!!.productvariant, "horizontal")
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
-        model!!.context=this
+        model!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         if (intent.getStringExtra("handle") != null) {
             model!!.handle = intent.getStringExtra("handle")
@@ -117,9 +120,9 @@ class ProductView : BaseActivity() {
                     }
 
 
-                   // a.previewImage
+                    // a.previewImage
 
-                    Log.i("MageNative","Product_id"+productedge!!.id.toString())
+                    Log.i("MageNative", "Product_id" + productedge!!.id.toString())
                     setProductData(productedge)
                 }
             }
@@ -128,6 +131,7 @@ class ProductView : BaseActivity() {
             }
         }
     }
+
     private fun consumeResponse(reponse: ApiResponse) {
         when (reponse.status) {
             Status.SUCCESS -> setPersonalisedData(reponse.data!!)
@@ -137,35 +141,37 @@ class ProductView : BaseActivity() {
             }
         }
     }
+
     private fun setPersonalisedData(data: JsonElement) {
-        try{
+        try {
             val jsondata = JSONObject(data.toString())
-            if(jsondata.has("query1")){
-                binding!!.personalisedsection.visibility=View.VISIBLE
+            if (jsondata.has("query1")) {
+                binding!!.personalisedsection.visibility = View.VISIBLE
                 setLayout(binding!!.personalised, "horizontal")
-                personamodel!!.setPersonalisedData(jsondata.getJSONObject("query1").getJSONArray("products"),personalisedadapter, model!!.presentmentCurrency!!,binding!!.personalised)
+                personamodel!!.setPersonalisedData(jsondata.getJSONObject("query1").getJSONArray("products"), personalisedadapter, model!!.presentmentCurrency!!, binding!!.personalised)
             }
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
+
     private fun setProductData(productedge: Storefront.Product?) {
         try {
-            loop@ for(i in 0..productedge!!.media.edges.size-1 ) {
-                var a:String=productedge!!.media.edges.get(i).node.graphQlTypeName
-                if(a.equals("Model3d")){
-                    var d=productedge!!.media.edges.get(i).node as Storefront.Model3d
-                    for(j in 0..d.sources.size-1 ) {
-                        if(d.sources.get(j).url.contains(".glb")){
-                            data!!.arimage=d.sources.get(j).url
-                            binding!!.aricon.visibility=View.VISIBLE
+            loop@ for (i in 0..productedge!!.media.edges.size - 1) {
+                var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
+                if (a.equals("Model3d")) {
+                    var d = productedge!!.media.edges.get(i).node as Storefront.Model3d
+                    for (j in 0..d.sources.size - 1) {
+                        if (d.sources.get(j).url.contains(".glb")) {
+                            data!!.arimage = d.sources.get(j).url
+                            binding!!.aricon.visibility = View.VISIBLE
                             break@loop
                         }
                     }
                 }
 
             }
-            if(Constant.ispersonalisedEnable){
+            if (Constant.ispersonalisedEnable) {
                 model!!.getRecommendations(productedge!!.id.toString())
             }
             val variant = productedge!!.variants.edges[0].node
@@ -175,17 +181,17 @@ class ProductView : BaseActivity() {
             binding!!.images.adapter = slider
             binding!!.indicator.setViewPager(binding!!.images)
             data!!.textdata = productedge.title
-            Log.i("here",productedge.descriptionHtml)
-           /* data!!.descriptionhmtl = Html.fromHtml(productedge.description)*/
+            Log.i("here", productedge.descriptionHtml)
+            /* data!!.descriptionhmtl = Html.fromHtml(productedge.description)*/
             /*Html.fromHtml(productedge.descriptionHtml)*/
             /*
             * Testing Code for images in HTML
             * */
-           /* data!!.descriptionhmtl = Html.fromHtml(productedge.descriptionHtml, object : Html.ImageGetter {
-                override fun getDrawable(source: String): Drawable? {
+            /* data!!.descriptionhmtl = Html.fromHtml(productedge.descriptionHtml, object : Html.ImageGetter {
+                 override fun getDrawable(source: String): Drawable? {
 
-                    Log.i("here",source)
-                    *//*val bmp: Drawable? = Drawable.createFromPath(source)
+                     Log.i("here",source)
+                     *//*val bmp: Drawable? = Drawable.createFromPath(source)
                     bmp?.setBounds(0, 0, bmp.getIntrinsicWidth(), bmp.getIntrinsicHeight())
                     return bmp*//*
                     val d = LevelListDrawable()
@@ -198,7 +204,7 @@ class ProductView : BaseActivity() {
                     return d
                 }
             }, null)*/
-            binding?.description?.loadData(productedge.descriptionHtml,"text/html", "utf-8")
+            binding?.description?.loadData(productedge.descriptionHtml, "text/html", "utf-8")
             data!!.addtowish = resources.getString(R.string.addtowish)
             if (model!!.presentmentCurrency == "nopresentmentcurrency") {
                 data!!.regularprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
@@ -315,8 +321,9 @@ class ProductView : BaseActivity() {
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareString)
             view.context.startActivity(Intent.createChooser(shareIntent, view.context.resources.getString(R.string.share)))
         }
-        fun showAR(view: View, data: ListData){
-            var sceneViewerIntent =  Intent(Intent.ACTION_VIEW);
+
+        fun showAR(view: View, data: ListData) {
+            var sceneViewerIntent = Intent(Intent.ACTION_VIEW);
             var intentUri: Uri =
                     Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
                             .appendQueryParameter("file", data.arimage)
