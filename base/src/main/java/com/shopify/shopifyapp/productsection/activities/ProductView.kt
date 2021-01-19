@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.lifecycle.Observer
@@ -94,6 +95,11 @@ class ProductView : BaseActivity() {
         adapter!!.setData(list, model, data)
         variantlist!!.adapter = adapter
         adapter!!.notifyDataSetChanged()
+        if (list.size > 1) {
+            binding!!.variantheading.visibility = View.VISIBLE
+        } else {
+            binding!!.variantheading.visibility = View.GONE
+        }
     }
 
     private fun consumeResponse(reponse: GraphQLResponse) {

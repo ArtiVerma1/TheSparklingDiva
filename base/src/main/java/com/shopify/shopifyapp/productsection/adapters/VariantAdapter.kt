@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.productsection.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 
@@ -47,6 +48,11 @@ constructor() : RecyclerView.Adapter<VariantItem>() {
         setVariants(data, holder, variants!![position].node.selectedOptions)
         if (variants!!.size == 1) {
             data.blockClick(holder.binding.mainView, data)
+            holder.binding.mainView.visibility = View.GONE
+            holder.binding.mainView.layoutParams = ViewGroup.LayoutParams(0, 0)
+        } else {
+            holder.binding.mainView.layoutParams = ViewGroup.LayoutParams(250, 250)
+            holder.binding.mainView.visibility = View.VISIBLE
         }
     }
 
