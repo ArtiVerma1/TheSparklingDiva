@@ -22,7 +22,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
-    var data: MutableList<Storefront.CheckoutLineItemEdge>? = nullgit
+    var data: MutableList<Storefront.CheckoutLineItemEdge>? = null
     private var layoutInflater: LayoutInflater? = null
     private var model: CartListViewModel? = null
 
