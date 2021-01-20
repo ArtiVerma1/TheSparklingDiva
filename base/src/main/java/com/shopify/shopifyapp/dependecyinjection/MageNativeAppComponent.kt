@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.dependecyinjection
 
+import android.content.Context
 import com.shopify.shopifyapp.addresssection.activities.AddressList
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
@@ -17,6 +18,7 @@ import com.shopify.shopifyapp.loginsection.activity.RegistrationActivity
 import com.shopify.shopifyapp.ordersection.activities.OrderList
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 import com.shopify.shopifyapp.utils.Urls
@@ -49,6 +51,7 @@ interface MageNativeAppComponent {
     fun doHomePageInjection(home: HomePage)
     fun doHomePageModelInjection(home: HomePageViewModel)
     fun orderSuccessInjection(orderSuccessActivity: OrderSuccessActivity)
+    fun quickAddInjection(quickAddActivity: QuickAddActivity)
     fun doServiceInjection(job: JobScheduler)
     fun doURlInjection(urls: Urls)
 }

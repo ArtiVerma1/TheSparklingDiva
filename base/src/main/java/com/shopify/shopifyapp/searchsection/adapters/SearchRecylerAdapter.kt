@@ -23,9 +23,9 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class SearchRecylerAdapter @Inject
- constructor() : RecyclerView.Adapter<SearechItem>() {
+constructor() : RecyclerView.Adapter<SearechItem>() {
     private var layoutInflater: LayoutInflater? = null
-    var products: MutableList<Storefront.ProductEdge>?=null
+    var products: MutableList<Storefront.ProductEdge>? = null
     private var activity: Activity? = null
     var presentmentcurrency: String? = null
     fun setData(products: List<Storefront.ProductEdge>, activity: Activity) {
@@ -113,7 +113,9 @@ class SearchRecylerAdapter @Inject
         }
         holder.binding.listdata = data
         val model = CommanModel()
-        model.imageurl = products?.get(position)!!.node.images.edges[0].node.transformedSrc
+        if (products?.get(position)!!.node.images.edges.size > 0) {
+            model.imageurl = products?.get(position)!!.node.images.edges[0].node.transformedSrc
+        }
         holder.binding.commondata = model
         holder.binding.clickproduct = Product()
     }

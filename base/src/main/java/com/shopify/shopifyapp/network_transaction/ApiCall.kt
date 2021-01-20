@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.network_transaction
 
+import android.app.Dialog
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -42,6 +43,26 @@ fun ViewModel.doGraphQLMutateGraph(repository: Repository, query: Storefront.Mut
 }
 
 fun ViewModel.doGraphQLQueryGraph(repository: Repository, query: Storefront.QueryRootQuery, customResponse: CustomResponse, context: Context) {
+    Log.d(TAG, "doGraphQLQueryGraph: "+query)
+    GlobalScope.launch(Dispatchers.Main) {
+        if (customLoader != null) {
+            customLoader!!.dismiss()
+            customLoader = null
+        }
+        customLoader = CustomLoader(context)
+        customLoader!!.show()
+    }
+    var call = repository.graphClient.queryGraph(query)
+    call.enqueue { result: GraphCallResult<Storefront.QueryRoot> ->
+        GlobalScope.launch(Dispatchers.Main) {
+            customLoader!!.dismiss()
+            customResponse.onSuccessQuery(result)
+
+        }
+    }
+}
+
+fun Dialog.doGraphQLQueryGraph(repository: Repository, query: Storefront.QueryRootQuery, customResponse: CustomResponse, context: Context) {
     Log.d(TAG, "doGraphQLQueryGraph: "+query)
     GlobalScope.launch(Dispatchers.Main) {
         if (customLoader != null) {

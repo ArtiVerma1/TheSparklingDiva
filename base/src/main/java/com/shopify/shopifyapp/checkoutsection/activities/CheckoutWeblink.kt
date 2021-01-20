@@ -139,6 +139,20 @@ class CheckoutWeblink : BaseActivity() {
 
             override fun onPageFinished(view: WebView, url: String) {
                 Log.i("pageURL", "" + url)
+                if (url.contains("thank_you")) {
+                    model!!.setOrder(Urls((application as MyApplication))!!.mid, id)
+                    model!!.deleteCart()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        Handler().postDelayed({
+                            if (count == 1) {
+                                startActivity(Intent(this@CheckoutWeblink, OrderSuccessActivity::class.java))
+                                finishAffinity()
+                            }
+                            count++
+                        }, 3000, 3000)
+                    }
+
+                }
                 val javascript = "javascript: document.getElementsByClassName('section__header')[0].style.display = 'none' "
                 val javascript1 = "javascript: document.getElementsByClassName('logged-in-customer-information')[0].style.display = 'none' "
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -167,7 +167,7 @@ class ProductList : BaseActivity() {
                 adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
                 if (this.products == null) {
                     this.products = products
-                    adapter!!.setData(this.products, this@ProductList)
+                    adapter!!.setData(this.products, this@ProductList,productListModel!!.repository)
                     productlist!!.adapter = adapter
                 } else {
                     this.products!!.addAll(products)

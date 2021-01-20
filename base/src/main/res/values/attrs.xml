@@ -13,4 +13,5 @@
     <declare-styleable name="MageNativeRadioButton">
         <attr name="radiotype" format="string" />
     </declare-styleable>
+
 </resources >

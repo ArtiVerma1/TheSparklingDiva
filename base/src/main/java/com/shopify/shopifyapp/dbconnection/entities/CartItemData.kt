@@ -12,5 +12,5 @@ class CartItemData : Serializable {
     @ColumnInfo(name = "variant_id")
     lateinit var variant_id: String
     @ColumnInfo(name = "qty")
-    var qty: Int = 0
+    var qty: Int = 1
 }

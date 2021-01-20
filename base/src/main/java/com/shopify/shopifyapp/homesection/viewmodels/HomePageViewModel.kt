@@ -73,7 +73,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class HomePageViewModel(private val repository: Repository) : ViewModel() {
+class HomePageViewModel( var repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
     val message = MutableLiveData<String>()
     private val disposables = CompositeDisposable()
@@ -1083,7 +1083,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                                 gridtwo = ProductSliderListAdapter()
                                                 gridtwo!!.presentmentcurrency = presentmentCurrency
                                                 context.setLayout(productdata!!, "grid")
-                                                gridtwo!!.setData(list, context, jsonObject)
+                                                gridtwo!!.setData(list, context, jsonObject,repository)
                                                 productdata!!.adapter = gridtwo
                                             }
                                             "3" -> {
@@ -1101,7 +1101,7 @@ class HomePageViewModel(private val repository: Repository) : ViewModel() {
                                     homeadapter = ProductSliderListAdapter()
                                     homeadapter!!.presentmentcurrency = presentmentCurrency
                                     context.setLayout(productdata!!, "horizontal")
-                                    homeadapter!!.setData(list, context, jsonObject)
+                                    homeadapter!!.setData(list, context, jsonObject,repository)
                                     productdata!!.adapter = homeadapter
                                 }
                             }

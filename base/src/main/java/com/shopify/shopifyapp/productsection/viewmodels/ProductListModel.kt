@@ -23,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class ProductListModel(private val repository: Repository) : ViewModel() {
+class ProductListModel( var repository: Repository) : ViewModel() {
     private var categoryID = ""
     var shopID = ""
     var presentmentCurrency: String? = null

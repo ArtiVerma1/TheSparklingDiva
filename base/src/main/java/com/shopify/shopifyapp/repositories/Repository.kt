@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 class Repository {
-
+    private val TAG = "Repository"
     private val apiCallInterface: ApiCallInterface
     private val appdatabase: AppDatabase
     var graphClient: GraphClient

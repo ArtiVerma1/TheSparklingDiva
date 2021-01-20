@@ -37,7 +37,7 @@ constructor() : RecyclerView.Adapter<VariantItem>() {
 
     override fun onBindViewHolder(holder: VariantItem, position: Int) {
         val model = CommanModel()
-        model.imageurl = variants!![position].node.image.originalSrc
+        model.imageurl = variants?.get(position)?.node?.image?.originalSrc
         holder.binding.commondata = model
         val data = VariantData()
         data.position = position

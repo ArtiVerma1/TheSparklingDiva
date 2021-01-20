@@ -22,6 +22,7 @@ import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.customviews.MageNativeTextView
 import com.shopify.shopifyapp.homesection.viewholders.SliderItemTypeOne
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import kotlinx.android.synthetic.main.m_trial.*
 import org.json.JSONObject
@@ -34,10 +35,12 @@ class ProductSliderListAdapter @Inject
     private var activity: Activity? = null
     var presentmentcurrency: String? = null
     var jsonObject:JSONObject?=null
-    fun setData(products: List<Storefront.Product>?, activity: Activity,jsonObject: JSONObject) {
+    lateinit var repository: Repository
+    fun setData(products: List<Storefront.Product>?, activity: Activity,jsonObject: JSONObject,repository: Repository) {
         this.products = products
         this.activity = activity
         this.jsonObject=jsonObject
+        this.repository=repository
     }
     init {
         setHasStableIds(true)
@@ -110,7 +113,7 @@ class ProductSliderListAdapter @Inject
         model.imageurl = products?.get(position)?.images!!.edges[0].node.transformedSrc
         item.binding.listdata = data
         item.binding.commondata = model
-        item.binding.clickproduct = ProductSliderAdapter().Product()
+        item.binding.clickproduct = ProductSliderAdapter().Product(repository,activity!!)
         val params:ConstraintLayout.LayoutParams
         view=item.binding.main
         card=item.binding.card

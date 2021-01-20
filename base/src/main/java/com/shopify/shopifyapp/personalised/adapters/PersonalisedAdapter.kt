@@ -100,7 +100,7 @@ class PersonalisedAdapter @Inject
             val model = CommanModel()
             model.imageurl = pro.images.edges[0].node.transformedSrc
             holder.personalbinding!!.commondata = model
-            holder.personalbinding!!.clickproduct = ProductRecylerAdapter().Product()
+            holder.personalbinding!!.clickproduct = ProductRecylerAdapter().Product(position)
         }catch (ex:Exception){
             ex.printStackTrace()
         }

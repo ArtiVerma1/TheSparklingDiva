@@ -16,6 +16,8 @@ import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.viewholders.ProductItem
+import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
+import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -25,10 +27,12 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
     private var layoutInflater: LayoutInflater? = null
     lateinit var products: MutableList<Storefront.ProductEdge>
     private var activity: Activity? = null
+    private var repository:Repository?=null
     var presentmentcurrency: String? = null
-    fun setData(products: List<Storefront.ProductEdge>?, activity: Activity) {
+    fun setData(products: List<Storefront.ProductEdge>?, activity: Activity,repository: Repository) {
         this.products = products as MutableList<Storefront.ProductEdge>
         this.activity = activity
+        this.repository=repository
     }
 
     init {
@@ -118,7 +122,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             model.imageurl = this.products[position].node.images.edges[0].node.transformedSrc
         }
         holder.binding!!.commondata = model
-        holder.binding!!.clickproduct = Product()
+        holder.binding!!.clickproduct = Product(position)
     }
 
     override fun getItemCount(): Int {
@@ -146,13 +150,17 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
         return pairEdge
     }
 
-    inner class Product {
+    inner class Product(var position: Int) {
         fun productClick(view: View, data: ListData) {
             val productintent = Intent(view.context, ProductView::class.java)
             productintent.putExtra("ID", data.product!!.id.toString())
             productintent.putExtra("tittle", data.textdata)
             productintent.putExtra("product", data.product)
             view.context.startActivity(productintent)
+        }
+        fun addCart(view: View, data: ListData){
+            var customQuickAddActivity = QuickAddActivity(context = activity!!, theme = R.style.WideDialogFull, product_id = data.product!!.id.toString(), repository = repository!!)
+            customQuickAddActivity.show()
         }
     }
 }
