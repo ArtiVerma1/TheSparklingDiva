@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 
+
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MCartitemBinding
@@ -21,7 +22,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
-    var data: MutableList<Storefront.CheckoutLineItemEdge>? = null
+    var data: MutableList<Storefront.CheckoutLineItemEdge>? = nullgit
     private var layoutInflater: LayoutInflater? = null
     private var model: CartListViewModel? = null
 
@@ -44,6 +45,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
     override fun onBindViewHolder(holder: CartItem, position: Int) {
         val item = CartListItem()
         item.position = position
+
         item.variant_id = data?.get(position)!!.node.variant.id.toString()
         item.productname = data?.get(position)!!.node.title
         val variant = data?.get(position)!!.node.variant

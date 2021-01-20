@@ -222,7 +222,7 @@ object MutationQuery {
             { query: CheckoutGiftCardRemoveV2PayloadQuery ->
                 query
                         .checkout { check ->
-                            check.webUrl()
+                                    check.webUrl()
                                     .paymentDueV2({ pd -> pd.amount().currencyCode() })
                                     .subtotalPriceV2({ st -> st.currencyCode().amount() })
                                     .taxesIncluded()
@@ -246,6 +246,30 @@ object MutationQuery {
             }
         }
     }
+
+    fun multipass(multipassToken: String?):Storefront.MutationQuery{
+
+        return Storefront.mutation { root ->
+            root.customerAccessTokenCreateWithMultipass(multipassToken)
+            {
+                query:CustomerAccessTokenCreateWithMultipassPayloadQuery->
+                query.customerAccessToken { c ->
+                    c.accessToken()
+                            .expiresAt()
+
+                }
+                        .customerUserErrors{
+                            e->e.message()
+                                .field()
+                        }
+
+            }
+
+        }
+    }
+
+
+
 
 }
 
