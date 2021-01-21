@@ -149,5 +149,9 @@ class LoginActivity : BaseActivity() {
                 }
             }
         }
+
+        fun closeForgotDialog(view: View){
+            sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 }

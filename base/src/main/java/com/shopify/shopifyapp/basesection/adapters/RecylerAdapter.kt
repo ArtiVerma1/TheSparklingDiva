@@ -1,5 +1,7 @@
 package com.shopify.shopifyapp.basesection.adapters
+
 import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +11,15 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MListitemBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.activities.Splash
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewholders.ListItem
+import com.shopify.shopifyapp.databinding.CurrencyListItemBinding
+import com.shopify.shopifyapp.databinding.CurrencyListLayoutBinding
+import com.shopify.shopifyapp.homesection.activities.HomePage
 import javax.inject.Inject
-class RecylerAdapter @Inject  constructor() : RecyclerView.Adapter<ListItem>() {
+
+class RecylerAdapter @Inject constructor() : RecyclerView.Adapter<ListItem>() {
     private var layoutInflater: LayoutInflater? = null
     private var currencies: List<Storefront.CurrencyCode>? = null
     private var activity: Activity? = null
@@ -25,7 +32,7 @@ class RecylerAdapter @Inject  constructor() : RecyclerView.Adapter<ListItem>() {
         if (layoutInflater == null) {
             layoutInflater = LayoutInflater.from(parent.context)
         }
-        val binding = DataBindingUtil.inflate<MListitemBinding>(layoutInflater!!, R.layout.m_listitem, parent, false)
+        val binding = DataBindingUtil.inflate<CurrencyListItemBinding>(layoutInflater!!, R.layout.currency_list_item, parent, false)
         return ListItem(binding)
     }
 
@@ -45,6 +52,10 @@ class RecylerAdapter @Inject  constructor() : RecyclerView.Adapter<ListItem>() {
             (activity as NewBaseActivity).closePopUp()
             val model = (activity as NewBaseActivity).model
             model!!.setCurrencyData(data.textdata)
+            val intent = Intent(activity, Splash::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            activity?.startActivity(intent)
         }
     }
 }

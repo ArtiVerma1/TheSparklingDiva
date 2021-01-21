@@ -2,130 +2,161 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="handlers"
             type="com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers" />
     </data>
+
     <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:id="@+id/scroll"
-        bind:layout_constraintTop_toTopOf="parent"
+        bind:layout_constraintBottom_toBottomOf="parent"
         bind:layout_constraintEnd_toEndOf="parent"
         bind:layout_constraintStart_toStartOf="parent"
-        bind:layout_constraintBottom_toBottomOf="parent">
+        bind:layout_constraintTop_toTopOf="parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
+
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back_image"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintEnd_toEndOf="parent"
-                bind:layout_constraintTop_toTopOf="parent"
-                bind:layout_constraintBottom_toBottomOf="parent"
-                bind:imageUrl="@{handlers.image}"
-                android:scaleType="fitXY"
                 android:adjustViewBounds="true"
-                android:id="@+id/back_image"
-                />
+                android:scaleType="fitXY"
+                bind:imageUrl="@{handlers.image}"
+                bind:layout_constraintBottom_toBottomOf="parent"
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toTopOf="parent" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toTopOf="parent"
-                bind:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/shadow"
                 android:alpha="0.5"
-                />
+                android:background="@drawable/shadow"
+                bind:layout_constraintBottom_toBottomOf="parent"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toTopOf="parent" />
+
             <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/startguide"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                bind:layout_constraintGuide_percent="0.1"
-                android:id="@+id/startguide"/>
+                bind:layout_constraintGuide_percent="0.1" />
+
             <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/endguide"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                bind:layout_constraintGuide_percent="0.9"
-                android:id="@+id/endguide"/>
+                bind:layout_constraintGuide_percent="0.9" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/maincontent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                bind:layout_constraintStart_toEndOf="@id/startguide"
-                bind:layout_constraintEnd_toStartOf="@id/endguide"
-                bind:layout_constraintTop_toTopOf="parent"
-                bind:layout_constraintBottom_toBottomOf="parent"
                 android:layout_margin="10dp"
-                android:id="@+id/maincontent">
-                <com.shopify.shopifyapp.customviews.MageNativeEditText
-                    android:id="@+id/username"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:backgroundTint="@color/white"
+                bind:layout_constraintBottom_toBottomOf="parent"
+                bind:layout_constraintEnd_toStartOf="@id/endguide"
+                bind:layout_constraintStart_toEndOf="@id/startguide"
+                bind:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/username_lyt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:textColorHint="@color/white"
-                    android:hint="@string/email_address"
-                    android:inputType="textEmailAddress"
-                    android:padding="5dp"
-                    bind:edittype="white"
-                    tools:targetApi="lollipop"
-                    bind:layout_constraintStart_toStartOf="parent"
                     bind:layout_constraintEnd_toEndOf="parent"
-                    bind:layout_constraintTop_toTopOf="parent"/>
-                <com.shopify.shopifyapp.customviews.MageNativeEditText
-                    android:id="@+id/password"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:backgroundTint="@color/white"
-                    android:textColorHint="@color/white"
-                    android:hint="@string/Password"
-                    android:inputType="textPassword"
-                    android:padding="5dp"
-                    tools:targetApi="lollipop"
-                    bind:edittype="white"
                     bind:layout_constraintStart_toStartOf="parent"
-                    bind:layout_constraintEnd_toEndOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@id/username"
+                    bind:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:hint="@string/email_address"
+                        android:inputType="textEmailAddress"
+                        android:paddingStart="5dp"
+                        android:paddingBottom="15dp"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/roboto_medium"
+                        bind:edittype="white"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password_lyt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    />
+                    android:textColorHint="@color/white"
+                    bind:passwordToggleEnabled="true"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@+id/username_lyt">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:hint="@string/Password"
+                        android:inputType="textPassword"
+                        android:padding="5dp"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:textColorHint="@color/white"
+                        bind:edittype="white"
+                        tools:targetApi="lollipop" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
                 <com.shopify.shopifyapp.customviews.MageNativeButton
-                    android:layout_width="0dp"
                     android:id="@+id/login"
+                    android:layout_width="0dp"
                     android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:onClick="@{handlers::onSignUpClicked}"
                     android:text="@string/login"
                     bind:buttontype="white"
-                    android:onClick="@{handlers::onSignUpClicked}"
-                    android:layout_marginTop="20dp"
-                    bind:layout_constraintStart_toStartOf="parent"
                     bind:layout_constraintEnd_toEndOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@id/password"/>
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@id/password_lyt" />
+
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/forgotpassword"
-                    bind:layout_constraintStart_toStartOf="parent"
-                    bind:layout_constraintEnd_toEndOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@id/login"
                     android:id="@+id/forgotpassword"
-                    android:onClick="@{handlers::forgotPass}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:onClick="@{handlers::forgotPass}"
+                    android:text="@string/forgotpassword"
                     android:textColor="@color/white"
-                    bind:texttype="whitetext"
-                    />
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@id/login"
+                    bind:texttype="whitetext" />
+
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    bind:texttype="whitetext"
-                    android:text="@string/donthaveaccount"
-                    bind:layout_constraintStart_toStartOf="parent"
-                    bind:layout_constraintEnd_toEndOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@id/forgotpassword"
+                    android:layout_margin="10dp"
                     android:onClick="@{handlers::newsignup}"
-                    android:layout_margin="10dp"/>
+                    android:text="@string/donthaveaccount"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@id/forgotpassword"
+                    bind:texttype="whitetext" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

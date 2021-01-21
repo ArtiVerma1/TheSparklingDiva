@@ -16,6 +16,16 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/close_icon"
+            android:onClick="@{handlers::closeForgotDialog}"
+            android:layout_margin="10dp"
+            />
         <com.shopify.shopifyapp.customviews.MageNativeEditText
             android:id="@+id/email"
             android:layout_width="0dp"

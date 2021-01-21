@@ -1,4 +1,6 @@
 package com.shopify.shopifyapp.basesection.viewmodels
+
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -9,6 +11,8 @@ import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.dbconnection.entities.LivePreviewData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.ApiResponse
@@ -33,6 +37,7 @@ class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
     val data = MutableLiveData<HashMap<String, String>>()
     private val currencyResponseLiveData = MutableLiveData<List<Storefront.CurrencyCode>>()
     private val handler = Handler()
+    var context: Context? = null
     val isLoggedIn: Boolean
         get() = repository.isLogin
 
@@ -40,6 +45,7 @@ class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
         getMenus()
         return responseLiveData
     }
+
     val cartCount: Int
         get() {
             val count = intArrayOf(0)
@@ -80,6 +86,7 @@ class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
 
             return count[0]
         }
+
     fun fetchUserData() {
         try {
             val runnable = Runnable {
@@ -128,8 +135,12 @@ class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getCurrency() {
         try {
-            val call = repository.graphClient.queryGraph(Query.shopDetails)
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
+            doGraphQLQueryGraph(repository, Query.shopDetails, customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invoke(result)
+                }
+            }, context = context!!)
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -193,17 +204,18 @@ class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
         }
         Thread(runnable).start()
     }
-    fun insertPreviewData(data:JSONObject){
+
+    fun insertPreviewData(data: JSONObject) {
         val runnable = Runnable {
-            var lpreview=repository.getPreviewData()
-            if(lpreview.size==0){
-                var preview =LivePreviewData(data.getString("mid"),data.getString("shopUrl"),data.getString("token"))
+            var lpreview = repository.getPreviewData()
+            if (lpreview.size == 0) {
+                var preview = LivePreviewData(data.getString("mid"), data.getString("shopUrl"), data.getString("token"))
                 repository.insertPreviewData(preview)
-            }else{
-                var preview=lpreview.get(0)
-                preview.mid=data.getString("mid")
-                preview.shopurl=data.getString("shopUrl")
-                preview.apikey=data.getString("token")
+            } else {
+                var preview = lpreview.get(0)
+                preview.mid = data.getString("mid")
+                preview.shopurl = data.getString("shopUrl")
+                preview.apikey = data.getString("token")
                 repository.updatePreviewData(preview)
             }
         }
