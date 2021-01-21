@@ -314,11 +314,11 @@ class CartList : BaseActivity() {
                 }
             }
             discountCodeLayoutBinding.yesBut.setOnClickListener {
-                listdialog.dismiss()
                 if (TextUtils.isEmpty(discountCodeLayoutBinding.discountCodeEdt.text.toString().trim())) {
                     discountCodeLayoutBinding.discountCodeEdt.error = getString(R.string.discount_validation)
                 } else {
                     model!!.applyDiscount(data.checkoutId, discountCodeLayoutBinding.discountCodeEdt.text.toString())
+                    listdialog.dismiss()
                 }
             }
             listdialog.show()
