@@ -20,6 +20,7 @@ import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
+import java.util.regex.Pattern
 
 class RegistrationViewModel(private val repository: Repository) : ViewModel() {
     val message = MutableLiveData<String>()
@@ -166,11 +167,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun isValidEmail(target: String): Boolean {
-        var valid = false
-        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-        if (target.matches(emailPattern.toRegex())) {
-            valid = true
-        }
-        return valid
+        val emailPattern = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE)
+        return emailPattern.matcher(target).matches()
     }
 }

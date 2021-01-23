@@ -30,6 +30,7 @@ import java.security.SecureRandom
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 import javax.crypto.Cipher
 import javax.crypto.Mac
 import javax.crypto.spec.IvParameterSpec
@@ -68,11 +69,11 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun multipass_login(email: String)
-    {
+    fun multipass_login(email: String) {
         val md: MessageDigest = MessageDigest.getInstance("SHA-256")
-        val by= md.digest(MulipassSecret.toByteArray(StandardCharsets.UTF_8))
+        val by = md.digest(MulipassSecret.toByteArray(StandardCharsets.UTF_8))
         val number = BigInteger(1, by)
         // Convert message digest into hex value
         val hexString: java.lang.StringBuilder = java.lang.StringBuilder(number.toString(16))
@@ -81,19 +82,19 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
             hexString.insert(0, '0')
         }
 
-        var encryption_key= hexString.toString().substring(0,16)
-        var signature_key= hexString.toString().substring(16,32)
+        var encryption_key = hexString.toString().substring(0, 16)
+        var signature_key = hexString.toString().substring(16, 32)
         val tz: TimeZone = TimeZone.getTimeZone("UTC")
         val df: DateFormat = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ssZ") // Quoted "Z" to indicate UTC, no timezone offset
 
         df.setTimeZone(tz)
         val created_at: String = df.format(Date())
         var customer_obj: JsonObject = JsonObject()
-        customer_obj.addProperty("email",email)
-        customer_obj.addProperty("created_at",created_at)
+        customer_obj.addProperty("email", email)
+        customer_obj.addProperty("created_at", created_at)
 
         /*val json = "{ \"email\": \"manoharsinghrawat@magenative.com\", \"created_at\": \"2021-01-20T12:38:52+0530\" }"*/
-        Log.i("customer_jsonObject1",customer_obj.toString())
+        Log.i("customer_jsonObject1", customer_obj.toString())
 
 
         val random = SecureRandom()
@@ -106,8 +107,8 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivSpec)
 
 
-        Log.d("encrypted - ivSize ",""+iv.size)
-        Log.d("encrypted - ivSize2 ",""+cipher.doFinal(customer_obj.toString().toByteArray()).size)
+        Log.d("encrypted - ivSize ", "" + iv.size)
+        Log.d("encrypted - ivSize2 ", "" + cipher.doFinal(customer_obj.toString().toByteArray()).size)
 
 
         val encrypted = ByteArray(ivSize + cipher.doFinal(customer_obj.toString().toByteArray()).size)
@@ -115,37 +116,36 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         System.arraycopy(cipher.doFinal(customer_obj.toString().toByteArray()), 0, encrypted, ivSize, cipher.doFinal(customer_obj.toString().toByteArray()).size)
         /*val encrypted: ByteArray = ArrayUtils.addAll(iv, cipher.doFinal(customer_obj.toString().toByteArray()))*/
 
-        Log.d("encrypted",""+encrypted.size)
+        Log.d("encrypted", "" + encrypted.size)
 
         val sha256HMAC = Mac.getInstance("HmacSHA256")
         val secretKeySpec = SecretKeySpec(signature_key.toByteArray(), "HmacSHA256")
         sha256HMAC.init(secretKeySpec)
         val signature = sha256HMAC.doFinal(encrypted)
 
-        Log.d("encrypted",""+signature.size)
+        Log.d("encrypted", "" + signature.size)
 
 
         val final = ByteArray(encrypted.size + signature.size)
         System.arraycopy(encrypted, 0, final, 0, encrypted.size)
         System.arraycopy(signature, 0, final, encrypted.size, signature.size)
 
-        Log.d("encrypted - final ",""+final.size)
+        Log.d("encrypted - final ", "" + final.size)
 
 
         var token = Base64.getUrlEncoder().encodeToString(final/*ArrayUtils.addAll(encrypted, signature)*/);
         token = token.replace('+', '-')  // Replace + with -
                 .replace('/', '_');
 
-        Log.d("encrypted - token ",token)
+        Log.d("encrypted - token ", token)
 
         try {
-            doGraphQLMutateGraph(repository,MutationQuery.multipass(token),customResponse = object : CustomResponse{
+            doGraphQLMutateGraph(repository, MutationQuery.multipass(token), customResponse = object : CustomResponse {
                 override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
                     multipasstoken(result)
                 }
-            },context = context)
-        }catch (e:java.lang.Exception)
-        {
+            }, context = context)
+        } catch (e: java.lang.Exception) {
             e.printStackTrace();
         }
     }
@@ -201,7 +201,6 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
             }
         }
     }
-
 
 
     private operator fun invoke(graphCallResult: GraphCallResult<Storefront.Mutation>): Unit {
@@ -365,11 +364,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun isValidEmail(target: String): Boolean {
-        var valid = false
-        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-        if (target.matches(emailPattern.toRegex())) {
-            valid = true
-        }
-        return valid
+        val emailPattern = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE)
+        return emailPattern.matcher(target).matches()
     }
 }

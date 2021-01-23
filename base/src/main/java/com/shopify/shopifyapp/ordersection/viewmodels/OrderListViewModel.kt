@@ -36,31 +36,25 @@ class OrderListViewModel(private val repository: Repository) : ViewModel() {
 
     private fun fetchOrderData() {
         try {
-            val runnable = object : Runnable {
-                override fun run() {
-                    val tokenData = repository.accessToken[0]
-                    doGraphQLQueryGraph(repository,Query.getOrderList(tokenData.customerAccessToken, cursor),customResponse = object :CustomResponse{
-                        override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                            invokes(result)
-                        }
-                    },context = context)
-
+            val tokenData = repository.accessToken[0]
+            doGraphQLQueryGraph(repository, Query.getOrderList(tokenData.customerAccessToken, cursor), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invokes(result)
                 }
-
-                private fun invokes(graphCallResult: GraphCallResult<Storefront.QueryRoot>): Unit {
-                    if (graphCallResult is GraphCallResult.Success<*>) {
-                        consumeResponse(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
-                    } else {
-                        consumeResponse(GraphQLResponse.error(graphCallResult as GraphCallResult.Failure))
-                    }
-                    return Unit
-                }
-            }
-            Thread(runnable).start()
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
+    }
+
+    private fun invokes(graphCallResult: GraphCallResult<Storefront.QueryRoot>): Unit {
+        if (graphCallResult is GraphCallResult.Success<*>) {
+            consumeResponse(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
+        } else {
+            consumeResponse(GraphQLResponse.error(graphCallResult as GraphCallResult.Failure))
+        }
+        return Unit
     }
 
     private fun consumeResponse(reponse: GraphQLResponse) {

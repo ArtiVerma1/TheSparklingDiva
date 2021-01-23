@@ -62,6 +62,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import org.json.JSONArray
 import org.json.JSONObject
@@ -73,7 +77,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class HomePageViewModel( var repository: Repository) : ViewModel() {
+class HomePageViewModel(var repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
     val message = MutableLiveData<String>()
     private val disposables = CompositeDisposable()
@@ -150,14 +154,12 @@ class HomePageViewModel( var repository: Repository) : ViewModel() {
     }
 
     fun dowloadJson(downloadlink: String) {
-        Observable.create(ObservableOnSubscribe<String> { emitter ->
-            emitter.onNext(URL(downloadlink).readText())
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { result -> parseResponse(result) },
-                        { throwable -> throwable.printStackTrace() }
-                )
+        GlobalScope.launch(Dispatchers.Main) {
+            var result = async(Dispatchers.IO) {
+                URL(downloadlink).readText()
+            }
+            parseResponse(result.await())
+        }
     }
 
     private fun parseResponse(apiResponse: String) {
@@ -1083,7 +1085,7 @@ class HomePageViewModel( var repository: Repository) : ViewModel() {
                                                 gridtwo = ProductSliderListAdapter()
                                                 gridtwo!!.presentmentcurrency = presentmentCurrency
                                                 context.setLayout(productdata!!, "grid")
-                                                gridtwo!!.setData(list, context, jsonObject,repository)
+                                                gridtwo!!.setData(list, context, jsonObject, repository)
                                                 productdata!!.adapter = gridtwo
                                             }
                                             "3" -> {
@@ -1101,7 +1103,7 @@ class HomePageViewModel( var repository: Repository) : ViewModel() {
                                     homeadapter = ProductSliderListAdapter()
                                     homeadapter!!.presentmentcurrency = presentmentCurrency
                                     context.setLayout(productdata!!, "horizontal")
-                                    homeadapter!!.setData(list, context, jsonObject,repository)
+                                    homeadapter!!.setData(list, context, jsonObject, repository)
                                     productdata!!.adapter = homeadapter
                                 }
                             }
