@@ -46,6 +46,7 @@ import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import com.shopify.shopifyapp.homesection.models.ProductSlider
 import com.shopify.shopifyapp.homesection.models.StandAloneBanner
 import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.customLoader
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
@@ -979,15 +980,25 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     fun getProductsById(id: String, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
         try {
-            doGraphQLQueryGraph(repository, Query.getProductById(getProductID(id)!!), customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+            var call = repository.graphClient.queryGraph(Query.getProductById(getProductID(id)!!))
+            call.enqueue { result: GraphCallResult<Storefront.QueryRoot> ->
+                GlobalScope.launch(Dispatchers.Main) {
                     if (result is GraphCallResult.Success<*>) {
                         consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
                     } else {
                         consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
                     }
                 }
-            }, context = context)
+            }
+//            doGraphQLQueryGraph(repository, Query.getProductById(getProductID(id)!!), customResponse = object : CustomResponse {
+//                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+//                    if (result is GraphCallResult.Success<*>) {
+//                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
+//                    } else {
+//                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+//                    }
+//                }
+//            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
