@@ -44,6 +44,7 @@ class Splash : AppCompatActivity() {
     private var splashmodel: SplashViewModel? = null
     private var binding: MSplashBinding? = null
     private var product_id: String? = null
+    private var tm: JobScheduler? = null
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +64,8 @@ class Splash : AppCompatActivity() {
         val extras = PersistableBundle()
         extras.putLong("MageNativeTEST", 10000)
         builder.setExtras(extras)
-        val tm = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        tm.schedule(builder.build())
+        tm = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        tm?.schedule(builder.build())
         if (intent != null) {
             val appLinkIntent = intent
             val appLinkAction = appLinkIntent.action
@@ -91,18 +92,25 @@ class Splash : AppCompatActivity() {
                         splashmodel!!.firebaseResponse().observe(this, Observer<FireBaseResponse> { this.consumeResponse(it) })
                         splashmodel!!.Response(resources.getString(R.string.shopdomain)).observe(this, Observer<LocalDbResponse> { this.consumeResponse(it) })
                         splashmodel!!.errorMessageResponse.observe(this, Observer<String> { this.consumeErrorResponse(it) })
+                        splashmodel!!.getNotificationCompaign().observe(this, Observer { this.cartNotification(it) })
                         @SuppressLint("HardwareIds") val deviceId = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
                         splashmodel!!.sendTokenToServer(deviceId)
 
-                       /* Toast.makeText(baseContext, "Authentication success",
-                                Toast.LENGTH_SHORT).show()*/
+                        /* Toast.makeText(baseContext, "Authentication success",
+                                 Toast.LENGTH_SHORT).show()*/
                     } else {
 
-                    /*    Toast.makeText(baseContext, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show()*/
+                        /*    Toast.makeText(baseContext, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show()*/
                     }
 
                 }
+    }
+
+    private fun cartNotification(it: Boolean?) {
+        if (!it!!) {
+            tm?.cancel(101)
+        }
     }
 
     private fun consumeErrorResponse(error: String) {

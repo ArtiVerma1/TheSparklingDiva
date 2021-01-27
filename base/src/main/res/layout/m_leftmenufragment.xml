@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout >
+
     <data>
+        <import type="android.view.View"/>
+        <variable
+            name="features"
+            type="com.shopify.shopifyapp.basesection.models.FeaturesModel" />
         <variable
             name="menudata"
             type="com.shopify.shopifyapp.basesection.models.MenuData" />
@@ -228,6 +233,7 @@
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
+            android:visibility="@{features.multi_currency ? View.VISIBLE : View.GONE}"
             android:tag="currencyswitcher"
             android:onClick="@{(view) -> clickdata.navigationClicks(view)}"
             app:layout_constraintTop_toBottomOf="@id/autosearch"

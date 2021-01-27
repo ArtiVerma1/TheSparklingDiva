@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.basesection.fragments
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -28,8 +29,10 @@ import com.shopify.shopifyapp.databinding.MDynamicmenuBinding
 import com.shopify.shopifyapp.databinding.MLeftmenufragmentBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.activities.Weblink
+import com.shopify.shopifyapp.basesection.models.FeaturesModel
 import com.shopify.shopifyapp.basesection.models.MenuData
 import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.collectionsection.activities.CollectionList
 import com.shopify.shopifyapp.livepreviewsection.LivePreview
@@ -50,10 +53,11 @@ import javax.inject.Inject
 
 class LeftMenu : BaseFragment() {
     private var binding: MLeftmenufragmentBinding? = null
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private var currentactivity: Activity?=null
+    private var currentactivity: Activity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -73,6 +77,7 @@ class LeftMenu : BaseFragment() {
         val app_version = "App Version $version($versioncode)"
         menuData!!.appversion = app_version
         menuData!!.copyright = resources.getString(R.string.copy) + " " + resources.getString(R.string.app_name)
+        binding!!.features = featuresModel
         binding!!.menudata = menuData
         binding!!.clickdata = ClickHandlers(currentcontext)
         (activity!!.application as MyApplication).mageNativeAppComponent!!.doLeftMeuInjection(this)
@@ -184,7 +189,7 @@ class LeftMenu : BaseFragment() {
 
         fun navigationClicks(view: View) {
             when (view.tag as String) {
-                "livepreview"->{
+                "livepreview" -> {
                     val integrator = IntentIntegrator((context as NewBaseActivity)!!)
                     integrator.setPrompt("Scan Your Barcode")
                     integrator.setCameraId(0) // Use a specific camera of the device
@@ -206,7 +211,7 @@ class LeftMenu : BaseFragment() {
                     val login = Intent(context, LoginActivity::class.java)
                     context!!.startActivity(login)
                 }
-                "mywishlist" ->  {
+                "mywishlist" -> {
                     val mywishlist = Intent(context, WishList::class.java)
                     context!!.startActivity(mywishlist)
                 }
@@ -255,11 +260,12 @@ class LeftMenu : BaseFragment() {
     override fun onResume() {
         super.onResume()
         Log.i("MageNative", "LeftMenuResume")
-        when(activity!!.getPackageName()){
-            "com.shopify.shopifyapp"->{
-                menuData!!.previewvislible=View.VISIBLE
-            }else->{
-                menuData!!.previewvislible=View.GONE
+        when (activity!!.getPackageName()) {
+            "com.shopify.shopifyapp" -> {
+                menuData!!.previewvislible = View.VISIBLE
+            }
+            else -> {
+                menuData!!.previewvislible = View.GONE
             }
         }
         leftmenu.fetchUserData()
@@ -284,8 +290,8 @@ class LeftMenu : BaseFragment() {
                                     for (i in 0 until array.length()) {
                                         handler.post {
                                             try {
-                                               // Log.i("MageNative","CurrentContext :"+currentcontext)
-                                                val binding:MDynamicmenuBinding = DataBindingUtil.inflate(currentcontext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_dynamicmenu, null, false)
+                                                // Log.i("MageNative","CurrentContext :"+currentcontext)
+                                                val binding: MDynamicmenuBinding = DataBindingUtil.inflate(currentcontext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_dynamicmenu, null, false)
                                                 val menuData = MenuData()
                                                 if (array.getJSONObject(i).has("id")) {
                                                     menuData.id = array.getJSONObject(i).getString("id")
@@ -308,8 +314,8 @@ class LeftMenu : BaseFragment() {
                                                 }
                                                 menulist.addView(binding.root)
                                             } catch (e: Exception) {
-                                                Log.i("MageNative","Error"+e.message)
-                                                Log.i("MageNative","Error"+e.cause)
+                                                Log.i("MageNative", "Error" + e.message)
+                                                Log.i("MageNative", "Error" + e.cause)
                                                 e.printStackTrace()
                                             }
                                         }

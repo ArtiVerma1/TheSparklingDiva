@@ -26,7 +26,9 @@ import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.models.FeaturesModel
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MProductviewBinding
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
@@ -66,6 +68,8 @@ class ProductView : BaseActivity() {
         Constant.current = null
         val group = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_productview, group, true)
+
+        binding?.features = featuresModel
         showBackButton()
         showTittle(" ")
         variantlist = setLayout(binding!!.productvariant, "horizontal")
@@ -170,7 +174,11 @@ class ProductView : BaseActivity() {
                     for (j in 0..d.sources.size - 1) {
                         if (d.sources.get(j).url.contains(".glb")) {
                             data!!.arimage = d.sources.get(j).url
-                            binding!!.aricon.visibility = View.VISIBLE
+                            if (featuresModel.ardumented_reality) {
+                                binding!!.aricon.visibility = View.VISIBLE
+                            } else {
+                                binding!!.aricon.visibility = View.GONE
+                            }
                             break@loop
                         }
                     }
