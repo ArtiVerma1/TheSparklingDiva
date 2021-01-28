@@ -34,6 +34,7 @@ import com.google.gson.JsonParser
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.models.CommanModel
@@ -77,6 +78,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class HomePageViewModel(var repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
@@ -970,35 +972,37 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     private fun updateDataInRecylerView(productdata: RecyclerView?, jsonArray: JSONArray, cat_id: String, jsonObject: JSONObject) {
         try {
             val edges = mutableListOf<Storefront.Product>()
+            var product_ids = ArrayList<ID>()
             for (i in 0..jsonArray.length() - 1) {
-                getProductsById(jsonArray.getString(i), productdata, jsonArray, jsonObject, edges)
+                product_ids.add(ID(getProductID(jsonArray.getString(i))))
             }
+            getProductsById(product_ids, productdata, jsonArray, jsonObject, edges)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
-    fun getProductsById(id: String, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
+    fun getProductsById(id: ArrayList<ID>, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
         try {
-            var call = repository.graphClient.queryGraph(Query.getProductById(getProductID(id)!!))
-            call.enqueue { result: GraphCallResult<Storefront.QueryRoot> ->
-                GlobalScope.launch(Dispatchers.Main) {
-                    if (result is GraphCallResult.Success<*>) {
-                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
-                    } else {
-                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
-                    }
-                }
-            }
-//            doGraphQLQueryGraph(repository, Query.getProductById(getProductID(id)!!), customResponse = object : CustomResponse {
-//                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+//            var call = repository.graphClient.queryGraph(Query.getAllProductsByID(id))
+//            call.enqueue { result: GraphCallResult<Storefront.QueryRoot> ->
+//                GlobalScope.launch(Dispatchers.Main) {
 //                    if (result is GraphCallResult.Success<*>) {
 //                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
 //                    } else {
 //                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
 //                    }
 //                }
-//            }, context = context)
+//            }
+            doGraphQLQueryGraph(repository, Query.getAllProductsByID(id), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    if (result is GraphCallResult.Success<*>) {
+                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
+                    } else {
+                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+                    }
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1046,8 +1050,9 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     message.setValue(errormessage.toString())
                 } else {
                     try {
-                        val edge = result.data!!.node as Storefront.Product
-                        edges.add(edge)
+                        for (i in 0..result.data!!.nodes.size - 1) {
+                            edges.add(result.data!!.nodes[i] as Storefront.Product)
+                        }
                         if (edges.size == jsonArray.length()) {
                             filterProduct(edges, productdata, jsonArray, jsonObject)
                         }
@@ -1058,7 +1063,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                 Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
                             }
                         }
-
                     }
                 }
             }

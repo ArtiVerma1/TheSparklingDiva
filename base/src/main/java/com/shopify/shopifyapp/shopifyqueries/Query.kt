@@ -1,6 +1,9 @@
 package com.shopify.shopifyapp.shopifyqueries
 
 import com.shopify.buy3.Storefront
+import com.shopify.buy3.Storefront.*
+import com.shopify.buy3.Storefront.ProductQuery.*
+import com.shopify.buy3.Storefront.ProductVariantQuery.PresentmentPricesArguments
 import com.shopify.graphql.support.ID
 
 object Query {
@@ -172,6 +175,82 @@ object Query {
                                     }
                                     .products(definition, productDefinition
                                     )
+                        }
+                    }
+        }
+    }
+
+    fun getAllProductsByID(id: List<ID>): Storefront.QueryRootQuery {
+        return Storefront.query { root: QueryRootQuery ->
+            root
+                    .nodes(id
+                    ) { n: NodeQuery ->
+                        n.onProduct { p: ProductQuery ->
+                            p.title()
+                                    .handle()
+                                    .vendor()
+                                    .tags()
+                                    .collections({ getconn: CollectionsArguments -> getconn.first(100) }
+                                    ) { conn: CollectionConnectionQuery ->
+                                        conn
+                                                .edges { edgeconn: CollectionEdgeQuery ->
+                                                    edgeconn
+                                                            .node { nodeconn: CollectionQuery ->
+                                                                nodeconn
+                                                                        .title()
+                                                            }
+                                                }
+                                    }
+                                    .images({ img: ImagesArguments -> img.first(10) }
+                                    ) { imag: ImageConnectionQuery ->
+                                        imag.edges { imgedge: ImageEdgeQuery ->
+                                            imgedge
+                                                    .node { imgnode: ImageQuery ->
+                                                        imgnode
+                                                                .originalSrc()
+                                                                .transformedSrc()
+                                                    }
+                                        }
+                                    }
+                                    .availableForSale()
+                                    .descriptionHtml()
+                                    .description()
+                                    .media({ m -> m.first(10) }, { me ->
+                                        me.edges({ e ->
+                                            e.node({ n ->
+                                                n
+                                                        .onModel3d({ md ->
+                                                            md
+                                                                    .sources({ s -> s.url() })
+                                                                    .previewImage({ p -> p.originalSrc() })
+                                                        })
+                                            })
+                                        })
+                                    })
+                                    .variants({ args: VariantsArguments ->
+                                        args
+                                                .first(120)
+                                    }
+                                    ) { variant: ProductVariantConnectionQuery ->
+                                        variant
+                                                .edges { variantEdgeQuery: ProductVariantEdgeQuery ->
+                                                    variantEdgeQuery
+                                                            .node { productVariantQuery: ProductVariantQuery ->
+                                                                productVariantQuery
+                                                                        .priceV2 { price: MoneyV2Query -> price.amount().currencyCode() }
+                                                                        .presentmentPrices({ arg: PresentmentPricesArguments -> arg.first(25) }) { price: ProductVariantPricePairConnectionQuery -> price.edges { e: ProductVariantPricePairEdgeQuery -> e.cursor().node { na: ProductVariantPricePairQuery -> na.price { pr: MoneyV2Query -> pr.amount().currencyCode() }.compareAtPrice { cp: MoneyV2Query -> cp.amount().currencyCode() } } } }
+                                                                        .price()
+                                                                        .title()
+                                                                        .selectedOptions { select: SelectedOptionQuery -> select.name().value() }
+                                                                        .compareAtPriceV2 { compare: MoneyV2Query -> compare.amount().currencyCode() }
+                                                                        .compareAtPrice()
+                                                                        .image { _queryBuilder ->
+                                                                            _queryBuilder?.originalSrc()
+                                                                        }
+                                                                        .availableForSale()
+                                                            }
+                                                }
+                                    }
                         }
                     }
         }
