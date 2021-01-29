@@ -1,7 +1,7 @@
 package com.shopify.shopifyapp.shopifyqueries
 import com.shopify.buy3.Storefront
 object Mutation {
-    fun createCheckout(inputs: Storefront.CheckoutCreateInput): Storefront.MutationQuery {
+    fun createCheckout(inputs: Storefront.CheckoutCreateInput,list_currency:List<Storefront.CurrencyCode>): Storefront.MutationQuery {
         var createcheckoutmutation: Storefront.MutationQuery? = null
         createcheckoutmutation = Storefront.mutation { root ->
             root
@@ -26,7 +26,9 @@ object Mutation {
                                                                         .product({p->p})
                                                                         .availableForSale()
                                                                         .price()
-                                                                        .presentmentPrices({ arg -> arg.first(25) }, { price -> price.edges({ e -> e.cursor().node({ n -> n.price({ p -> p.amount().currencyCode() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }) }) })
+                                                                        .presentmentPrices({ arg -> arg.first(25).presentmentCurrencies(list_currency)},
+                                                                                { price -> price.edges({ e -> e.cursor().node({ n -> n.price({ p -> p.amount().currencyCode() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }) }) }
+                                                                        )
                                                                         .priceV2({ p -> p.currencyCode().amount().currencyCode() })
                                                                         .compareAtPriceV2({ c -> c.amount().amount().currencyCode() })
                                                                         .image({ img ->

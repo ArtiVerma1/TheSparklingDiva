@@ -234,12 +234,15 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                     val input = Storefront.CheckoutCreateInput()
                     input.lineItems = lineItems
                     try {
+                        var currency_list = ArrayList<Storefront.CurrencyCode>()
                         if (presentCurrency != "nopresentmentcurrency") {
                             val currencyCode = Storefront.CurrencyCode.valueOf(presentCurrency)
                             input.presentmentCurrencyCode = currencyCode
-
+                            currency_list.add(Storefront.CurrencyCode.valueOf(presentCurrency))
                         }
-                        doGraphQLMutateGraph(repository, Mutation.createCheckout(input), customResponse = object : CustomResponse {
+
+
+                        doGraphQLMutateGraph(repository, Mutation.createCheckout(input, currency_list), customResponse = object : CustomResponse {
                             override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
                                 invoke(result)
                             }

@@ -244,9 +244,7 @@ object Query {
                                                                         .selectedOptions { select: SelectedOptionQuery -> select.name().value() }
                                                                         .compareAtPriceV2 { compare: MoneyV2Query -> compare.amount().currencyCode() }
                                                                         .compareAtPrice()
-                                                                        .image { _queryBuilder ->
-                                                                            _queryBuilder?.originalSrc()
-                                                                        }
+                                                                        .image({ image -> image.transformedSrc({ tr -> tr.maxHeight(600).maxWidth(600) }).originalSrc() })
                                                                         .availableForSale()
                                                             }
                                                 }

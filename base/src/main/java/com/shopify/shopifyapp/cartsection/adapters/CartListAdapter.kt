@@ -49,18 +49,18 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         item.variant_id = data?.get(position)!!.node.variant.id.toString()
         item.productname = data?.get(position)!!.node.title
         val variant = data?.get(position)!!.node.variant
-        item.normalprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
+        item.normalprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.price.amount, variant.presentmentPrices.edges[0].node.price.currencyCode.toString())
         if (variant.compareAtPriceV2 != null) {
-            val special = java.lang.Double.valueOf(variant.compareAtPriceV2.amount)
-            val regular = java.lang.Double.valueOf(variant.priceV2.amount)
+            val special = java.lang.Double.valueOf(variant.presentmentPrices.edges[0].node.compareAtPrice.amount)
+            val regular = java.lang.Double.valueOf(variant.presentmentPrices.edges[0].node.price.amount)
             if (BigDecimal.valueOf(special).compareTo(BigDecimal.valueOf(regular)) == 1) {
-                item.normalprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
-                item.specialprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
+                item.normalprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.compareAtPrice.amount, variant.presentmentPrices.edges[0].node.compareAtPrice.currencyCode.toString())
+                item.specialprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.price.amount, variant.presentmentPrices.edges[0].node.price.currencyCode.toString())
                 item.offertext = getDiscount(special, regular).toString() + "%off"
 
             } else {
-                item.normalprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
-                item.specialprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
+                item.normalprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.price.amount, variant.presentmentPrices.edges[0].node.price.currencyCode.toString())
+                item.specialprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.compareAtPrice.amount, variant.presentmentPrices.edges[0].node.compareAtPrice.currencyCode.toString())
                 item.offertext = getDiscount(regular, special).toString() + "%off"
             }
             holder.binding.regularprice.paintFlags = holder.binding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
