@@ -141,7 +141,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
                 if (repository.getSingleData(product_id) == null) {
                     Log.i("MageNative", "WishListCount : " + repository.wishListData.size)
                     val data = ItemData()
-                    data.product_id=product_id
+                    data.product_id = product_id
                     repository.insertWishListData(data)
                     Log.i("MageNative", "WishListCount 2: " + repository.wishListData.size)
                     isadded[0] = true
@@ -176,7 +176,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         disposables.clear()
     }
 
-    fun isInwishList(variantId: String): Boolean {
+    public fun isInwishList(variantId: String): Boolean {
         val isadded = booleanArrayOf(false)
         try {
             val executor = Executors.newSingleThreadExecutor()

@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.shopifyqueries
 
+import android.util.Log
 import com.shopify.buy3.Storefront
 import com.shopify.buy3.Storefront.*
 import com.shopify.buy3.Storefront.ProductQuery.*
@@ -7,6 +8,7 @@ import com.shopify.buy3.Storefront.ProductVariantQuery.PresentmentPricesArgument
 import com.shopify.graphql.support.ID
 
 object Query {
+    private val TAG = "Query"
     val shopDetails: Storefront.QueryRootQuery
         get() = Storefront.query { q ->
             q
@@ -306,13 +308,14 @@ object Query {
     }
 
     fun getSearchProducts(keyword: String, cursor: String): Storefront.QueryRootQuery {
-
+        Log.d(TAG, "getSearchProducts: " + keyword)
         return Storefront.query { root ->
             root
                     .products(
                             //   Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(keyword).first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
                             Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> product_list(args, cursor).query(keyword).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
         }
+
     }
 
     private fun product_list(args: Storefront.QueryRootQuery.ProductsArguments?, cursor: String): Storefront.QueryRootQuery.ProductsArguments {

@@ -1,31 +1,36 @@
 package com.shopify.shopifyapp.utils
+
 import android.util.Log
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.repositories.Repository
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import javax.inject.Inject
-class  Urls {
+
+class Urls {
     @Inject
     lateinit var repository: Repository
-    var app:MyApplication
-    constructor(app:MyApplication) {
-        this.app=app
+    var app: MyApplication
+
+    constructor(app: MyApplication) {
+        this.app = app
         app.mageNativeAppComponent!!.doURlInjection(this)
     }
-    companion  object Data{
-        const val BASE_URL:String = "https://shopifymobileapp.cedcommerce.com/"//put your base url here
-        const val PERSONALISED:String = "https://recommendations.loopclub.io/api/v1/"//put your base url here
-        const val MENU:String = "shopifymobile/shopifyapi/getcategorymenus/"//put your end point here
-        const val SETORDER:String = "shopifymobile/shopifyapi/setorder"
-        const val SETDEVICES:String = "shopifymobile/shopifyapi/setdevices"
-        const val RECOMMENDATION:String = "recommendations/"
-        const val HEADER:String ="Domain-Name: douban"
-        const val HOMEPAGE:String = "shopifymobile/shopifyapi/homepagedata"
-        const val CLIENT:String = "magenative"
-        const val TOKEN:String = "a2ds21R!3rT#R@R23r@#3f3ef"
-        const val MulipassSecret:String ="1f4237c87f31090e5763feaa34962b72"
+
+    companion object Data {
+        const val BASE_URL: String = "https://shopifymobileapp.cedcommerce.com/"//put your base url here
+        const val PERSONALISED: String = "https://recommendations.loopclub.io/api/v1/"//put your base url here
+        const val MENU: String = "shopifymobile/shopifyapi/getcategorymenus/"//put your end point here
+        const val SETORDER: String = "shopifymobile/shopifyapi/setorder"
+        const val SETDEVICES: String = "shopifymobile/shopifyapi/setdevices"
+        const val RECOMMENDATION: String = "recommendations/"
+        const val HEADER: String = "Domain-Name: douban"
+        const val HOMEPAGE: String = "shopifymobile/shopifyapi/homepagedata"
+        const val CLIENT: String = "magenative"
+        const val TOKEN: String = "a2ds21R!3rT#R@R23r@#3f3ef"
+        const val MulipassSecret: String = "1f4237c87f31090e5763feaa34962b72"
     }
+
     val shopdomain: String
         get() {
             var domain = "magenative.myshopify.com" //magenative-store.myshopify.com
@@ -43,12 +48,12 @@ class  Urls {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            Log.i("MageNative","domain"+domain)
+            Log.i("MageNative", "domain" + domain)
             return domain
         }
     val mid: String
         get() {
-            var domain ="18" // 3937
+            var domain = "18" // 3937
             try {
                 val executor = Executors.newSingleThreadExecutor()
                 val callable = Callable {
@@ -63,7 +68,7 @@ class  Urls {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            Log.i("MageNative","domain"+domain)
+            Log.i("MageNative", "domain" + domain)
             return domain
         }
     val apikey: String
@@ -83,7 +88,7 @@ class  Urls {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            Log.i("MageNative","domain"+key)
+            Log.i("MageNative", "domain" + key)
             return key
         }
 }

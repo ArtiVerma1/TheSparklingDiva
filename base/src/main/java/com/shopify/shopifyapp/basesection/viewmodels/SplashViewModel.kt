@@ -154,7 +154,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
             MyApplication.dataBaseReference.child("features").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    Log.d(TAG, "onDataChange: " + dataSnapshot.hasChild("features"))
+                    Log.d(TAG, "onDataChange: " + dataSnapshot.exists())
                     if (dataSnapshot.value != null) {
                         val featuresList = dataSnapshot.value as ArrayList<String>
                         for (i in 0..featuresList.size - 1) {

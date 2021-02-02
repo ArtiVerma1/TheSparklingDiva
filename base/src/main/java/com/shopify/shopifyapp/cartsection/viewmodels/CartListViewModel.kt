@@ -272,7 +272,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     fun moveToWishList(item: CartListItem) {
         try {
             val runnable = Runnable {
-                if (repository.getSingleData(item.variant_id!!) == null) {
+                if (repository.getSingleData(item.product_id!!) == null) {
                     val data = ItemData()
                     data.product_id = item.product_id!!
                     repository.insertWishListData(data)

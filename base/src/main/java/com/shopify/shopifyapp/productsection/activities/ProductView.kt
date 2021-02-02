@@ -221,7 +221,12 @@ class ProductView : BaseActivity() {
                 }
             }, null)*/
             binding?.description?.loadData(productedge.descriptionHtml, "text/html", "utf-8")
-            data!!.addtowish = resources.getString(R.string.addtowish)
+            if (model?.isInwishList(model?.id!!)!!) {
+                data!!.addtowish = resources.getString(R.string.alreadyinwish)
+            } else {
+                data!!.addtowish = resources.getString(R.string.addtowish)
+            }
+
             if (model!!.presentmentCurrency == "nopresentmentcurrency") {
                 data!!.regularprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
                 if (variant.compareAtPriceV2 != null) {

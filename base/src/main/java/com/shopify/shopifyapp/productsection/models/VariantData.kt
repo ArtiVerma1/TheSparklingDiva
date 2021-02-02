@@ -36,10 +36,10 @@ import com.shopify.shopifyapp.utils.Constant
         Log.i("MageNative", "Variant Id : " + data.variant_id!!)
         Log.i("MageNative", "Variant Id : " + data.model!!.isInwishList(data.variant_id!!))
         Log.i("MageNative", "Variant Id : " + data.data!!.textdata!!)
-        if (data.model!!.isInwishList(data.variant_id!!)) {
-            data.data!!.addtowish = view.context.resources.getString(R.string.alreadyinwish)
-        } else {
-            data.data!!.addtowish = view.context.resources.getString(R.string.addtowish)
-        }
+//        if (data.model!!.isInwishList(data.variant_id!!)) {
+//            data.data!!.addtowish = view.context.resources.getString(R.string.alreadyinwish)
+//        } else {
+//            data.data!!.addtowish = view.context.resources.getString(R.string.addtowish)
+//        }
     }
 }
