@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="varaint_data"
             type="com.shopify.shopifyapp.productsection.models.VariantData" />
@@ -38,6 +40,7 @@
             android:text="@{varaint_data.selectedoption_one}"
             android:textColor="@color/black"
             android:textSize="12sp"
+            android:visibility="@{varaint_data.selectedoption_one.length() >0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/variant_image"
             app:layout_constraintStart_toStartOf="@+id/variant_image"
             app:layout_constraintTop_toBottomOf="@+id/variant_image" />
@@ -54,6 +57,7 @@
             android:text="@{varaint_data.selectedoption_two}"
             android:textColor="@color/black"
             android:textSize="12sp"
+            android:visibility="@{varaint_data.selectedoption_two.length() >0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/variant_image"
             app:layout_constraintStart_toStartOf="@+id/variant_image"
             app:layout_constraintTop_toBottomOf="@+id/variant_name1" />
@@ -70,6 +74,7 @@
             android:text="@{varaint_data.selectedoption_three}"
             android:textColor="@color/black"
             android:textSize="12sp"
+            android:visibility="@{varaint_data.selectedoption_three.length() >0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/variant_image"
             app:layout_constraintStart_toStartOf="@+id/variant_image"
             app:layout_constraintTop_toBottomOf="@+id/variant_name2" />
@@ -78,12 +83,12 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="5dp"
+            android:fontFamily="@font/roboto_medium"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:fontFamily="@font/roboto_medium"
-            app:layout_constraintTop_toBottomOf="@+id/variant_name3"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/variant_name3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

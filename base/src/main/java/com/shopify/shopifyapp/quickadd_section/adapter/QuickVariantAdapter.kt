@@ -17,6 +17,7 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
 
     var variants: List<Storefront.ProductVariantEdge>? = null
     var context: Context? = null
+    var presentmentcurrency: String? = null
 
     companion object {
         var itemClickVariant: ItemClick? = null
@@ -53,11 +54,14 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
     override fun onBindViewHolder(holder: QuickVariantViewHolder, position: Int) {
         val data = VariantData()
         data.position = position
-
-
-        holder.customVariantListitemBinding?.price?.text = CurrencyFormatter.setsymbol(variants!![position].node.presentmentPrices.edges[0].node.price.amount, variants!![position].node.presentmentPrices.edges[0].node.price.currencyCode.toString())
+        if (presentmentcurrency == "nopresentmentcurrency") {
+            holder.customVariantListitemBinding?.price?.text = CurrencyFormatter.setsymbol(variants?.get(position)?.node?.priceV2?.amount!!, variants?.get(position)?.node?.priceV2?.currencyCode.toString())
+        } else {
+            val edge = getEdge(variants?.get(position)?.node?.presentmentPrices?.edges!!)
+            holder.customVariantListitemBinding?.price?.text = CurrencyFormatter.setsymbol(edge?.node?.price?.amount!!, edge.node.price.currencyCode.toString())
+        }
         data.variantimage = variants!![position].node.image.transformedSrc
-        data.variant_id= variants!![position].node.id.toString()
+        data.variant_id = variants!![position].node.id.toString()
         setVariants(data, holder, variants!![position].node.selectedOptions)
         var sdk: Int = android.os.Build.VERSION.SDK_INT;
         if (selectedPosition == position) {
@@ -78,6 +82,21 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
             selectedPosition = position
             notifyDataSetChanged()
         }
+    }
+
+    private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>): Storefront.ProductVariantPricePairEdge? {
+        var pairEdge: Storefront.ProductVariantPricePairEdge? = null
+        try {
+            for (i in edges.indices) {
+                if (edges[i].node.price.currencyCode.toString() == presentmentcurrency) {
+                    pairEdge = edges[i]
+                    break
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return pairEdge
     }
 
     private fun setVariants(data: VariantData, holder: QuickVariantViewHolder, selectedOptions: List<Storefront.SelectedOption>) {

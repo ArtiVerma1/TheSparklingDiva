@@ -90,13 +90,6 @@ constructor() : RecyclerView.Adapter<WishItem>() {
         }
 
         fun moveToCart(view: View, product_id: String, variantData: Storefront.Product, position: Int) {
-//            try {
-//                Log.i("MageNative", "Position : " + item.position)
-//                model!!.addToCart(item.variant_id!!)
-//                removeWishList(view, item)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
             var customQuickAddActivity = QuickAddActivity(context = context!!,activity = context, theme = R.style.WideDialogFull, product_id = product_id, repository = model?.repository!!, wishListViewModel = model, position = position,wishlistData = data)
             if (variantData.variants.edges.size == 1) {
                 customQuickAddActivity.addToCart(variantData.variants.edges[0].node.id.toString(), 1)

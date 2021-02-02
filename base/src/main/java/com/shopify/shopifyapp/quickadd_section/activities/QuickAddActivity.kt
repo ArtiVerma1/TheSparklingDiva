@@ -60,6 +60,23 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
             }
         }, context = context)
         binding.handler = VariantClickHandler()
+        setPresentmentCurrencyForModel()
+
+    }
+
+    private fun setPresentmentCurrencyForModel() {
+        try {
+            val runnable = Runnable {
+                if (repository.localData[0].currencycode == null) {
+                    quickVariantAdapter.presentmentcurrency = "nopresentmentcurrency"
+                } else {
+                    quickVariantAdapter.presentmentcurrency = repository.localData[0].currencycode
+                }
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
     }
 

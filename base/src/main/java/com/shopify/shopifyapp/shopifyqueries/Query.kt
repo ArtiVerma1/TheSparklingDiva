@@ -321,9 +321,9 @@ object Query {
     private fun product_list(args: Storefront.QueryRootQuery.ProductsArguments?, cursor: String): Storefront.QueryRootQuery.ProductsArguments {
         var defination: Storefront.QueryRootQuery.ProductsArguments? = null
         if (cursor == "nocursor") {
-            defination = args!!.first(10)
+            defination = args!!.first(15)
         } else {
-            defination = args!!.first(10).after(cursor)
+            defination = args!!.first(15).after(cursor)
         }
         return defination
     }
