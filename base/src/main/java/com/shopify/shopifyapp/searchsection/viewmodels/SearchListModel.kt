@@ -124,7 +124,10 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
                     .filter { x -> x.node.availableForSale }
                     .toList()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { result -> filteredproducts!!.value = result })
+                    .subscribe {
+                        result -> filteredproducts!!.value = result
+
+                    })
         } catch (e: Exception) {
             e.printStackTrace()
         }

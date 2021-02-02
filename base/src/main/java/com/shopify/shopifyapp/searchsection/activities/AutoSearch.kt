@@ -35,6 +35,10 @@ import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.f
 import com.shopify.shopifyapp.searchsection.adapters.SearchRecylerAdapter
 import com.shopify.shopifyapp.searchsection.viewmodels.SearchListModel
 import com.shopify.shopifyapp.utils.ViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AutoSearch : BaseActivity() {
@@ -109,11 +113,16 @@ class AutoSearch : BaseActivity() {
         binding!!.searchtext.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                model!!.setSearchData(s.toString())
                 search_string = s.toString()
+                model!!.searchcursor = "nocursor"
+                if (search_string?.length!! >= 3) {
+                    model!!.setSearchData(search_string)
+                }
             }
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                Log.d(TAG, "afterTextChanged: " + s.toString())
+            }
         })
     }
 
@@ -139,7 +148,12 @@ class AutoSearch : BaseActivity() {
                     adapter!!.setData(search_product!!, this@AutoSearch)
                     viewlist!!.adapter = adapter
                 } else {
-                    adapter!!.products!!.addAll(products!!)
+                    if (model!!.searchcursor == "nocursor") {
+                        adapter!!.products!!.clear()
+                        adapter!!.products!!.addAll(products!!)
+                    } else {
+                        adapter!!.products!!.addAll(products!!)
+                    }
                     adapter!!.notifyDataSetChanged()
                 }
                 Log.d(TAG, "setRecylerData: " + products)
