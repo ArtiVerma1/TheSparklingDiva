@@ -21,13 +21,20 @@ import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.productsection.models.VariantData
 import com.shopify.shopifyapp.quickadd_section.adapter.QuickVariantAdapter
+import com.shopify.shopifyapp.quickadd_section.adapter.QuickVariantAdapter.Companion.selectedPosition
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
+import com.shopify.shopifyapp.wishlistsection.activities.WishList
+import com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter
+import com.shopify.shopifyapp.wishlistsection.viewmodels.WishListViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class QuickAddActivity(context: Context, theme: Int, var product_id: String, var repository: Repository) : BottomSheetDialog(context, theme) {
+class QuickAddActivity(context: Context, var activity: Context? = null, theme: Int, var product_id: String, var repository: Repository, var wishListViewModel: WishListViewModel? = null, var position: Int? = null, var wishlistData: MutableList<Storefront.Product>? = null) : BottomSheetDialog(context, theme) {
     lateinit var binding: ActivityQuickAddBinding
     private val TAG = "QuickAddActivity"
     lateinit var app: MyApplication
@@ -41,7 +48,9 @@ class QuickAddActivity(context: Context, theme: Int, var product_id: String, var
         this.window?.setBackgroundDrawableResource(android.R.color.transparent)
         bottomSheetDialog = this
         initView()
+
     }
+
 
     private fun initView() {
         quickVariantAdapter = QuickVariantAdapter()
@@ -99,7 +108,9 @@ class QuickAddActivity(context: Context, theme: Int, var product_id: String, var
             }
         })
         binding.variantList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        selectedPosition = -1
         binding.variantList.adapter = quickVariantAdapter
+
     }
 
     fun addToCart(variantId: String, quantity: Int) {
@@ -118,8 +129,19 @@ class QuickAddActivity(context: Context, theme: Int, var product_id: String, var
                     repository.updateSingLeItem(data)
                 }
                 Log.i("MageNative", "CartCount : " + repository.allCartItems.size)
+
             }
             Thread(runnable).start()
+            if (wishListViewModel != null) {
+                if (activity is WishList) {
+                    wishListViewModel!!.deleteData(product_id)
+                    wishlistData!!.removeAt(position!!)
+                    (activity as WishList).adapter.notifyItemRemoved(position!!)
+                    (activity as WishList).adapter.notifyItemRangeChanged(position!!, wishlistData!!.size)
+                    wishListViewModel!!.update(true)
+                    (activity as WishList).invalidateOptionsMenu()
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

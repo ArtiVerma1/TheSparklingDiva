@@ -274,37 +274,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             val runnable = Runnable {
                 if (repository.getSingleData(item.variant_id!!) == null) {
                     val data = ItemData()
-                    data.variant_id = item.variant_id!!
-                    data.productname = item.productname!!
-                    data.normalprice = item.normalprice!!
-                    if (item.specialprice != null) {
-                        data.specialprice = item.specialprice!!
-                        data.isSet_strike = true
-                    } else {
-                        data.specialprice = " "
-                        data.isSet_strike = false
-                    }
-                    if (item.variant_one != null) {
-                        data.variant_one = item.variant_one!!
-                    } else {
-                        data.variant_one = " "
-                    }
-                    if (item.variant_two != null) {
-                        data.variant_two = item.variant_two!!
-                    } else {
-                        data.variant_two = " "
-                    }
-                    if (item.variant_three != null) {
-                        data.variant_three = item.variant_three!!
-                    } else {
-                        data.variant_three = " "
-                    }
-                    if (item.offertext != null) {
-                        data.offertext = item.offertext!!
-                    } else {
-                        data.offertext = " "
-                    }
-                    data.image = item.image!!
+                    data.product_id = item.product_id!!
                     repository.insertWishListData(data)
                     Log.i("MageNative", "WishListCount : " + repository.wishListData.size)
                 }

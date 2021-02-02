@@ -154,39 +154,40 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
             MyApplication.dataBaseReference.child("features").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val featuresList = dataSnapshot.value as ArrayList<String>
-                    for (i in 0..featuresList.size - 1) {
-                        if (featuresList[i].equals("in-app-whislist", true)) {
-                            featuresModel.in_app_wishlist = true //Implemented
-                        } else if (featuresList[i].equals("real-time-sync", true)) {
-                            featuresModel.real_time_sync = true
-                        } else if (featuresList[i].equals("rtl-Support", true)) {
-                            featuresModel.rtl_support = true
-                        } else if (featuresList[i].equals("white-labled-app", true)) {
-                            featuresModel.white_labled_app = true
-                        } else if (featuresList[i].equals("push-notification", true)) {
-                            featuresModel.push_notification = true
-                        } else if (featuresList[i].equals("product-share", true)) {
-                            featuresModel.product_share = true //Implemented
-                        } else if (featuresList[i].equals("multi-currency", true)) {
-                            featuresModel.multi_currency = true //Implemented
-                        } else if (featuresList[i].equals("multi-language", true)) {
-                            featuresModel.multi_language = true
-                        } else if (featuresList[i].equals("abandoned-cart-campaigns", true)) {
-                            featuresModel.abandoned_cart_compaigns = true //Implemented
-                            notification_compaign.value = true
-                        } else if (featuresList[i].equals("all-website-payment-gateways-supported", true)) {
-                            featuresModel.allwebsite_getway_supported = true
-                        } else if (featuresList[i].equals("scheduled-push-notification", true)) {
-                            featuresModel.scheduled_pushnotification = true
-                        } else if (featuresList[i].equals("app-live-preview", true)) {
-                            featuresModel.applive_preview = true
-                        } else if (featuresList[i].equals("product-reviews", true)) {
-                            featuresModel.product_reviews = true
-                        } else if (featuresList[i].equals("augmented-reality", true)) {
-                            featuresModel.ardumented_reality = true //Implemented
+                    Log.d(TAG, "onDataChange: " + dataSnapshot.hasChild("features"))
+                    if (dataSnapshot.value != null) {
+                        val featuresList = dataSnapshot.value as ArrayList<String>
+                        for (i in 0..featuresList.size - 1) {
+                            if (featuresList[i].equals("in-app-whislist", true)) {
+                                featuresModel.in_app_wishlist = true //Implemented
+                            } else if (featuresList[i].equals("product-share", true)) {
+                                featuresModel.product_share = true //Implemented
+                            } else if (featuresList[i].equals("multi-currency", true)) {
+                                featuresModel.multi_currency = true //Implemented
+                            } else if (featuresList[i].equals("multi-language", true)) {
+                                featuresModel.multi_language = true
+                            } else if (featuresList[i].equals("abandoned-cart-campaigns", true)) {
+                                featuresModel.abandoned_cart_compaigns = true //Implemented
+                                notification_compaign.value = true //Implemented
+                            } else if (featuresList[i].equals("augmented-reality", true)) {
+                                featuresModel.ardumented_reality = true //Implemented
+                            } else if (featuresList[i].equals("ai-product-reccomendation", true)) {
+                                featuresModel.ai_product_reccomendaton = true //Implemented
+                            } else if (featuresList[i].equals("qr-code-search-scanner", true)) {
+                                featuresModel.qr_code_search_scanner = true //Implemented
+                            }
                         }
+                    } else {
+                        featuresModel.in_app_wishlist = true
+                        featuresModel.product_share = true
+                        featuresModel.multi_currency = true
+                        featuresModel.multi_language = true
+                        featuresModel.abandoned_cart_compaigns = true
+                        featuresModel.ardumented_reality = true
+                        featuresModel.ai_product_reccomendaton = true
+                        featuresModel.qr_code_search_scanner = true
                     }
+
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {

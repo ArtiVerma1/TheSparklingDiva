@@ -133,44 +133,15 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         return isadded[0]
     }
 
-    fun setWishList(variant: VariantData): Boolean {
+    fun setWishList(product_id: String): Boolean {
         val isadded = booleanArrayOf(false)
         try {
             val executor = Executors.newSingleThreadExecutor()
             val callable = Callable {
-                if (repository.getSingleData(variant.variant_id!!) == null) {
+                if (repository.getSingleData(product_id) == null) {
                     Log.i("MageNative", "WishListCount : " + repository.wishListData.size)
                     val data = ItemData()
-                    data.variant_id = variant.variant_id!!
-                    data.productname = variant.data!!.textdata!!
-                    data.normalprice = variant.data!!.regularprice!!
-                    if (variant.data!!.specialprice != null) {
-                        data.specialprice = variant.data!!.specialprice!!
-                    } else {
-                        data.specialprice = " "
-                    }
-                    if (variant.selectedoption_one != null) {
-                        data.variant_one = variant.selectedoption_one!!
-                    } else {
-                        data.variant_one = " "
-                    }
-                    if (variant.selectedoption_two != null) {
-                        data.variant_two = variant.selectedoption_two!!
-                    } else {
-                        data.variant_two = " "
-                    }
-                    if (variant.selectedoption_three != null) {
-                        data.variant_three = variant.selectedoption_three!!
-                    } else {
-                        data.variant_three = " "
-                    }
-                    data.isSet_strike = variant.data!!.isStrike
-                    if (variant.data!!.isStrike) {
-                        data.offertext = variant.data!!.offertext!!
-                    } else {
-                        data.offertext = " "
-                    }
-                    data.image = variant.variantimage!!
+                    data.product_id=product_id
                     repository.insertWishListData(data)
                     Log.i("MageNative", "WishListCount 2: " + repository.wishListData.size)
                     isadded[0] = true

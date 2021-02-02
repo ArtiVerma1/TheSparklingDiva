@@ -13,6 +13,7 @@ import com.google.gson.JsonElement
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.databinding.MHomepageModifiedBinding
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
@@ -48,9 +49,11 @@ class HomePage : NewBaseActivity() {
         homemodel!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         homemodel!!.connectFirebaseForHomePageData(this, homepage)
-        if (Constant.ispersonalisedEnable) {
-            homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-            homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+        if (featuresModel.ai_product_reccomendaton) {
+            if (Constant.ispersonalisedEnable) {
+                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            }
         }
         // GlobalScope.launch(Dispatchers.Main) {
         homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })

@@ -31,6 +31,7 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MAutosearchBinding
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.searchsection.adapters.SearchRecylerAdapter
 import com.shopify.shopifyapp.searchsection.viewmodels.SearchListModel
 import com.shopify.shopifyapp.utils.ViewModelFactory
@@ -121,8 +122,12 @@ class AutoSearch : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_scanner, menu)
-        return true
+        if (featuresModel.qr_code_search_scanner) {
+            menuInflater.inflate(R.menu.menu_scanner, menu)
+            return true
+        } else {
+            return false
+        }
     }
 
     private fun setRecylerData(products: MutableList<Storefront.ProductEdge>) {

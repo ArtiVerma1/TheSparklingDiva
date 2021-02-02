@@ -11,6 +11,7 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.CustomVariantListitemBinding
 import com.shopify.shopifyapp.productsection.models.VariantData
+import com.shopify.shopifyapp.utils.CurrencyFormatter
 
 class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVariantViewHolder>() {
 
@@ -52,8 +53,11 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
     override fun onBindViewHolder(holder: QuickVariantViewHolder, position: Int) {
         val data = VariantData()
         data.position = position
-        data.variant_id = variants!![position].node.id.toString()
+
+
+        holder.customVariantListitemBinding?.price?.text = CurrencyFormatter.setsymbol(variants!![position].node.presentmentPrices.edges[0].node.price.amount, variants!![position].node.presentmentPrices.edges[0].node.price.currencyCode.toString())
         data.variantimage = variants!![position].node.image.transformedSrc
+        data.variant_id= variants!![position].node.id.toString()
         setVariants(data, holder, variants!![position].node.selectedOptions)
         var sdk: Int = android.os.Build.VERSION.SDK_INT;
         if (selectedPosition == position) {

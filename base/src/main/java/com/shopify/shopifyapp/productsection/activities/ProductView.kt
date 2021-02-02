@@ -86,7 +86,9 @@ class ProductView : BaseActivity() {
         data = ListData()
         if (model!!.setPresentmentCurrencyForModel()) {
             model!!.filteredlist.observe(this, Observer<List<Storefront.ProductVariantEdge>> { this.filterResponse(it) })
-            model!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            if (featuresModel.ai_product_reccomendaton) {
+                model!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            }
             if (intent.getSerializableExtra("product") != null) {
                 setProductData(intent.getSerializableExtra("product") as Storefront.Product)
             } else {
@@ -316,13 +318,9 @@ class ProductView : BaseActivity() {
 
         fun addtoWish(view: View, data: ListData) {
             Log.i("MageNative", "In Wish")
-            if (Constant.current == null) {
-                Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
-            } else {
-                if (model!!.setWishList(Constant.current!!)) {
-                    Toast.makeText(view.context, resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
-                    data.addtowish = resources.getString(R.string.alreadyinwish)
-                }
+            if (model!!.setWishList(data.product?.id.toString())) {
+                Toast.makeText(view.context, resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
+                data.addtowish = resources.getString(R.string.alreadyinwish)
             }
         }
 

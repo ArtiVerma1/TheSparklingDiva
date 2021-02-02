@@ -24,6 +24,7 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.adapters.CartListAdapter
 import com.shopify.shopifyapp.cartsection.models.CartBottomData
 import com.shopify.shopifyapp.cartsection.viewmodels.CartListViewModel
@@ -70,9 +71,11 @@ class CartList : BaseActivity() {
         model!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         model!!.Response().observe(this, Observer<Storefront.Checkout> { this.consumeResponse(it) })
-        if (Constant.ispersonalisedEnable) {
-            model!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-            model!!.getYouMAyAPiResponse().observe(this, Observer<ApiResponse> { this.Response(it) })
+        if (SplashViewModel.featuresModel.ai_product_reccomendaton) {
+            if (Constant.ispersonalisedEnable) {
+                model!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                model!!.getYouMAyAPiResponse().observe(this, Observer<ApiResponse> { this.Response(it) })
+            }
         }
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
         model!!.getGiftCard().observe(this, Observer<Storefront.Mutation> { this.consumeResponseGift(it) })

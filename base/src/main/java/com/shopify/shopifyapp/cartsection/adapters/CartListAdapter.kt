@@ -45,7 +45,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
     override fun onBindViewHolder(holder: CartItem, position: Int) {
         val item = CartListItem()
         item.position = position
-
+        item.product_id = data?.get(position)!!.node.id.toString()
         item.variant_id = data?.get(position)!!.node.variant.id.toString()
         item.productname = data?.get(position)!!.node.title
         val variant = data?.get(position)!!.node.variant

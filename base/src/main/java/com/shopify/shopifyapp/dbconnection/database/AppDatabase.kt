@@ -7,7 +7,7 @@ import com.shopify.shopifyapp.dbconnection.dao.ItemDataDao
 import com.shopify.shopifyapp.dbconnection.dao.LivePreviewDao
 import com.shopify.shopifyapp.dbconnection.entities.*
 
-@Database(entities = [AppLocalData::class, UserLocalData::class, CustomerTokenData::class, ItemData::class, CartItemData::class, LivePreviewData::class], version = 9)
+@Database(entities = [AppLocalData::class, UserLocalData::class, CustomerTokenData::class, ItemData::class, CartItemData::class, LivePreviewData::class], version = 10)
 abstract class AppDatabase : RoomDatabase() {
     abstract val itemDataDao: ItemDataDao
     abstract val cartItemDataDao: CartItemDataDao

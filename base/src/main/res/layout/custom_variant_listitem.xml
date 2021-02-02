@@ -73,5 +73,17 @@
             app:layout_constraintEnd_toEndOf="@id/variant_image"
             app:layout_constraintStart_toStartOf="@+id/variant_image"
             app:layout_constraintTop_toBottomOf="@+id/variant_name2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_medium"
+            app:layout_constraintTop_toBottomOf="@+id/variant_name3"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

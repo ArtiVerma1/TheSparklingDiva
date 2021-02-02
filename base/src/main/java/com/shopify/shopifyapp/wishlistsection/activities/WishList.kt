@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.shopify.buy3.Storefront
 
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
@@ -28,9 +29,11 @@ import javax.inject.Inject
 
 class WishList : BaseActivity() {
     private var binding: MWishlistBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: WishListViewModel? = null
+
     @Inject
     lateinit var adapter: WishListAdapter
     private var list: RecyclerView? = null
@@ -47,36 +50,28 @@ class WishList : BaseActivity() {
         list = setLayout(list!!, "grid")
         (application as MyApplication).mageNativeAppComponent!!.doWishListActivityInjection(this)
         model = ViewModelProviders.of(this, factory).get(WishListViewModel::class.java)
-        model!!.Response().observe(this, Observer<WishListDbResponse> { this.consumeResponse(it) })
+        model?.context = this
+        model!!.Response().observe(this, Observer { consumeWishlist(it) })
+        model!!.getToastMessage().observe(this, Observer { consumeErrorResponse(it) })
         model!!.updateResponse().observe(this, Observer<Boolean> { this.consumeResponse(it) })
+    }
+
+    private fun consumeErrorResponse(it: String?) {
+        showToast(it!!)
+    }
+
+    private fun consumeWishlist(it: MutableList<Storefront.Product>?) {
+        Log.i("MageNative", "wishcount : " + it?.size)
+        showTittle(resources.getString(R.string.mywishlist) + " ( " + it?.size + " items )")
+        adapter!!.setData(it, this, model!!)
+        adapter!!.notifyDataSetChanged()
+        list!!.adapter = adapter
     }
 
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
-    private fun consumeResponse(response: WishListDbResponse) {
-        try {
-            when (response.status) {
-                Status.SUCCESS -> {
-                    Log.i("MageNative", "wishcount : " + response.data!!.size)
-                    showTittle(resources.getString(R.string.mywishlist) + " ( " + response.data.size + " items )")
-                    adapter!!.setData(response.data as MutableList<ItemData>, model!!)
-                    adapter!!.notifyDataSetChanged()
-                    list!!.adapter = adapter
-                }
-                Status.ERROR -> {
-                    showToast(response.error!!)
-                    finish()
-                }
-                else -> {
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }
 
     private fun consumeResponse(response: Boolean?) {
         try {

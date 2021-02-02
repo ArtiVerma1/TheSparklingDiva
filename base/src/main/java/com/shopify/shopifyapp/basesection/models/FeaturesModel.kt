@@ -12,12 +12,6 @@ class FeaturesModel : BaseObservable() {
             notifyPropertyChanged(BR.in_app_wishlist)
         }
 
-    @Bindable
-    var real_time_sync: Boolean = false
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.real_time_sync)
-        }
 
     @Bindable
     var rtl_support: Boolean = false
@@ -26,19 +20,6 @@ class FeaturesModel : BaseObservable() {
             notifyPropertyChanged(BR.rtl_support)
         }
 
-    @Bindable
-    var white_labled_app: Boolean = false
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.white_labled_app)
-        }
-
-    @Bindable
-    var push_notification: Boolean = false
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.push_notification)
-        }
 
     @Bindable
     var product_share: Boolean = false
@@ -69,31 +50,17 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var allwebsite_getway_supported: Boolean = false
+    var ai_product_reccomendaton: Boolean = false
         set(value) {
             field = value
-            notifyPropertyChanged(BR.allwebsite_getway_supported)
+            notifyPropertyChanged(BR.ai_product_reccomendaton)
         }
 
     @Bindable
-    var scheduled_pushnotification: Boolean = false
+    var qr_code_search_scanner: Boolean = false
         set(value) {
             field = value
-            notifyPropertyChanged(BR.scheduled_pushnotification)
-        }
-
-    @Bindable
-    var applive_preview: Boolean = false
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.applive_preview)
-        }
-
-    @Bindable
-    var product_reviews: Boolean = false
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.product_reviews)
+            notifyPropertyChanged(BR.qr_code_search_scanner)
         }
 
     @Bindable

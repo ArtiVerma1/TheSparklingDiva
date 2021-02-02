@@ -5,6 +5,7 @@ import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 
 class CartListItem : BaseObservable() {
+    var product_id: String? = null
     var variant_id: String? = null
     var productname: String? = null
     var normalprice: String? = null
@@ -14,12 +15,14 @@ class CartListItem : BaseObservable() {
     var variant_three: String? = null
     var image: String? = null
     var offertext: String? = null
+
     @get:Bindable
     var qty: String? = null
         set(qty) {
             field = qty
             notifyPropertyChanged(BR.qty)
         }
+
     @get:Bindable
     var position: Int = 0
         set(position) {
