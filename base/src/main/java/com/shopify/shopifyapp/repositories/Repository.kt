@@ -121,6 +121,10 @@ class Repository {
         appdatabase.appLocalDataDaoDao().update(data)
     }
 
+    fun deleteLocalData() {
+        appdatabase.appLocalDataDaoDao().delete()
+    }
+
     fun insertWishListData(data: ItemData) {
         appdatabase.itemDataDao.insert(data)
     }

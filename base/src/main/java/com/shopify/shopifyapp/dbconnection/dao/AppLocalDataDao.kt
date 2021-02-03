@@ -30,8 +30,8 @@ interface AppLocalDataDao {
     @Insert
     fun insert(appLocalData: AppLocalData)
 
-    @Delete
-    fun delete(appLocalData: AppLocalData)
+    @Query("DELETE  FROM AppLocalData")
+    fun delete()
 
     @Update
     fun update(appLocalData: AppLocalData)

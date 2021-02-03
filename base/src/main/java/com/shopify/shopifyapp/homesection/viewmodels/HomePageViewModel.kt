@@ -975,6 +975,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             val edges = mutableListOf<Storefront.Product>()
             var product_ids = ArrayList<ID>()
             for (i in 0..jsonArray.length() - 1) {
+                Log.d(TAG, "updateDataInRecylerView: " + ID(getProductID(jsonArray.getString(i))))
                 product_ids.add(ID(getProductID(jsonArray.getString(i))))
             }
             getProductsById(product_ids, productdata, jsonArray, jsonObject, edges)
@@ -1052,11 +1053,13 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 } else {
                     try {
                         for (i in 0..result.data!!.nodes.size - 1) {
-                            edges.add(result.data!!.nodes[i] as Storefront.Product)
+                            if (result.data!!.nodes[i] != null) {
+                                edges.add(result?.data?.nodes?.get(i)!! as Storefront.Product)
+                            }
                         }
-                        if (edges.size == jsonArray.length()) {
-                            filterProduct(edges, productdata, jsonArray, jsonObject)
-                        }
+                        //if (edges.size == jsonArray.length()) {
+                        filterProduct(edges, productdata, jsonArray, jsonObject)
+                        //}
                     } catch (e: Exception) {
                         e.printStackTrace()
                         when (context!!.getPackageName()) {

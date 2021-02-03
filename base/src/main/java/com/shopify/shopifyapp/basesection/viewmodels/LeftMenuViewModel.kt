@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.basesection.viewmodels
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
+import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.dbconnection.entities.LivePreviewData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
@@ -26,6 +28,9 @@ import java.util.Objects
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -203,6 +208,12 @@ class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
             fetchUserData()
         }
         Thread(runnable).start()
+    }
+
+    fun deletLocal() {
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.deleteLocalData()
+        }
     }
 
     fun insertPreviewData(data: JSONObject) {

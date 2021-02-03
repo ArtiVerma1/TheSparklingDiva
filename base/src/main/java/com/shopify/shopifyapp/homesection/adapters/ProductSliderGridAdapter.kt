@@ -181,7 +181,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
             val edge = getEdge(variant!!.presentmentPrices.edges)
             data.regularprice = CurrencyFormatter.setsymbol(edge?.node?.price?.amount!!, edge?.node?.price?.currencyCode.toString())
             if (variant.compareAtPriceV2 != null) {
-                val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
+                val special = java.lang.Double.valueOf(edge?.node?.compareAtPrice?.amount!!)
                 val regular = java.lang.Double.valueOf(edge.node.price.amount)
                 if (BigDecimal.valueOf(special).compareTo(BigDecimal.valueOf(regular)) == 1) {
                     data.regularprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())

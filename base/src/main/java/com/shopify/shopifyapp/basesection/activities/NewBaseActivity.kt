@@ -104,7 +104,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         ButterKnife.bind(this)
         (application as MyApplication).mageNativeAppComponent!!.doBaseActivityInjection(this)
         model = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
-        model!!.context=this
+        model!!.context = this
         model!!.Response().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
         setSupportActionBar(toolbar)
         setToggle()
@@ -417,7 +417,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                             if (json.has("mid")) {
                                 Log.i("MageNative", "Barcode" + result)
                                 Log.i("MageNative", "Barcode" + result.contents)
-
+                                model!!.deletLocal()
                                 model!!.insertPreviewData(json)
                                 model!!.logOut()
                                 var intent = Intent(this, Splash::class.java)
