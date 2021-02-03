@@ -90,7 +90,7 @@ class ProductSliderListAdapter @Inject
             }
         } else {
             val edge = getEdge(variant!!.presentmentPrices.edges)
-            data.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
+            data.regularprice = CurrencyFormatter.setsymbol(edge?.node?.price?.amount!!, edge?.node?.price?.currencyCode.toString())
             if (variant.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
                 val regular = java.lang.Double.valueOf(edge.node.price.amount)

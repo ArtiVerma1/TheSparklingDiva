@@ -118,6 +118,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             val runnable = Runnable {
                 if (repository.localData[0].currencycode == null) {
                     presentmentCurrency = "nopresentmentcurrency"
+
                 } else {
                     presentmentCurrency = repository.localData[0].currencycode
                 }

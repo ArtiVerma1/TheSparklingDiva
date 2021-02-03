@@ -53,6 +53,7 @@ class Splash : AppCompatActivity() {
         setContentView(binding!!.root)
         (application as MyApplication).mageNativeAppComponent!!.doSplashInjection(this)
         splashmodel = ViewModelProvider(this, viewModelFactory).get(SplashViewModel::class.java)
+        splashmodel!!.message.observe(this, Observer<String> { this.showToast(it) })
         initializeFirebase();
         val mServiceComponent = ComponentName(this, com.shopify.shopifyapp.jobservicessection.JobScheduler::class.java)
         val builder = JobInfo.Builder(101, mServiceComponent)
@@ -75,6 +76,10 @@ class Splash : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun showToast(it: String?) {
+        Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
     }
 
     private fun initializeFirebase() {

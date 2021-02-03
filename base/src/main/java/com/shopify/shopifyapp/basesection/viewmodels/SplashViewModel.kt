@@ -17,8 +17,11 @@ import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.basesection.models.FeaturesModel
 import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
+import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.*
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -36,6 +39,8 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     private val fireBaseResponseMutableLiveData = MutableLiveData<FireBaseResponse>()
     private val notification_compaign = MutableLiveData<Boolean>()
     val errorMessageResponse = MutableLiveData<String>()
+    var appLocalData: AppLocalData = AppLocalData()
+    val message = MutableLiveData<String>()
 
     companion object {
         var featuresModel: FeaturesModel = FeaturesModel()
@@ -67,6 +72,52 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
         return fireBaseResponseMutableLiveData
     }
 
+    private fun getCurrency() {
+        try {
+            var call = repository.graphClient.queryGraph(Query.shopDetails)
+            call.enqueue { result: GraphCallResult<Storefront.QueryRoot> -> currencyResponse(result) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun currencyResponse(result: GraphCallResult<Storefront.QueryRoot>) {
+        if (result is GraphCallResult.Success<*>) {
+            consumeResponseCurrency(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeResponseCurrency(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+    }
+
+    private fun consumeResponseCurrency(reponse: GraphQLResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    message.setValue(errormessage.toString())
+                } else {
+
+                    if (repository.localData.size == 0) {
+                        appLocalData.currencycode = result.data?.getShop()?.paymentSettings?.currencyCode.toString()
+                        repository.insertData(appLocalData)
+                    }
+                }
+            }
+            Status.ERROR -> message.setValue(reponse.error!!.error.message)
+            else -> {
+            }
+        }
+    }
+
     private fun connectFirebaseForTrial(shop: String) {
         try {
             MyApplication.dataBaseReference.child("additional_info").child("validity").addValueEventListener(object : ValueEventListener {
@@ -75,17 +126,17 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                     val runnable = Runnable {
                         Log.i("MageNative:", "TrialExpired$value")
                         Log.i("MageNative:", "LocalData" + repository.localData)
-                        var appLocalData: AppLocalData? = null
+
                         if (repository.localData.size == 0) {
-                            appLocalData = AppLocalData()
-                            appLocalData.isIstrialexpire = value
-                            repository.insertData(appLocalData)
+                            appLocalData?.isIstrialexpire = value
+                            getCurrency()
                         } else {
                             appLocalData = repository.localData[0]
                             appLocalData!!.isIstrialexpire = value
                             repository.updateData(appLocalData)
                         }
-                        Log.i("MageNative:", "Currency" + appLocalData.currencycode)
+                        Log.i("MageNative:", "Currency" +
+                                appLocalData.currencycode)
                         disposables.add(repository.getSingle(appLocalData)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
