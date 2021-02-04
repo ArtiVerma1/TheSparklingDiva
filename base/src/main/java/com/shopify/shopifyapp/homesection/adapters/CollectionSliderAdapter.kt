@@ -91,7 +91,7 @@ class CollectionSliderAdapter @Inject
             if (collectionEdges.getJSONObject(position) != null) {
                 val model = CommanModel()
                 if(collectionEdges.getJSONObject(position).has("image_url")){
-                    model.imageurl = collectionEdges.getJSONObject(position).getString("image_url")
+                    model.imageurl = collectionEdges?.getJSONObject(position)?.getString("image_url")
                    // model.imageurl = "https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
                     holder.collectionbinding.commondata = model
                 }

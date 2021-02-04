@@ -92,7 +92,7 @@ class CollectionGridAdapter @Inject
             if (collectionEdges.get(position) != null) {
                 val model = CommanModel()
                 if(collectionEdges.get(position).asJsonObject.has("image_url")){
-                    model.imageurl = collectionEdges.get(position).asJsonObject.get("image_url").asString
+                    model.imageurl = collectionEdges?.get(position)?.asJsonObject?.get("image_url")?.asString
                     holder.gridbinding.commondata = model
                 }
             }

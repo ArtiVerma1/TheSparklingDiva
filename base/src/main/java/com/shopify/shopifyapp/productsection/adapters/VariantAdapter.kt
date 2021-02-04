@@ -42,7 +42,7 @@ constructor() : RecyclerView.Adapter<VariantItem>() {
         val data = VariantData()
         data.position = position
         data.variant_id = variants!![position].node.id.toString()
-        data.variantimage = variants!![position].node.image.transformedSrc
+        data.variantimage = variants!![position]?.node?.image?.transformedSrc
         data.data = this.data
         data.model = this.model
         setVariants(data, holder, variants!![position].node.selectedOptions)

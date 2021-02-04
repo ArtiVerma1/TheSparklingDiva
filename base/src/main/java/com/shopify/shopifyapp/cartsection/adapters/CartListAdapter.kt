@@ -73,9 +73,9 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
             holder.binding.regularprice.paintFlags = holder.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
         val model = CommanModel()
-        model.imageurl = variant.image.originalSrc
+        model.imageurl = variant?.image?.originalSrc
         holder.binding.commondata = model
-        item.image = variant.image.originalSrc
+        item.image = variant?.image?.originalSrc
         item.qty = data?.get(position)!!.node.quantity!!.toString()
         holder.binding.name.textSize = 12f
         holder.binding.specialprice.textSize = 13f

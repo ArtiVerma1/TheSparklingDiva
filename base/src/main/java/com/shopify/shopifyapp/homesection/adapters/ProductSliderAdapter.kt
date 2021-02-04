@@ -164,7 +164,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
             }
         }
         val model = CommanModel()
-        model.imageurl = products?.get(position)?.node!!.images.edges[0].node.transformedSrc
+        model.imageurl = products?.get(position)?.node?.images?.edges?.get(0)?.node?.transformedSrc
         when (jsonObject!!.getString("item_shape")) {
             "square" -> {
                 item.bindingtwo.listdata = data

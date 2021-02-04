@@ -63,7 +63,7 @@ class HomePageBanner(fm: FragmentManager, var context: Context, private var item
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.m_bannerlayout, null, false)
         val model = CommanModel()
         Log.i("MageNative-Banner","Banner"+items.getJSONObject(position).getString("image_url")!!)
-        model.imageurl = items.getJSONObject(position).getString("image_url")!!
+        model.imageurl = items?.getJSONObject(position)?.getString("image_url")!!
         val home = Home()
         Log.i("MageNative-Banner","id"+items.getJSONObject(position).getString("link_value")!!)
         home.id = items.getJSONObject(position).getString("link_value")

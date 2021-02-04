@@ -48,7 +48,7 @@ class ProductSlidertypeThreeAdapter @Inject
         data.product = products?.get(position)?.node
         item.bindingtwo.listdata = data
         val model = CommanModel()
-        model.imageurl = products?.get(position)!!.node.images.edges[0].node.transformedSrc
+        model.imageurl = products?.get(position)?.node?.images?.edges?.get(0)?.node?.transformedSrc
         item.bindingtwo.commondata = model
         //item.bindingtwo.clickproduct = Product()
     }

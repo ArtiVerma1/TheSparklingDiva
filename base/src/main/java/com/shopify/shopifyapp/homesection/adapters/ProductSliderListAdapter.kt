@@ -110,7 +110,7 @@ class ProductSliderListAdapter @Inject
             }
         }
         val model = CommanModel()
-        model.imageurl = products?.get(position)?.images!!.edges[0].node.transformedSrc
+        model.imageurl = products?.get(position)?.images?.edges?.get(0)?.node?.transformedSrc
         item.binding.listdata = data
         item.binding.commondata = model
         item.binding.clickproduct = ProductSliderAdapter().Product(repository,activity!!)

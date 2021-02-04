@@ -60,7 +60,7 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
             val edge = getEdge(variants?.get(position)?.node?.presentmentPrices?.edges!!)
             holder.customVariantListitemBinding?.price?.text = CurrencyFormatter.setsymbol(edge?.node?.price?.amount!!, edge.node.price.currencyCode.toString())
         }
-        data.variantimage = variants!![position].node.image.transformedSrc
+        data.variantimage = variants!![position]?.node?.image?.transformedSrc
         data.variant_id = variants!![position].node.id.toString()
         setVariants(data, holder, variants!![position].node.selectedOptions)
         var sdk: Int = android.os.Build.VERSION.SDK_INT;
