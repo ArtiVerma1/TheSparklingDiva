@@ -31,6 +31,7 @@ import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MSplashBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.productsection.activities.ProductView
@@ -113,7 +114,7 @@ class Splash : AppCompatActivity() {
     }
 
     private fun cartNotification(it: Boolean?) {
-        if (!it!!) {
+        if (featuresModel.abandoned_cart_compaigns) {
             tm?.cancel(101)
         }
     }
