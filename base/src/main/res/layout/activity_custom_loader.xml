@@ -6,7 +6,8 @@
     android:layout_height="match_parent">
 
     <com.github.ybq.android.spinkit.SpinKitView
-        style="@style/SpinKitView.Large.Circle"
+        android:id="@+id/spinkit"
+        style="@style/SpinKitView.Small.Pulse"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
