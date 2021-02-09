@@ -23,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class ProductListModel( var repository: Repository) : ViewModel() {
+class ProductListModel(var repository: Repository) : ViewModel() {
     private var categoryID = ""
     var shopID = ""
     var presentmentCurrency: String? = null
@@ -72,11 +72,11 @@ class ProductListModel( var repository: Repository) : ViewModel() {
 
     private fun getAllProducts() {
         try {
-            doGraphQLQueryGraph(repository,Query.getAllProducts(cursor, keys, isDirection, number),customResponse = object :CustomResponse{
+            doGraphQLQueryGraph(repository, Query.getAllProducts(cursor, keys, isDirection, number), customResponse = object : CustomResponse {
                 override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                     invoke(result)
                 }
-            },context = context)
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -85,11 +85,11 @@ class ProductListModel( var repository: Repository) : ViewModel() {
 
     private fun getProductsById() {
         try {
-            doGraphQLQueryGraph(repository,Query.getProductsById(getcategoryID(), cursor, sortKeys, isDirection, number),customResponse = object :CustomResponse{
+            doGraphQLQueryGraph(repository, Query.getProductsById(getcategoryID(), cursor, sortKeys, isDirection, number), customResponse = object : CustomResponse {
                 override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                     invoke(result)
                 }
-            },context = context)
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -98,11 +98,11 @@ class ProductListModel( var repository: Repository) : ViewModel() {
 
     private fun getProductsByHandle() {
         try {
-            doGraphQLQueryGraph(repository,Query.getProductsByHandle(getcategoryHandle(), cursor, sortKeys, isDirection, number),customResponse = object :CustomResponse{
+            doGraphQLQueryGraph(repository, Query.getProductsByHandle(getcategoryHandle(), cursor, sortKeys, isDirection, number), customResponse = object : CustomResponse {
                 override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                     invoke(result)
                 }
-            },context = context)
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -154,7 +154,9 @@ class ProductListModel( var repository: Repository) : ViewModel() {
                         edges = result.data!!.collectionByHandle.products.edges
                     }
                     if (!getcategoryID().isEmpty()) {
-                        edges = (result.data!!.node as Storefront.Collection).products.edges
+                        if (result.data!!.node != null) {
+                            edges = (result.data?.node as Storefront.Collection).products.edges
+                        }
                     }
                     if (!shopID.isEmpty()) {
                         edges = result.data!!.products.edges

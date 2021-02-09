@@ -117,6 +117,8 @@ class AutoSearch : BaseActivity() {
                 model!!.searchcursor = "nocursor"
                 if (search_string?.length!! >= 3) {
                     model!!.setSearchData(search_string)
+                } else if (search_string?.length!! == 0) {
+                    model!!.setSearchData(search_string)
                 }
             }
 
