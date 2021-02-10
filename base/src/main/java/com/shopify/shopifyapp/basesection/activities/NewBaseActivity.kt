@@ -61,9 +61,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     @BindView(R2.id.toolbar)
     lateinit var toolbar: Toolbar
 
-    @BindView(R2.id.fab)
-    lateinit var fab: FloatingActionButton
-
     @BindView(R2.id.toolimage)
     lateinit var toolimage: ImageView
 
@@ -111,11 +108,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         Objects.requireNonNull<ActionBar>(supportActionBar).setDisplayShowTitleEnabled(false)
         tooltext!!.textSize = 14f
         showHumburger()
-        fab.setOnClickListener {
-            var builder = CustomTabsIntent.Builder()
-            var customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(this, Uri.parse("https://cedcommerce.com/magenativeapp.html?name=" + resources.getString(R.string.app_name)));
-        }
     }
 
     init {
@@ -308,14 +300,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
     override fun onResume() {
         super.onResume()
-        when (getPackageName()) {
-            "com.shopify.shopifyapp" -> {
-                fab.visibility = View.VISIBLE
-            }
-            else -> {
-                fab.visibility = View.GONE
-            }
-        }
         cartCount = model!!.cartCount
 
 
