@@ -8,6 +8,7 @@ import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.viewmodels.CartListViewModel
 import com.shopify.shopifyapp.checkoutsection.viewmodels.CheckoutWebLinkViewModel
+import com.shopify.shopifyapp.collectionsection.viewmodels.CollectionMenuViewModel
 import com.shopify.shopifyapp.collectionsection.viewmodels.CollectionViewModel
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.loginsection.viewmodels.LoginViewModel
@@ -37,6 +38,9 @@ constructor(private val repository: Repository) : ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(CollectionViewModel::class.java)) {
             return CollectionViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(CollectionMenuViewModel::class.java)) {
+            return CollectionMenuViewModel(repository) as T
         }
         if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
             return ProductViewModel(repository) as T

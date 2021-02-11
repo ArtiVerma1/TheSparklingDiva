@@ -1,7 +1,9 @@
 package com.shopify.shopifyapp.collectionsection.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
@@ -16,6 +18,7 @@ import com.shopify.shopifyapp.basesection.activities.BaseActivity
 import com.shopify.shopifyapp.collectionsection.adapters.CollectionRecylerAdapter
 import com.shopify.shopifyapp.collectionsection.viewmodels.CollectionViewModel
 import com.shopify.shopifyapp.databinding.MCollectionlistBinding
+import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.utils.ViewModelFactory
 
 import javax.inject.Inject
@@ -36,12 +39,18 @@ class CollectionList : BaseActivity() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_collectionlist, group, true)
         showBackButton()
         showTittle(resources.getString(R.string.collection))
-        setLayout(binding!!.categorylist, "3grid")
+        setLayout(binding!!.categorylist, "vertical")
         (application as MyApplication).mageNativeAppComponent!!.doCollectionInjection(this)
         model = ViewModelProviders.of(this, factory).get(CollectionViewModel::class.java)
         model!!.context = this
         model!!.Response().observe(this, Observer<List<Storefront.CollectionEdge>> { this.setRecylerData(it) })
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
+        binding?.clickHandler = this
+    }
+
+    fun clickSearch(view: View) {
+        val searchpage = Intent(this, AutoSearch::class.java)
+        startActivity(searchpage)
     }
 
     private fun showToast(msg: String) {

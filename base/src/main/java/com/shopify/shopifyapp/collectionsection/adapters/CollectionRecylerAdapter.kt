@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.collectionsection.adapters
 
 import android.app.Activity
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup

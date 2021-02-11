@@ -10,6 +10,7 @@ import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.checkoutsection.activities.CheckoutWeblink
 import com.shopify.shopifyapp.checkoutsection.activities.OrderSuccessActivity
 import com.shopify.shopifyapp.collectionsection.activities.CollectionList
+import com.shopify.shopifyapp.collectionsection.activities.CollectionListMenu
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.jobservicessection.JobScheduler
@@ -35,6 +36,7 @@ interface MageNativeAppComponent {
     fun doSplashInjection(splash: Splash)
     fun doProductListInjection(product: ProductList)
     fun doCollectionInjection(collectionList: CollectionList)
+    fun doCollectionInjection(collectionList: CollectionListMenu)
     fun doProductViewInjection(product: ProductView)
     fun doBaseActivityInjection(base: BaseActivity)
     fun doBaseActivityInjection(base: NewBaseActivity)

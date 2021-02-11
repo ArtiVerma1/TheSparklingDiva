@@ -35,6 +35,7 @@ import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.collectionsection.activities.CollectionList
+import com.shopify.shopifyapp.collectionsection.activities.CollectionListMenu
 import com.shopify.shopifyapp.livepreviewsection.LivePreview
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
 import com.shopify.shopifyapp.ordersection.activities.OrderList

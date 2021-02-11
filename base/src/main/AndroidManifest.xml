@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
+        <activity android:name=".collectionsection.activities.CollectionListMenu"></activity>
         <activity android:name=".checkoutsection.activities.OrderSuccessActivity" />
 
         <service android:name=".notificationsection.FirebaseInstanceIDService">
