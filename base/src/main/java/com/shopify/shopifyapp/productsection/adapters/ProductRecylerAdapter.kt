@@ -123,6 +123,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
         }
         holder.binding!!.commondata = model
         holder.binding!!.clickproduct = Product(position)
+      //  holder.setIsRecyclable(false)
     }
 
     override fun getItemCount(): Int {

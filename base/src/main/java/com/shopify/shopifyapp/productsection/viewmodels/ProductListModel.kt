@@ -22,11 +22,14 @@ import com.shopify.shopifyapp.utils.Status
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 
 class ProductListModel(var repository: Repository) : ViewModel() {
     private var categoryID = ""
     var shopID = ""
     var presentmentCurrency: String? = null
+    var collectionData: MutableLiveData<Storefront.Collection> = MutableLiveData<Storefront.Collection>()
     private var categoryHandle = ""
     var cursor = "nocursor"
         set(cursor) {
@@ -44,6 +47,27 @@ class ProductListModel(var repository: Repository) : ViewModel() {
     fun getcategoryID(): String {
         return categoryID
     }
+
+    val cartCount: Int
+        get() {
+            val count = intArrayOf(0)
+            try {
+                val executor = Executors.newSingleThreadExecutor()
+                val callable = Callable {
+                    if (repository.allCartItems.size > 0) {
+                        count[0] = repository.allCartItems.size
+                    }
+                    count[0]
+                }
+                val future = executor.submit(callable)
+                count[0] = future.get()
+                executor.shutdown()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return count[0]
+        }
 
     fun setcategoryID(categoryID: String) {
         this.categoryID = categoryID
@@ -156,6 +180,7 @@ class ProductListModel(var repository: Repository) : ViewModel() {
                     if (!getcategoryID().isEmpty()) {
                         if (result.data!!.node != null) {
                             edges = (result.data?.node as Storefront.Collection).products.edges
+                            collectionData.value = result.data?.node as Storefront.Collection
                         }
                     }
                     if (!shopID.isEmpty()) {

@@ -1,10 +1,13 @@
 package com.shopify.shopifyapp.productsection.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -20,6 +23,7 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MProductlistitemBinding
 import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.customviews.MageNativeRadioButton
 import com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter
 import com.shopify.shopifyapp.productsection.viewmodels.ProductListModel
@@ -30,11 +34,19 @@ import javax.inject.Inject
 class ProductList : BaseActivity() {
     private var binding: MProductlistitemBinding? = null
     private var productlist: RecyclerView? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var productListModel: ProductListModel? = null
     private var products: MutableList<Storefront.ProductEdge>? = null
     private var productcursor: String? = null
+    private var textView: TextView? = null
+    private val cartCount: Int
+        get() {
+            Log.i("MageNative", "Cart Count : " + productListModel!!.cartCount)
+            return productListModel!!.cartCount
+        }
+
     @Inject
     lateinit var adapter: ProductRecylerAdapter
     private var sheet: BottomSheetBehavior<*>? = null
@@ -79,7 +91,8 @@ class ProductList : BaseActivity() {
         }
         (application as MyApplication).mageNativeAppComponent!!.doProductListInjection(this)
         productListModel = ViewModelProvider(this, factory).get(ProductListModel::class.java)
-        productListModel!!.context=this
+        productListModel!!.context = this
+        productListModel?.collectionData?.observe(this, Observer { this.collectionResponse(it) })
         if (intent.getStringExtra("ID") != null) {
             productListModel!!.setcategoryID(intent.getStringExtra("ID"))
         }
@@ -108,6 +121,33 @@ class ProductList : BaseActivity() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
+    }
+
+    private fun collectionResponse(it: Storefront.Collection?) {
+        if (it?.title != null) {
+            showTittle(it?.title)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (textView != null) {
+            textView!!.text = "" + productListModel!!.cartCount
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.m_product, menu)
+        val item = menu.findItem(R.id.cart_item)
+        item.setActionView(R.layout.m_count)
+        val notifCount = item.actionView
+        textView = notifCount.findViewById<TextView>(R.id.count)
+        textView?.text = "" + cartCount
+        notifCount.setOnClickListener {
+            val mycartlist = Intent(this, CartList::class.java)
+            startActivity(mycartlist)
+        }
+        return true
     }
 
     private fun showToast(msg: String) {
@@ -167,7 +207,7 @@ class ProductList : BaseActivity() {
                 adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
                 if (this.products == null) {
                     this.products = products
-                    adapter!!.setData(this.products, this@ProductList,productListModel!!.repository)
+                    adapter!!.setData(this.products, this@ProductList, productListModel!!.repository)
                     productlist!!.adapter = adapter
                 } else {
                     this.products!!.addAll(products)

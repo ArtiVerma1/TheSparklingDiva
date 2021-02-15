@@ -175,6 +175,7 @@ object Query {
                                                             .maxWidth(700)
                                                 }
                                     }
+                                    .title()
                                     .products(definition, productDefinition
                                     )
                         }

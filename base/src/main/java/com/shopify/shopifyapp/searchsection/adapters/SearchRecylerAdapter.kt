@@ -118,6 +118,7 @@ constructor() : RecyclerView.Adapter<SearechItem>() {
         }
         holder.binding.commondata = model
         holder.binding.clickproduct = Product()
+        holder.setIsRecyclable(false)
     }
 
     override fun getItemCount(): Int {
