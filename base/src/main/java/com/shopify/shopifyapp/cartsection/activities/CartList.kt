@@ -47,6 +47,7 @@ class CartList : BaseActivity() {
     private var cartlist: RecyclerView? = null
     private var model: CartListViewModel? = null
     private var personamodel: PersonalisedViewModel? = null
+    private var count: Int = 1
     private val TAG = "CartList"
 
     @Inject
@@ -274,6 +275,7 @@ class CartList : BaseActivity() {
     override fun onResume() {
         super.onResume()
         invalidateOptionsMenu()
+        count = 1
     }
 
     inner class ClickHandler {
@@ -328,10 +330,14 @@ class CartList : BaseActivity() {
         }
 
         fun getResonse(it: Storefront.Checkout?) {
-            val intent = Intent(this@CartList, CheckoutWeblink::class.java)
-            intent.putExtra("link", it?.webUrl)
-            intent.putExtra("id", it?.id.toString())
-            startActivity(intent)
+            if (count == 1) {
+                val intent = Intent(this@CartList, CheckoutWeblink::class.java)
+                intent.putExtra("link", it?.webUrl)
+                intent.putExtra("id", it?.id.toString())
+                startActivity(intent)
+                count++
+            }
+
         }
 
 
