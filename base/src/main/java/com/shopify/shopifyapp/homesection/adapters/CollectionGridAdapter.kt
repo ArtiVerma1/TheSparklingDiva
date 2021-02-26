@@ -39,10 +39,7 @@ class CollectionGridAdapter @Inject
         setHasStableIds(true)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MCategorygriditemBinding>(layoutInflater!!, R.layout.m_categorygriditem, parent, false)
+        val binding = DataBindingUtil.inflate<MCategorygriditemBinding>(LayoutInflater.from(parent.context), R.layout.m_categorygriditem, parent, false)
         try {
 
             if(jsonObject.getString("item_shape").equals("rounded")){

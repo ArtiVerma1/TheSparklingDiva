@@ -19,6 +19,7 @@
         android:onClick="@{(view) -> variantdata.blockClick(view,variantdata)}"
         bind:cardUseCompatPadding="true">
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/variant_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >

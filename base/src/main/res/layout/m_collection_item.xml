@@ -36,7 +36,6 @@
                     android:id="@+id/image"
                     android:scaleType="fitXY"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/tes_background"
                     bind:imageUrl="@{commondata.imageurl}"
                     />
                 <View

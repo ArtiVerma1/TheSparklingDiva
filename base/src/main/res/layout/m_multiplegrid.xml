@@ -28,12 +28,10 @@
             android:background="@color/white">
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/image"
-                android:scaleType="fitXY"
                 android:contentDescription="@string/image"
                 bind:imageUrl="@{commondata.imageurl}"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:src="@drawable/tes_background"
                 app:layout_constraintDimensionRatio="H,1:1.2"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

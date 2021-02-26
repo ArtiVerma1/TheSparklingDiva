@@ -50,13 +50,10 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderItemTypeOne {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
 
         when (jsonObject!!.getString("item_shape")) {
             "square" -> {
-                var binding = DataBindingUtil.inflate<MSlideritemtwoBinding>(layoutInflater!!, R.layout.m_slideritemtwo, parent, false)
+                var binding = DataBindingUtil.inflate<MSlideritemtwoBinding>(LayoutInflater.from(parent.context), R.layout.m_slideritemtwo, parent, false)
                 return SliderItemTypeOne(binding)
             }
             else -> {
@@ -90,8 +87,8 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                             item.bindingtwo!!.specialprice.visibility = View.VISIBLE
                         }
                         else -> {
-                            item.binding!!.regularprice.paintFlags = item.binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                            item.binding!!.specialprice.visibility = View.VISIBLE
+                            item!!.bindingtwo!!.regularprice.paintFlags = item!!.bindingtwo!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                            item!!.bindingtwo!!.specialprice.visibility = View.VISIBLE
                         }
                     }
                 } else {
@@ -111,11 +108,11 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 when (jsonObject!!.getString("item_shape")) {
                     "square" -> {
                         item.bindingtwo!!.specialprice.visibility = View.GONE
-                        item.bindingtwo!!.regularprice.paintFlags = item.binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                        item.bindingtwo!!.regularprice.paintFlags = item!!.bindingtwo!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                     }
                     else -> {
-                        item.binding!!.specialprice.visibility = View.GONE
-                        item.binding!!.regularprice.paintFlags = item.binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                        item!!.bindingtwo!!.specialprice.visibility = View.GONE
+                        item!!.bindingtwo!!.regularprice.paintFlags = item!!.bindingtwo!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                     }
                 }
             }

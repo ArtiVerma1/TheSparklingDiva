@@ -36,10 +36,7 @@ constructor() : RecyclerView.Adapter<WishItem>() {
 
     private var model: WishListViewModel? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MWishitemBinding>(layoutInflater!!, R.layout.m_wishitem, parent, false)
+        val binding = DataBindingUtil.inflate<MWishitemBinding>(LayoutInflater.from(parent.context), R.layout.m_wishitem, parent, false)
         return WishItem(binding)
     }
 

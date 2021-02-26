@@ -43,10 +43,7 @@ ProductListSliderAdapter @Inject
         setHasStableIds(true)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderItemTypeOne {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        var binding = DataBindingUtil.inflate<MCustomisableListBinding>(layoutInflater!!, R.layout.m_customisable_list, parent, false)
+        var binding = DataBindingUtil.inflate<MCustomisableListBinding>(LayoutInflater.from(parent.context), R.layout.m_customisable_list, parent, false)
         if(jsonObject!!.getString("item_shape").equals("square")){
             binding.card.cardElevation=0f
             binding.card.radius=0f
@@ -191,7 +188,7 @@ ProductListSliderAdapter @Inject
                 item.listbinding.specialprice.visibility = View.VISIBLE
             } else {
                 item.listbinding.specialprice.visibility = View.GONE
-                item.listbinding.regularprice.paintFlags = item.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                item.listbinding.regularprice.paintFlags = item.listbinding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }
         val model = CommanModel()

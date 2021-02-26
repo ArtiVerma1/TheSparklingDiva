@@ -39,10 +39,7 @@ class CollectionSliderAdapter @Inject
         setHasStableIds(true)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MCollectionItemBinding>(layoutInflater!!, R.layout.m_collection_item, parent, false)
+        val binding = DataBindingUtil.inflate<MCollectionItemBinding>(LayoutInflater.from(parent.context), R.layout.m_collection_item, parent, false)
         try {
 
             if(jsonObject.getString("item_shape").equals("rounded")){

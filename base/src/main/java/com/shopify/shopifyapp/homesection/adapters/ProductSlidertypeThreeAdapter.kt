@@ -35,10 +35,7 @@ class ProductSlidertypeThreeAdapter @Inject
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderItemTypeOne {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MSlideritemtwoBinding>(layoutInflater!!, R.layout.m_slideritemtwo, parent, false)
+        val binding = DataBindingUtil.inflate<MSlideritemtwoBinding>(LayoutInflater.from(parent.context), R.layout.m_slideritemtwo, parent, false)
         return SliderItemTypeOne(binding)
     }
 

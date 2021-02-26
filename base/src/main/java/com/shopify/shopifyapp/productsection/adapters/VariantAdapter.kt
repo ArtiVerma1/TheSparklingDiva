@@ -25,14 +25,19 @@ constructor() : RecyclerView.Adapter<VariantItem>() {
     private var data: ListData? = null
     private var layoutInflater: LayoutInflater? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VariantItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MVariantoptionBinding>(layoutInflater!!, R.layout.m_variantoption, parent, false)
+        val binding = DataBindingUtil.inflate<MVariantoptionBinding>(LayoutInflater.from(parent.context), R.layout.m_variantoption, parent, false)
         binding.selected1.textSize = 10f
         binding.selected2.textSize = 10f
         binding.selected3.textSize = 10f
         return VariantItem(binding)
+    }
+
+    companion object {
+        var variantCallback: VariantCallback? = null
+    }
+
+    interface VariantCallback {
+        fun clickVariant(variant: Storefront.ProductVariantEdge)
     }
 
     override fun onBindViewHolder(holder: VariantItem, position: Int) {
@@ -53,6 +58,11 @@ constructor() : RecyclerView.Adapter<VariantItem>() {
         } else {
             holder.binding.mainView.layoutParams = ViewGroup.LayoutParams(250, 250)
             holder.binding.mainView.visibility = View.VISIBLE
+        }
+
+        holder.binding.variantContainer.setOnClickListener {
+            variantCallback?.clickVariant(variants?.get(position)!!)
+            holder.binding.mainView.performClick()
         }
     }
 
@@ -89,10 +99,11 @@ constructor() : RecyclerView.Adapter<VariantItem>() {
         return variants!!.size
     }
 
-    fun setData(variants: List<Storefront.ProductVariantEdge>, model: ProductViewModel?, data: ListData?) {
+    fun setData(variants: List<Storefront.ProductVariantEdge>, model: ProductViewModel?, data: ListData?, variantCallback_: VariantCallback) {
         this.variants = variants
         this.model = model
         this.data = data
+        variantCallback = variantCallback_
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -48,10 +48,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MProductitemBinding>(layoutInflater!!, R.layout.m_productitem, parent, false)
+        val binding = DataBindingUtil.inflate<MProductitemBinding>(LayoutInflater.from(parent.context), R.layout.m_productitem, parent, false)
         return ProductItem(binding)
     }
 

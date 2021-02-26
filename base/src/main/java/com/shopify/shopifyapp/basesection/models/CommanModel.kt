@@ -1,33 +1,36 @@
 package com.shopify.shopifyapp.basesection.models
-import android.app.Activity
-import android.app.Application
+
+import android.content.res.Resources
 import android.graphics.*
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.databinding.library.baseAdapters.BR
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
-import com.bumptech.glide.request.target.Target
 import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.net.HttpURLConnection
+import java.net.URL
+
 fun <String> ImageView.loadCircularImage(
         model: kotlin.String,
         borderSize: Float = 0F,
@@ -56,6 +59,7 @@ fun <String> ImageView.loadCircularImage(
                 }
             })
 }
+
 fun Bitmap.createBitmapWithBorder(borderSize: Float, borderColor: Int = Color.WHITE): Bitmap {
     val borderOffset = (borderSize * 2).toInt()
     val halfWidth = width / 2
@@ -94,7 +98,8 @@ fun Bitmap.createBitmapWithBorder(borderSize: Float, borderColor: Int = Color.WH
     canvas.drawCircle(centerX, centerY, circleRadius, paint)
     return newBitmap
 }
-class CommanModel :BaseObservable(){
+
+class CommanModel : BaseObservable() {
     @get:Bindable
     var imageurl: String? = null
         set(imageurl) {
@@ -117,13 +122,39 @@ class CommanModel :BaseObservable(){
                         }
 
                         override fun onNext(s: String) {
-                            Log.i("Magenative ","Developer image url "+s)
-                                Glide.with(context)
-                                        .asBitmap()
-                                        .load(s)
-                                        //.thumbnail(0.5f)
-                                        // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
-                                        .into(view)
+                            Log.i("Magenative ", "Developer image url " + s)
+                            Glide.with(context)
+                                    .asBitmap()
+                                    .load(s)
+                                    .dontTransform()
+                                    //.thumbnail(0.5f)
+                                    // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
+                                    .into(view)
+
+
+                            /*Don't remove this commented code i will work on it latter (Abhishek)*/
+
+//                            GlobalScope.launch(Dispatchers.Main) {
+//                                var drawable = GlobalScope.async(Dispatchers.IO) {
+//                                    val connection: HttpURLConnection = URL(imageUrl).openConnection() as HttpURLConnection
+//                                    connection.connect()
+//                                    BitmapFactory.decodeStream(connection.getInputStream())
+//
+//                                }
+//
+//                                var image = BitmapDrawable(Resources.getSystem(), drawable.await())
+//                                val width: Int = image.getIntrinsicWidth()
+//                                var height = width * image.intrinsicHeight / image.intrinsicWidth
+//
+//                                Log.d("ImageHeight", "$width  $height")
+//                                val parms: ConstraintLayout.LayoutParams = ConstraintLayout.LayoutParams(width, height)
+//                                view.setLayoutParams(parms)
+//                                Glide.with(context)
+//                                        .asDrawable()
+//                                        .load(imageUrl)
+//                                        .apply(RequestOptions().override(width, height))
+//                                        .into(view)
+//                            }
 
                         }
 
@@ -136,6 +167,7 @@ class CommanModel :BaseObservable(){
                         }
                     })
         }
+
         @BindingAdapter("circleImageUrl")
         @JvmStatic
         fun circleLoadImage(view: ImageView, imageUrl: String?) {
@@ -144,24 +176,27 @@ class CommanModel :BaseObservable(){
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<String?> {
                         override fun onSubscribe(d: Disposable) {
                         }
+
                         override fun onNext(s: String) {
-                            view.loadCircularImage<String>(s,2f,Color.parseColor(view.tag.toString()))
-                          /*  Glide.with(view.context)
-                                    .load(s)
-                                    .thumbnail(0.5f)
-                                    .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
-                                    .into(view)*/
+                            view.loadCircularImage<String>(s, 2f, Color.parseColor(view.tag.toString()))
+                            /*  Glide.with(view.context)
+                                      .load(s)
+                                      .thumbnail(0.5f)
+                                      .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
+                                      .into(view)*/
                         }
+
                         override fun onError(e: Throwable) {
                         }
+
                         override fun onComplete() {
                         }
                     })
         }
 
-        @BindingAdapter("radius","url")
+        @BindingAdapter("radius", "url")
         @JvmStatic
-        fun Image(view: ImageView, radius: String?,url:String?) {
+        fun Image(view: ImageView, radius: String?, url: String?) {
 
             val observable = Observable.fromCallable { url }
             observable.subscribeOn(Schedulers.io())
@@ -171,12 +206,13 @@ class CommanModel :BaseObservable(){
                         }
 
                         override fun onNext(s: String) {
-                           var round:RequestOptions
-                            when(radius){
-                                "0"->{
-                                    round=RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL)
-                                }else->{
-                                    round=RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).transform(RoundedCorners(radius!!.toInt())).diskCacheStrategy(DiskCacheStrategy.ALL)
+                            var round: RequestOptions
+                            when (radius) {
+                                "0" -> {
+                                    round = RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL)
+                                }
+                                else -> {
+                                    round = RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).transform(RoundedCorners(radius!!.toInt())).diskCacheStrategy(DiskCacheStrategy.ALL)
                                 }
                             }
                             Glide.with(view.context)

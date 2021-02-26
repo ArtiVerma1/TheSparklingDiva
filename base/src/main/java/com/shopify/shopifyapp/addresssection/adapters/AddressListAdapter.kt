@@ -17,10 +17,7 @@ constructor() : RecyclerView.Adapter<AddressViewHolder>() {
     private var layoutInflater: LayoutInflater? = null
     private var model: AddressModel? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MAddressitemBinding>(layoutInflater!!, R.layout.m_addressitem, parent, false)
+        val binding = DataBindingUtil.inflate<MAddressitemBinding>(LayoutInflater.from(parent.context), R.layout.m_addressitem, parent, false)
         return AddressViewHolder(binding)
     }
 

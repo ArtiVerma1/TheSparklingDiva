@@ -46,10 +46,7 @@ constructor() : RecyclerView.Adapter<SearechItem>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearechItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MSearchitemBinding>(layoutInflater!!, R.layout.m_searchitem, parent, false)
+        val binding = DataBindingUtil.inflate<MSearchitemBinding>(LayoutInflater.from(parent.context), R.layout.m_searchitem, parent, false)
         return SearechItem(binding)
     }
 

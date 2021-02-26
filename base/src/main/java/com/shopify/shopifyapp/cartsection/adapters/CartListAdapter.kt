@@ -31,10 +31,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MCartitemBinding>(layoutInflater!!, R.layout.m_cartitem, parent, false)
+        val binding = DataBindingUtil.inflate<MCartitemBinding>(LayoutInflater.from(parent.context), R.layout.m_cartitem, parent, false)
         return CartItem(binding)
     }
 

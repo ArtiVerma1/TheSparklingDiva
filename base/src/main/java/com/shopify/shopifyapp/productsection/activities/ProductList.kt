@@ -112,14 +112,29 @@ class ProductList : BaseActivity() {
             val radioButton = findViewById<View>(selectedId) as MageNativeRadioButton
             appySort(radioButton)
         }
+
+        binding!!.view.setOnClickListener() {
+            if (sheet!!.state == BottomSheetBehavior.STATE_EXPANDED) {
+                sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
         sheet!!.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
                     sheet!!.state = BottomSheetBehavior.STATE_EXPANDED
                 }
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    binding!!.view.visibility = View.VISIBLE
+                }
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    binding!!.view.visibility = View.GONE
+                }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding!!.view.visibility=View.VISIBLE
+                binding!!.view.alpha=slideOffset
+            }
         })
     }
 

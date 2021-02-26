@@ -47,10 +47,7 @@ class ProductSliderListAdapter @Inject
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderItemTypeOne {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        var binding = DataBindingUtil.inflate<MSlideritemoneBinding>(layoutInflater!!, R.layout.m_slideritemone, parent, false)
+        var binding = DataBindingUtil.inflate<MSlideritemoneBinding>(LayoutInflater.from(parent.context), R.layout.m_slideritemone, parent, false)
         when(jsonObject!!.getString("item_shape")){
             "square"->{
                 binding.card.radius=0f

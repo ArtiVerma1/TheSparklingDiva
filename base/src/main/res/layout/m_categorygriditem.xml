@@ -35,7 +35,6 @@
                     app:imageUrl="@{commondata.imageurl}"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:src="@drawable/tes_background"
                     android:scaleType="fitXY"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/name"

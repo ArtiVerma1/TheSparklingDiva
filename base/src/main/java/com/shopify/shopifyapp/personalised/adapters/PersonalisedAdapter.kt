@@ -25,10 +25,7 @@ class PersonalisedAdapter @Inject
         this.products = products
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MPersonalisedBinding>(layoutInflater!!, R.layout.m_personalised, parent, false)
+        val binding = DataBindingUtil.inflate<MPersonalisedBinding>(LayoutInflater.from(parent.context), R.layout.m_personalised, parent, false)
         return ProductItem(binding)
     }
 

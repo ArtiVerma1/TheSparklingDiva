@@ -26,10 +26,7 @@ constructor() : RecyclerView.Adapter<OrderItem>() {
     private var layoutInflater: LayoutInflater? = null
     private var model: OrderListViewModel? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MOrderitemBinding>(layoutInflater!!, R.layout.m_orderitem, parent, false)
+        val binding = DataBindingUtil.inflate<MOrderitemBinding>(LayoutInflater.from(parent.context), R.layout.m_orderitem, parent, false)
         binding.orderdetails.textSize = 11f
         binding.orderdetails.setTextColor(binding.root.context.resources.getColor(R.color.colorPrimaryDark))
         binding.orderno.textSize = 11f

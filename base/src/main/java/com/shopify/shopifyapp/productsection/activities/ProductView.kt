@@ -48,6 +48,7 @@ class ProductView : BaseActivity() {
     lateinit var factory: ViewModelFactory
     private var model: ProductViewModel? = null
     private var variantlist: RecyclerView? = null
+    private val TAG = "ProductView"
 
     @Inject
     lateinit var adapter: VariantAdapter
@@ -98,7 +99,15 @@ class ProductView : BaseActivity() {
     }
 
     private fun filterResponse(list: List<Storefront.ProductVariantEdge>) {
-        adapter!!.setData(list, model, data)
+        adapter!!.setData(list, model, data, variantCallback_ = object : VariantAdapter.VariantCallback {
+            override fun clickVariant(variant: Storefront.ProductVariantEdge) {
+                Log.d(TAG, "clickVariant: " + variant)
+                data?.regularprice = CurrencyFormatter.setsymbol(variant.node.priceV2.amount, variant.node.priceV2.currencyCode.toString())
+                //  data?.specialprice = CurrencyFormatter.setsymbol(variant?.node?.compareAtPriceV2?.amount!!, variant?.node?.compareAtPriceV2?.currencyCode?.toString()!!)
+                // data?.offertext = getDiscount(data?.regularprice?.toDouble()!!, data?.specialprice?.toDouble()!!).toString() + "%off"
+
+            }
+        })
         variantlist!!.adapter = adapter
         adapter!!.notifyDataSetChanged()
         if (list.size > 1) {

@@ -29,10 +29,7 @@ class RecylerAdapter @Inject constructor() : RecyclerView.Adapter<ListItem>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<CurrencyListItemBinding>(layoutInflater!!, R.layout.currency_list_item, parent, false)
+        val binding = DataBindingUtil.inflate<CurrencyListItemBinding>(LayoutInflater.from(parent.context), R.layout.currency_list_item, parent, false)
         return ListItem(binding)
     }
 

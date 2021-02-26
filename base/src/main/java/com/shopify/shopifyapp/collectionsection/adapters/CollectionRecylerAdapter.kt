@@ -31,10 +31,7 @@ class CollectionRecylerAdapter @Inject
         setHasStableIds(true)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionItem {
-        if (layoutInflater == null) {
-            layoutInflater = LayoutInflater.from(parent.context)
-        }
-        val binding = DataBindingUtil.inflate<MCategoryitemBinding>(layoutInflater!!, R.layout.m_categoryitem, parent, false)
+        val binding = DataBindingUtil.inflate<MCategoryitemBinding>(LayoutInflater.from(parent.context), R.layout.m_categoryitem, parent, false)
         return CollectionItem(binding)
     }
     override fun getItemId(position: Int): Long {
