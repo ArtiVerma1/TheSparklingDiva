@@ -14,6 +14,7 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.viewholders.ProductItem
 import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
@@ -27,12 +28,12 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
     private var layoutInflater: LayoutInflater? = null
     lateinit var products: MutableList<Storefront.ProductEdge>
     private var activity: Activity? = null
-    private var repository:Repository?=null
+    private var repository: Repository? = null
     var presentmentcurrency: String? = null
-    fun setData(products: List<Storefront.ProductEdge>?, activity: Activity,repository: Repository) {
+    fun setData(products: List<Storefront.ProductEdge>?, activity: Activity, repository: Repository) {
         this.products = products as MutableList<Storefront.ProductEdge>
         this.activity = activity
-        this.repository=repository
+        this.repository = repository
     }
 
     init {
@@ -113,6 +114,14 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }
+
+        if (SplashViewModel.featuresModel.outOfStock!!) {
+            if (!this.products[position].node.availableForSale) {
+                holder?.binding?.outOfStock?.visibility = View.VISIBLE
+            } else {
+                holder?.binding?.outOfStock?.visibility = View.GONE
+            }
+        }
         holder.binding!!.listdata = data
         val model = CommanModel()
         if (this.products[position].node.images.edges.size > 0) {
@@ -120,7 +129,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
         }
         holder.binding!!.commondata = model
         holder.binding!!.clickproduct = Product(position)
-      //  holder.setIsRecyclable(false)
+        //  holder.setIsRecyclable(false)
     }
 
     override fun getItemCount(): Int {
@@ -156,7 +165,8 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             productintent.putExtra("product", data.product)
             view.context.startActivity(productintent)
         }
-        fun addCart(view: View, data: ListData){
+
+        fun addCart(view: View, data: ListData) {
             var customQuickAddActivity = QuickAddActivity(context = activity!!, theme = R.style.WideDialogFull, product_id = data.product!!.id.toString(), repository = repository!!)
             customQuickAddActivity.show()
         }

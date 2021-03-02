@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import androidx.databinding.Bindable
 
 import com.shopify.buy3.HttpCachePolicy
 import com.shopify.shopifyapp.productsection.models.VariantData
@@ -12,8 +13,9 @@ import java.util.concurrent.TimeUnit
 
 
 object Constant {
-    var ispersonalisedEnable:Boolean=false
-    var locale:String="en"
+
+    var ispersonalisedEnable: Boolean = false
+    var locale: String = "en"
     var previous: VariantData? = null
     var current: VariantData? = null
     var policy: HttpCachePolicy.ExpirePolicy = HttpCachePolicy.Default.CACHE_FIRST.expireAfter(5, TimeUnit.SECONDS)

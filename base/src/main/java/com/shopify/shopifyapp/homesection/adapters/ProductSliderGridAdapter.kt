@@ -23,6 +23,7 @@ import com.shopify.shopifyapp.databinding.MSlideritemoneBinding
 import com.shopify.shopifyapp.databinding.MSlideritemtwoBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.customviews.MageNativeTextView
 import com.shopify.shopifyapp.homesection.viewholders.SliderItemTypeOne
 import com.shopify.shopifyapp.productsection.activities.ProductView
@@ -205,6 +206,14 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 item.gridbinding.regularprice.paintFlags = item.gridbinding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }
+        if (SplashViewModel.featuresModel.outOfStock!!) {
+            if (!products?.get(position)!!.availableForSale) {
+                item?.gridbinding?.outOfStock?.visibility = View.VISIBLE
+            } else {
+                item?.gridbinding?.outOfStock?.visibility = View.GONE
+            }
+        }
+
         val model = CommanModel()
         model.imageurl = products?.get(position)?.images?.edges?.get(0)?.node?.transformedSrc
         item.gridbinding.listdata = data

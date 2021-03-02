@@ -54,6 +54,7 @@ class ProductView : BaseActivity() {
     lateinit var adapter: VariantAdapter
     private var data: ListData? = null
     private var personamodel: PersonalisedViewModel? = null
+    private var inStock: Boolean = true
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -199,6 +200,19 @@ class ProductView : BaseActivity() {
             if (Constant.ispersonalisedEnable) {
                 model!!.getRecommendations(productedge!!.id.toString())
             }
+
+            if (featuresModel.outOfStock!!) {
+                if (!productedge.availableForSale) {
+                    binding?.outOfStock?.visibility = View.VISIBLE
+                    binding?.shareicon?.visibility = View.GONE
+                    inStock = false
+                } else {
+                    inStock = true
+                    binding?.outOfStock?.visibility = View.GONE
+                    binding?.shareicon?.visibility = View.VISIBLE
+                }
+            }
+
             val variant = productedge!!.variants.edges[0].node
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
             slider.setData(productedge.images.edges)
@@ -321,21 +335,31 @@ class ProductView : BaseActivity() {
 
     inner class ClickHandlers {
         fun addtoCart(view: View, data: ListData) {
-            if (Constant.current == null) {
-                Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
+            if (inStock) {
+                if (Constant.current == null) {
+                    Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
+                } else {
+                    model!!.addToCart(Constant.current!!.variant_id!!)
+                    Toast.makeText(view.context, resources.getString(R.string.successcart), Toast.LENGTH_LONG).show()
+                    invalidateOptionsMenu()
+                }
             } else {
-                model!!.addToCart(Constant.current!!.variant_id!!)
-                Toast.makeText(view.context, resources.getString(R.string.successcart), Toast.LENGTH_LONG).show()
-                invalidateOptionsMenu()
+                Toast.makeText(view.context, getString(R.string.outofstock_warning), Toast.LENGTH_SHORT).show()
             }
+
         }
 
         fun addtoWish(view: View, data: ListData) {
-            Log.i("MageNative", "In Wish")
-            if (model!!.setWishList(data.product?.id.toString())) {
-                Toast.makeText(view.context, resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
-                data.addtowish = resources.getString(R.string.alreadyinwish)
+            if (inStock) {
+                Log.i("MageNative", "In Wish")
+                if (model!!.setWishList(data.product?.id.toString())) {
+                    Toast.makeText(view.context, resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
+                    data.addtowish = resources.getString(R.string.alreadyinwish)
+                }
+            } else {
+                Toast.makeText(view.context, getString(R.string.outofstock_warning), Toast.LENGTH_SHORT).show()
             }
+
         }
 
         fun shareProduct(view: View, data: ListData) {

@@ -5,6 +5,14 @@ import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 
 class FeaturesModel : BaseObservable() {
+
+    @Bindable
+    var outOfStock: Boolean? = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.outOfStock)
+        }
+
     @Bindable
     var in_app_wishlist: Boolean = false
         set(value) {

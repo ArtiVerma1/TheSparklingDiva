@@ -128,4 +128,5 @@
     <string name="gift_remove">Gift card removed successfully</string>
     <string name="discount_validation">Please enter discount code</string>
     <string name="loading">Loading...</string>
+    <string name="outofstock_warning">Product is out of stock</string>
 </resources>

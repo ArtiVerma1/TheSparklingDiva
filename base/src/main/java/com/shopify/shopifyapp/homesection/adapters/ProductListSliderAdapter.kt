@@ -19,131 +19,139 @@ import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MCustomisableListBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.homesection.viewholders.SliderItemTypeOne
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import org.json.JSONObject
 import java.math.BigDecimal
 import javax.inject.Inject
+
 class
 
 ProductListSliderAdapter @Inject
- constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
+constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
     private var layoutInflater: LayoutInflater? = null
-    private var products: List<Storefront.Product>?=null
+    private var products: List<Storefront.Product>? = null
     private var activity: Activity? = null
     var presentmentcurrency: String? = null
-    var jsonObject:JSONObject?=null
-    fun setData(products: List<Storefront.Product>?, activity: Activity,jsonObject: JSONObject) {
+    var jsonObject: JSONObject? = null
+    fun setData(products: List<Storefront.Product>?, activity: Activity, jsonObject: JSONObject) {
         this.products = products
         this.activity = activity
-        this.jsonObject=jsonObject
+        this.jsonObject = jsonObject
     }
+
     init {
         setHasStableIds(true)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderItemTypeOne {
         var binding = DataBindingUtil.inflate<MCustomisableListBinding>(LayoutInflater.from(parent.context), R.layout.m_customisable_list, parent, false)
-        if(jsonObject!!.getString("item_shape").equals("square")){
-            binding.card.cardElevation=0f
-            binding.card.radius=0f
+        if (jsonObject!!.getString("item_shape").equals("square")) {
+            binding.card.cardElevation = 0f
+            binding.card.radius = 0f
         }
         var params = binding.pricesection.layoutParams as ConstraintLayout.LayoutParams
-        var alignment:String
-        if(jsonObject!!.has("item_text_alignment"))   {
-            alignment=jsonObject!!.getString("item_text_alignment")
-        }else{
-            alignment=jsonObject!!.getString("item_alignment")
+        var alignment: String
+        if (jsonObject!!.has("item_text_alignment")) {
+            alignment = jsonObject!!.getString("item_text_alignment")
+        } else {
+            alignment = jsonObject!!.getString("item_alignment")
         }
-        when(alignment) {
+        when (alignment) {
             "right" -> {
-                binding.name.gravity=Gravity.END
-                params.startToStart= ConstraintSet.GONE
-                params.endToEnd= ConstraintSet.PARENT_ID
+                binding.name.gravity = Gravity.END
+                params.startToStart = ConstraintSet.GONE
+                params.endToEnd = ConstraintSet.PARENT_ID
             }
             "left" -> {
-                binding.name.gravity=Gravity.START
-                params.startToStart= ConstraintSet.PARENT_ID
-                params.endToEnd= ConstraintSet.GONE
+                binding.name.gravity = Gravity.START
+                params.startToStart = ConstraintSet.PARENT_ID
+                params.endToEnd = ConstraintSet.GONE
             }
         }
-        var tittlevisibility:Int=View.GONE
-        if(jsonObject!!.getString("item_title").equals("1")){
-            var item_title_color=JSONObject(jsonObject!!.getString("item_title_color"))
+        var tittlevisibility: Int = View.GONE
+        if (jsonObject!!.getString("item_title").equals("1")) {
+            var item_title_color = JSONObject(jsonObject!!.getString("item_title_color"))
             binding.name.setTextColor(Color.parseColor(item_title_color.getString("color")))
-            tittlevisibility=View.VISIBLE
-        }else{
-            tittlevisibility=View.GONE
+            tittlevisibility = View.VISIBLE
+        } else {
+            tittlevisibility = View.GONE
         }
-        var productpricevisibility:Int=View.GONE
-        if(jsonObject!!.getString("item_price").equals("1")){
-            var item_price_color=JSONObject(jsonObject!!.getString("item_price_color"))
+        var productpricevisibility: Int = View.GONE
+        if (jsonObject!!.getString("item_price").equals("1")) {
+            var item_price_color = JSONObject(jsonObject!!.getString("item_price_color"))
             binding.regularprice.setTextColor(Color.parseColor(item_price_color.getString("color")))
-            productpricevisibility=View.VISIBLE
-        }else{
-            productpricevisibility=View.GONE
+            productpricevisibility = View.VISIBLE
+        } else {
+            productpricevisibility = View.GONE
         }
-        var specialpricevisibility:Int=View.GONE
-        if(jsonObject!!.getString("item_compare_at_price").equals("1")){
-            var item_compare_at_price_color=JSONObject(jsonObject!!.getString("item_compare_at_price_color"))
+        var specialpricevisibility: Int = View.GONE
+        if (jsonObject!!.getString("item_compare_at_price").equals("1")) {
+            var item_compare_at_price_color = JSONObject(jsonObject!!.getString("item_compare_at_price_color"))
             binding.specialprice.setTextColor(Color.parseColor(item_compare_at_price_color.getString("color")))
-            specialpricevisibility=View.VISIBLE
-        }else{
-            specialpricevisibility=View.GONE
+            specialpricevisibility = View.VISIBLE
+        } else {
+            specialpricevisibility = View.GONE
         }
-        binding.name.visibility=tittlevisibility
-        binding.regularprice.visibility=productpricevisibility
-        binding.specialprice.visibility=specialpricevisibility
-        if(jsonObject!!.getString("item_border").equals("1")){
-            var item_border_color=JSONObject(jsonObject!!.getString("item_border_color"))
+        binding.name.visibility = tittlevisibility
+        binding.regularprice.visibility = productpricevisibility
+        binding.specialprice.visibility = specialpricevisibility
+        if (jsonObject!!.getString("item_border").equals("1")) {
+            var item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
             binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
             val newLayoutParams = binding.main.layoutParams as FrameLayout.LayoutParams
             newLayoutParams.marginStart = 2
             newLayoutParams.marginEnd = 2
             newLayoutParams.topMargin = 2
             newLayoutParams.bottomMargin = 2
-            binding.main.layoutParams=newLayoutParams
+            binding.main.layoutParams = newLayoutParams
         }
-        var cell_background_color=JSONObject(jsonObject!!.getString("cell_background_color"))
+        var cell_background_color = JSONObject(jsonObject!!.getString("cell_background_color"))
         binding.main.setBackgroundColor(Color.parseColor(cell_background_color.getString("color")))
-        val face : Typeface
-        when(jsonObject!!.getString("item_title_font_weight")){
-            "bold"->{
-                face= Typeface.createFromAsset(activity!!.assets,"fonts/bold.ttf");
-            }else->{
-            face= Typeface.createFromAsset(activity!!.assets,"fonts/normal.ttf");
-        }
+        val face: Typeface
+        when (jsonObject!!.getString("item_title_font_weight")) {
+            "bold" -> {
+                face = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+            }
+            else -> {
+                face = Typeface.createFromAsset(activity!!.assets, "fonts/normal.ttf");
+            }
         }
         binding.name.setTypeface(face)
-        if(jsonObject!!.getString("item_title_font_style").equals("italic")) {
+        if (jsonObject!!.getString("item_title_font_style").equals("italic")) {
             binding.name.setTypeface(binding.name.getTypeface(), Typeface.ITALIC);
         }
-        val priceface : Typeface
-        when(jsonObject!!.getString("header_subtitle_font_weight")){
-            "bold"->{
-                priceface= Typeface.createFromAsset(activity!!.assets,"fonts/bold.ttf");
-            }else->{
-            priceface= Typeface.createFromAsset(activity!!.assets,"fonts/normal.ttf");
-        }
+        val priceface: Typeface
+        when (jsonObject!!.getString("header_subtitle_font_weight")) {
+            "bold" -> {
+                priceface = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+            }
+            else -> {
+                priceface = Typeface.createFromAsset(activity!!.assets, "fonts/normal.ttf");
+            }
         }
         binding.regularprice.setTypeface(priceface)
-        if(jsonObject!!.getString("item_price_font_style").equals("italic")) {
+        if (jsonObject!!.getString("item_price_font_style").equals("italic")) {
             binding.regularprice.setTypeface(binding.regularprice.getTypeface(), Typeface.ITALIC);
         }
-        val specialpriceface : Typeface
-        when(jsonObject!!.getString("item_compare_at_price_font_weight")){
-            "bold"->{
-                specialpriceface= Typeface.createFromAsset(activity!!.assets,"fonts/bold.ttf");
-            }else->{
-            specialpriceface= Typeface.createFromAsset(activity!!.assets,"fonts/normal.ttf");
-        }
+        val specialpriceface: Typeface
+        when (jsonObject!!.getString("item_compare_at_price_font_weight")) {
+            "bold" -> {
+                specialpriceface = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+            }
+            else -> {
+                specialpriceface = Typeface.createFromAsset(activity!!.assets, "fonts/normal.ttf");
+            }
         }
         binding.specialprice.setTypeface(specialpriceface)
-        if(jsonObject!!.getString("item_compare_at_price_font_style").equals("italic")) {
+        if (jsonObject!!.getString("item_compare_at_price_font_style").equals("italic")) {
             binding.specialprice.setTypeface(binding.specialprice.getTypeface(), Typeface.ITALIC);
         }
         return SliderItemTypeOne(binding)
     }
+
     override fun onBindViewHolder(item: SliderItemTypeOne, position: Int) {
         val variant = products?.get(position)!!.variants.edges.get(0).node
         val data = ListData()
@@ -166,8 +174,8 @@ ProductListSliderAdapter @Inject
                 item.listbinding.regularprice.paintFlags = item.listbinding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 item.listbinding.specialprice.visibility = View.VISIBLE
             } else {
-                    item.listbinding.regularprice.paintFlags = item.listbinding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                    item.listbinding.specialprice.visibility = View.GONE
+                item.listbinding.regularprice.paintFlags = item.listbinding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                item.listbinding.specialprice.visibility = View.GONE
             }
         } else {
             val edge = getEdge(variant!!.presentmentPrices.edges)
@@ -191,6 +199,14 @@ ProductListSliderAdapter @Inject
                 item.listbinding.regularprice.paintFlags = item.listbinding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }
+        if (SplashViewModel.featuresModel.outOfStock!!) {
+            if (!products?.get(position)!!.availableForSale) {
+                item?.listbinding?.outOfStock?.visibility = View.VISIBLE
+            } else {
+                item?.listbinding?.outOfStock?.visibility = View.GONE
+            }
+        }
+
         val model = CommanModel()
         model.imageurl = products?.get(position)?.images?.edges?.get(0)?.node?.transformedSrc
         item.listbinding.listdata = data
@@ -198,6 +214,7 @@ ProductListSliderAdapter @Inject
         item.listbinding.clickproduct = ProductListAdapter().Product()
 
     }
+
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
@@ -205,6 +222,7 @@ ProductListSliderAdapter @Inject
     override fun getItemCount(): Int {
         return products!!.size
     }
+
     private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>): Storefront.ProductVariantPricePairEdge? {
         var pairEdge: Storefront.ProductVariantPricePairEdge? = null
         try {

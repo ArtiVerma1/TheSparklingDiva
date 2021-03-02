@@ -38,6 +38,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/nameandpricesection"
                 />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/out_of_stock"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/outofstock"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/image"
+                app:layout_constraintEnd_toEndOf="parent" />
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"

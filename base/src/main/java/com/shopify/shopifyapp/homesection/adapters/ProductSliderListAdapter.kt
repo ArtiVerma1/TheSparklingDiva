@@ -19,6 +19,7 @@ import com.shopify.shopifyapp.databinding.MSlideritemoneBinding
 import com.shopify.shopifyapp.databinding.MSlideritemtwoBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.customviews.MageNativeTextView
 import com.shopify.shopifyapp.homesection.viewholders.SliderItemTypeOne
 import com.shopify.shopifyapp.productsection.activities.ProductView
@@ -216,6 +217,14 @@ class ProductSliderListAdapter @Inject
         special.setTypeface(specialpriceface)
         if(jsonObject!!.getString("item_compare_at_price_font_style").equals("italic")) {
             special.setTypeface(special.getTypeface(), Typeface.ITALIC);
+        }
+
+        if (SplashViewModel.featuresModel.outOfStock!!) {
+            if (!products?.get(position)!!.availableForSale) {
+                item?.binding?.outOfStock?.visibility = View.VISIBLE
+            } else {
+                item?.binding?.outOfStock?.visibility = View.GONE
+            }
         }
     }
     override fun getItemId(position: Int): Long {

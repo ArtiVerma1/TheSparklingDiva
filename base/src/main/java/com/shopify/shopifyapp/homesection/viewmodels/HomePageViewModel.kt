@@ -38,6 +38,7 @@ import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.models.CommanModel
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.databinding.*
 import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.dependecyinjection.InnerData
@@ -1079,59 +1080,114 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     private fun filterProduct(list: List<Storefront.Product>, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject) {
         try {
-            repository.getProductListSlider(list)
-                    .subscribeOn(Schedulers.io())
-                    .filter { x -> x.availableForSale }
-                    .toList()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<List<Storefront.Product>> {
-                        override fun onSubscribe(d: Disposable) {
 
-                        }
+            if (SplashViewModel.featuresModel.outOfStock!!) {
+                repository.getProductListSlider(list)
+                        .subscribeOn(Schedulers.io())
+                        .toList()
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(object : SingleObserver<List<Storefront.Product>> {
+                            override fun onSubscribe(d: Disposable) {
 
-                        override fun onSuccess(list: List<Storefront.Product>) {
-                            when (jsonObject.getString("type")) {
-                                "fixed-customisable-layout" -> {
-                                    if (jsonObject.getString("item_layout_type").equals("list")) {
-                                        productListAdapter = ProductListSliderAdapter()
-                                        productListAdapter!!.presentmentcurrency = presentmentCurrency
-                                        context.setLayout(productdata!!, "vertical")
-                                        productListAdapter!!.setData(list, context, jsonObject)
-                                        productdata!!.adapter = productListAdapter
-                                    } else {
-                                        when (jsonObject.getString("item_in_a_row")) {
-                                            "2" -> {
-                                                gridtwo = ProductSliderListAdapter()
-                                                gridtwo!!.presentmentcurrency = presentmentCurrency
-                                                context.setLayout(productdata!!, "grid")
-                                                gridtwo!!.setData(list, context, jsonObject, repository)
-                                                productdata!!.adapter = gridtwo
-                                            }
-                                            "3" -> {
-                                                gridAdapter = ProductSliderGridAdapter()
-                                                gridAdapter!!.presentmentcurrency = presentmentCurrency
-                                                context.setLayout(productdata!!, "customisablegrid")
-                                                gridAdapter!!.setData(list, context, jsonObject)
-                                                productdata!!.adapter = gridAdapter
+                            }
+
+                            override fun onSuccess(list: List<Storefront.Product>) {
+                                when (jsonObject.getString("type")) {
+                                    "fixed-customisable-layout" -> {
+                                        if (jsonObject.getString("item_layout_type").equals("list")) {
+                                            productListAdapter = ProductListSliderAdapter()
+                                            productListAdapter!!.presentmentcurrency = presentmentCurrency
+                                            context.setLayout(productdata!!, "vertical")
+                                            productListAdapter!!.setData(list, context, jsonObject)
+                                            productdata!!.adapter = productListAdapter
+                                        } else {
+                                            when (jsonObject.getString("item_in_a_row")) {
+                                                "2" -> {
+                                                    gridtwo = ProductSliderListAdapter()
+                                                    gridtwo!!.presentmentcurrency = presentmentCurrency
+                                                    context.setLayout(productdata!!, "grid")
+                                                    gridtwo!!.setData(list, context, jsonObject, repository)
+                                                    productdata!!.adapter = gridtwo
+                                                }
+                                                "3" -> {
+                                                    gridAdapter = ProductSliderGridAdapter()
+                                                    gridAdapter!!.presentmentcurrency = presentmentCurrency
+                                                    context.setLayout(productdata!!, "customisablegrid")
+                                                    gridAdapter!!.setData(list, context, jsonObject)
+                                                    productdata!!.adapter = gridAdapter
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                else -> {
-                                    Log.i("MageNatyive", "Data" + list.size)
-                                    homeadapter = ProductSliderListAdapter()
-                                    homeadapter!!.presentmentcurrency = presentmentCurrency
-                                    context.setLayout(productdata!!, "horizontal")
-                                    homeadapter!!.setData(list, context, jsonObject, repository)
-                                    productdata!!.adapter = homeadapter
+                                    else -> {
+                                        Log.i("MageNatyive", "Data" + list.size)
+                                        homeadapter = ProductSliderListAdapter()
+                                        homeadapter!!.presentmentcurrency = presentmentCurrency
+                                        context.setLayout(productdata!!, "horizontal")
+                                        homeadapter!!.setData(list, context, jsonObject, repository)
+                                        productdata!!.adapter = homeadapter
+                                    }
                                 }
                             }
-                        }
 
-                        override fun onError(e: Throwable) {
-                            e.printStackTrace()
-                        }
-                    })
+                            override fun onError(e: Throwable) {
+                                e.printStackTrace()
+                            }
+                        })
+            } else {
+                repository.getProductListSlider(list)
+                        .subscribeOn(Schedulers.io())
+                        .filter { x -> x.availableForSale }
+                        .toList()
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(object : SingleObserver<List<Storefront.Product>> {
+                            override fun onSubscribe(d: Disposable) {
+
+                            }
+
+                            override fun onSuccess(list: List<Storefront.Product>) {
+                                when (jsonObject.getString("type")) {
+                                    "fixed-customisable-layout" -> {
+                                        if (jsonObject.getString("item_layout_type").equals("list")) {
+                                            productListAdapter = ProductListSliderAdapter()
+                                            productListAdapter!!.presentmentcurrency = presentmentCurrency
+                                            context.setLayout(productdata!!, "vertical")
+                                            productListAdapter!!.setData(list, context, jsonObject)
+                                            productdata!!.adapter = productListAdapter
+                                        } else {
+                                            when (jsonObject.getString("item_in_a_row")) {
+                                                "2" -> {
+                                                    gridtwo = ProductSliderListAdapter()
+                                                    gridtwo!!.presentmentcurrency = presentmentCurrency
+                                                    context.setLayout(productdata!!, "grid")
+                                                    gridtwo!!.setData(list, context, jsonObject, repository)
+                                                    productdata!!.adapter = gridtwo
+                                                }
+                                                "3" -> {
+                                                    gridAdapter = ProductSliderGridAdapter()
+                                                    gridAdapter!!.presentmentcurrency = presentmentCurrency
+                                                    context.setLayout(productdata!!, "customisablegrid")
+                                                    gridAdapter!!.setData(list, context, jsonObject)
+                                                    productdata!!.adapter = gridAdapter
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else -> {
+                                        Log.i("MageNatyive", "Data" + list.size)
+                                        homeadapter = ProductSliderListAdapter()
+                                        homeadapter!!.presentmentcurrency = presentmentCurrency
+                                        context.setLayout(productdata!!, "horizontal")
+                                        homeadapter!!.setData(list, context, jsonObject, repository)
+                                        productdata!!.adapter = homeadapter
+                                    }
+                                }
+                            }
+
+                            override fun onError(e: Throwable) {
+                                e.printStackTrace()
+                            }
+                        })
+            }
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
