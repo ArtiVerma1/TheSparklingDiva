@@ -48,7 +48,7 @@ open class AddressList : BaseActivity() {
             val totalItemCount = recyclerView.layoutManager!!.itemCount
             val firstVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             if (!recyclerView.canScrollVertically(1)) {
-                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition > 0
                         && totalItemCount >= mailingAddressEdges!!.size) {
                     Log.i("Magenative", "NEwAddress")
                     model!!.addresscursor = cursor.toString()
@@ -75,7 +75,7 @@ open class AddressList : BaseActivity() {
         model!!.addresses.observe(this, Observer<MutableList<Storefront.MailingAddressEdge>> { this.listAddress(it) })
         model!!.sheet.observe(this, Observer<Boolean> { this.opensheet(it) })
         model!!.editaddress.observe(this, Observer<Address> { this.editAddress(it) })
-        sheet!!.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        sheet!!.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
                     sheet!!.state = BottomSheetBehavior.STATE_EXPANDED
@@ -228,15 +228,15 @@ open class AddressList : BaseActivity() {
                 }
                 "edit" -> model!!.updateAddress(input, address!!.address_id)
             }
-            binding!!.mainbottomsheet.firstname.setText(" ")
-            binding!!.mainbottomsheet.lastname.setText(" ")
-            binding!!.mainbottomsheet.address1.setText(" ")
-            binding!!.mainbottomsheet.address2.setText(" ")
-            binding!!.mainbottomsheet.city.setText(" ")
-            binding!!.mainbottomsheet.country.setText(" ")
-            binding!!.mainbottomsheet.state.setText(" ")
-            binding!!.mainbottomsheet.pincode.setText(" ")
-            binding!!.mainbottomsheet.phone.setText(" ")
+            binding!!.mainbottomsheet.firstname.setText("")
+            binding!!.mainbottomsheet.lastname.setText("")
+            binding!!.mainbottomsheet.address1.setText("")
+            binding!!.mainbottomsheet.address2.setText("")
+            binding!!.mainbottomsheet.city.setText("")
+            binding!!.mainbottomsheet.country.setText("")
+            binding!!.mainbottomsheet.state.setText("")
+            binding!!.mainbottomsheet.pincode.setText("")
+            binding!!.mainbottomsheet.phone.setText("")
         }
     }
 }

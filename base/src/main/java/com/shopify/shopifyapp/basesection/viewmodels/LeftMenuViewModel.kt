@@ -11,6 +11,7 @@ import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
+import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.dbconnection.entities.LivePreviewData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
@@ -105,8 +106,8 @@ class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
 
                 } else {
                     Log.i("MageNative", "LeftMenuResume 2" + "Sign")
-                    hashdata["firstname"] = "Sign"
-                    hashdata["secondname"] = "In"
+                    hashdata["firstname"] = context?.getString(R.string.sign_first)!!
+                    hashdata["secondname"] = context?.getString(R.string.in_last)!!
                     hashdata["tag"] = "Sign In"
                 }
                 handler.post { data.value = hashdata }

@@ -52,15 +52,27 @@ class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel()
     fun setOrder(mid: String, checkout_token: String?) {
         try {
             var postData = repository.setOrder(mid, checkout_token)
-            doRetrofitCall(postData, disposables, customResponse = object : CustomResponse {
-                override fun onSuccessRetrofit(result: JsonElement) {
-                    responseLiveData.setValue(ApiResponse.success(result))
-                }
+//            doRetrofitCall(postData, disposables, customResponse = object : CustomResponse {
+//                override fun onSuccessRetrofit(result: JsonElement) {
+//                    responseLiveData.setValue(ApiResponse.success(result))
+//                }
+//
+//                override fun onErrorRetrofit(error: Throwable) {
+//                    responseLiveData.setValue(ApiResponse.error(error))
+//                }
+//            }, context = context)
 
-                override fun onErrorRetrofit(error: Throwable) {
-                    responseLiveData.setValue(ApiResponse.error(error))
-                }
-            }, context = context)
+            disposables.add(postData
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { result ->
+                                responseLiveData.value = ApiResponse.success(result)
+                            },
+                            { throwable ->
+                                responseLiveData.value = ApiResponse.error(throwable)
+                            }
+                    ))
         } catch (e: Exception) {
             e.printStackTrace()
         }

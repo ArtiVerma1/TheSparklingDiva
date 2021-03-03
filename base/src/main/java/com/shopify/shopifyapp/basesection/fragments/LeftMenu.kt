@@ -269,6 +269,7 @@ class LeftMenu : BaseFragment() {
                 menuData!!.previewvislible = View.GONE
             }
         }
+        leftmenu.context=currentcontext
         leftmenu.fetchUserData()
     }
 

@@ -18,6 +18,7 @@ import com.shopify.shopifyapp.basesection.activities.BaseActivity
 import com.shopify.shopifyapp.checkoutsection.viewmodels.CheckoutWebLinkViewModel
 import com.shopify.shopifyapp.databinding.MWebpageBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
+import com.shopify.shopifyapp.loader_section.CustomLoader
 import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import java.util.*
@@ -29,6 +30,7 @@ class CheckoutWeblink : BaseActivity() {
     private var currentUrl: String? = null
     private var id: String? = null
     private var postData: String? = null
+    private var customLoader: CustomLoader? = null
 
     @Inject
     lateinit var factory: ViewModelFactory
@@ -45,6 +47,8 @@ class CheckoutWeblink : BaseActivity() {
         model!!.context = this
         showTittle(resources.getString(R.string.checkout))
         showBackButton()
+        customLoader = CustomLoader(this)
+        customLoader?.show()
         webView = binding!!.webview
         currentUrl = intent.getStringExtra("link")
         id = intent.getStringExtra("id")
@@ -117,6 +121,7 @@ class CheckoutWeblink : BaseActivity() {
             override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 Log.i("URL", "" + description)
+                customLoader?.dismiss()
             }
 
             override fun onLoadResource(view: WebView, url: String) {
@@ -138,6 +143,7 @@ class CheckoutWeblink : BaseActivity() {
             }
 
             override fun onPageFinished(view: WebView, url: String) {
+                customLoader?.dismiss()
                 Log.i("pageURL", "" + url)
                 if (url.contains("thank_you")) {
                     model!!.setOrder(Urls((application as MyApplication))!!.mid, id)
@@ -167,6 +173,7 @@ class CheckoutWeblink : BaseActivity() {
             override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
                 super.onReceivedSslError(view, handler, error)
                 Log.i("URL", "" + error.url)
+                customLoader?.dismiss()
             }
         }
     }

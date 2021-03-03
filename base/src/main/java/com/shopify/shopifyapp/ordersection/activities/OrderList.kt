@@ -43,7 +43,7 @@ class OrderList : BaseActivity() {
             val totalItemCount = recyclerView.layoutManager!!.itemCount
             val firstVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             if (!recyclerView.canScrollVertically(1)) {
-                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition > 0
                         && totalItemCount >= orders!!.size) {
                     model!!.cursor = ordercursor!!
                 }

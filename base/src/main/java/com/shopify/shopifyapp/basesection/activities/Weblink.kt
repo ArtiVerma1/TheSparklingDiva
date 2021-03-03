@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.basesection.activities
+
 import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.os.Build
@@ -13,10 +14,14 @@ import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MWebpageBinding
+import com.shopify.shopifyapp.loader_section.CustomLoader
+
 class Weblink : BaseActivity() {
     private var webView: WebView? = null
     private var currentUrl: String? = null
     private var binding: MWebpageBinding? = null
+    private var customLoader: CustomLoader? = null
+
     @SuppressLint("SetJavaScriptEnabled")
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +30,7 @@ class Weblink : BaseActivity() {
         binding = DataBindingUtil.inflate<MWebpageBinding>(getLayoutInflater(), R.layout.m_webpage, content, true)
         webView = binding!!.webview
         showBackButton()
-        if(getIntent().hasExtra("name") && getIntent().getStringExtra("name") !=null){
+        if (getIntent().hasExtra("name") && getIntent().getStringExtra("name") != null) {
             showTittle(getIntent().getStringExtra("name"))
         }
         Log.i("MageNative", "Link :" + getIntent().getStringExtra("link")!!)
@@ -34,6 +39,8 @@ class Weblink : BaseActivity() {
         } else {
             currentUrl = "https://" + getResources().getString(R.string.shopdomain) + getIntent().getStringExtra("link")
         }
+        customLoader = CustomLoader(this)
+        customLoader?.show()
         webView!!.getSettings().setJavaScriptEnabled(true)
         webView!!.getSettings().setLoadWithOverviewMode(true)
         webView!!.getSettings().setUseWideViewPort(true)
@@ -58,6 +65,7 @@ class Weblink : BaseActivity() {
             public override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 Log.i("URL", "" + description)
+                customLoader?.dismiss()
             }
 
             public override fun onLoadResource(view: WebView, url: String) {
@@ -65,6 +73,7 @@ class Weblink : BaseActivity() {
             }
 
             public override fun onPageFinished(view: WebView, url: String) {
+                customLoader?.dismiss()
                 Log.i("pageURL", "" + url)
                 val javascript = "javascript: document.getElementsByClassName('grid--table')[0].style.display = 'none' "
                 val javascript1 = "javascript: document.getElementsByClassName('site-header')[0].style.display = 'none' "
@@ -112,12 +121,15 @@ class Weblink : BaseActivity() {
                     webView.loadUrl(javascript5)
                 }
             }
+
             public override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
                 super.onReceivedSslError(view, handler, error)
                 Log.i("URL", "" + error.getUrl())
+                customLoader?.dismiss()
             }
         })
     }
+
     public override fun onBackPressed() {
         if (webView!!.canGoBack()) {
             webView!!.goBack()

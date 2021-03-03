@@ -68,7 +68,7 @@ class ProductList : BaseActivity() {
                 firstVisibleItemPosition = (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
             }
             if (!recyclerView.canScrollVertically(1)) {
-                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition > 0
                         && totalItemCount >= products!!.size) {
                     productListModel!!.number = 20
                     productListModel!!.cursor = productcursor!!
