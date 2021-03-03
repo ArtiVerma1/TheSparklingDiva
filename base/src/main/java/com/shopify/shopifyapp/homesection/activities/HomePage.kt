@@ -48,24 +48,23 @@ class HomePage : NewBaseActivity() {
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
-        homemodel!!.connectFirebaseForHomePageData(this, homepage)
         if (featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
                 homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
                 homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
             }
         }
-        // GlobalScope.launch(Dispatchers.Main) {
         homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })
         homemodel!!.getHomePageData().observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
-        //}
     }
+
 
     fun consumeResponse(data: String) {
         Toast.makeText(this, data, Toast.LENGTH_LONG).show()
     }
 
     fun consumeResponse(data: HashMap<String, View>) {
+
         if (data.containsKey("top-bar_")) {
             homepage.addView(data.get("top-bar_"))
         }
@@ -101,6 +100,8 @@ class HomePage : NewBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        homemodel!!.connectFirebaseForHomePageData(this, homepage)
+
         if (wishtextView != null) {
             wishtextView!!.text = "" + model!!.wishListcount
         }

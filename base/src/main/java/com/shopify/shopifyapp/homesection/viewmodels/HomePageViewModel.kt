@@ -142,7 +142,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     Log.i("MageNative", "DownloadLink " + downloadlink)
                     if (homepage.childCount > 0) {
                         homepage.removeAllViews()
-                        homepage.invalidate()
+                        //   homepage.invalidate()
                     }
                     dowloadJson(downloadlink)
                 }
@@ -737,7 +737,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         override fun onSubscribe(d: Disposable) {
 
                         }
-
                         override fun onSuccess(list: List<JsonElement>) {
                             adapter = CollectionGridAdapter()
                             adapter!!.setData(list, context, jsonObject!!)
