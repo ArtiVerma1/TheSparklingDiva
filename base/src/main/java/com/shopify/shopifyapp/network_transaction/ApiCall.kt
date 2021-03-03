@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.network_transaction
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.util.Log
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 var customLoader: CustomLoader? = null
 private val TAG = "ApiCall"
 fun ViewModel.doGraphQLMutateGraph(repository: Repository, query: Storefront.MutationQuery, customResponse: CustomResponse, context: Context) {
-    Log.d(TAG, "doGraphQLMutateGraph: "+query)
+    Log.d(TAG, "doGraphQLMutateGraph: " + query)
     GlobalScope.launch(Dispatchers.Main) {
         if (customLoader != null) {
             customLoader!!.dismiss()
@@ -43,14 +44,16 @@ fun ViewModel.doGraphQLMutateGraph(repository: Repository, query: Storefront.Mut
 }
 
 fun ViewModel.doGraphQLQueryGraph(repository: Repository, query: Storefront.QueryRootQuery, customResponse: CustomResponse, context: Context) {
-    Log.d(TAG, "doGraphQLQueryGraph: "+query)
+    Log.d(TAG, "doGraphQLQueryGraph: " + query)
     GlobalScope.launch(Dispatchers.Main) {
         if (customLoader != null) {
             customLoader!!.dismiss()
             customLoader = null
         }
         customLoader = CustomLoader(context)
-        customLoader!!.show()
+        if (!(context as Activity).isDestroyed) {
+            customLoader!!.show()
+        }
     }
     var call = repository.graphClient.queryGraph(query)
     call.enqueue { result: GraphCallResult<Storefront.QueryRoot> ->
@@ -63,7 +66,7 @@ fun ViewModel.doGraphQLQueryGraph(repository: Repository, query: Storefront.Quer
 }
 
 fun Dialog.doGraphQLQueryGraph(repository: Repository, query: Storefront.QueryRootQuery, customResponse: CustomResponse, context: Context) {
-    Log.d(TAG, "doGraphQLQueryGraph: "+query)
+    Log.d(TAG, "doGraphQLQueryGraph: " + query)
     GlobalScope.launch(Dispatchers.Main) {
         if (customLoader != null) {
             customLoader!!.dismiss()

@@ -115,19 +115,20 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     private fun setPresentmentCurrencyForModel() {
-        try {
-            val runnable = Runnable {
-                if (repository.localData[0].currencycode == null) {
-                    presentmentCurrency = "nopresentmentcurrency"
-
-                } else {
-                    presentmentCurrency = repository.localData[0].currencycode
+        val runnable = Runnable {
+            try {
+                if (repository.localData.size > 0) {
+                    if (repository.localData[0].currencycode == null) {
+                        presentmentCurrency = "nopresentmentcurrency"
+                    } else {
+                        presentmentCurrency = repository.localData[0].currencycode
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            Thread(runnable).start()
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
+        Thread(runnable).start()
     }
 
     //***************************************************************NEW hompage changes*************************************************//
