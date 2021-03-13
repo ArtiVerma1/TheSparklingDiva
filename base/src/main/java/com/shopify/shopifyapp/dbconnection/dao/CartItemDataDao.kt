@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.dbconnection.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -13,6 +14,10 @@ interface CartItemDataDao {
 
     @get:Query("SELECT * FROM cartitemdata")
     val all: List<CartItemData>
+
+    @get:Query("SELECT * FROM cartitemdata")
+    val cart_count: LiveData<List<CartItemData>>
+
 
     @Query("SELECT * FROM cartitemdata WHERE variant_id = :id")
     fun getSingleData(id: String): CartItemData

@@ -241,7 +241,6 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                             currency_list.add(Storefront.CurrencyCode.valueOf(presentCurrency))
                         }
 
-
                         doGraphQLMutateGraph(repository, Mutation.createCheckout(input, currency_list), customResponse = object : CustomResponse {
                             override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
                                 invoke(result)

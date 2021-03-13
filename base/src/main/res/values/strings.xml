@@ -131,4 +131,17 @@
     <string name="outofstock_warning">Product is out of stock</string>
     <string name="sign_first">Sign</string>
     <string name="in_last">In</string>
+    <string name="rating">Rating</string>
+    <string name="ratings_reviews"><![CDATA[Ratings & Reviews]]></string>
+    <string name="rate_product">Rate Product</string>
+    <string name="write_your_review_here">Write your review here</string>
+    <string name="title">Title</string>
+    <string name="author_name">Name</string>
+    <string name="please_select_rating">Please select rating</string>
+    <string name="name_validation">Please enter name here</string>
+    <string name="review_title_validation">Please enter title here</string>
+    <string name="review_validation">Please write your review</string>
+    <string name="email_validation">Please enter email here</string>
+    <string name="review_submitted">Review submitted successfully</string>
+    <string name="sorry_this_product_does_not_have_any_reviews">Sorry this product does not have any reviews</string>
 </resources>

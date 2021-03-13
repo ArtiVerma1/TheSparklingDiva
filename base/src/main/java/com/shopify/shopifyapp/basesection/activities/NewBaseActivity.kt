@@ -1,12 +1,10 @@
 package com.shopify.shopifyapp.basesection.activities
 
-import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -19,7 +17,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -28,33 +26,47 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.shopify.buy3.Storefront
-import com.shopify.shopifyapp.MyApplication
-import com.shopify.shopifyapp.basesection.ItemDecoration.GridSpacingItemDecoration
-import com.shopify.shopifyapp.basesection.adapters.RecylerAdapter
-import com.shopify.shopifyapp.basesection.fragments.BaseFragment
-import com.shopify.shopifyapp.basesection.fragments.LeftMenu
-import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
-import com.shopify.shopifyapp.customviews.MageNativeTextView
-import com.shopify.shopifyapp.searchsection.activities.AutoSearch
-import javax.inject.Inject
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.zxing.integration.android.IntentIntegrator
+import com.shopify.buy3.Storefront
+import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.R2
+import com.shopify.shopifyapp.basesection.ItemDecoration.GridSpacingItemDecoration
+import com.shopify.shopifyapp.basesection.adapters.RecylerAdapter
+import com.shopify.shopifyapp.basesection.fragments.BaseFragment
+import com.shopify.shopifyapp.basesection.fragments.LeftMenu
+import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
+import com.shopify.shopifyapp.customviews.MageNativeTextView
 import com.shopify.shopifyapp.databinding.CurrencyListLayoutBinding
+import com.shopify.shopifyapp.dbconnection.entities.CartItemData
+import com.shopify.shopifyapp.dbconnection.entities.ItemData
+import com.shopify.shopifyapp.homesection.activities.HomePage
+import com.shopify.shopifyapp.loginsection.activity.LoginActivity
+import com.shopify.shopifyapp.productsection.activities.ProductList
+import com.shopify.shopifyapp.searchsection.activities.AutoSearch
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
+import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 import com.shopify.shopifyapp.utils.*
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import info.androidhive.fontawesome.FontTextView
+import kotlinx.android.synthetic.main.m_newbaseactivity.*
 import org.json.JSONObject
 import java.util.*
+import javax.inject.Inject
 
 open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInteractionListener {
 
@@ -79,18 +91,21 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    var model: LeftMenuViewModel? = null
+    var leftMenuViewModel: LeftMenuViewModel? = null
     var wishtextView: TextView? = null
     var textView: TextView? = null
-        private set
+
+    var wishcount_bottom: TextView? = null
+    var cartcount_bottom: TextView? = null
+    private val TAG = "NewBaseActivity"
 
     @Inject
-    lateinit var adapter: RecylerAdapter
+    lateinit var recylerAdapter: RecylerAdapter
     private var listDialog: BottomSheetDialog? = null
     var cartCount: Int = 0
         get() {
-            Log.i("MageNative", "Cart Count : " + model!!.cartCount)
-            return model!!.cartCount
+            Log.i("MageNative", "Cart Count : " + leftMenuViewModel!!.cartCount)
+            return leftMenuViewModel!!.cartCount
         }
     lateinit var item: MenuItem
     lateinit var wishitem: MenuItem
@@ -100,14 +115,115 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         setContentView(R.layout.m_newbaseactivity)
         ButterKnife.bind(this)
         (application as MyApplication).mageNativeAppComponent!!.doBaseActivityInjection(this)
-        model = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
-        model!!.context = this
-        model!!.Response().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+        leftMenuViewModel = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
+        leftMenuViewModel!!.context = this
+        leftMenuViewModel!!.Response().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+        leftMenuViewModel!!.repository.allCartItemsCount.observe(this, Observer { this.consumeCartCount(it) })
+        leftMenuViewModel!!.repository.wishListDataCount.observe(this, Observer { this.consumeWishCount(it) })
         setSupportActionBar(toolbar)
         setToggle()
         Objects.requireNonNull<ActionBar>(supportActionBar).setDisplayShowTitleEnabled(false)
         tooltext!!.textSize = 14f
         showHumburger()
+        if (!featuresModel.in_app_wishlist) {
+            nav_view.menu.findItem(R.id.wishlist_bottom).setVisible(false)
+        } else {
+            nav_view.menu.findItem(R.id.wishlist_bottom).setVisible(true)
+        }
+        nav_view.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.home_bottom -> {
+                    startActivity(Intent(this, HomePage::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
+                    Constant.activityTransition(this)
+                }
+                R.id.search_bottom -> {
+                    startActivity(Intent(this, AutoSearch::class.java))
+                    Constant.activityTransition(this)
+                }
+                R.id.cart_bottom -> {
+                    startActivity(Intent(this, CartList::class.java))
+                    Constant.activityTransition(this)
+                }
+                R.id.wishlist_bottom -> {
+                    startActivity(Intent(this, WishList::class.java))
+                    Constant.activityTransition(this)
+                }
+                R.id.account_bottom -> {
+                    if (leftMenuViewModel?.isLoggedIn!!) {
+                        startActivity(Intent(this, UserProfile::class.java))
+                        Constant.activityTransition(this)
+                    } else {
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        Constant.activityTransition(this)
+                    }
+                }
+            }
+            true
+        }
+
+        val mbottomNavigationMenuView: BottomNavigationMenuView = nav_view.getChildAt(0) as BottomNavigationMenuView
+        val cartview: View = mbottomNavigationMenuView.getChildAt(2)
+        val wishview: View = mbottomNavigationMenuView.getChildAt(3)
+
+        val cartitemView: BottomNavigationItemView = cartview as BottomNavigationItemView
+        val whishitemView: BottomNavigationItemView = wishview as BottomNavigationItemView
+
+        val cart_badge: View = LayoutInflater.from(this)
+                .inflate(R.layout.cart_count_bottom,
+                        mbottomNavigationMenuView, false)
+
+
+        val wish_badge: View = LayoutInflater.from(this)
+                .inflate(R.layout.wish_count_bottom,
+                        mbottomNavigationMenuView, false)
+
+        wishcount_bottom = wish_badge.findViewById(R.id.count)
+        cartcount_bottom = cart_badge.findViewById(R.id.count)
+
+        whishitemView.addView(wish_badge)
+        cartitemView.addView(cart_badge)
+
+        if (this@NewBaseActivity is HomePage) {
+            nav_view.menu.findItem(R.id.home_bottom).setChecked(true)
+        } else if (this@NewBaseActivity is AutoSearch) {
+            nav_view.menu.findItem(R.id.search_bottom).setChecked(true)
+        } else if (this@NewBaseActivity is CartList) {
+            nav_view.menu.findItem(R.id.cart_bottom).setChecked(true)
+        } else if (this@NewBaseActivity is WishList) {
+            nav_view.menu.findItem(R.id.wishlist_bottom).setChecked(true)
+        } else if (this@NewBaseActivity is UserProfile) {
+            nav_view.menu.findItem(R.id.account_bottom).setChecked(true)
+        }
+
+        try {
+            MyApplication.dataBaseReference.child("additional_info").child("appthemecolor").addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var value = dataSnapshot.getValue(String::class.java)!!
+                    if (!value.contains("#")) {
+                        value = "#" + value
+                    }
+                    if (this@NewBaseActivity !is HomePage) {
+                        toolbar.setBackgroundColor(Color.parseColor(value))
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.i("DBConnectionError", "" + databaseError.details)
+                    Log.i("DBConnectionError", "" + databaseError.message)
+                    Log.i("DBConnectionError", "" + databaseError.code)
+                }
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun consumeWishCount(it: List<ItemData>?) {
+        wishcount_bottom?.text = "" + it?.size
+    }
+
+    private fun consumeCartCount(it: List<CartItemData>?) {
+        cartcount_bottom?.text = "" + it?.size
     }
 
     init {
@@ -181,8 +297,8 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     }
 
     fun getCurrency() {
-        model!!.currencyResponse().observe(this, Observer<List<Storefront.CurrencyCode>> { this.preparePopUp(it) })
-        model!!.message.observe(this, Observer<String> { this.showToast(it) })
+        leftMenuViewModel!!.currencyResponse().observe(this, Observer<List<Storefront.CurrencyCode>> { this.preparePopUp(it) })
+        leftMenuViewModel!!.message.observe(this, Observer<String> { this.showToast(it) })
     }
 
     private fun preparePopUp(currencyCodes: List<Storefront.CurrencyCode>) {
@@ -202,8 +318,8 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             listDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
             listDialog?.setContentView(currencyBinding.root)
             currencyBinding.currencyList.layoutManager = LinearLayoutManager(this)
-            adapter!!.setData(enabledPresentmentCurrencies, this@NewBaseActivity)
-            currencyBinding.currencyList.adapter = adapter
+            recylerAdapter!!.setData(enabledPresentmentCurrencies, this@NewBaseActivity)
+            currencyBinding.currencyList.adapter = recylerAdapter
             currencyBinding.closeBut.setOnClickListener {
                 listDialog?.dismiss()
             }
@@ -251,9 +367,9 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             }
             "customisablegrid" -> {
                 view.layoutManager = GridLayoutManager(this, 3)
-                if (view.itemDecorationCount == 0) {
-                    view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(4), true))
-                }
+//                if (view.itemDecorationCount == 0) {
+//                    view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(4), true))
+//                }
             }
         }
         return view
@@ -273,13 +389,14 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         item = menu.findItem(R.id.search_item)
         wishitem = menu.findItem(R.id.wish_item)
         cartitem = menu.findItem(R.id.cart_item)
-        item.setActionView(R.layout.m_search)
+        item?.setActionView(R.layout.m_search)
         wishitem.setActionView(R.layout.m_wishcount)
         cartitem.setActionView(R.layout.m_count)
-        val search = item.actionView
-        search.setOnClickListener {
+        val search = item?.actionView
+        search?.setOnClickListener {
             val searchpage = Intent(this@NewBaseActivity, AutoSearch::class.java)
             startActivity(searchpage)
+            Constant.activityTransition(this)
         }
         val notifCount = cartitem.actionView
         textView = notifCount.findViewById<TextView>(R.id.count)
@@ -287,43 +404,44 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         notifCount.setOnClickListener {
             val mycartlist = Intent(this, CartList::class.java)
             startActivity(mycartlist)
+            Constant.activityTransition(this)
         }
         val wishcount = wishitem.actionView
         wishtextView = wishcount.findViewById<TextView>(R.id.count)
-        wishtextView!!.text = "" + model!!.wishListcount
+        wishtextView!!.text = "" + leftMenuViewModel!!.wishListcount
         wishcount.setOnClickListener {
             val wishlist = Intent(this, WishList::class.java)
             startActivity(wishlist)
+            Constant.activityTransition(this)
         }
         return true
     }
 
     override fun onResume() {
         super.onResume()
-        cartCount = model!!.cartCount
-
-
+        cartCount = leftMenuViewModel!!.cartCount
     }
 
     fun setSearchOption(type: String, placeholder: String) {
         when (type) {
             "middle-width-search" -> {
-                item.setVisible(false)
+                item?.setVisible(false)
                 toolimage.visibility = View.GONE
                 searchsection.visibility = View.VISIBLE
                 search.text = placeholder
                 search.setOnClickListener {
                     val searchpage = Intent(this@NewBaseActivity, AutoSearch::class.java)
                     startActivity(searchpage)
+                    Constant.activityTransition(this)
                 }
             }
             "full-width-search" -> {
-                item.setVisible(false)
+                item?.setVisible(false)
                 toolimage.visibility = View.VISIBLE
                 searchsection.visibility = View.GONE
             }
             else -> {
-                item.setVisible(true)
+                item?.setVisible(true)
                 toolimage.visibility = View.VISIBLE
                 searchsection.visibility = View.GONE
             }
@@ -359,7 +477,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     fun setIconColors(countback: String, counttext: String, iconcolor: String) {
         val wishview = wishitem.actionView
         val cartview = cartitem.actionView
-        val searchview = item.actionView
+        val searchview = item?.actionView
         val wishrelative = wishview.findViewById<RelativeLayout>(R.id.back)
         val wishtext = wishview.findViewById<TextView>(R.id.count)
         val wishicon = wishview.findViewById<FontTextView>(R.id.cart_icon)
@@ -372,8 +490,8 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         carttext.setTextColor(Color.parseColor(counttext))
         wishicon.setTextColor(Color.parseColor(iconcolor))
         carticon.setTextColor(Color.parseColor(iconcolor))
-        val searchicon = searchview.findViewById<FontTextView>(R.id.search_icon)
-        searchicon.setTextColor(Color.parseColor(iconcolor))
+        val searchicon = searchview?.findViewById<FontTextView>(R.id.search_icon)
+        searchicon?.setTextColor(Color.parseColor(iconcolor))
         mDrawerToggle!!.getDrawerArrowDrawable().setColor(Color.parseColor(iconcolor));
     }
 
@@ -398,16 +516,19 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                         try {
                             AESEnDecryption().data()
                             var json = JSONObject(result.contents)
+
                             if (json.has("mid")) {
                                 Log.i("MageNative", "Barcode" + result)
                                 Log.i("MageNative", "Barcode" + result.contents)
-                                model!!.deletLocal()
-                                model!!.insertPreviewData(json)
-                                model!!.logOut()
+                                MagePrefs.clearHomeData()
+                                leftMenuViewModel!!.deletLocal()
+                                leftMenuViewModel!!.insertPreviewData(json)
+                                leftMenuViewModel!!.logOut()
                                 var intent = Intent(this, Splash::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 startActivity(intent)
+                                Constant.activityTransition(this)
                             }
                         } catch (ex: Exception) {
                             ex.printStackTrace()
@@ -419,5 +540,4 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
-
 }

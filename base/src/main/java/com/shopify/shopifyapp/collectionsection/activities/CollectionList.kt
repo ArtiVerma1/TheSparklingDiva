@@ -14,16 +14,17 @@ import androidx.lifecycle.ViewModelProviders
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.collectionsection.adapters.CollectionRecylerAdapter
 import com.shopify.shopifyapp.collectionsection.viewmodels.CollectionViewModel
 import com.shopify.shopifyapp.databinding.MCollectionlistBinding
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
 
 import javax.inject.Inject
 
-class CollectionList : BaseActivity() {
+class CollectionList : NewBaseActivity() {
     private var binding: MCollectionlistBinding? = null
 
     @Inject
@@ -51,6 +52,7 @@ class CollectionList : BaseActivity() {
     fun clickSearch(view: View) {
         val searchpage = Intent(this, AutoSearch::class.java)
         startActivity(searchpage)
+        Constant.activityTransition(this)
     }
 
     private fun showToast(msg: String) {

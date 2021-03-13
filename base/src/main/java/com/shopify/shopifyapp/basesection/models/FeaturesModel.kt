@@ -7,6 +7,14 @@ import androidx.databinding.library.baseAdapters.BR
 class FeaturesModel : BaseObservable() {
 
     @Bindable
+    var productReview: Boolean? = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.productReview)
+        }
+
+
+    @Bindable
     var outOfStock: Boolean? = true
         set(value) {
             field = value

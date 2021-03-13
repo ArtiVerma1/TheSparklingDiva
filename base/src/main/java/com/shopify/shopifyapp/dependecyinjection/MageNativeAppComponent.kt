@@ -1,8 +1,6 @@
 package com.shopify.shopifyapp.dependecyinjection
 
-import android.content.Context
 import com.shopify.shopifyapp.addresssection.activities.AddressList
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.activities.Splash
 import com.shopify.shopifyapp.basesection.fragments.LeftMenu
@@ -38,7 +36,7 @@ interface MageNativeAppComponent {
     fun doCollectionInjection(collectionList: CollectionList)
     fun doCollectionInjection(collectionList: CollectionListMenu)
     fun doProductViewInjection(product: ProductView)
-    fun doBaseActivityInjection(base: BaseActivity)
+//    fun doBaseActivityInjection(base: BaseActivity)
     fun doBaseActivityInjection(base: NewBaseActivity)
     fun doWishListActivityInjection(wish: WishList)
     fun doCartListActivityInjection(cart: CartList)

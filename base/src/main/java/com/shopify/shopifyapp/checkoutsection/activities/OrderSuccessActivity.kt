@@ -1,18 +1,17 @@
 package com.shopify.shopifyapp.checkoutsection.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.databinding.ActivityOrderSuccessBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
-import kotlinx.android.synthetic.main.activity_order_success.*
+import com.shopify.shopifyapp.utils.Constant
 
-class OrderSuccessActivity : BaseActivity() {
+class OrderSuccessActivity : NewBaseActivity() {
     lateinit var binding: ActivityOrderSuccessBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +23,7 @@ class OrderSuccessActivity : BaseActivity() {
         showBackButton()
         binding.continueShopping.setOnClickListener {
             startActivity(Intent(this, HomePage::class.java))
+            Constant.activityTransition(this)
             finish()
         }
     }

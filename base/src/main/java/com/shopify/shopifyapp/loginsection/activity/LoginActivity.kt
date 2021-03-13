@@ -2,9 +2,9 @@ package com.shopify.shopifyapp.loginsection.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -23,16 +23,19 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MLoginPageBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loginsection.viewmodels.LoginViewModel
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
+import kotlinx.android.synthetic.main.m_newbaseactivity.*
 
 import javax.inject.Inject
 
-class LoginActivity : BaseActivity() {
+class LoginActivity : NewBaseActivity() {
     private var binding: MLoginPageBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: LoginViewModel? = null
@@ -41,23 +44,25 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_login_page, group, true)
+        nav_view.visibility = View.GONE
         showBackButton()
         showTittle(resources.getString(R.string.login))
         (application as MyApplication).mageNativeAppComponent!!.doLoginActivtyInjection(this)
         sheet = BottomSheetBehavior.from(binding!!.includedforgot.bottomSheet)
         sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
         model = ViewModelProviders.of(this, factory).get(LoginViewModel::class.java)
-        model!!.context=this
+        model!!.context = this
         model!!.Response().observe(this, Observer<Storefront.CustomerAccessToken> { this.consumeResponse(it) })
         model!!.getResponsedata_().observe(this, Observer<Storefront.Customer> { this.MapLoginDetails(it) })
         model!!.errormessage.observe(this, Observer<String> { this.showToast(it) })
-        var hand= MyClickHandlers(this)
+        var hand = MyClickHandlers(this)
         try {
             MyApplication.dataBaseReference.child("additional_info").child("login").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val value = dataSnapshot.getValue(String::class.java)!!
-                    hand.image=value
+                    hand.image = value
                 }
+
                 override fun onCancelled(databaseError: DatabaseError) {
                     Log.i("DBConnectionError", "" + databaseError.details)
                     Log.i("DBConnectionError", "" + databaseError.message)
@@ -67,7 +72,11 @@ class LoginActivity : BaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        binding!!.handlers =hand
+        binding!!.handlers = hand
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        return false
     }
 
     private fun showToast(toast: String) {
@@ -85,22 +94,25 @@ class LoginActivity : BaseActivity() {
             intent.putExtra("checkout_id", getIntent().getStringExtra("checkout_id"))
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
+            Constant.activityTransition(this)
         } else {
             val intent = Intent(this@LoginActivity, HomePage::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            Constant.activityTransition(this)
         }
         finish()
     }
 
-    inner class MyClickHandlers(private val context: Context):BaseObservable() {
+    inner class MyClickHandlers(private val context: Context) : BaseObservable() {
         @get:Bindable
         var image: String? = null
             set(image) {
                 field = image
                 notifyPropertyChanged(BR.image)
             }
+
         fun onSignUpClicked(view: View) {
             if (binding!!.includedlogin.username.text!!.toString().isEmpty()) {
                 binding!!.includedlogin.username.error = resources.getString(R.string.empty)
@@ -123,6 +135,7 @@ class LoginActivity : BaseActivity() {
         fun newsignup(view: View) {
             val signup_page = Intent(context, RegistrationActivity::class.java)
             startActivity(signup_page)
+            Constant.activityTransition(context)
         }
 
         fun forgotPass(view: View) {
@@ -150,7 +163,7 @@ class LoginActivity : BaseActivity() {
             }
         }
 
-        fun closeForgotDialog(view: View){
+        fun closeForgotDialog(view: View) {
             sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }

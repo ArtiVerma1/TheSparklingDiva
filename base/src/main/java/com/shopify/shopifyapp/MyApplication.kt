@@ -14,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.shopify.shopifyapp.dependecyinjection.MageNativeAppComponent
 import com.shopify.shopifyapp.dependecyinjection.DaggerMageNativeAppComponent
 import com.shopify.shopifyapp.dependecyinjection.UtilsModule
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.Urls
 import net.danlew.android.joda.JodaTimeAndroid
 
@@ -23,6 +24,7 @@ class MyApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         JodaTimeAndroid.init(this)
+        MagePrefs.getInstance(this)
         context = this
         mageNativeAppComponent = DaggerMageNativeAppComponent.builder().utilsModule(UtilsModule(this)).build()
         val options = FirebaseOptions.Builder()

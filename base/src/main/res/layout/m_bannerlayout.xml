@@ -13,6 +13,7 @@
         android:id="@+id/bannerimage"
         android:layout_width="match_parent"
         android:layout_height="160dp"
+        android:layout_marginTop="5dp"
         android:contentDescription="@string/image"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"

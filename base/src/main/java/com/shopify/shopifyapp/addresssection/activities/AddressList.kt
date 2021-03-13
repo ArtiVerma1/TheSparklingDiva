@@ -18,11 +18,11 @@ import com.shopify.shopifyapp.addresssection.models.Address
 import com.shopify.shopifyapp.addresssection.viewmodels.AddressModel
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MAddresslistBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import javax.inject.Inject
 
-open class AddressList : BaseActivity() {
+open class AddressList : NewBaseActivity() {
     internal var binding: MAddresslistBinding? = null
     private var model: AddressModel? = null
 

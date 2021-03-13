@@ -12,14 +12,14 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MUserprofileBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.userprofilesection.models.User
 import com.shopify.shopifyapp.userprofilesection.viewmodels.UserProfileViewModel
 import com.shopify.shopifyapp.utils.ViewModelFactory
 
 import javax.inject.Inject
 
-class UserProfile : BaseActivity() {
+class UserProfile : NewBaseActivity() {
     private var binding: MUserprofileBinding? = null
 
     @Inject

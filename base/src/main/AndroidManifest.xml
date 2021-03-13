@@ -62,7 +62,6 @@
         <activity
             android:name=".addresssection.activities.AddressList"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".basesection.activities.BaseActivity" />
         <activity android:name=".basesection.activities.Weblink" />
         <activity android:name=".basesection.activities.NewBaseActivity" />
         <activity

@@ -14,17 +14,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.checkoutsection.viewmodels.CheckoutWebLinkViewModel
 import com.shopify.shopifyapp.databinding.MWebpageBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loader_section.CustomLoader
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import java.util.*
 import javax.inject.Inject
 
-class CheckoutWeblink : BaseActivity() {
+class CheckoutWeblink : NewBaseActivity() {
     private var webView: WebView? = null
     private var binding: MWebpageBinding? = null
     private var currentUrl: String? = null
@@ -134,6 +135,7 @@ class CheckoutWeblink : BaseActivity() {
                             if (count == 1) {
                                 startActivity(Intent(this@CheckoutWeblink, OrderSuccessActivity::class.java))
                                 finishAffinity()
+                                Constant.activityTransition(this@CheckoutWeblink)
                             }
                             count++
                         }, 3000, 3000)
@@ -153,6 +155,7 @@ class CheckoutWeblink : BaseActivity() {
                             if (count == 1) {
                                 startActivity(Intent(this@CheckoutWeblink, OrderSuccessActivity::class.java))
                                 finishAffinity()
+                                Constant.activityTransition(this@CheckoutWeblink)
                             }
                             count++
                         }, 3000, 3000)
@@ -185,6 +188,7 @@ class CheckoutWeblink : BaseActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            Constant.activityTransition(this)
         } else {
             super.onBackPressed()
         }

@@ -1,0 +1,11 @@
+package com.shopify.shopifyapp.productsection.models
+
+
+import com.google.gson.annotations.SerializedName
+
+data class ReviewModel(
+    @SerializedName("data")
+    val `data`: Data?,
+    @SerializedName("success")
+    val success: Boolean?
+)

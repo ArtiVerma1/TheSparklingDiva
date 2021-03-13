@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,16 +21,17 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MProductlistitemBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.customviews.MageNativeRadioButton
 import com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter
 import com.shopify.shopifyapp.productsection.viewmodels.ProductListModel
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
 
 import javax.inject.Inject
 
-class ProductList : BaseActivity() {
+class ProductList : NewBaseActivity() {
     private var binding: MProductlistitemBinding? = null
     private var productlist: RecyclerView? = null
 
@@ -40,15 +40,9 @@ class ProductList : BaseActivity() {
     private var productListModel: ProductListModel? = null
     private var products: MutableList<Storefront.ProductEdge>? = null
     private var productcursor: String? = null
-    private var textView: TextView? = null
-    private val cartCount: Int
-        get() {
-            Log.i("MageNative", "Cart Count : " + productListModel!!.cartCount)
-            return productListModel!!.cartCount
-        }
 
     @Inject
-    lateinit var adapter: ProductRecylerAdapter
+    lateinit var product_adapter: ProductRecylerAdapter
     private var sheet: BottomSheetBehavior<*>? = null
     private var sortselction: RadioGroup? = null
     private var flag = true
@@ -89,6 +83,7 @@ class ProductList : BaseActivity() {
         if (intent.hasExtra("tittle") && intent.getStringExtra("tittle") != null) {
             showTittle(intent.getStringExtra("tittle"))
         }
+        //setPanelBackgroundColor(HomePageViewModel.panel_bg_color!!)
         (application as MyApplication).mageNativeAppComponent!!.doProductListInjection(this)
         productListModel = ViewModelProvider(this, factory).get(ProductListModel::class.java)
         productListModel!!.context = this
@@ -118,7 +113,7 @@ class ProductList : BaseActivity() {
                 sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
-        sheet!!.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        sheet!!.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
                     sheet!!.state = BottomSheetBehavior.STATE_EXPANDED
@@ -132,8 +127,8 @@ class ProductList : BaseActivity() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding!!.view.visibility=View.VISIBLE
-                binding!!.view.alpha=slideOffset
+                binding!!.view.visibility = View.VISIBLE
+                binding!!.view.alpha = slideOffset
             }
         })
     }
@@ -161,6 +156,7 @@ class ProductList : BaseActivity() {
         notifCount.setOnClickListener {
             val mycartlist = Intent(this, CartList::class.java)
             startActivity(mycartlist)
+            Constant.activityTransition(this)
         }
         return true
     }
@@ -219,14 +215,14 @@ class ProductList : BaseActivity() {
     private fun setRecylerData(products: MutableList<Storefront.ProductEdge>) {
         try {
             if (products.size > 0) {
-                adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
+                product_adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
                 if (this.products == null) {
                     this.products = products
-                    adapter!!.setData(this.products, this@ProductList, productListModel!!.repository)
-                    productlist!!.adapter = adapter
+                    product_adapter!!.setData(this.products, this@ProductList, productListModel!!.repository)
+                    productlist!!.adapter = product_adapter
                 } else {
                     this.products!!.addAll(products)
-                    adapter!!.notifyDataSetChanged()
+                    product_adapter!!.notifyDataSetChanged()
                 }
                 productcursor = this.products!![this.products!!.size - 1].cursor
                 Log.i("MageNative", "Cursor : " + productcursor!!)
@@ -244,8 +240,10 @@ class ProductList : BaseActivity() {
         fun openSort(view: View) {
             if (sheet!!.state != BottomSheetBehavior.STATE_EXPANDED) {
                 sheet!!.setState(BottomSheetBehavior.STATE_EXPANDED)
+                sortselction?.visibility = View.VISIBLE
             } else {
                 sheet!!.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                sortselction?.visibility = View.GONE
             }
         }
     }

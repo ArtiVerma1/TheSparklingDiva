@@ -36,7 +36,7 @@ import org.json.JSONObject
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
-class LeftMenuViewModel(private val repository: Repository) : ViewModel() {
+class LeftMenuViewModel(var repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<ApiResponse>()
     val message = MutableLiveData<String>()

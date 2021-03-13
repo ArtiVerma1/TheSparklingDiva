@@ -1,14 +1,13 @@
 package com.shopify.shopifyapp.utils
 
+import android.R
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import androidx.databinding.Bindable
-
 import com.shopify.buy3.HttpCachePolicy
 import com.shopify.shopifyapp.productsection.models.VariantData
-
 import java.util.concurrent.TimeUnit
 
 
@@ -24,6 +23,10 @@ object Constant {
         progressDialog.setMessage(msg)
         progressDialog.setCancelable(false)
         return progressDialog
+    }
+
+    fun activityTransition(context: Context) {
+        (context as Activity).overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
 

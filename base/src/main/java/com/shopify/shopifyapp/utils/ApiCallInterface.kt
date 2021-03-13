@@ -24,4 +24,18 @@ interface ApiCallInterface {
     @POST(Urls.RECOMMENDATION)
     fun getRecommendations(@Header("X-SHOP") shop: String, @Header("X-CLIENT") client: String, @Header("X-ACCESS-TOKEN") token: String, @Header("Content-Type") content_tyepe: String, @Body body: com.shopify.shopifyapp.dependecyinjection.Body): Single<JsonElement>
 
+    @GET("installedstatus")
+    fun checkInstallStatusReviewApi(@Query("mid") mid: String?, @Query("product_id") productId: String?): Single<JsonElement>
+
+    @GET("index.php/shopifymobile/productreviewapi/badges")
+    fun getBadges(@Query("mid") mid: String?, @Query("product_id") productId: String?): Single<JsonElement>
+
+    @GET("index.php/shopifymobile/productreviewapi/product")
+    fun getReviewsList(@Query("mid") mid: String?, @Query("product_id") productId: String?): Single<JsonElement>
+
+    @GET("index.php/shopifymobile/productreviewapi/create")
+    fun createReview(@Query("mid") mid: String?, @Query("review[rating]") reviewRating: String?, @Query("product_id") productId: String?,
+                     @Query("review[author]") reviewAuthor: String?, @Query("review[email]") reviewEmail: String?, @Query("review[title]") reviewTitle: String?,
+                     @Query("review[body]") reviewBody: String?): Single<JsonElement>
+
 }

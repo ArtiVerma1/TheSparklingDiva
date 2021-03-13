@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -21,14 +22,16 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MRegistrationpageBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loginsection.viewmodels.RegistrationViewModel
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
+import kotlinx.android.synthetic.main.m_newbaseactivity.*
 
 import javax.inject.Inject
 
-class RegistrationActivity : BaseActivity() {
+class RegistrationActivity : NewBaseActivity() {
     private var binding: MRegistrationpageBinding? = null
 
     @Inject
@@ -38,20 +41,21 @@ class RegistrationActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_registrationpage, group, true)
+        nav_view.visibility = View.GONE
         showTittle(resources.getString(R.string.signupwithustext))
         showBackButton()
         (application as MyApplication).mageNativeAppComponent!!.doRegistrationActivityInjection(this)
         model = ViewModelProviders.of(this, factory).get(RegistrationViewModel::class.java)
-        model!!.context=this
+        model!!.context = this
         model!!.Response().observe(this, Observer<Storefront.Customer> { this.consumeResponse(it) })
         model!!.LoginResponse().observe(this, Observer<Storefront.CustomerAccessToken> { this.consumeLoginResponse(it) })
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
-        var hand= MyClickHandlers(this)
+        var hand = MyClickHandlers(this)
         try {
             MyApplication.dataBaseReference.child("additional_info").child("login").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val value = dataSnapshot.getValue(String::class.java)!!
-                    hand.image=value
+                    hand.image = value
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -63,7 +67,7 @@ class RegistrationActivity : BaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        binding!!.handlers=hand
+        binding!!.handlers = hand
     }
 
     private fun showToast(msg: String) {
@@ -77,7 +81,12 @@ class RegistrationActivity : BaseActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+        Constant.activityTransition(this)
         finish()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        return false
     }
 
     private fun consumeResponse(customer: Storefront.Customer) {

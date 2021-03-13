@@ -10,7 +10,6 @@ import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
-import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
@@ -23,7 +22,7 @@ import com.google.gson.JsonElement
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.adapters.CartListAdapter
 import com.shopify.shopifyapp.cartsection.models.CartBottomData
@@ -41,7 +40,7 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
-class CartList : BaseActivity() {
+class CartList : NewBaseActivity() {
     @Inject
     lateinit var factory: ViewModelFactory
     private var cartlist: RecyclerView? = null
@@ -268,6 +267,7 @@ class CartList : BaseActivity() {
         notifCount.setOnClickListener {
             val mycartlist = Intent(this@CartList, WishList::class.java)
             startActivity(mycartlist)
+            Constant.activityTransition(this)
         }
         return true
     }
@@ -335,6 +335,7 @@ class CartList : BaseActivity() {
                 intent.putExtra("link", it?.webUrl)
                 intent.putExtra("id", it?.id.toString())
                 startActivity(intent)
+                Constant.activityTransition(this@CartList)
                 count++
             }
 
@@ -362,6 +363,7 @@ class CartList : BaseActivity() {
                         intent.putExtra("link", data.checkouturl)
                         intent.putExtra("id", data.checkoutId)
                         buttonView.context.startActivity(intent)
+                        Constant.activityTransition(buttonView.context)
                     }
                 }
                 User.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -370,6 +372,7 @@ class CartList : BaseActivity() {
                         val intent = Intent(buttonView.context, LoginActivity::class.java)
                         intent.putExtra("checkout_id", data.checkoutId)
                         buttonView.context.startActivity(intent)
+                        Constant.activityTransition(buttonView.context)
                     }
                 }
                 listDialog.setContentView(loginoptions)

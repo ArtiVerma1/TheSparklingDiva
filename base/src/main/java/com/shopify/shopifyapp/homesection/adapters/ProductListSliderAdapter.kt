@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -99,14 +100,13 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         binding.regularprice.visibility = productpricevisibility
         binding.specialprice.visibility = specialpricevisibility
         if (jsonObject!!.getString("item_border").equals("1")) {
-            var item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
-            binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
-            val newLayoutParams = binding.main.layoutParams as FrameLayout.LayoutParams
-            newLayoutParams.marginStart = 2
-            newLayoutParams.marginEnd = 2
-            newLayoutParams.topMargin = 2
-            newLayoutParams.bottomMargin = 2
-            binding.main.layoutParams = newLayoutParams
+            if (jsonObject!!.getString("item_shape").equals("square")) {
+                var drawable = GradientDrawable()
+                var background = JSONObject(jsonObject!!.getString("item_border_color"))
+                drawable.shape = GradientDrawable.RECTANGLE
+                drawable.setStroke(1, Color.parseColor(background.getString("color")))
+                binding.mainCintainer.background = drawable
+            }
         }
         var cell_background_color = JSONObject(jsonObject!!.getString("cell_background_color"))
         binding.main.setBackgroundColor(Color.parseColor(cell_background_color.getString("color")))
@@ -178,7 +178,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 item.listbinding.specialprice.visibility = View.GONE
             }
         } else {
-            val edge = getEdge(variant!!.presentmentPrices.edges)
+            val edge = variant!!.presentmentPrices.edges[0]
             data.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
             if (variant.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
@@ -223,19 +223,4 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         return products!!.size
     }
 
-    private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>): Storefront.ProductVariantPricePairEdge? {
-        var pairEdge: Storefront.ProductVariantPricePairEdge? = null
-        try {
-            for (i in edges.indices) {
-                if (edges[i].node.price.currencyCode.toString() == presentmentcurrency) {
-                    pairEdge = edges[i]
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return pairEdge
-    }
 }

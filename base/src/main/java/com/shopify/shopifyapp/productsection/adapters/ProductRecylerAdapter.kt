@@ -19,6 +19,7 @@ import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.viewholders.ProductItem
 import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
 import com.shopify.shopifyapp.repositories.Repository
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -89,7 +90,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         } else {
-            val edge = getEdge(variant.presentmentPrices.edges)
+            val edge = variant.presentmentPrices.edges[0]
             data.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
             if (variant.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
@@ -141,22 +142,6 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
         return ((regular - special) / regular * 100).toInt()
     }
 
-    private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>): Storefront.ProductVariantPricePairEdge? {
-        var pairEdge: Storefront.ProductVariantPricePairEdge? = null
-        try {
-            for (i in edges.indices) {
-                if (edges[i].node.price.currencyCode.toString() == presentmentcurrency) {
-                    pairEdge = edges[i]
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return pairEdge
-    }
-
     inner class Product(var position: Int) {
         fun productClick(view: View, data: ListData) {
             val productintent = Intent(view.context, ProductView::class.java)
@@ -164,6 +149,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             productintent.putExtra("tittle", data.textdata)
             productintent.putExtra("product", data.product)
             view.context.startActivity(productintent)
+            Constant.activityTransition(view.context)
         }
 
         fun addCart(view: View, data: ListData) {

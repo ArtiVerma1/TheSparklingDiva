@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.dependecyinjection
+
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
@@ -36,18 +37,18 @@ class UtilsModule(private val context: Context) {
         @Provides
         @Singleton
         get() {
-            val httpClient =  RetrofitUrlManager.getInstance().with( OkHttpClient.Builder())
+            val httpClient = RetrofitUrlManager.getInstance().with(OkHttpClient.Builder())
             httpClient.addInterceptor { chain ->
                 val original = chain.request()
                 val request = original.newBuilder().build()
-                Log.i("MageNative","Request_Data"+request.url())
-                Log.i("MageNative","Request_Data"+request.headers())
-                Log.i("MageNative","Request_Data"+request.method())
+                Log.i("OkHttp", " " + request.url())
+                Log.i("OkHttp", " " + request.headers())
+                Log.i("OkHttp", " " + request.method())
                 chain.proceed(request)
             }
-            .connectTimeout(100, TimeUnit.SECONDS)
-            .writeTimeout(100, TimeUnit.SECONDS)
-            .readTimeout(300, TimeUnit.SECONDS)
+                    .connectTimeout(100, TimeUnit.SECONDS)
+                    .writeTimeout(100, TimeUnit.SECONDS)
+                    .readTimeout(300, TimeUnit.SECONDS)
 
             return httpClient.build()
         }

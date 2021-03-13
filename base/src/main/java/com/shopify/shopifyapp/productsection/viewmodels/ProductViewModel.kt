@@ -42,8 +42,64 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<GraphQLResponse>()
+    var reviewResponse: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
+    var reviewBadges: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
+    var createreviewResponse = MutableLiveData<ApiResponse>()
     lateinit var context: Context
     val filteredlist = MutableLiveData<List<Storefront.ProductVariantEdge>>()
+
+
+    fun getReviews(mid: String, product_id: String): MutableLiveData<ApiResponse> {
+        getProductReviews(mid, product_id)
+        return reviewResponse!!
+    }
+
+    fun getReviewBadges(mid: String, product_id: String): MutableLiveData<ApiResponse> {
+        getbadgeReviews(mid, product_id)
+        return reviewBadges!!
+    }
+
+    fun getProductReviews(mid: String, product_id: String) {
+
+        doRetrofitCall(repository.getProductReviews(mid, product_id), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                reviewResponse?.setValue(ApiResponse.success(result))
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                reviewResponse?.setValue(ApiResponse.error(error))
+            }
+        }, context = context)
+
+    }
+
+
+    fun getbadgeReviews(mid: String, product_id: String) {
+
+        doRetrofitCall(repository.getbadgeReviews(mid, product_id), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                reviewBadges?.setValue(ApiResponse.success(result))
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                reviewBadges?.setValue(ApiResponse.error(error))
+            }
+        }, context = context)
+
+    }
+
+    fun getcreateReview(mid: String, reviewRating: String, product_id: String, reviewAuthor: String, reviewEmail: String, reviewTitle: String, reviewBody: String) {
+        doRetrofitCall(repository.getcreateReview(mid, reviewRating, product_id, reviewAuthor, reviewEmail, reviewTitle, reviewBody), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                createreviewResponse.setValue(ApiResponse.success(result))
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                createreviewResponse.setValue(ApiResponse.error(error))
+            }
+        }, context = context)
+    }
+
     val cartCount: Int
         get() {
             val count = intArrayOf(0)
@@ -66,18 +122,22 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         }
 
     fun Response(): MutableLiveData<GraphQLResponse> {
+        var currency_list = ArrayList<Storefront.CurrencyCode>()
+        if (presentmentCurrency != "nopresentmentcurrency") {
+            currency_list.add(Storefront.CurrencyCode.valueOf(presentmentCurrency!!))
+        }
         if (!id.isEmpty()) {
-            getProductsById()
+            getProductsById(currency_list)
         }
         if (!handle.isEmpty()) {
-            getProductsByHandle()
+            getProductsByHandle(currency_list)
         }
         return responseLiveData
     }
 
-    private fun getProductsById() {
+    private fun getProductsById(currency_list: ArrayList<Storefront.CurrencyCode>) {
         try {
-            doGraphQLQueryGraph(repository, Query.getProductById(id), customResponse = object : CustomResponse {
+            doGraphQLQueryGraph(repository, Query.getProductById(id, currency_list), customResponse = object : CustomResponse {
                 override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                     invoke(result)
                 }
@@ -88,9 +148,9 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
 
     }
 
-    private fun getProductsByHandle() {
+    private fun getProductsByHandle(currency_list: ArrayList<Storefront.CurrencyCode>) {
         try {
-            doGraphQLQueryGraph(repository, Query.getProductByHandle(handle), customResponse = object : CustomResponse {
+            doGraphQLQueryGraph(repository, Query.getProductByHandle(handle, currency_list), customResponse = object : CustomResponse {
                 override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                     invoke(result)
                 }

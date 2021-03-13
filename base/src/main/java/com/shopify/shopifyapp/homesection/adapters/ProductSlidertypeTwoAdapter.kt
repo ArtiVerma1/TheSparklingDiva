@@ -67,20 +67,5 @@ class ProductSlidertypeTwoAdapter @Inject
         return ((regular - special) / regular * 100).toInt()
     }
 
-    private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>): Storefront.ProductVariantPricePairEdge? {
-        var pairEdge: Storefront.ProductVariantPricePairEdge? = null
-        try {
-            for (i in edges.indices) {
-                if (edges[i].node.price.currencyCode.toString() == presentmentcurrency) {
-                    pairEdge = edges[i]
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return pairEdge
-    }
 
 }

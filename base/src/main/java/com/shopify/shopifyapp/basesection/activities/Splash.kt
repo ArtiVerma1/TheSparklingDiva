@@ -162,6 +162,7 @@ class Splash : AppCompatActivity() {
         }
         Handler().postDelayed(Runnable {
             startActivities(intent)
+            Constant.activityTransition(this)
             finish()
         }, 1000)
     }

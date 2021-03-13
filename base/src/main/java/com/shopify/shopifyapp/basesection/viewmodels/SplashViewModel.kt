@@ -20,6 +20,7 @@ import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.*
@@ -27,6 +28,9 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,6 +56,13 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     fun Response(shop: String): MutableLiveData<LocalDbResponse> {
         val handler = Handler()
+        var runnable = Runnable {
+            var lpreview = repository.getPreviewData()
+            if (lpreview.size > 0) {
+                MagePrefs.clearHomeData()
+            }
+        }
+        Thread(runnable).start()
         handler.postDelayed({ // Do something after 5s = 5000ms
             connectFirebaseForTrial(shop)
         }, 2000)

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.utils.Constant
 
 class ProductListAdapter {
 
@@ -14,6 +15,7 @@ class ProductListAdapter {
             productintent.putExtra("tittle", data.textdata)
             productintent.putExtra("product", data.product)
             view.context.startActivity(productintent)
+            Constant.activityTransition(view.context)
         }
     }
 }

@@ -1,4 +1,5 @@
 package com.shopify.shopifyapp.personalised.adapters
+
 import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,14 +17,16 @@ import com.shopify.shopifyapp.productsection.viewholders.ProductItem
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import java.math.BigDecimal
 import javax.inject.Inject
+
 class PersonalisedAdapter @Inject
- constructor() : RecyclerView.Adapter<ProductItem>() {
+constructor() : RecyclerView.Adapter<ProductItem>() {
     private var layoutInflater: LayoutInflater? = null
     lateinit var products: List<Storefront.Product>
     var presentmentcurrency: String? = null
     fun setData(products: List<Storefront.Product>) {
         this.products = products
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItem {
         val binding = DataBindingUtil.inflate<MPersonalisedBinding>(LayoutInflater.from(parent.context), R.layout.m_personalised, parent, false)
         return ProductItem(binding)
@@ -35,11 +38,11 @@ class PersonalisedAdapter @Inject
 
     override fun onBindViewHolder(holder: ProductItem, position: Int) {
 
-        try{
-            var pro=products.get(position)
+        try {
+            var pro = products.get(position)
             val variant = pro.variants.edges[0].node
             val data = ListData()
-            Log.i("MageNative","Product ID"+pro.id)
+            Log.i("MageNative", "Product ID" + pro.id)
             data.product = pro
             data.textdata = pro.title
             data.description = pro.description
@@ -68,7 +71,7 @@ class PersonalisedAdapter @Inject
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             } else {
-                val edge = getEdge(variant.presentmentPrices.edges,presentmentcurrency!!)
+                val edge = variant.presentmentPrices.edges[0]
                 data.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
                 if (variant.compareAtPriceV2 != null) {
                     val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
@@ -98,7 +101,7 @@ class PersonalisedAdapter @Inject
             model.imageurl = pro?.images?.edges?.get(0)?.node?.transformedSrc
             holder.personalbinding!!.commondata = model
             holder.personalbinding!!.clickproduct = ProductRecylerAdapter().Product(position)
-        }catch (ex:Exception){
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
@@ -106,21 +109,9 @@ class PersonalisedAdapter @Inject
     override fun getItemCount(): Int {
         return products.size
     }
+
     fun getDiscount(regular: Double, special: Double): Int {
         return ((regular - special) / regular * 100).toInt()
     }
-    private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>,presentmentcurrency: String): Storefront.ProductVariantPricePairEdge? {
-        var pairEdge: Storefront.ProductVariantPricePairEdge? = null
-        try {
-            for (i in edges.indices) {
-                if (edges[i].node.price.currencyCode.toString() == presentmentcurrency) {
-                    pairEdge = edges[i]
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return pairEdge
-    }
+
 }

@@ -40,6 +40,8 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     lateinit var app: MyApplication
     var variant_id: String? = null
     var bottomSheetDialog: BottomSheetDialog? = null
+    var presentment_currency = "nopresentmentcurrency"
+    var currency_list: ArrayList<Storefront.CurrencyCode>? = null
     lateinit var quickVariantAdapter: QuickVariantAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +49,11 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
         setContentView(binding.root)
         this.window?.setBackgroundDrawableResource(android.R.color.transparent)
         bottomSheetDialog = this
+        currency_list = ArrayList<Storefront.CurrencyCode>()
+        if (repository.localData[0].currencycode != null) {
+            presentment_currency = repository.localData[0].currencycode!!
+            currency_list?.add(Storefront.CurrencyCode.valueOf(presentment_currency))
+        }
         initView()
 
     }
@@ -54,7 +61,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
 
     private fun initView() {
         quickVariantAdapter = QuickVariantAdapter()
-        doGraphQLQueryGraph(repository, Query.getProductById(product_id!!), customResponse = object : CustomResponse {
+        doGraphQLQueryGraph(repository, Query.getProductById(product_id!!, currency_list!!), customResponse = object : CustomResponse {
             override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                 invoke(result)
             }

@@ -1,9 +1,12 @@
 package com.shopify.shopifyapp.homesection.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil
@@ -14,14 +17,23 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
+import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MHomepageModifiedBinding
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
+import com.shopify.shopifyapp.searchsection.activities.AutoSearch
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.utils.ViewModelFactory
+import com.shopify.shopifyapp.wishlistsection.activities.WishList
+import kotlinx.android.synthetic.main.m_newbaseactivity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -34,8 +46,11 @@ class HomePage : NewBaseActivity() {
     lateinit var homepage: LinearLayoutCompat
     private var personamodel: PersonalisedViewModel? = null
 
+
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
+
+    private val TAG = "HomePage"
 
     @Inject
     lateinit var padapter: PersonalisedAdapter
@@ -48,14 +63,9 @@ class HomePage : NewBaseActivity() {
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
-        if (featuresModel.ai_product_reccomendaton) {
-            if (Constant.ispersonalisedEnable) {
-                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-            }
-        }
         homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })
-        homemodel!!.getHomePageData().observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
+        homemodel!!.getHomePageData()?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
+
     }
 
 
@@ -64,7 +74,7 @@ class HomePage : NewBaseActivity() {
     }
 
     fun consumeResponse(data: HashMap<String, View>) {
-
+        //  Log.d(TAG, "onCreate: " + MagePrefs.getHomepageData())
         if (data.containsKey("top-bar_")) {
             homepage.addView(data.get("top-bar_"))
         }
@@ -99,15 +109,31 @@ class HomePage : NewBaseActivity() {
     }
 
     override fun onResume() {
+        if (!MagePrefs.getHomepageData().equals(null)) {
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(1000)
+                homemodel?.setPresentmentCurrencyForModel()
+                if (homepage.childCount > 0) {
+                    homepage.removeAllViews()
+                    homepage.invalidate()
+                }
+                homemodel?.parseResponse(MagePrefs.getHomepageData()!!, this@HomePage)
+            }
+        } else {
+            if (homepage.childCount > 0) {
+                homepage.removeAllViews()
+                homepage.invalidate()
+            }
+            homemodel!!.connectFirebaseForHomePageData(this, homepage)
+        }
+        if (featuresModel.ai_product_reccomendaton) {
+            if (Constant.ispersonalisedEnable) {
+                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            }
+        }
         super.onResume()
-        homemodel!!.connectFirebaseForHomePageData(this, homepage)
-
-        if (wishtextView != null) {
-            wishtextView!!.text = "" + model!!.wishListcount
-        }
-        if (textView != null) {
-            textView!!.text = "" + model!!.cartCount
-        }
+        nav_view.menu.findItem(R.id.home_bottom).setChecked(true)
     }
 
     override fun onBackPressed() {

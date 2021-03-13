@@ -52,6 +52,7 @@
         android:layout_height="15dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/black"
+
         android:id="@+id/back"
         android:gravity="center">
 

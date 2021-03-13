@@ -14,9 +14,10 @@ import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MWebpageBinding
+import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.loader_section.CustomLoader
 
-class Weblink : BaseActivity() {
+class Weblink : NewBaseActivity() {
     private var webView: WebView? = null
     private var currentUrl: String? = null
     private var binding: MWebpageBinding? = null

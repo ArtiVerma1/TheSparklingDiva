@@ -23,15 +23,21 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import java.nio.charset.Charset
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 
 class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
 
     fun setPersonalisedData(data: JSONArray, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView) {
         try {
             val edges = mutableListOf<Storefront.Product>()
+            var currency_list = ArrayList<Storefront.CurrencyCode>()
+            if (presentCurrency != "nopresentmentcurrency") {
+                currency_list.add(Storefront.CurrencyCode.valueOf(presentCurrency!!))
+            }
             var runnable = Runnable {
                 for (i in 0..data.length() - 1) {
-                    getProductById(data.getJSONObject(i).getString("product_id"), adapter, presentmentcurrency, recyler, edges, data)
+                    getProductById(data.getJSONObject(i).getString("product_id"), adapter, presentmentcurrency, recyler, edges, data, currency_list)
                 }
             }
             Thread(runnable).start()
@@ -40,9 +46,30 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getProductById(id: String, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView, edges: MutableList<Storefront.Product>, data: JSONArray) {
+    val presentCurrency: String
+        get() {
+            val currency = arrayOf("nopresentmentcurrency")
+            try {
+                val executor = Executors.newSingleThreadExecutor()
+                val callable = Callable {
+                    if (repository.localData[0].currencycode != null) {
+                        currency[0] = repository.localData[0].currencycode!!
+                    }
+                    currency[0]
+                }
+                val future = executor.submit(callable)
+                currency[0] = future.get()
+                executor.shutdown()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return currency[0]
+        }
+
+    fun getProductById(id: String, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView, edges: MutableList<Storefront.Product>, data: JSONArray, currency_list: ArrayList<Storefront.CurrencyCode>) {
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductById(getID(id)))
+            val call = repository.graphClient.queryGraph(Query.getProductById(getID(id), currency_list))
             call.enqueue(Handler(Looper.getMainLooper())) { result ->
                 if (result is GraphCallResult.Success<*>) {
                     consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), adapter, presentmentcurrency, recyler, edges, data)

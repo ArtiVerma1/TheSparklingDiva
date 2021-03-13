@@ -71,8 +71,12 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
     }
 
     public fun getProductsByKeywords(keyword: String): Unit {
+        var currency_list = ArrayList<Storefront.CurrencyCode>()
+        if (presentmentcurrency != "nopresentmentcurrency") {
+            currency_list.add(Storefront.CurrencyCode.valueOf(presentmentcurrency!!))
+        }
         try {
-            val call = repository.graphClient.queryGraph(Query.getSearchProducts(keyword, searchcursor))
+            val call = repository.graphClient.queryGraph(Query.getSearchProducts(keyword, searchcursor, currency_list))
             call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -124,8 +128,8 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
                     .filter { x -> x.node.availableForSale }
                     .toList()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        result -> filteredproducts!!.value = result
+                    .subscribe { result ->
+                        filteredproducts!!.value = result
 
                     })
         } catch (e: Exception) {
@@ -143,8 +147,12 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
     }
 
     fun searchResultforscanner(barcode: String) {
+        var currency_list = ArrayList<Storefront.CurrencyCode>()
+        if (presentmentcurrency != "nopresentmentcurrency") {
+            currency_list.add(Storefront.CurrencyCode.valueOf(presentmentcurrency!!))
+        }
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductByBarcode(barcode))
+            val call = repository.graphClient.queryGraph(Query.getProductByBarcode(barcode, currency_list))
             call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invoke(result) }
         } catch (e: Exception) {
             e.printStackTrace()

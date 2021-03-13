@@ -99,6 +99,27 @@ class WishListViewModel(var repository: Repository) : ViewModel() {
         return changes
     }
 
+    val presentCurrency: String
+        get() {
+            val currency = arrayOf("nopresentmentcurrency")
+            try {
+                val executor = Executors.newSingleThreadExecutor()
+                val callable = Callable {
+                    if (repository.localData[0].currencycode != null) {
+                        currency[0] = repository.localData[0].currencycode!!
+                    }
+                    currency[0]
+                }
+                val future = executor.submit(callable)
+                currency[0] = future.get()
+                executor.shutdown()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return currency[0]
+        }
+
     private fun FetchData() {
         try {
             val runnable = Runnable {
@@ -110,7 +131,11 @@ class WishListViewModel(var repository: Repository) : ViewModel() {
                     for (i in 0..repository.wishListData.size - 1) {
                         product_ids.add(ID(repository.wishListData[i].product_id))
                     }
-                    getAllProductsById(product_ids, edges)
+                    var currency_list = ArrayList<Storefront.CurrencyCode>()
+                    if (presentCurrency != "nopresentmentcurrency") {
+                        currency_list.add(Storefront.CurrencyCode.valueOf(presentCurrency!!))
+                    }
+                    getAllProductsById(product_ids, edges, currency_list)
                 } else {
                     Log.i("MageNative", "nowish")
                     GlobalScope.launch(Dispatchers.Main) {
@@ -125,8 +150,8 @@ class WishListViewModel(var repository: Repository) : ViewModel() {
 
     }
 
-    private fun getAllProductsById(productIds: ArrayList<ID>, edges: MutableList<Storefront.Product>) {
-        doGraphQLQueryGraph(repository, Query.getAllProductsByID(productIds), customResponse = object : CustomResponse {
+    private fun getAllProductsById(productIds: ArrayList<ID>, edges: MutableList<Storefront.Product>, currency_list: ArrayList<Storefront.CurrencyCode>) {
+        doGraphQLQueryGraph(repository, Query.getAllProductsByID(productIds, currency_list), customResponse = object : CustomResponse {
             override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                 if (result is GraphCallResult.Success<*>) {
                     consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), edges, productIds)

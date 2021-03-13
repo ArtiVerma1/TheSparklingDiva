@@ -30,6 +30,7 @@ class CustomLoader(context: Context) : Dialog(context) {
                 }
                 spinkit.setColor(Color.parseColor(value))
             }
+
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.i("DBConnectionError", "" + databaseError.details)
                 Log.i("DBConnectionError", "" + databaseError.message)

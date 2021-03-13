@@ -16,18 +16,16 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MWishlistBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.cartsection.activities.CartList
-import com.shopify.shopifyapp.dbconnection.entities.ItemData
-import com.shopify.shopifyapp.utils.Status
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
-import com.shopify.shopifyapp.utils.WishListDbResponse
 import com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter
 import com.shopify.shopifyapp.wishlistsection.viewmodels.WishListViewModel
 
 import javax.inject.Inject
 
-class WishList : BaseActivity() {
+class WishList : NewBaseActivity() {
     private var binding: MWishlistBinding? = null
 
     @Inject
@@ -37,8 +35,8 @@ class WishList : BaseActivity() {
     @Inject
     lateinit var adapter: WishListAdapter
     private var list: RecyclerView? = null
-    private val cartCount: Int
-        get() = model!!.cartCount
+//    private val cartCount: Int
+//        get() = model!!.cartCount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +97,7 @@ class WishList : BaseActivity() {
         notifCount.setOnClickListener {
             val mycartlist = Intent(this@WishList, CartList::class.java)
             startActivity(mycartlist)
+            Constant.activityTransition(this)
         }
         return true
     }

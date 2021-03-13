@@ -2,7 +2,6 @@ package com.shopify.shopifyapp.collectionsection.activities
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -17,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.gson.JsonElement
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.fragments.LeftMenu
 import com.shopify.shopifyapp.basesection.models.MenuData
 import com.shopify.shopifyapp.collectionsection.viewmodels.CollectionMenuViewModel
@@ -26,13 +25,14 @@ import com.shopify.shopifyapp.databinding.CollectionMenuItemBinding
 import com.shopify.shopifyapp.databinding.MDynamicmenuBinding
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.utils.ApiResponse
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 
-class CollectionListMenu : BaseActivity() {
+class CollectionListMenu : NewBaseActivity() {
     var binding: ActivityCollectionListMenuBinding? = null
 
     @Inject
@@ -55,6 +55,7 @@ class CollectionListMenu : BaseActivity() {
     fun clickSearch(view: View) {
         val searchpage = Intent(this, AutoSearch::class.java)
         startActivity(searchpage)
+        Constant.activityTransition(this)
     }
 
     private fun consumeMenuResponse(reponse: ApiResponse?) {

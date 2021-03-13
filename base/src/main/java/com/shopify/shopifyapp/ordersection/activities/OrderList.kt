@@ -15,19 +15,21 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MOrderlistBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.ordersection.adapters.OrderListAdapter
 import com.shopify.shopifyapp.ordersection.viewmodels.OrderListViewModel
 import com.shopify.shopifyapp.utils.ViewModelFactory
 
 import javax.inject.Inject
 
-class OrderList : BaseActivity() {
+class OrderList : NewBaseActivity() {
     private var binding: MOrderlistBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var orderlist: RecyclerView? = null
     private var model: OrderListViewModel? = null
+
     @Inject
     lateinit var adapter: OrderListAdapter
     private var orders: MutableList<Storefront.OrderEdge>? = null
@@ -61,7 +63,7 @@ class OrderList : BaseActivity() {
         showBackButton()
         (application as MyApplication).mageNativeAppComponent!!.doOrderListInjection(this)
         model = ViewModelProviders.of(this, factory).get(OrderListViewModel::class.java)
-        model!!.context=this
+        model!!.context = this
         model!!.errorResponse.observe(this, Observer<String> { this.showToast(it) })
         model!!.getResponse_().observe(this, Observer<Storefront.OrderConnection> { this.consumeResponse(it) })
     }

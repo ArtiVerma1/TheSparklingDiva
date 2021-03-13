@@ -5,6 +5,7 @@ import android.view.View
 
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.utils.Constant
 
 class Product {
     fun productClick(view: View, data: ListData) {
@@ -13,5 +14,6 @@ class Product {
         productintent.putExtra("tittle", data.textdata)
         productintent.putExtra("product", data.product)
         view.context.startActivity(productintent)
+        Constant.activityTransition(view.context)
     }
 }

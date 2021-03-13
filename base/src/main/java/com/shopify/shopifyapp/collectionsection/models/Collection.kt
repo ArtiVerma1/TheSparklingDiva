@@ -7,6 +7,7 @@ import android.view.View
 import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.basesection.activities.Weblink
 import com.shopify.shopifyapp.productsection.activities.ProductList
+import com.shopify.shopifyapp.utils.Constant
 import java.nio.charset.Charset
 
 class Collection {
@@ -20,6 +21,7 @@ class Collection {
         intent.putExtra("tittle", collection.category_name)
         intent.putExtra("ID", collection.id!!.toString())
         view.context.startActivity(intent)
+        Constant.activityTransition(view.context)
     }
 
     fun gridClick(view: View, collection: Collection) {
@@ -29,12 +31,14 @@ class Collection {
                 intent.putExtra("tittle", collection.category_name)
                 intent.putExtra("ID", getcategoryID(collection.value))
                 view.context.startActivity(intent)
+                Constant.activityTransition(view.context)
             }
             else -> {
                 val intent = Intent(view.context, Weblink::class.java)
                 intent.putExtra("name", collection.category_name)
                 intent.putExtra("link", collection.value)
                 view.context.startActivity(intent)
+                Constant.activityTransition(view.context)
             }
         }
 

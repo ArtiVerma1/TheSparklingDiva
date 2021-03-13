@@ -30,18 +30,14 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MAutosearchBinding
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.searchsection.adapters.SearchRecylerAdapter
 import com.shopify.shopifyapp.searchsection.viewmodels.SearchListModel
 import com.shopify.shopifyapp.utils.ViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AutoSearch : BaseActivity() {
+class AutoSearch : NewBaseActivity() {
     private var binding: MAutosearchBinding? = null
 
     @Inject
@@ -132,7 +128,7 @@ class AutoSearch : BaseActivity() {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (featuresModel.qr_code_search_scanner) {
             menuInflater.inflate(R.menu.menu_scanner, menu)
             return true

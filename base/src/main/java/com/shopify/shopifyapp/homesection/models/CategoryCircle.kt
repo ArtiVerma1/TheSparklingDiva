@@ -11,6 +11,7 @@ import com.shopify.shopifyapp.basesection.activities.Weblink
 import com.shopify.shopifyapp.collectionsection.activities.CollectionList
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.utils.Constant
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 
@@ -168,22 +169,26 @@ class CategoryCircle : BaseObservable() {
                 intent.putExtra("ID", getBase64Encode(collection))
                 intent.putExtra("tittle", " ")
                 context.startActivity(intent)
+                Constant.activityTransition(context)
             }
             "product" -> {
                 val product = "gid://shopify/Product/" + id
                 val prod_link = Intent(context, ProductView::class.java)
                 prod_link.putExtra("ID", getBase64Encode(product))
                 context.startActivity(prod_link)
+                Constant.activityTransition(context)
             }
             "web_url" -> {
                 val weblink = Intent(context, Weblink::class.java)
                 weblink.putExtra("link", id)
                 weblink.putExtra("name", " ")
                 context.startActivity(weblink)
+                Constant.activityTransition(context)
             }
             "list_collection" ->{
                 val weblink = Intent(context, CollectionList::class.java)
                 context.startActivity(weblink)
+                Constant.activityTransition(context)
             }
         }
     }

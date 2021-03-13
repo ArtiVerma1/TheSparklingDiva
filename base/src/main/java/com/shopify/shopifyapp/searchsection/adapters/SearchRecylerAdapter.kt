@@ -16,6 +16,7 @@ import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.searchsection.viewholders.SearechItem
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 
 import java.math.BigDecimal
@@ -84,7 +85,7 @@ constructor() : RecyclerView.Adapter<SearechItem>() {
                 holder.binding.regularprice.paintFlags = holder.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         } else {
-            val edge = getEdge(variant.presentmentPrices.edges)
+            val edge = variant.presentmentPrices.edges[0]
             data.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
             if (variant.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
@@ -115,7 +116,7 @@ constructor() : RecyclerView.Adapter<SearechItem>() {
         }
         holder.binding.commondata = model
         holder.binding.clickproduct = Product()
-     //   holder.setIsRecyclable(false)
+        //   holder.setIsRecyclable(false)
     }
 
     override fun getItemCount(): Int {
@@ -127,21 +128,6 @@ constructor() : RecyclerView.Adapter<SearechItem>() {
         return ((regular - special) / regular * 100).toInt()
     }
 
-    private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>): Storefront.ProductVariantPricePairEdge? {
-        var pairEdge: Storefront.ProductVariantPricePairEdge? = null
-        try {
-            for (i in edges.indices) {
-                if (edges[i].node.price.currencyCode.toString() == presentmentcurrency) {
-                    pairEdge = edges[i]
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return pairEdge
-    }
 
     inner class Product {
         fun productClick(view: View, data: ListData) {
@@ -150,6 +136,7 @@ constructor() : RecyclerView.Adapter<SearechItem>() {
             productintent.putExtra("tittle", data.textdata)
             productintent.putExtra("product", data.product)
             view.context.startActivity(productintent)
+            Constant.activityTransition(view.context)
         }
     }
 }

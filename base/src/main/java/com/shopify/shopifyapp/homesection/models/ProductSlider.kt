@@ -10,6 +10,7 @@ import androidx.databinding.library.baseAdapters.BR
 import com.shopify.shopifyapp.basesection.activities.Weblink
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.utils.Constant
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 class ProductSlider : BaseObservable() {
@@ -73,6 +74,7 @@ class ProductSlider : BaseObservable() {
         resultIntent.putExtra("ID", category.action_id)
         resultIntent.putExtra("tittle", category.headertext)
         view.context.startActivity(resultIntent)
+        Constant.activityTransition(view.context)
     }
     @get:Bindable
     var hvimageone: String? = null
@@ -161,18 +163,21 @@ class ProductSlider : BaseObservable() {
                 intent.putExtra("ID", getBase64Encode(collection))
                 intent.putExtra("tittle", " ")
                 view.context.startActivity(intent)
+                Constant.activityTransition(view.context)
             }
             "product" -> {
                 val product = "gid://shopify/Product/" + id
                 val prod_link = Intent(view.context, ProductView::class.java)
                 prod_link.putExtra("ID", getBase64Encode(product))
                 view.context.startActivity(prod_link)
+                Constant.activityTransition(view.context)
             }
             "web_address" -> {
                 val weblink = Intent(view.context, Weblink::class.java)
                 weblink.putExtra("link", id)
                 weblink.putExtra("name", " ")
                 view.context.startActivity(weblink)
+                Constant.activityTransition(view.context)
             }
         }
     }

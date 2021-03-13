@@ -18,8 +18,9 @@ object Query {
                     }
 
         }
-    private val productDefinition: Storefront.ProductConnectionQueryDefinition
-        get() = Storefront.ProductConnectionQueryDefinition { productdata ->
+
+    fun productDefinition(list_currency: List<Storefront.CurrencyCode>): Storefront.ProductConnectionQueryDefinition {
+        return Storefront.ProductConnectionQueryDefinition { productdata ->
             productdata
                     .edges({ edges ->
                         edges
@@ -71,7 +72,7 @@ object Query {
                                                                         productVariantQuery
                                                                                 .priceV2({ price -> price.amount().currencyCode() })
                                                                                 .price()
-                                                                                .presentmentPrices({ arg -> arg.first(25) }, { price -> price.edges({ e -> e.cursor().node({ n -> n.price({ p -> p.amount().currencyCode() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }) }) })
+                                                                                .presentmentPrices({ arg -> arg.first(25).presentmentCurrencies(list_currency) }, { price -> price.edges({ e -> e.cursor().node({ n -> n.price({ p -> p.amount().currencyCode() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }) }) })
                                                                                 .selectedOptions({ select -> select.name().value() })
                                                                                 .compareAtPriceV2({ compare -> compare.amount().currencyCode() })
                                                                                 .compareAtPrice()
@@ -95,8 +96,10 @@ object Query {
                     .pageInfo(Storefront.PageInfoQueryDefinition { it.hasNextPage() }
                     )
         }
-    private val productQuery: Storefront.ProductQueryDefinition
-        get() = Storefront.ProductQueryDefinition { product ->
+    }
+
+    fun productQuery(list_currency: List<Storefront.CurrencyCode>): Storefront.ProductQueryDefinition {
+        return Storefront.ProductQueryDefinition { product ->
             product
                     .title()
                     .images({ img -> img.first(10) }, { imag ->
@@ -123,7 +126,7 @@ object Query {
                                             .node({ productVariantQuery ->
                                                 productVariantQuery
                                                         .priceV2({ p -> p.amount().currencyCode() })
-                                                        .presentmentPrices({ a -> a.first(50) }, { pre -> pre.edges({ ed -> ed.node({ n -> n.price({ p -> p.currencyCode().amount() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }).cursor() }) })
+                                                        .presentmentPrices({ a -> a.first(50).presentmentCurrencies(list_currency) }, { pre -> pre.edges({ ed -> ed.node({ n -> n.price({ p -> p.currencyCode().amount() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }).cursor() }) })
                                                         .selectedOptions({ select -> select.name().value() })
                                                         .compareAtPriceV2({ c -> c.amount().currencyCode() })
                                                         .image(Storefront.ImageQueryDefinition { it.originalSrc().transformedSrc() })
@@ -152,8 +155,10 @@ object Query {
                     }
                     )
         }
+    }
 
-    fun getProductsById(cat_id: String?, cursor: String, sortby_key: Storefront.ProductCollectionSortKeys, direction: Boolean, number: Int): Storefront.QueryRootQuery {
+
+    fun getProductsById(cat_id: String?, cursor: String, sortby_key: Storefront.ProductCollectionSortKeys, direction: Boolean, number: Int, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
             definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args -> args.first(number).sortKey(sortby_key).reverse(direction) }
@@ -176,14 +181,14 @@ object Query {
                                                 }
                                     }
                                     .title()
-                                    .products(definition, productDefinition
+                                    .products(definition, productDefinition(list_currency)
                                     )
                         }
                     }
         }
     }
 
-    fun getAllProductsByID(id: List<ID>): Storefront.QueryRootQuery {
+    fun getAllProductsByID(id: List<ID>, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
         return Storefront.query { root: QueryRootQuery ->
             root
                     .nodes(id
@@ -241,7 +246,7 @@ object Query {
                                                             .node { productVariantQuery: ProductVariantQuery ->
                                                                 productVariantQuery
                                                                         .priceV2 { price: MoneyV2Query -> price.amount().currencyCode() }
-                                                                        .presentmentPrices({ arg: PresentmentPricesArguments -> arg.first(25) }) { price: ProductVariantPricePairConnectionQuery -> price.edges { e: ProductVariantPricePairEdgeQuery -> e.cursor().node { na: ProductVariantPricePairQuery -> na.price { pr: MoneyV2Query -> pr.amount().currencyCode() }.compareAtPrice { cp: MoneyV2Query -> cp.amount().currencyCode() } } } }
+                                                                        .presentmentPrices({ arg: PresentmentPricesArguments -> arg.first(25).presentmentCurrencies(list_currency) }) { price: ProductVariantPricePairConnectionQuery -> price.edges { e: ProductVariantPricePairEdgeQuery -> e.cursor().node { na: ProductVariantPricePairQuery -> na.price { pr: MoneyV2Query -> pr.amount().currencyCode() }.compareAtPrice { cp: MoneyV2Query -> cp.amount().currencyCode() } } } }
                                                                         .price()
                                                                         .title()
                                                                         .selectedOptions { select: SelectedOptionQuery -> select.name().value() }
@@ -257,24 +262,24 @@ object Query {
         }
     }
 
-    fun getProductsByHandle(handle: String, cursor: String, sortby_key: Storefront.ProductCollectionSortKeys, direction: Boolean, number: Int): Storefront.QueryRootQuery {
+    fun getProductsByHandle(handle: String, cursor: String, sortby_key: Storefront.ProductCollectionSortKeys, direction: Boolean, number: Int, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
             definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args -> args.first(number).sortKey(sortby_key).reverse(direction) }
         } else {
             definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
         }
-        return Storefront.query { root -> root.collectionByHandle(handle) { collect -> collect.products(definition, productDefinition) } }
+        return Storefront.query { root -> root.collectionByHandle(handle) { collect -> collect.products(definition, productDefinition(list_currency)) } }
     }
 
-    fun getAllProducts(cursor: String, sortby_key: Storefront.ProductSortKeys, direction: Boolean, number: Int): Storefront.QueryRootQuery {
+    fun getAllProducts(cursor: String, sortby_key: Storefront.ProductSortKeys, direction: Boolean, number: Int, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
         val shoppro: Storefront.QueryRootQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
             shoppro = Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.first(number).sortKey(sortby_key).reverse(direction) }
         } else {
             shoppro = Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.first(number).after(cursor).sortKey(sortby_key).reverse(direction) }
         }
-        return Storefront.query { root -> root.products(shoppro, productDefinition) }
+        return Storefront.query { root -> root.products(shoppro, productDefinition(list_currency)) }
     }
 
     fun getCollections(cursor: String): Storefront.QueryRootQuery {
@@ -300,21 +305,21 @@ object Query {
                     .pageInfo(Storefront.PageInfoQueryDefinition { it.hasNextPage() })
         }
 
-    fun getProductById(product_id: String): Storefront.QueryRootQuery {
-        return Storefront.query { root -> root.node(ID(product_id)) { rootnode -> rootnode.onProduct(productQuery) } }
+    fun getProductById(product_id: String, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
+        return Storefront.query { root -> root.node(ID(product_id)) { rootnode -> rootnode.onProduct(productQuery(list_currency)) } }
     }
 
-    fun getProductByHandle(handle: String): Storefront.QueryRootQuery {
-        return Storefront.query { root -> root.productByHandle(handle, productQuery) }
+    fun getProductByHandle(handle: String, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
+        return Storefront.query { root -> root.productByHandle(handle, productQuery(list_currency)) }
     }
 
-    fun getSearchProducts(keyword: String, cursor: String): Storefront.QueryRootQuery {
+    fun getSearchProducts(keyword: String, cursor: String, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
         Log.d(TAG, "getSearchProducts: " + keyword)
         return Storefront.query { root ->
             root
                     .products(
                             //   Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(keyword).first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
-                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> product_list(args, cursor).query(keyword) }, productDefinition)
+                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> product_list(args, cursor).query(keyword) }, productDefinition(list_currency))
         }
 
     }
@@ -438,11 +443,11 @@ object Query {
         return definitions
     }
 
-    fun getProductByBarcode(barcode: String): Storefront.QueryRootQuery {
+    fun getProductByBarcode(barcode: String, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
         return Storefront.query { root ->
             root
                     .products(
-                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(barcode).first(1).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
+                            Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(barcode).first(1).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition(list_currency))
         }
     }
 

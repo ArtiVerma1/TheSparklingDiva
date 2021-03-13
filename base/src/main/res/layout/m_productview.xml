@@ -40,8 +40,8 @@
                 android:id="@+id/out_of_stock"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:visibility="gone"
                 android:src="@drawable/outofstock"
+                android:visibility="gone"
                 bind:layout_constraintBottom_toBottomOf="@+id/images"
                 bind:layout_constraintEnd_toEndOf="@+id/images" />
 
@@ -70,28 +70,39 @@
                 android:layout_height="50dp"
                 android:onClick="@{view->clickhandlers.shareProduct(view,productdata)}"
                 android:padding="12dp"
-                bind:layout_constraintHorizontal_weight="0.1"
-                bind:layout_constraintTop_toBottomOf="@+id/images"
                 android:src="@drawable/ic_share"
                 android:visibility="@{features.product_share ? View.VISIBLE : View.GONE}"
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintHorizontal_weight="0.1"
                 bind:layout_constraintStart_toEndOf="@+id/name"
-                bind:layout_constraintEnd_toEndOf="parent"/>
+                bind:layout_constraintTop_toBottomOf="@+id/images" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
-                bind:layout_constraintHorizontal_weight="0.9"
+                android:layout_marginEnd="10dp"
                 android:gravity="center_vertical"
                 android:text="@{productdata.textdata}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 bind:layout_constraintEnd_toStartOf="@+id/shareicon"
+                bind:layout_constraintHorizontal_weight="0.9"
                 bind:layout_constraintStart_toStartOf="parent"
                 bind:layout_constraintTop_toBottomOf="@id/images"
                 bind:texttype="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rating_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                bind:layout_constraintStart_toStartOf="@id/name"
+                bind:layout_constraintTop_toBottomOf="@id/name" />
 
             <WebView
                 android:id="@+id/description"
@@ -103,7 +114,7 @@
                 android:gravity="center_vertical"
                 bind:layout_constraintEnd_toEndOf="parent"
                 bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/shareicon"
+                bind:layout_constraintTop_toBottomOf="@id/rating_txt"
                 bind:texttype="normal" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
@@ -185,7 +196,7 @@
                 android:onClick="@{(view) -> clickhandlers.addtoCart(view,productdata)}"
                 android:text="@string/addtocart"
                 bind:buttontype="normal"
-                bind:layout_constraintBottom_toTopOf="@id/personalisedsection"
+                bind:layout_constraintBottom_toTopOf="@id/review_section"
                 bind:layout_constraintEnd_toStartOf="@id/addtowish"
                 bind:layout_constraintHorizontal_weight=".5"
                 bind:layout_constraintStart_toStartOf="parent"
@@ -201,11 +212,71 @@
                 android:text="@{productdata.addtowish}"
                 android:visibility="@{features.in_app_wishlist ? View.VISIBLE: View.GONE}"
                 bind:buttontype="normal"
-                bind:layout_constraintBottom_toTopOf="@id/personalisedsection"
+                bind:layout_constraintBottom_toTopOf="@id/review_section"
                 bind:layout_constraintEnd_toEndOf="parent"
                 bind:layout_constraintHorizontal_weight=".5"
                 bind:layout_constraintStart_toEndOf="@id/addtocart"
                 bind:layout_constraintTop_toBottomOf="@id/productvariant" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/review_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:padding="10dp"
+                android:visibility="@{features.productReview ? View.VISIBLE : View.GONE}"
+                bind:layout_constraintTop_toBottomOf="@+id/addtowish">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="@string/ratings_reviews"
+                    android:textSize="13sp"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/rate_product_but"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rating_but_bg"
+                    android:fontFamily="@font/roboto_medium"
+                    android:onClick="@{(view) -> clickhandlers.rateProduct(view,productdata)}"
+                    android:padding="8dp"
+                    android:text="@string/rate_product"
+                    android:textSize="12sp"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/review_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    bind:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    bind:layout_constraintTop_toBottomOf="@+id/rate_product_but"
+                    tools:listitem="@layout/review_list_item" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/no_reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/sorry_this_product_does_not_have_any_reviews"
+                    android:textSize="12sp"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@+id/rate_product_but" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/personalisedsection"
@@ -214,7 +285,7 @@
                 android:background="@color/main_color_gray_lt"
                 android:visibility="gone"
                 bind:layout_constraintBottom_toBottomOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/addtowish">
+                bind:layout_constraintTop_toBottomOf="@id/review_section">
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/personalisedyext"

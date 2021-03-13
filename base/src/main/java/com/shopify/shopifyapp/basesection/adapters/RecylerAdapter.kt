@@ -17,6 +17,7 @@ import com.shopify.shopifyapp.basesection.viewholders.ListItem
 import com.shopify.shopifyapp.databinding.CurrencyListItemBinding
 import com.shopify.shopifyapp.databinding.CurrencyListLayoutBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
+import com.shopify.shopifyapp.utils.Constant
 import javax.inject.Inject
 
 class RecylerAdapter @Inject constructor() : RecyclerView.Adapter<ListItem>() {
@@ -47,12 +48,13 @@ class RecylerAdapter @Inject constructor() : RecyclerView.Adapter<ListItem>() {
     inner class ClickHandler {
         fun setCurrency(view: View, data: ListData) {
             (activity as NewBaseActivity).closePopUp()
-            val model = (activity as NewBaseActivity).model
+            val model = (activity as NewBaseActivity).leftMenuViewModel
             model!!.setCurrencyData(data.textdata)
             val intent = Intent(activity, Splash::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             activity?.startActivity(intent)
+            Constant.activityTransition(activity!!)
         }
     }
 }

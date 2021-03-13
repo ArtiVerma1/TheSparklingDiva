@@ -6,6 +6,7 @@ import android.view.View
 
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.basesection.activities.Weblink
+import com.shopify.shopifyapp.utils.Constant
 
 class Order {
     var ordernumber: String? = null
@@ -23,5 +24,6 @@ class Order {
         intent.putExtra("name", order.name)
         intent.putExtra("link", order.orderEdge!!.statusUrl)
         view.context.startActivity(intent)
+        Constant.activityTransition(view.context)
     }
 }

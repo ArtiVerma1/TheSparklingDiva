@@ -47,17 +47,12 @@ import com.shopify.shopifyapp.homesection.adapters.*
 import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import com.shopify.shopifyapp.homesection.models.ProductSlider
 import com.shopify.shopifyapp.homesection.models.StandAloneBanner
-import com.shopify.shopifyapp.network_transaction.CustomResponse
-import com.shopify.shopifyapp.network_transaction.customLoader
-import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
-import com.shopify.shopifyapp.network_transaction.doRetrofitCall
+import com.shopify.shopifyapp.network_transaction.*
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.shopifyqueries.Query
-import com.shopify.shopifyapp.utils.ApiResponse
-import com.shopify.shopifyapp.utils.GraphQLResponse
-import com.shopify.shopifyapp.utils.Status
-import com.shopify.shopifyapp.utils.Urls
+import com.shopify.shopifyapp.utils.*
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.SingleObserver
@@ -88,6 +83,13 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     val homepagedata = MutableLiveData<HashMap<String, View>>()
     private val TAG = "HomePageViewModel"
 
+    companion object {
+        var count_color: String? = null
+        var count_textcolor: String? = null
+        var icon_color: String? = null
+        var panel_bg_color: String? = null
+    }
+
     @Inject
     lateinit var homeadapter: ProductSliderListAdapter
 
@@ -105,6 +107,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     @Inject
     lateinit var gridAdapter: ProductSliderGridAdapter
+
     lateinit var context: HomePage
     fun getHomePageData(): MutableLiveData<HashMap<String, View>> {
         return homepagedata
@@ -114,7 +117,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         return message;
     }
 
-    private fun setPresentmentCurrencyForModel() {
+    fun setPresentmentCurrencyForModel() {
         val runnable = Runnable {
             try {
                 if (repository.localData.size > 0) {
@@ -145,7 +148,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         homepage.removeAllViews()
                         homepage.invalidate()
                     }
-                    dowloadJson(downloadlink)
+                    dowloadJson(downloadlink, context)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -159,16 +162,18 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
     }
 
-    fun dowloadJson(downloadlink: String) {
+    fun dowloadJson(downloadlink: String, context: HomePage) {
         GlobalScope.launch(Dispatchers.Main) {
             var result = async(Dispatchers.IO) {
                 URL(downloadlink).readText()
             }
-            parseResponse(result.await())
+            parseResponse(result.await(), context)
         }
     }
 
-    private fun parseResponse(apiResponse: String) {
+    fun parseResponse(apiResponse: String, context: HomePage) {
+        this.context = context
+        MagePrefs.setHomepageData(apiResponse)
         try {
             var obj = JSONObject(apiResponse)
             var names: JSONArray = obj.getJSONObject("sort_order").names()!!
@@ -224,6 +229,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             }
             binding.root.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
             context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
+            panel_bg_color = JSONObject(jsonObject.getString("panel_background_color")).getString("color")
+            count_color = JSONObject(jsonObject.getString("count_color")).getString("color")
+            count_textcolor = JSONObject(jsonObject.getString("count_textcolor")).getString("color")
+            icon_color = JSONObject(jsonObject.getString("icon_color")).getString("color")
             context.setIconColors(
                     JSONObject(jsonObject.getString("count_color")).getString("color"),
                     JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
@@ -243,6 +252,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     binding.fullsearch.setOnClickListener {
                         val searchpage = Intent(context, AutoSearch::class.java)
                         context.startActivity(searchpage)
+                        Constant.activityTransition(context)
                     }
                     var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
                     draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
@@ -490,7 +500,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
             var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
             var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
-            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
+            binding.productdata.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
             binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
             if (jsonObject.getString("header").equals("1")) {
                 productSlider.headertextvisibility = View.VISIBLE
@@ -619,21 +629,51 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 }
             }
             if (jsonObject.getString("item_shape").equals("rounded")) {
-                binding.firsthvsection.cardElevation = 8f
-                binding.firsthvsection.radius = 10f
-                binding.secondhvcard.cardElevation = 8f
-                binding.secondhvcard.radius = 10f
-                binding.thirdhvcard.cardElevation = 8f
-                binding.thirdhvcard.radius = 10f
+
+                var background = JSONObject(jsonObject.getString("item_border_color"))
+                var first_hv_shape = GradientDrawable()
+                first_hv_shape.shape = GradientDrawable.RECTANGLE
+                first_hv_shape.cornerRadius = 15f
+                first_hv_shape.setStroke(2, Color.parseColor(background.getString("color")))
+                binding.firsthvsection.setPadding(2, 2, 2, 2)
+                first_hv_shape.setSize(binding.firsthvsection.width, binding.firsthvsection.height)
+                binding.firsthvsection.background = first_hv_shape
+                binding.cardOne.radius = 15f
+
+                var second_hv_shape = GradientDrawable()
+                second_hv_shape.shape = GradientDrawable.RECTANGLE
+                second_hv_shape.cornerRadius = 15f
+                second_hv_shape.setStroke(2, Color.parseColor(background.getString("color")))
+                binding.secondhvcard.setPadding(2, 2, 2, 2)
+                binding.thirdhvcard.setPadding(2, 2, 2, 2)
+                binding.secondhvcard.background = second_hv_shape
+                binding.thirdhvcard.background = second_hv_shape
+                binding.cardTwo.radius = 15f
+                binding.cardThree.radius = 15f
+
             }
             if (jsonObject.getString("item_border").equals("1")) {
                 var background = JSONObject(jsonObject.getString("item_border_color"))
-                binding.firsthvsection.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.secondhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.thirdhvcard.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.hvimagOne.setPadding(8, 8, 8, 8)
-                binding.hvimagtwo.setPadding(8, 8, 8, 8)
-                binding.hvimagthree.setPadding(8, 8, 8, 8)
+                if (!jsonObject.getString("item_shape").equals("rounded")) {
+                    var first_hv_shape = GradientDrawable()
+                    first_hv_shape.shape = GradientDrawable.RECTANGLE
+                    first_hv_shape.setStroke(2, Color.parseColor(background.getString("color")))
+                    binding.firsthvsection.setPadding(2, 2, 2, 2)
+                    first_hv_shape.setSize(binding.firsthvsection.width, binding.firsthvsection.height)
+                    binding.firsthvsection.background = first_hv_shape
+                    binding.cardOne.radius = 0f
+
+                    var second_hv_shape = GradientDrawable()
+                    second_hv_shape.shape = GradientDrawable.RECTANGLE
+                    second_hv_shape.setStroke(2, Color.parseColor(background.getString("color")))
+                    binding.secondhvcard.setPadding(2, 2, 2, 2)
+                    binding.thirdhvcard.setPadding(2, 2, 2, 2)
+                    binding.secondhvcard.background = second_hv_shape
+                    binding.thirdhvcard.background = second_hv_shape
+                    binding.cardTwo.radius = 0f
+                    binding.cardThree.radius = 0f
+                }
+
             }
             val face: Typeface
             when (jsonObject.getString("item_title_font_weight")) {
@@ -980,33 +1020,40 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 Log.d(TAG, "updateDataInRecylerView: " + ID(getProductID(jsonArray.getString(i))))
                 product_ids.add(ID(getProductID(jsonArray.getString(i))))
             }
-            getProductsById(product_ids, productdata, jsonArray, jsonObject, edges)
+
+            var currency_list = ArrayList<Storefront.CurrencyCode>()
+            if (presentmentCurrency != "nopresentmentcurrency") {
+                currency_list.add(Storefront.CurrencyCode.valueOf(presentmentCurrency!!))
+            }
+            getProductsById(product_ids, productdata, jsonArray, jsonObject, edges, currency_list)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
 
-    fun getProductsById(id: ArrayList<ID>, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
+    fun getProductsById(id: ArrayList<ID>, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>, currency_list: ArrayList<Storefront.CurrencyCode>) {
         try {
-//            var call = repository.graphClient.queryGraph(Query.getAllProductsByID(id))
-//            call.enqueue { result: GraphCallResult<Storefront.QueryRoot> ->
-//                GlobalScope.launch(Dispatchers.Main) {
-//                    if (result is GraphCallResult.Success<*>) {
-//                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
-//                    } else {
-//                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
-//                    }
-//                }
-//            }
-            doGraphQLQueryGraph(repository, Query.getAllProductsByID(id), customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                    if (result is GraphCallResult.Success<*>) {
-                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
-                    } else {
-                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+            if (MagePrefs.getHomepageData() != null) {
+                doGraphQLQueryGraphNoLoader(repository, Query.getAllProductsByID(id, currency_list), customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        if (result is GraphCallResult.Success<*>) {
+                            consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
+                        } else {
+                            consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+                        }
                     }
-                }
-            }, context = context)
+                }, context = context)
+            } else {
+                doGraphQLQueryGraph(repository, Query.getAllProductsByID(id, currency_list), customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        if (result is GraphCallResult.Success<*>) {
+                            consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
+                        } else {
+                            consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+                        }
+                    }
+                }, context = context)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1061,6 +1108,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         }
                         //if (edges.size == jsonArray.length()) {
                         filterProduct(edges, productdata, jsonArray, jsonObject)
+
                         //}
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -1343,15 +1391,29 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             query.recommendationType = recommendationType
             var body = Body()
             body.queries = mutableListOf(query)
-            doRetrofitCall(repository.getRecommendation(body), disposables, customResponse = object : CustomResponse {
-                override fun onSuccessRetrofit(result: JsonElement) {
-                    api.setValue(ApiResponse.success(result))
-                }
 
-                override fun onErrorRetrofit(error: Throwable) {
-                    api.setValue(ApiResponse.error(error))
-                }
-            }, context = context)
+            disposables.add(repository.getRecommendation(body)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { result ->
+                                api.setValue(ApiResponse.success(result))
+                            },
+                            { throwable ->
+                                customLoader!!.dismiss()
+                                api.setValue(ApiResponse.error(throwable))
+                            }
+                    ))
+
+//            doRetrofitCall(repository.getRecommendation(body), disposables, customResponse = object : CustomResponse {
+//                override fun onSuccessRetrofit(result: JsonElement) {
+//                    api.setValue(ApiResponse.success(result))
+//                }
+//
+//                override fun onErrorRetrofit(error: Throwable) {
+//                    api.setValue(ApiResponse.error(error))
+//                }
+//            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.repositories
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.shopify.buy3.GraphClient
@@ -63,8 +64,16 @@ class Repository {
         get() = appdatabase.appLocalDataDaoDao().all
     val wishListData: List<ItemData>
         get() = appdatabase.itemDataDao.all
+
+    val wishListDataCount: LiveData<List<ItemData>>
+        get() = appdatabase.itemDataDao.wish_count
+
     val allCartItems: List<CartItemData>
         get() = appdatabase.cartItemDataDao.all
+
+    val allCartItemsCount: LiveData<List<CartItemData>>
+        get() = appdatabase.cartItemDataDao.cart_count
+
     val allUserData: List<UserLocalData>
         get() = appdatabase.appLocalDataDaoDao().allUserData
     val isLogin: Boolean
@@ -197,6 +206,18 @@ class Repository {
 
     fun getPreviewData(): List<LivePreviewData> {
         return appdatabase.getLivePreviewDao().getPreviewDetails
+    }
+
+    fun getProductReviews(mid: String, product_id: String): Single<JsonElement> {
+        return apiCallInterface.getReviewsList(mid, product_id)
+    }
+
+    fun getbadgeReviews(mid: String, product_id: String): Single<JsonElement> {
+        return apiCallInterface.getBadges(mid, product_id)
+    }
+
+    fun getcreateReview(mid: String, reviewRating: String, product_id: String, reviewAuthor: String, reviewEmail: String, reviewTitle: String, reviewBody: String): Single<JsonElement> {
+        return apiCallInterface.createReview(mid, reviewRating, product_id, reviewAuthor, reviewEmail, reviewTitle, reviewBody)
     }
 
 }

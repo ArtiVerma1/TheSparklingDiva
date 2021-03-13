@@ -57,7 +57,7 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
         if (presentmentcurrency == "nopresentmentcurrency") {
             holder.customVariantListitemBinding?.price?.text = CurrencyFormatter.setsymbol(variants?.get(position)?.node?.priceV2?.amount!!, variants?.get(position)?.node?.priceV2?.currencyCode.toString())
         } else {
-            val edge = getEdge(variants?.get(position)?.node?.presentmentPrices?.edges!!)
+            val edge = variants?.get(position)?.node?.presentmentPrices?.edges?.get(0)
             holder.customVariantListitemBinding?.price?.text = CurrencyFormatter.setsymbol(edge?.node?.price?.amount!!, edge.node.price.currencyCode.toString())
         }
         data.variantimage = variants!![position]?.node?.image?.transformedSrc
@@ -84,20 +84,6 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
         }
     }
 
-    private fun getEdge(edges: List<Storefront.ProductVariantPricePairEdge>): Storefront.ProductVariantPricePairEdge? {
-        var pairEdge: Storefront.ProductVariantPricePairEdge? = null
-        try {
-            for (i in edges.indices) {
-                if (edges[i].node.price.currencyCode.toString() == presentmentcurrency) {
-                    pairEdge = edges[i]
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return pairEdge
-    }
 
     private fun setVariants(data: VariantData, holder: QuickVariantViewHolder, selectedOptions: List<Storefront.SelectedOption>) {
         try {

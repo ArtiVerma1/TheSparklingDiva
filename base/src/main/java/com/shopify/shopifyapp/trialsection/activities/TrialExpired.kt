@@ -10,6 +10,7 @@ import com.shopify.shopifyapp.basesection.activities.Splash
 
 import butterknife.OnClick
 import com.shopify.shopifyapp.customviews.MageNativeButton
+import com.shopify.shopifyapp.utils.Constant
 import kotlinx.android.synthetic.main.m_trial.*
 
 class TrialExpired : AppCompatActivity() {
@@ -32,6 +33,7 @@ class TrialExpired : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+        Constant.activityTransition(this)
     }
 
     public override fun onBackPressed() {

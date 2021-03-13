@@ -2,46 +2,51 @@ package com.shopify.shopifyapp.productsection.activities
 
 import android.content.Intent
 import android.graphics.Paint
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.LevelListDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.Html
+import android.text.TextUtils
+import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.activities.BaseActivity
-import com.shopify.shopifyapp.basesection.models.FeaturesModel
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MProductviewBinding
+import com.shopify.shopifyapp.databinding.ReviewFormBinding
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.productsection.adapters.ImagSlider
+import com.shopify.shopifyapp.productsection.adapters.ReviewListAdapter
 import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
+import com.shopify.shopifyapp.productsection.models.ReviewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
 import com.shopify.shopifyapp.utils.*
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.math.BigDecimal
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
-class ProductView : BaseActivity() {
+class ProductView : NewBaseActivity() {
     private var binding: MProductviewBinding? = null
 
     @Inject
@@ -49,6 +54,10 @@ class ProductView : BaseActivity() {
     private var model: ProductViewModel? = null
     private var variantlist: RecyclerView? = null
     private val TAG = "ProductView"
+    var productID = "noid"
+
+    @Inject
+    lateinit var reviewAdapter: ReviewListAdapter
 
     @Inject
     lateinit var adapter: VariantAdapter
@@ -58,11 +67,6 @@ class ProductView : BaseActivity() {
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
-    private val cartCount: Int
-        get() {
-            Log.i("MageNative", "Cart Count : " + model!!.cartCount)
-            return model!!.cartCount
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +74,6 @@ class ProductView : BaseActivity() {
         Constant.current = null
         val group = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_productview, group, true)
-
         binding?.features = featuresModel
         showBackButton()
         showTittle(" ")
@@ -78,13 +81,20 @@ class ProductView : BaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
         model!!.context = this
+        model?.createreviewResponse?.observe(this, Observer { this.createReview(it) })
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         if (intent.getStringExtra("handle") != null) {
             model!!.handle = intent.getStringExtra("handle")
         }
         if (intent.getStringExtra("ID") != null) {
             model!!.id = intent.getStringExtra("ID")
+            productID = model!!.id
         }
+        if (featuresModel.productReview!!) {
+            model?.getReviewBadges(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)?.observe(this, Observer { this.consumeBadges(it) })
+            model?.getReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)?.observe(this, Observer { this.consumeReview(it) })
+        }
+
         data = ListData()
         if (model!!.setPresentmentCurrencyForModel()) {
             model!!.filteredlist.observe(this, Observer<List<Storefront.ProductVariantEdge>> { this.filterResponse(it) })
@@ -97,6 +107,61 @@ class ProductView : BaseActivity() {
                 model!!.Response().observe(this, Observer<GraphQLResponse> { this.consumeResponse(it) })
             }
         }
+    }
+
+    private fun createReview(response: ApiResponse?) {
+        if (response?.data != null) {
+            var data = JSONObject(response?.data.toString())
+            if (data.getBoolean("success")) {
+                Toast.makeText(this, getString(R.string.review_submitted), Toast.LENGTH_SHORT).show()
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(2000)
+                    model?.getProductReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)
+                    model?.getbadgeReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)
+                }
+            }
+        }
+    }
+
+    private fun consumeBadges(response: ApiResponse?) {
+        if (response?.data != null) {
+            var data = JSONObject(response?.data.toString()).getJSONObject("data")
+            binding?.ratingTxt?.text = data.getJSONObject(getBase64Decode(productID)).getString("total-rating") + " " + getString(R.string.rating)
+        }
+    }
+
+    private fun consumeReview(response: ApiResponse?) {
+        if (response?.data != null) {
+            try {
+                Log.d(TAG, "consumeReview: " + JSONObject(response.data.toString()))
+
+                if (JSONObject(response.data.toString()).getJSONObject("data").has("reviews")) {
+                    var reviewModel = Gson().fromJson<ReviewModel>(response.data.toString(), ReviewModel::class.java) as ReviewModel
+                    if (reviewModel.success!!) {
+                        if (reviewModel.data?.reviews?.size!! > 0) {
+                            binding?.noReviews?.visibility = View.GONE
+                            binding?.reviewList?.visibility = View.VISIBLE
+                            reviewAdapter.setData(reviewModel.data?.reviews)
+                            binding?.reviewList?.adapter = reviewAdapter
+                        }
+                    }
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                binding?.noReviews?.visibility = View.VISIBLE
+                binding?.reviewList?.visibility = View.GONE
+            }
+        }
+    }
+
+    fun getBase64Decode(id: String?): String? {
+        val data = Base64.decode(id, Base64.DEFAULT)
+        var text = String(data, StandardCharsets.UTF_8)
+        val datavalue = text.split("/".toRegex()).toTypedArray()
+        val valueid = datavalue[datavalue.size - 1]
+        val datavalue2 = valueid.split("key".toRegex()).toTypedArray()
+        text = datavalue2[0]
+        return text
     }
 
     private fun filterResponse(list: List<Storefront.ProductVariantEdge>) {
@@ -277,7 +342,7 @@ class ProductView : BaseActivity() {
                     binding!!.regularprice.paintFlags = binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             } else {
-                val edge = getEdge(variant.presentmentPrices.edges)
+                val edge = variant.presentmentPrices.edges[0]
                 data!!.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
                 if (variant.compareAtPriceV2 != null) {
                     val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
@@ -370,19 +435,55 @@ class ProductView : BaseActivity() {
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, view.context.resources.getString(R.string.app_name))
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareString)
             view.context.startActivity(Intent.createChooser(shareIntent, view.context.resources.getString(R.string.share)))
+            Constant.activityTransition(view.context)
         }
 
         fun showAR(view: View, data: ListData) {
-            var sceneViewerIntent = Intent(Intent.ACTION_VIEW);
+            var sceneViewerIntent = Intent(Intent.ACTION_VIEW)
             var intentUri: Uri =
                     Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
                             .appendQueryParameter("file", data.arimage)
-                            .build();
-            sceneViewerIntent.setData(intentUri);
-            sceneViewerIntent.setPackage("com.google.ar.core");
-            startActivity(sceneViewerIntent);
+                            .build()
+            sceneViewerIntent.setData(intentUri)
+            sceneViewerIntent.setPackage("com.google.ar.core")
+            startActivity(sceneViewerIntent)
+            Constant.activityTransition(view.context)
+        }
+
+        fun rateProduct(view: View, data: ListData) {
+            var bottomsheet = BottomSheetDialog(this@ProductView, R.style.WideDialog)
+            bottomsheet.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            bottomsheet.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+            var reviewFormBinding = DataBindingUtil.inflate<ReviewFormBinding>(layoutInflater, R.layout.review_form, null, false)
+            bottomsheet.setContentView(reviewFormBinding.root)
+            bottomsheet.setCancelable(false)
+            reviewFormBinding.closeBut.setOnClickListener {
+                bottomsheet.dismiss()
+            }
+            reviewFormBinding.submitReview.setOnClickListener {
+                if (TextUtils.isEmpty(reviewFormBinding.nameEdt.text.toString().trim())) {
+                    reviewFormBinding.nameEdt.error = getString(R.string.name_validation)
+                    reviewFormBinding.nameEdt.requestFocus()
+                } else if (TextUtils.isEmpty(reviewFormBinding.titleEdt.text.toString().trim())) {
+                    reviewFormBinding.titleEdt.error = getString(R.string.review_title_validation)
+                    reviewFormBinding.titleEdt.requestFocus()
+                } else if (TextUtils.isEmpty(reviewFormBinding.bodyEdt.text.toString().trim())) {
+                    reviewFormBinding.bodyEdt.error = getString(R.string.review_validation)
+                    reviewFormBinding.bodyEdt.requestFocus()
+                } else if (TextUtils.isEmpty(reviewFormBinding.emailEdt.text.toString().trim())) {
+                    reviewFormBinding.emailEdt.error = getString(R.string.email_validation)
+                    reviewFormBinding.emailEdt.requestFocus()
+                } else {
+                    model?.getcreateReview(Urls(application as MyApplication).mid, reviewFormBinding.ratingBar.rating.toString(), getBase64Decode(productID)!!,
+                            reviewFormBinding.nameEdt.text.toString().trim(), reviewFormBinding.emailEdt.text.toString().trim(), reviewFormBinding.titleEdt.text.toString().trim()
+                            , reviewFormBinding.bodyEdt.text.toString().trim())
+                    bottomsheet.dismiss()
+                }
+            }
+            bottomsheet.show()
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.m_product, menu)
@@ -394,6 +495,7 @@ class ProductView : BaseActivity() {
         notifCount.setOnClickListener {
             val mycartlist = Intent(this@ProductView, CartList::class.java)
             startActivity(mycartlist)
+            Constant.activityTransition(this)
         }
         return true
     }

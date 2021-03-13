@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.utils
 import android.util.Log
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.repositories.Repository
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import javax.inject.Inject

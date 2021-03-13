@@ -65,6 +65,17 @@ fun ViewModel.doGraphQLQueryGraph(repository: Repository, query: Storefront.Quer
     }
 }
 
+fun ViewModel.doGraphQLQueryGraphNoLoader(repository: Repository, query: Storefront.QueryRootQuery, customResponse: CustomResponse, context: Context) {
+    Log.d(TAG, "doGraphQLQueryGraph: " + query)
+    var call = repository.graphClient.queryGraph(query)
+    call.enqueue { result: GraphCallResult<Storefront.QueryRoot> ->
+        GlobalScope.launch(Dispatchers.Main) {
+            customResponse.onSuccessQuery(result)
+
+        }
+    }
+}
+
 fun Dialog.doGraphQLQueryGraph(repository: Repository, query: Storefront.QueryRootQuery, customResponse: CustomResponse, context: Context) {
     Log.d(TAG, "doGraphQLQueryGraph: " + query)
     GlobalScope.launch(Dispatchers.Main) {

@@ -44,6 +44,7 @@ import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.searchsection.activities.SearchByScanner
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import org.json.JSONArray
@@ -133,6 +134,7 @@ class LeftMenu : BaseFragment() {
                     }
                     intent.putExtra("tittle", menudata.title)
                     context!!.startActivity(intent)
+                    Constant.activityTransition(context!!)
                 }
                 "product" -> {
                     val productintent = Intent(context, ProductView::class.java)
@@ -150,27 +152,32 @@ class LeftMenu : BaseFragment() {
                     }
                     productintent.putExtra("tittle", menudata.title)
                     context!!.startActivity(productintent)
+                    Constant.activityTransition(context!!)
                 }
                 "product-all" -> {
                     val product_all = Intent(context, ProductList::class.java)
                     product_all.putExtra("tittle", menudata.title)
                     context!!.startActivity(product_all)
+                    Constant.activityTransition(context!!)
                 }
                 "collection-all" -> {
                     val collection_all = Intent(context, CollectionList::class.java)
                     context!!.startActivity(collection_all)
+                    Constant.activityTransition(context!!)
                 }
                 "page" -> {
                     val page = Intent(context, Weblink::class.java)
                     page.putExtra("name", menudata.title)
                     page.putExtra("link", menudata.url)
                     context!!.startActivity(page)
+                    Constant.activityTransition(context!!)
                 }
                 "blog" -> {
                     val blog = Intent(context, Weblink::class.java)
                     blog.putExtra("name", menudata.title)
                     blog.putExtra("link", menudata.url)
                     context!!.startActivity(blog)
+                    Constant.activityTransition(context!!)
                 }
             }
         }
@@ -207,18 +214,22 @@ class LeftMenu : BaseFragment() {
                 "collections" -> {
                     val collection_all = Intent(context, CollectionList::class.java)
                     context!!.startActivity(collection_all)
+                    Constant.activityTransition(context!!)
                 }
                 "Sign In" -> {
                     val login = Intent(context, LoginActivity::class.java)
                     context!!.startActivity(login)
+                    Constant.activityTransition(context!!)
                 }
                 "mywishlist" -> {
                     val mywishlist = Intent(context, WishList::class.java)
                     context!!.startActivity(mywishlist)
+                    Constant.activityTransition(context!!)
                 }
                 "mycartlist" -> {
                     val mycartlist = Intent(context, CartList::class.java)
                     context!!.startActivity(mycartlist)
+                    Constant.activityTransition(context!!)
                 }
                 "invitefriends" -> {
                     val appPackageName = view.context.packageName // getPackageName() from Context or Activity object
@@ -227,10 +238,12 @@ class LeftMenu : BaseFragment() {
                     shareIntent.putExtra(Intent.EXTRA_SUBJECT, view.context.resources.getString(R.string.app_name))
                     shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=$appPackageName")
                     view.context.startActivity(Intent.createChooser(shareIntent, view.context.resources.getString(R.string.shareproduct)))
+                    Constant.activityTransition(view.context)
                 }
                 "autosearch" -> {
                     val autosearch = Intent(context, AutoSearch::class.java)
                     context!!.startActivity(autosearch)
+                    Constant.activityTransition(context!!)
                 }
                 "logout" -> {
                     Toast.makeText(context, context!!.resources.getString(R.string.successlogout), Toast.LENGTH_LONG).show()
@@ -239,18 +252,21 @@ class LeftMenu : BaseFragment() {
                 "myprofile" -> if (leftmenu.isLoggedIn) {
                     val myprofile = Intent(context, UserProfile::class.java)
                     context!!.startActivity(myprofile)
+                    Constant.activityTransition(context!!)
                 } else {
                     Toast.makeText(context, context!!.resources.getString(R.string.logginfirst), Toast.LENGTH_LONG).show()
                 }
                 "myorders" -> if (leftmenu.isLoggedIn) {
                     val myprofile = Intent(context, OrderList::class.java)
                     context!!.startActivity(myprofile)
+                    Constant.activityTransition(context!!)
                 } else {
                     Toast.makeText(context, context!!.resources.getString(R.string.logginfirst), Toast.LENGTH_LONG).show()
                 }
                 "myaddress" -> if (leftmenu.isLoggedIn) {
                     val myaddress = Intent(context, AddressList::class.java)
                     context!!.startActivity(myaddress)
+                    Constant.activityTransition(context!!)
                 } else {
                     Toast.makeText(context, context!!.resources.getString(R.string.logginfirst), Toast.LENGTH_LONG).show()
                 }
