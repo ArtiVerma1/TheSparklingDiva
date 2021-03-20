@@ -17,6 +17,7 @@ import com.shopify.shopifyapp.loginsection.activity.RegistrationActivity
 import com.shopify.shopifyapp.ordersection.activities.OrderList
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.productsection.activities.ZoomActivity
 import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
@@ -36,7 +37,7 @@ interface MageNativeAppComponent {
     fun doCollectionInjection(collectionList: CollectionList)
     fun doCollectionInjection(collectionList: CollectionListMenu)
     fun doProductViewInjection(product: ProductView)
-//    fun doBaseActivityInjection(base: BaseActivity)
+    fun doZoomActivityInjection(base: ZoomActivity)
     fun doBaseActivityInjection(base: NewBaseActivity)
     fun doWishListActivityInjection(wish: WishList)
     fun doCartListActivityInjection(cart: CartList)

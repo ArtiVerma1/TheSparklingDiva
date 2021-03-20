@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.productsection.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,11 +13,14 @@ import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MImagefragmentBinding
 import com.shopify.shopifyapp.basesection.fragments.BaseFragment
 import com.shopify.shopifyapp.basesection.models.CommanModel
+import com.shopify.shopifyapp.productsection.activities.ZoomActivity
+import com.shopify.shopifyapp.utils.Constant
 
 import java.util.Objects
 
 class ImageFragment(var images: List<Storefront.ImageEdge>) : BaseFragment(), View.OnClickListener {
     private val TAG = "ImageFragment"
+    private var image_list: ArrayList<String>? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<MImagefragmentBinding>(layoutInflater, R.layout.m_imagefragment, null, false)
         val url = Objects.requireNonNull<Bundle>(arguments).getString("url")
@@ -32,6 +36,13 @@ class ImageFragment(var images: List<Storefront.ImageEdge>) : BaseFragment(), Vi
     }
 
     override fun onClick(v: View?) {
-      //  Log.d(TAG, "onClick: " + images)
+        image_list = ArrayList<String>()
+        images.forEach {
+            image_list?.add(it.node.originalSrc)
+        }
+        var intent = Intent(context, ZoomActivity::class.java)
+        intent.putStringArrayListExtra("images", image_list)
+        context?.startActivity(intent)
+        Constant.activityTransition(v?.context!!)
     }
 }
