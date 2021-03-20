@@ -87,7 +87,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
     @BindView(R2.id.search)
     lateinit var search: MageNativeTextView
-    private var mDrawerToggle: ActionBarDrawerToggle? = null
+    public var mDrawerToggle: ActionBarDrawerToggle? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -194,7 +194,9 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         } else if (this@NewBaseActivity is UserProfile) {
             nav_view.menu.findItem(R.id.account_bottom).setChecked(true)
         }
-
+        if (this@NewBaseActivity !is HomePage) {
+            fullsearch_container.visibility = View.GONE
+        }
         try {
             MyApplication.dataBaseReference.child("additional_info").child("appthemecolor").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -205,6 +207,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                     if (this@NewBaseActivity !is HomePage) {
                         toolbar.setBackgroundColor(Color.parseColor(value))
                     }
+                    //   nav_view.menu.findItem(R.id.home_bottom).iconTintList = ColorStateList.valueOf(Color.parseColor(value))
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -238,7 +241,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         wrapper.applyOverrideConfiguration(configuration)
     }
 
-    private fun setToggle() {
+    fun setToggle() {
         mDrawerToggle = object : ActionBarDrawerToggle(this@NewBaseActivity, drawer_layout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
@@ -500,7 +503,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         draw.setColor(Color.parseColor(searchback))
         search.setTextColor(Color.parseColor(searchtext))
         search.setHintTextColor(Color.parseColor(searchtext))
-        draw.setStroke(5, Color.parseColor(searhcborder));
+        draw.setStroke(2, Color.parseColor(searhcborder));
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -520,7 +523,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                             if (json.has("mid")) {
                                 Log.i("MageNative", "Barcode" + result)
                                 Log.i("MageNative", "Barcode" + result.contents)
-                                MagePrefs.clearHomeData()
                                 leftMenuViewModel!!.deletLocal()
                                 leftMenuViewModel!!.insertPreviewData(json)
                                 leftMenuViewModel!!.logOut()

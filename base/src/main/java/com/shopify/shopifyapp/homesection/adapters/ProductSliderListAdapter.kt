@@ -5,13 +5,19 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.constraintlayout.widget.Constraints
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.shopify.buy3.Storefront
@@ -52,6 +58,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         setHasStableIds(true)
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderItemTypeOne {
         var binding = DataBindingUtil.inflate<MSlideritemoneBinding>(LayoutInflater.from(parent.context), R.layout.m_slideritemone, parent, false)
         when (jsonObject!!.getString("item_shape")) {
@@ -59,6 +66,19 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 binding.card.radius = 0f
                 binding.card.cardElevation = 0f
                 binding.card.useCompatPadding = false
+                var layout = binding.main.layoutParams as FrameLayout.LayoutParams
+                layout.setMargins(0, 0, 0, 2)
+            }
+        }
+        if (jsonObject!!.getString("item_border").equals("1")) {
+            var item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
+            if (jsonObject!!.getString("item_shape").equals("rounded")) {
+                var gradientDrawable = GradientDrawable()
+                gradientDrawable.shape = GradientDrawable.RECTANGLE
+                gradientDrawable.cornerRadius = 16f
+                gradientDrawable.setStroke(3, Color.parseColor(item_border_color.getString("color")))
+                binding.card.useCompatPadding = false
+                binding.card.background = gradientDrawable
             }
         }
         return SliderItemTypeOne(binding)
@@ -69,6 +89,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         val data = ListData()
         var view: View
         var card: CardView
+        var main: ConstraintLayout
         var tittle: MageNativeTextView
         var price: MageNativeTextView
         var special: MageNativeTextView
@@ -121,6 +142,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         val params: ConstraintLayout.LayoutParams
         view = item.binding.main
         card = item.binding.card
+        main = item.binding.main
         tittle = item.binding.name
         price = item.binding.regularprice
         special = item.binding.specialprice
@@ -176,11 +198,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         item.binding.regularprice.visibility = productpricevisibility
         item.binding.specialprice.visibility = specialpricevisibility
         var cell_background_color = JSONObject(jsonObject!!.getString("cell_background_color"))
-        if (jsonObject!!.getString("item_border").equals("1")) {
-            var item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
-            card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
-            card.setContentPadding(3, 3, 3, 3)
-        }
+
         var item_title_color = JSONObject(jsonObject!!.getString("item_title_color"))
         var item_price_color = JSONObject(jsonObject!!.getString("item_price_color"))
         var item_compare_at_price_color = JSONObject(jsonObject!!.getString("item_compare_at_price_color"))

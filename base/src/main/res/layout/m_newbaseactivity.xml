@@ -51,12 +51,12 @@
             <ImageView
                 android:id="@+id/toolimage"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="?actionBarSize"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
-                android:paddingBottom="5dp"
+                android:padding="5dp"
                 android:src="@drawable/logo"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/tooltext"
@@ -79,9 +79,8 @@
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/search"
-                    android:layout_width="250dp"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_margin="2dp"
                     android:background="@drawable/corner_search"
                     android:ellipsize="end"
                     android:gravity="start|center_vertical"
@@ -93,13 +92,41 @@
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fullsearch_container"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/container"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                android:id="@+id/fullsearch"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/corner_search"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingStart="15dp"
+                android:text="I'm shoppping forfgggggggggggggggggggggggfgggggggggggfggggggggggg"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:texttype="normal" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"></FrameLayout>
+            app:layout_constraintTop_toBottomOf="@id/fullsearch_container"></FrameLayout>
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

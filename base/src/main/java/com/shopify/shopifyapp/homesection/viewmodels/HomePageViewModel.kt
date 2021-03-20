@@ -1,6 +1,5 @@
 package com.shopify.shopifyapp.homesection.viewmodels
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -15,6 +14,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -22,8 +22,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.database.DataSnapshot
@@ -47,26 +45,25 @@ import com.shopify.shopifyapp.homesection.adapters.*
 import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import com.shopify.shopifyapp.homesection.models.ProductSlider
 import com.shopify.shopifyapp.homesection.models.StandAloneBanner
-import com.shopify.shopifyapp.network_transaction.*
+import com.shopify.shopifyapp.network_transaction.CustomResponse
+import com.shopify.shopifyapp.network_transaction.customLoader
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
-import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.*
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.m_homepage_modified.*
+import kotlinx.android.synthetic.main.m_newbaseactivity.*
+import kotlinx.coroutines.*
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Runnable
 import java.net.URL
 import java.nio.charset.Charset
 import java.text.ParseException
@@ -81,6 +78,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     val message = MutableLiveData<String>()
     private val disposables = CompositeDisposable()
     val homepagedata = MutableLiveData<HashMap<String, View>>()
+    val hasBannerOnTop = MutableLiveData<Boolean>()
+    val hasFullSearchOnTop = MutableLiveData<Boolean>()
     private val TAG = "HomePageViewModel"
 
     companion object {
@@ -144,10 +143,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val downloadlink = dataSnapshot.getValue(String::class.java)!!
                     Log.i("MageNative", "DownloadLink " + downloadlink)
-                    if (homepage.childCount > 0) {
-                        homepage.removeAllViews()
-                        homepage.invalidate()
-                    }
                     dowloadJson(downloadlink, context)
                 }
 
@@ -173,7 +168,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     fun parseResponse(apiResponse: String, context: HomePage) {
         this.context = context
-        MagePrefs.setHomepageData(apiResponse)
+        if (context.homepage.childCount > 0) {
+            context.homepage.removeAllViews()
+            context.homepage.invalidate()
+        }
         try {
             var obj = JSONObject(apiResponse)
             var names: JSONArray = obj.getJSONObject("sort_order").names()!!
@@ -214,60 +212,122 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                 }
             }
+
+            if (names.length() == context.homepage.childCount) {
+                //   Toast.makeText(context, "complete", Toast.LENGTH_SHORT).show()
+                context.main_container.visibility = View.VISIBLE
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        //  MagePrefs.setHomepageData(apiResponse)
     }
 
     private fun topbar(jsonObject: JSONObject) {
         try {
             var binding: MTopbarBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
-            context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
-            context.setWishList(jsonObject.getString("wishlist"))
-            if (jsonObject.has("logo_image_url")) {
-                context.setLogoImage(jsonObject.getString("logo_image_url"))
-            }
+
             binding.root.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-            context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
             panel_bg_color = JSONObject(jsonObject.getString("panel_background_color")).getString("color")
             count_color = JSONObject(jsonObject.getString("count_color")).getString("color")
             count_textcolor = JSONObject(jsonObject.getString("count_textcolor")).getString("color")
             icon_color = JSONObject(jsonObject.getString("icon_color")).getString("color")
-            context.setIconColors(
-                    JSONObject(jsonObject.getString("count_color")).getString("color"),
-                    JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
-                    JSONObject(jsonObject.getString("icon_color")).getString("color")
-            )
-            when (jsonObject.getString("search_position")) {
-                "middle-width-search" -> {
-                    context.setSearchOptions(
-                            JSONObject(jsonObject.getString("search_background_color")).getString("color"),
-                            JSONObject(jsonObject.getString("search_text_color")).getString("color"),
-                            JSONObject(jsonObject.getString("search_border_color")).getString("color")
-                    )
-                }
-                "full-width-search" -> {
-                    binding.fullsearch.visibility = View.VISIBLE
-                    binding.fullsearch.text = jsonObject.getString("search_placeholder")
-                    binding.fullsearch.setOnClickListener {
-                        val searchpage = Intent(context, AutoSearch::class.java)
-                        context.startActivity(searchpage)
-                        Constant.activityTransition(context)
-                    }
-                    var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
-                    draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
-                    binding.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                    binding.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                    draw.setStroke(5, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
-                }
-            }
+
             if (jsonObject.has("item_banner") && jsonObject.getString("item_banner").equals("1")) {
+                hasBannerOnTop.value = true
                 var common = CommanModel()
                 var adp = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
                 binding!!.bannerss.adapter = adp
                 adp.notifyDataSetChanged()
+                context.toolbar.visibility = View.GONE
+                binding.homeToolbar.visibility = View.VISIBLE
+                context.setToggle(binding.homeToolbar)
 
-                binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(1000)
+                    context.setHomeIconColors(
+                            JSONObject(jsonObject.getString("count_color")).getString("color"),
+                            JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
+                            JSONObject(jsonObject.getString("icon_color")).getString("color")
+                    )
+                    context.setHomeSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"), binding)
+                    context.setHomeWishList(jsonObject.getString("wishlist"))
+                    if (jsonObject.has("logo_image_url")) {
+                        context.setHomeLogoImage(jsonObject.getString("logo_image_url"), binding)
+                    }
+
+                    context.setToggle(context.toolbar)
+                    delay(1000)
+                    context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
+                    context.setWishList(jsonObject.getString("wishlist"))
+                    if (jsonObject.has("logo_image_url")) {
+                        context.setLogoImage(jsonObject.getString("logo_image_url"))
+                    }
+                    context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
+                    context.setIconColors(
+                            JSONObject(jsonObject.getString("count_color")).getString("color"),
+                            JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
+                            JSONObject(jsonObject.getString("icon_color")).getString("color")
+                    )
+                }
+
+                when (jsonObject.getString("search_position")) {
+                    "middle-width-search" -> {
+                        GlobalScope.launch(Dispatchers.Main) {
+                            delay(1000)
+                            context.setHomeSearchOptions(
+                                    JSONObject(jsonObject.getString("search_background_color")).getString("color"),
+                                    JSONObject(jsonObject.getString("search_text_color")).getString("color"),
+                                    JSONObject(jsonObject.getString("search_border_color")).getString("color"),
+                                    binding
+                            )
+                            context.setSearchOptions(
+                                    JSONObject(jsonObject.getString("search_background_color")).getString("color"),
+                                    JSONObject(jsonObject.getString("search_text_color")).getString("color"),
+                                    JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                            )
+
+                        }
+                    }
+                    "full-width-search" -> {
+                        hasFullSearchOnTop.value = true
+                        binding.fullsearch.visibility = View.VISIBLE
+                        binding.fullsearch.text = jsonObject.getString("search_placeholder")
+                        binding.fullsearch.setOnClickListener {
+                            val searchpage = Intent(context, AutoSearch::class.java)
+                            context.startActivity(searchpage)
+                            Constant.activityTransition(context)
+                        }
+                        var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
+                        draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
+                        binding.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        binding.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        draw.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+
+
+                        context.fullsearch_container.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                        context.fullsearch.visibility = View.GONE
+                        context.fullsearch_container.visibility = View.GONE
+                        context.fullsearch.text = jsonObject.getString("search_placeholder")
+                        context.fullsearch.setOnClickListener {
+                            val searchpage = Intent(context, AutoSearch::class.java)
+                            context.startActivity(searchpage)
+                            Constant.activityTransition(context)
+                        }
+
+                        var draw1: GradientDrawable = context.fullsearch.background as GradientDrawable
+                        draw1.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
+                        context.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        context.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        draw1.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+                        //context.fullsearch.background = draw1
+
+
+                    }
+                }
+
+
+                //  binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
                 binding!!.bannerss.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                     override fun onPageScrollStateChanged(state: Int) {
 
@@ -289,6 +349,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 if (jsonObject.getString("item_dots").equals("1")) {
                     var background = JSONObject(jsonObject.getString("active_dot_color"))
                     var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
+                    binding!!.indicators.visibility = View.VISIBLE
                     binding!!.indicators.setDotIndicatorColor(Color.parseColor(background.getString("color")))
                     binding!!.indicators.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
                     binding!!.indicators.setViewPager(binding!!.bannerss)
@@ -298,12 +359,83 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 binding.bannersection.visibility = View.VISIBLE
                 binding.backImage.visibility = View.VISIBLE
                 binding.overlay.visibility = View.VISIBLE
+            } else {
+                hasBannerOnTop.value = false
+                binding.bannersection.visibility = View.GONE
+                binding.backImage.visibility = View.GONE
+                binding.overlay.visibility = View.GONE
+                context.toolbar.visibility = View.VISIBLE
+                binding.homeToolbar.visibility = View.GONE
+                context.setToggle(context.toolbar)
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(1000)
+                    context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
+                    context.setWishList(jsonObject.getString("wishlist"))
+                    if (jsonObject.has("logo_image_url")) {
+                        context.setLogoImage(jsonObject.getString("logo_image_url"))
+                    }
+                    context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
+                    context.setIconColors(
+                            JSONObject(jsonObject.getString("count_color")).getString("color"),
+                            JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
+                            JSONObject(jsonObject.getString("icon_color")).getString("color")
+                    )
+                }
+
+
+                when (jsonObject.getString("search_position")) {
+                    "middle-width-search" -> {
+                        if (jsonObject.has("item_banner") && !jsonObject.getString("item_banner").equals("1")) {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                context.setSearchOptions(
+                                        JSONObject(jsonObject.getString("search_background_color")).getString("color"),
+                                        JSONObject(jsonObject.getString("search_text_color")).getString("color"),
+                                        JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                                )
+                            }
+
+                        }
+                    }
+                    "full-width-search" -> {
+                        hasFullSearchOnTop.value = true
+                        binding.fullsearch.visibility = View.VISIBLE
+                        binding.fullsearch.text = jsonObject.getString("search_placeholder")
+                        binding.fullsearch.setOnClickListener {
+                            val searchpage = Intent(context, AutoSearch::class.java)
+                            context.startActivity(searchpage)
+                            Constant.activityTransition(context)
+                        }
+                        var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
+                        draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
+                        binding.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        binding.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        draw.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+
+                        context.fullsearch_container.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                        context.fullsearch.visibility = View.GONE
+                        context.fullsearch_container.visibility = View.GONE
+                        context.fullsearch.text = jsonObject.getString("search_placeholder")
+                        context.fullsearch.setOnClickListener {
+                            val searchpage = Intent(context, AutoSearch::class.java)
+                            context.startActivity(searchpage)
+                            Constant.activityTransition(context)
+                        }
+                        var draw1: GradientDrawable = context.fullsearch.background as GradientDrawable
+                        draw1.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
+                        context.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        context.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
+                        draw1.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+                        //  context.fullsearch.background = draw1
+                    }
+
+                }
             }
             homepagedata.setValue(hashMapOf("top-bar_" to binding.root))
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
+
 
     private fun createFixedCustomisableLayout(jsonObject: JSONObject) {
         try {
@@ -927,7 +1059,13 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
                     productSlider.actiontext = jsonObject.getString("header_action_text")
                     binding.headertext.textSize = 20f
-                    binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
+
+                    var action_drawable = GradientDrawable()
+                    action_drawable.shape = GradientDrawable.RECTANGLE
+                    action_drawable.cornerRadius = 8f
+                    action_drawable.setColor(Color.parseColor(header_action_background_color.getString("color")))
+                    binding.actiontext.background = action_drawable
+                    // binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
                     binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
@@ -1033,27 +1171,15 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     fun getProductsById(id: ArrayList<ID>, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>, currency_list: ArrayList<Storefront.CurrencyCode>) {
         try {
-            if (MagePrefs.getHomepageData() != null) {
-                doGraphQLQueryGraphNoLoader(repository, Query.getAllProductsByID(id, currency_list), customResponse = object : CustomResponse {
-                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                        if (result is GraphCallResult.Success<*>) {
-                            consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
-                        } else {
-                            consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
-                        }
+            doGraphQLQueryGraph(repository, Query.getAllProductsByID(id, currency_list), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    if (result is GraphCallResult.Success<*>) {
+                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
+                    } else {
+                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
                     }
-                }, context = context)
-            } else {
-                doGraphQLQueryGraph(repository, Query.getAllProductsByID(id, currency_list), customResponse = object : CustomResponse {
-                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                        if (result is GraphCallResult.Success<*>) {
-                            consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
-                        } else {
-                            consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
-                        }
-                    }
-                }, context = context)
-            }
+                }
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-            <variable
-                name="productslider"
-                type="com.shopify.shopifyapp.homesection.models.ProductSlider" />
+        <variable
+            name="productslider"
+            type="com.shopify.shopifyapp.homesection.models.ProductSlider" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:padding="8dp"
         android:id="@+id/panelbackgroundcolor"
-       >
+        >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,6 +34,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/actiontext"
+                app:layout_constraintBottom_toTopOf="@+id/subheadertext"
                 android:layout_margin="5dp"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
@@ -111,7 +112,7 @@
                 android:layout_height="wrap_content"
                 app:texttype="normal"
                 android:id="@+id/timer_message"
-                android:visibility="@{productslider.timericon}"
+                android:visibility="gone"
                 android:text="@{productslider.timertextmessage}"
                 android:maxLines="1"
                 android:ellipsize="end"

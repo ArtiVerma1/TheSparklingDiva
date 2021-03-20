@@ -56,13 +56,6 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     fun Response(shop: String): MutableLiveData<LocalDbResponse> {
         val handler = Handler()
-        var runnable = Runnable {
-            var lpreview = repository.getPreviewData()
-            if (lpreview.size > 0) {
-                MagePrefs.clearHomeData()
-            }
-        }
-        Thread(runnable).start()
         handler.postDelayed({ // Do something after 5s = 5000ms
             connectFirebaseForTrial(shop)
         }, 2000)

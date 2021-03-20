@@ -52,6 +52,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         if (jsonObject!!.getString("item_shape").equals("square")) {
             binding.card.cardElevation = 0f
             binding.card.radius = 0f
+            binding.card.useCompatPadding = false
         }
         var params = binding.pricesection.layoutParams as ConstraintLayout.LayoutParams
         var alignment: String
@@ -96,6 +97,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         } else {
             specialpricevisibility = View.GONE
         }
+        var cell_background_color = JSONObject(jsonObject!!.getString("cell_background_color"))
         binding.name.visibility = tittlevisibility
         binding.regularprice.visibility = productpricevisibility
         binding.specialprice.visibility = specialpricevisibility
@@ -104,12 +106,13 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 var drawable = GradientDrawable()
                 var background = JSONObject(jsonObject!!.getString("item_border_color"))
                 drawable.shape = GradientDrawable.RECTANGLE
+                drawable.setColor(Color.parseColor(cell_background_color.getString("color")))
                 drawable.setStroke(1, Color.parseColor(background.getString("color")))
-                binding.mainCintainer.background = drawable
+                binding.main.background = drawable
+            } else {
+                binding.main.setBackgroundColor(Color.parseColor(cell_background_color.getString("color")))
             }
         }
-        var cell_background_color = JSONObject(jsonObject!!.getString("cell_background_color"))
-        binding.main.setBackgroundColor(Color.parseColor(cell_background_color.getString("color")))
         val face: Typeface
         when (jsonObject!!.getString("item_title_font_weight")) {
             "bold" -> {

@@ -18,7 +18,7 @@ class ImagSlider(fm: FragmentManager, behavior: Int) : FragmentStatePagerAdapter
     override fun getItem(position: Int): Fragment {
         var fragment: ImageFragment? = null
         try {
-            fragment = ImageFragment()
+            fragment = ImageFragment(images!!)
             val bundle = Bundle()
             bundle.putString("url", images!![position].node.originalSrc)
             fragment.arguments = bundle

@@ -127,6 +127,7 @@ class CommanModel : BaseObservable() {
                                     .asBitmap()
                                     .load(s)
                                     .dontTransform()
+                                    .diskCacheStrategy(DiskCacheStrategy.DATA)
                                     //.thumbnail(0.5f)
                                     // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
                                     .into(view)

@@ -4,6 +4,7 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="commondata"
             type="com.shopify.shopifyapp.basesection.models.CommanModel" />
@@ -19,7 +20,7 @@
             android:layout_height="250dp"
             android:scaleType="fitXY"
             android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
             bind:imageUrl="@{commondata.imageurl}" />
 
         <View
@@ -29,7 +30,7 @@
             android:alpha="0.5"
             android:background="@drawable/shadow"
             android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent" />
+           app:layout_constraintBottom_toTopOf="parent" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/home_toolbar"
@@ -110,7 +111,7 @@
             android:paddingStart="15dp"
             android:text="I'm shoppping forfgggggggggggggggggggggggfgggggggggggfggggggggggg"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/bannersection"
+            app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_toolbar"
             app:texttype="normal" />
 
@@ -121,6 +122,7 @@
             android:background="@drawable/backimage"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            app:layout_constraintBottom_toTopOf="parent"
             android:paddingBottom="8dp"
             app:constraint_referenced_ids="fullsearch,home_toolbar"
             app:layout_constraintBottom_toBottomOf="parent"

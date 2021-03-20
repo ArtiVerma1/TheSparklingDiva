@@ -1,41 +1,50 @@
 package com.shopify.shopifyapp.homesection.activities
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.JsonElement
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.R2.id.view
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MHomepageModifiedBinding
+import com.shopify.shopifyapp.databinding.MTopbarBinding
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
-import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
+import info.androidhive.fontawesome.FontTextView
+import kotlinx.android.synthetic.main.m_homepage_modified.*
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class HomePage : NewBaseActivity() {
     private var binding: MHomepageModifiedBinding? = null
@@ -45,7 +54,8 @@ class HomePage : NewBaseActivity() {
     private var homemodel: HomePageViewModel? = null
     lateinit var homepage: LinearLayoutCompat
     private var personamodel: PersonalisedViewModel? = null
-
+    private var hasBanner: Boolean? = null
+    private var hasFullSearch: Boolean = false
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -62,10 +72,220 @@ class HomePage : NewBaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doHomePageInjection(this)
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
+
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })
         homemodel!!.getHomePageData()?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
+        if (featuresModel.ai_product_reccomendaton) {
+            if (Constant.ispersonalisedEnable) {
+                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            }
+        }
+        homemodel!!.hasBannerOnTop.observe(this, Observer { this.ConsumeBanner(it) })
+        homemodel!!.hasFullSearchOnTop.observe(this, Observer { this.consumeFullSearch(it) })
 
+        scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            if (scrollY > oldScrollY) {
+                Log.i(TAG, "Scroll DOWN")
+                if (!hasBanner!! && hasFullSearch) {
+                    toolbar.visibility = View.GONE
+                    fullsearch.visibility = View.VISIBLE
+                    fullsearch_container.visibility = View.VISIBLE
+                } else if (hasBanner!! && !hasFullSearch) {
+                    toolbar.visibility = View.VISIBLE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                } else if (hasBanner!! && hasFullSearch) {
+                    toolbar.visibility = View.GONE
+                    fullsearch.visibility = View.VISIBLE
+                    fullsearch_container.visibility = View.VISIBLE
+                } else if (!hasBanner!! && !hasFullSearch) {
+                    toolbar.visibility = View.VISIBLE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                }
+            }
+            if (scrollY < oldScrollY) {
+                Log.i(TAG, "Scroll UP")
+            }
+            if (scrollY == 0) {
+                Log.i(TAG, "TOP SCROLL")
+                if (hasBanner!! && hasFullSearch) {
+                    toolbar.visibility = View.GONE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                } else if (hasBanner!! && !hasFullSearch) {
+                    toolbar.visibility = View.GONE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                } else {
+                    toolbar.visibility = View.VISIBLE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                }
+            }
+            if (scrollY <= 200) {
+                if (hasBanner!! && hasFullSearch) {
+                    toolbar.visibility = View.GONE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                } else if (hasBanner!! && !hasFullSearch) {
+                    toolbar.visibility = View.GONE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                } else {
+                    toolbar.visibility = View.VISIBLE
+                    fullsearch.visibility = View.GONE
+                    fullsearch_container.visibility = View.GONE
+                }
+            }
+            if (scrollY == (v?.measuredHeight!! - v?.getChildAt(0).measuredHeight)) {
+                Log.i(TAG, "BOTTOM SCROLL")
+            }
+        }
+    }
+
+    private fun consumeFullSearch(it: Boolean?) {
+        hasFullSearch = it!!
+    }
+
+    private fun ConsumeBanner(it: Boolean?) {
+        hasBanner = it
+    }
+
+    fun setToggle(toolbar: androidx.appcompat.widget.Toolbar) {
+        setSupportActionBar(toolbar)
+        Objects.requireNonNull<ActionBar>(supportActionBar).setDisplayShowTitleEnabled(false)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+        mDrawerToggle = object : ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+            override fun onDrawerOpened(drawerView: View) {
+                super.onDrawerOpened(drawerView)
+                invalidateOptionsMenu()
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                super.onDrawerClosed(drawerView)
+                invalidateOptionsMenu()
+            }
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                super.onDrawerSlide(drawerView, slideOffset)
+            }
+        }
+        mDrawerToggle!!.syncState()
+        mDrawerToggle!!.isDrawerIndicatorEnabled = true
+        mDrawerToggle!!.toolbarNavigationClickListener = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.m_search, menu)
+        item = menu.findItem(R.id.search_item)
+        wishitem = menu.findItem(R.id.wish_item)
+        cartitem = menu.findItem(R.id.cart_item)
+        item?.setActionView(R.layout.m_search)
+        wishitem?.setActionView(R.layout.m_wishcount)
+        cartitem?.setActionView(R.layout.m_count)
+        val search = item?.actionView
+        search?.setOnClickListener {
+            val searchpage = Intent(this, AutoSearch::class.java)
+            startActivity(searchpage)
+            Constant.activityTransition(this)
+        }
+        val notifCount = cartitem?.actionView
+        textView = notifCount?.findViewById<TextView>(R.id.count)
+        textView!!.text = "" + cartCount
+        notifCount?.setOnClickListener {
+            val mycartlist = Intent(this, CartList::class.java)
+            startActivity(mycartlist)
+            Constant.activityTransition(this)
+        }
+        val wishcount = wishitem?.actionView
+        wishtextView = wishcount?.findViewById<TextView>(R.id.count)
+        wishtextView!!.text = "" + leftMenuViewModel!!.wishListcount
+        wishcount?.setOnClickListener {
+            val wishlist = Intent(this, WishList::class.java)
+            startActivity(wishlist)
+            Constant.activityTransition(this)
+        }
+        return true
+    }
+
+    fun setHomeLogoImage(url: String, binding: MTopbarBinding) {
+        if (!this.isDestroyed) {
+            Log.i("MageNative", "Image URL" + url)
+            Glide.with(this)
+                    .load(url)
+                    .thumbnail(0.5f)
+                    .apply(RequestOptions().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .into(binding.toolimage)
+        }
+    }
+
+    fun setHomeWishList(visiblity: String) {
+        when (visiblity) {
+            "1" -> {
+                wishitem?.setVisible(true)
+            }
+            else -> {
+                wishitem?.setVisible(false)
+            }
+        }
+    }
+
+    fun setHomeIconColors(countback: String, counttext: String, iconcolor: String) {
+        val wishview = wishitem?.actionView
+        val cartview = cartitem?.actionView
+        val searchview = item?.actionView
+        val wishrelative = wishview?.findViewById<RelativeLayout>(R.id.back)
+        val wishtext = wishview?.findViewById<TextView>(R.id.count)
+        val wishicon = wishview?.findViewById<FontTextView>(R.id.cart_icon)
+        val cartrelative = cartview?.findViewById<RelativeLayout>(R.id.back)
+        val carttext = cartview?.findViewById<TextView>(R.id.count)
+        val carticon = cartview?.findViewById<FontTextView>(R.id.cart_icon)
+        wishrelative?.backgroundTintList = ColorStateList.valueOf(Color.parseColor(countback))
+        cartrelative?.backgroundTintList = ColorStateList.valueOf(Color.parseColor(countback))
+        wishtext?.setTextColor(Color.parseColor(counttext))
+        carttext?.setTextColor(Color.parseColor(counttext))
+        wishicon?.setTextColor(Color.parseColor(iconcolor))
+        carticon?.setTextColor(Color.parseColor(iconcolor))
+        val searchicon = searchview?.findViewById<FontTextView>(R.id.search_icon)
+        searchicon?.setTextColor(Color.parseColor(iconcolor))
+        mDrawerToggle!!.getDrawerArrowDrawable().setColor(Color.parseColor(iconcolor))
+    }
+
+    fun setHomeSearchOptions(searchback: String, searchtext: String, searhcborder: String, binding: MTopbarBinding) {
+        var draw: GradientDrawable = binding.search.background as GradientDrawable
+        draw.setColor(Color.parseColor(searchback))
+        binding.search.setTextColor(Color.parseColor(searchtext))
+        binding.search.setHintTextColor(Color.parseColor(searchtext))
+        draw.setStroke(2, Color.parseColor(searhcborder));
+    }
+
+    fun setHomeSearchOption(type: String, placeholder: String, binding: MTopbarBinding) {
+        when (type) {
+            "middle-width-search" -> {
+                item?.setVisible(false)
+                binding.toolimage.visibility = View.GONE
+                binding.searchsection.visibility = View.VISIBLE
+                binding.search.text = placeholder
+                binding.search.setOnClickListener {
+                    val searchpage = Intent(this, AutoSearch::class.java)
+                    startActivity(searchpage)
+                    Constant.activityTransition(this)
+                }
+            }
+            "full-width-search" -> {
+                item?.setVisible(false)
+                binding.toolimage.visibility = View.VISIBLE
+                binding.searchsection.visibility = View.GONE
+            }
+            else -> {
+                item?.setVisible(true)
+                binding.toolimage.visibility = View.VISIBLE
+                binding.searchsection.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -109,30 +329,9 @@ class HomePage : NewBaseActivity() {
     }
 
     override fun onResume() {
-        if (!MagePrefs.getHomepageData().equals(null)) {
-            GlobalScope.launch(Dispatchers.Main) {
-                delay(1000)
-                homemodel?.setPresentmentCurrencyForModel()
-                if (homepage.childCount > 0) {
-                    homepage.removeAllViews()
-                    homepage.invalidate()
-                }
-                homemodel?.parseResponse(MagePrefs.getHomepageData()!!, this@HomePage)
-            }
-        } else {
-            if (homepage.childCount > 0) {
-                homepage.removeAllViews()
-                homepage.invalidate()
-            }
-            homemodel!!.connectFirebaseForHomePageData(this, homepage)
-        }
-        if (featuresModel.ai_product_reccomendaton) {
-            if (Constant.ispersonalisedEnable) {
-                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-            }
-        }
         super.onResume()
+        homemodel!!.connectFirebaseForHomePageData(this, homepage)
+        scrollview.scrollTo(0, 0)
         nav_view.menu.findItem(R.id.home_bottom).setChecked(true)
     }
 

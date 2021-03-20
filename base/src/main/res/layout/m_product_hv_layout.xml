@@ -29,7 +29,9 @@
                 android:id="@+id/headertext"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{productslider.headertext}"
@@ -66,7 +68,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="2dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="5dp"
                 android:ellipsize="end"
@@ -133,8 +134,6 @@
             android:id="@+id/productdata"
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
             android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headerback">
@@ -153,34 +152,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/hvimagOne"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
-                        bind:imageUrl="@{productslider.hvimageone}" />
+                        android:background="@drawable/hv_shadow">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:alpha="0.5"
-                        android:background="@drawable/hv_shadow" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/hvimagOne"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            bind:imageUrl="@{productslider.hvimageone}" />
 
-                    <com.shopify.shopifyapp.customviews.MageNativeTextView
-                        android:id="@+id/hvnameone"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="5dp"
-                        android:ellipsize="end"
-                        android:gravity="@{productslider.textaligment}"
-                        android:maxLines="1"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"
-                        android:text="@{productslider.hvnameone}"
-                        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                        app:texttype="whitetext" />
+                        <com.shopify.shopifyapp.customviews.MageNativeTextView
+                            android:id="@+id/hvnameone"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="5dp"
+                            android:ellipsize="end"
+                            android:gravity="@{productslider.textaligment}"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:text="@{productslider.hvnameone}"
+                            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                            app:texttype="whitetext" />
+                    </FrameLayout>
+
+
                 </androidx.cardview.widget.CardView>
 
 
@@ -209,34 +210,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/hvimagtwo"
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitXY"
-                            bind:imageUrl="@{productslider.hvimagetwo}" />
+                            android:background="@drawable/hv_shadow">
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:alpha="0.5"
-                            android:background="@drawable/hv_shadow" />
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/hvimagtwo"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                bind:imageUrl="@{productslider.hvimagetwo}" />
 
-                        <com.shopify.shopifyapp.customviews.MageNativeTextView
-                            android:id="@+id/hvnametwo"
-                            android:layout_width="match_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="bottom"
-                            android:layout_marginBottom="5dp"
-                            android:ellipsize="end"
-                            android:gravity="@{productslider.textaligment}"
-                            android:maxLines="1"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:text="@{productslider.hvnametwo}"
-                            android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                            app:texttype="whitetext" />
+
+                            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                                android:id="@+id/hvnametwo"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginBottom="5dp"
+                                android:ellipsize="end"
+                                android:gravity="@{productslider.textaligment}"
+                                android:maxLines="1"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:text="@{productslider.hvnametwo}"
+                                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                                app:texttype="whitetext" />
+                        </FrameLayout>
+
+
                     </androidx.cardview.widget.CardView>
 
 
@@ -257,36 +261,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/hvimagthree"
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitXY"
-                            bind:imageUrl="@{productslider.hvimagethree}" />
+                            android:background="@drawable/hv_shadow">
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:alpha="0.5"
-                            android:background="@drawable/hv_shadow" />
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/hvimagthree"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                bind:imageUrl="@{productslider.hvimagethree}" />
 
-                        <com.shopify.shopifyapp.customviews.MageNativeTextView
-                            android:id="@+id/hvnamethree"
-                            android:layout_width="match_parent"
-                            android:layout_height="35dp"
-                            android:layout_gravity="bottom"
-                            android:layout_marginBottom="5dp"
-                            android:ellipsize="end"
-                            android:gravity="@{productslider.textaligment}"
-                            android:maxLines="1"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:text="@{productslider.hvnamethree}"
-                            android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                            app:texttype="whitetext" />
+
+                            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                                android:id="@+id/hvnamethree"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginBottom="5dp"
+                                android:ellipsize="end"
+                                android:gravity="@{productslider.textaligment}"
+                                android:maxLines="1"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:text="@{productslider.hvnamethree}"
+                                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                                app:texttype="whitetext" />
+                        </FrameLayout>
+
                     </androidx.cardview.widget.CardView>
-
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

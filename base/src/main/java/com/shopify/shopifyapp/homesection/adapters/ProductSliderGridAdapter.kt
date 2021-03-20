@@ -57,6 +57,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         if (jsonObject!!.getString("item_shape").equals("square")) {
             binding.card.cardElevation = 0f
             binding.card.radius = 0f
+            binding.card.useCompatPadding = true
         }
         var params = binding.nameandpricesection.layoutParams as ConstraintLayout.LayoutParams
         var alignment: String
@@ -68,11 +69,15 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         when (alignment) {
             "right" -> {
                 binding.name.gravity = Gravity.END
-                params.startToStart = ConstraintSet.GONE
+                binding.specialprice.gravity = Gravity.END
+                binding.regularprice.gravity = Gravity.END
                 params.endToEnd = ConstraintSet.PARENT_ID
+                params.endToEnd = ConstraintSet.GONE
             }
             "left" -> {
                 binding.name.gravity = Gravity.START
+                binding.specialprice.gravity = Gravity.START
+                binding.regularprice.gravity = Gravity.START
                 params.startToStart = ConstraintSet.PARENT_ID
                 params.endToEnd = ConstraintSet.GONE
             }
@@ -85,42 +90,34 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         } else {
             tittlevisibility = View.GONE
         }
-        var productpricevisibility: Int = View.GONE
+        var productpricevisibility: Int = View.INVISIBLE
         if (jsonObject!!.getString("item_price").equals("1")) {
             var item_price_color = JSONObject(jsonObject!!.getString("item_price_color"))
             binding.regularprice.setTextColor(Color.parseColor(item_price_color.getString("color")))
             productpricevisibility = View.VISIBLE
         } else {
-            productpricevisibility = View.GONE
+            productpricevisibility = View.INVISIBLE
         }
-        var specialpricevisibility: Int = View.GONE
+        var specialpricevisibility: Int = View.INVISIBLE
         if (jsonObject!!.getString("item_compare_at_price").equals("1")) {
             var item_compare_at_price_color = JSONObject(jsonObject!!.getString("item_compare_at_price_color"))
             binding.specialprice.setTextColor(Color.parseColor(item_compare_at_price_color.getString("color")))
             specialpricevisibility = View.VISIBLE
         } else {
-            specialpricevisibility = View.GONE
+            specialpricevisibility = View.VISIBLE
         }
         binding.name.visibility = tittlevisibility
         binding.regularprice.visibility = productpricevisibility
 
         binding.specialprice.visibility = specialpricevisibility
         if (jsonObject!!.getString("item_border").equals("1")) {
-//            var item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
-//            binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
-//            val newLayoutParams = binding.main.layoutParams as FrameLayout.LayoutParams
-//            newLayoutParams.marginStart = 2
-//            newLayoutParams.marginEnd = 2
-//            newLayoutParams.topMargin = 2
-//            newLayoutParams.bottomMargin = 2
-//            binding.main.layoutParams = newLayoutParams
-
             if (jsonObject!!.getString("item_shape").equals("square")) {
                 var drawable = GradientDrawable()
                 var background = JSONObject(jsonObject!!.getString("item_border_color"))
                 drawable.shape = GradientDrawable.RECTANGLE
-                drawable.setStroke(1, Color.parseColor(background.getString("color")))
+                drawable.setStroke(2, Color.parseColor(background.getString("color")))
                 binding.mainContainer.background = drawable
+                binding.card.useCompatPadding = false
             }
         }
         var cell_background_color = JSONObject(jsonObject!!.getString("cell_background_color"))
@@ -212,7 +209,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 item.gridbinding.regularprice.paintFlags = item.gridbinding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 item.gridbinding.specialprice.visibility = View.VISIBLE
             } else {
-                item.gridbinding.specialprice.visibility = View.GONE
+                item.gridbinding.specialprice.visibility = View.VISIBLE
                 item.gridbinding.regularprice.paintFlags = item.gridbinding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }

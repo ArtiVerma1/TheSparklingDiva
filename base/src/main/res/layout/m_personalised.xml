@@ -46,7 +46,7 @@
                 android:layout_marginEnd="4dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:text="@{listdata.textdata}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 bind:layout_constraintEnd_toEndOf="parent"
@@ -83,31 +83,32 @@
                 bind:layout_constraintTop_toBottomOf="@id/shortdescription"
                 bind:texttype="bold" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
-                android:id="@+id/offertext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:gravity="center_vertical"
-                android:text="@{listdata.offertext}"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                android:visibility="gone"
-                bind:layout_constraintStart_toEndOf="@id/specialprice"
-                bind:layout_constraintTop_toBottomOf="@id/shortdescription"
-                bind:texttype="normal" />
+            <!--            <com.shopify.shopifyapp.customviews.MageNativeTextView-->
+            <!--                android:id="@+id/offertext"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="5dp"-->
+            <!--                android:gravity="center_vertical"-->
+            <!--                android:text="@{listdata.offertext}"-->
+            <!--                android:textAppearance="?android:attr/textAppearanceListItemSmall"-->
+            <!--                android:visibility="gone"-->
+            <!--                bind:layout_constraintStart_toEndOf="@id/specialprice"-->
+            <!--                bind:layout_constraintTop_toBottomOf="@id/shortdescription"-->
+            <!--                bind:texttype="normal" />-->
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/regularprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="3dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
                 android:paddingBottom="10dp"
                 android:text="@{listdata.regularprice}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/specialprice"
+                bind:layout_constraintStart_toEndOf="@id/specialprice"
+                bind:layout_constraintTop_toBottomOf="@id/shortdescription"
                 bind:texttype="normal" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

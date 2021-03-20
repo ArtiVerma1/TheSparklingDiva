@@ -63,11 +63,11 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     }
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     holder.personalbinding!!.specialprice.visibility = View.VISIBLE
-                    holder.personalbinding!!.offertext.visibility = View.VISIBLE
-                    holder.personalbinding!!.offertext.setTextColor(holder.personalbinding!!.offertext.context!!.resources.getColor(R.color.green))
+                    //holder.personalbinding!!.offertext.visibility = View.VISIBLE
+                    //holder.personalbinding!!.offertext.setTextColor(holder.personalbinding!!.offertext.context!!.resources.getColor(R.color.green))
                 } else {
                     holder.personalbinding!!.specialprice.visibility = View.GONE
-                    holder.personalbinding!!.offertext.visibility = View.GONE
+                    //holder.personalbinding!!.offertext.visibility = View.GONE
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             } else {
@@ -88,11 +88,11 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     }
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     holder.personalbinding!!.specialprice.visibility = View.VISIBLE
-                    holder.personalbinding!!.offertext.visibility = View.VISIBLE
-                    holder.personalbinding!!.offertext.setTextColor(holder.personalbinding!!.offertext.context!!.resources.getColor(R.color.green))
+                    //    holder.personalbinding!!.offertext.visibility = View.VISIBLE
+                    //   holder.personalbinding!!.offertext.setTextColor(holder.personalbinding!!.offertext.context!!.resources.getColor(R.color.green))
                 } else {
                     holder.personalbinding!!.specialprice.visibility = View.GONE
-                    holder.personalbinding!!.offertext.visibility = View.GONE
+                    // holder.personalbinding!!.offertext.visibility = View.GONE
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             }
