@@ -130,6 +130,11 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         } else {
             nav_view.menu.findItem(R.id.wishlist_bottom).setVisible(true)
         }
+        if (featuresModel.showBottomNavigation) {
+            nav_view.visibility = View.VISIBLE
+        } else {
+            nav_view.visibility = View.GONE
+        }
         nav_view.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_bottom -> {

@@ -7,7 +7,7 @@ import androidx.databinding.library.baseAdapters.BR
 class FeaturesModel : BaseObservable() {
 
     @Bindable
-    var productReview: Boolean? = true
+    var productReview: Boolean? = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.productReview)
@@ -28,6 +28,12 @@ class FeaturesModel : BaseObservable() {
             notifyPropertyChanged(BR.in_app_wishlist)
         }
 
+    @Bindable
+    var showBottomNavigation: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.showBottomNavigation)
+        }
 
     @Bindable
     var rtl_support: Boolean = false
