@@ -84,7 +84,7 @@ class HomePage : NewBaseActivity() {
         }
         homemodel!!.hasBannerOnTop.observe(this, Observer { this.ConsumeBanner(it) })
         homemodel!!.hasFullSearchOnTop.observe(this, Observer { this.consumeFullSearch(it) })
-
+        showHumburger()
         scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
             if (scrollY > oldScrollY) {
                 Log.i(TAG, "Scroll DOWN")

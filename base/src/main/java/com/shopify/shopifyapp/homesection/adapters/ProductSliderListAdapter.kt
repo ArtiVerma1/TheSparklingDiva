@@ -2,6 +2,7 @@ package com.shopify.shopifyapp.homesection.adapters
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -78,6 +79,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 gradientDrawable.cornerRadius = 16f
                 gradientDrawable.setStroke(3, Color.parseColor(item_border_color.getString("color")))
                 binding.card.useCompatPadding = false
+                binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
                 binding.card.background = gradientDrawable
             }
         }

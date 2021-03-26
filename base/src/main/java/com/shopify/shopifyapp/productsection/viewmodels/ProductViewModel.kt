@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,7 @@ import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Urls
+import com.shopify.shopifyapp.utils.Urls.Data.SIZECHART
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -34,7 +36,12 @@ import java.util.concurrent.Future
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
+import java.io.UnsupportedEncodingException
+import java.lang.Runnable
+import java.net.URL
+import java.net.URLEncoder
 
 class ProductViewModel(private val repository: Repository) : ViewModel() {
     var handle = ""
@@ -45,6 +52,8 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var reviewResponse: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
     var reviewBadges: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
     var createreviewResponse = MutableLiveData<ApiResponse>()
+    var sizeChartVisibility = MutableLiveData<Boolean>()
+    var sizeChartUrl = MutableLiveData<String>()
     lateinit var context: Context
     val filteredlist = MutableLiveData<List<Storefront.ProductVariantEdge>>()
 
@@ -218,11 +227,28 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         return isadded[0]
     }
 
+    fun deleteData(product_id: String) {
+        try {
+            val runnable = Runnable {
+                try {
+                    val data = repository.getSingleData(product_id)
+                    repository.deleteSingleData(data)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
     fun filterList(list: List<Storefront.ProductVariantEdge>) {
         try {
             disposables.add(repository.getList(list)
                     .subscribeOn(Schedulers.io())
-                    .filter { x -> x.node.availableForSale }
+                    //  .filter { x -> x.node.availableForSale }
                     .toList()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { result -> filteredlist.setValue(result) })
@@ -258,18 +284,18 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         return isadded[0]
     }
 
-    fun addToCart(variantId: String) {
+    fun addToCart(variantId: String, quantity: Int) {
         try {
             val runnable = Runnable {
                 val data: CartItemData
                 if (repository.getSingLeItem(variantId) == null) {
                     data = CartItemData()
                     data.variant_id = variantId
-                    data.qty = 1
+                    data.qty = quantity
                     repository.addSingLeItem(data)
                 } else {
                     data = repository.getSingLeItem(variantId)
-                    val qty = data.qty + 1
+                    val qty = data.qty + quantity
                     data.qty = qty
                     repository.updateSingLeItem(data)
                 }
@@ -280,6 +306,17 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
             e.printStackTrace()
         }
 
+    }
+
+    fun getQtyInCart(variantId: String): Int {
+        var variant_qty = runBlocking {
+            if (repository.getSingLeItem(variantId) == null) {
+                return@runBlocking 0
+            } else {
+                return@runBlocking repository.getSingLeItem(variantId).qty
+            }
+        }
+        return variant_qty
     }
 
     private val api = MutableLiveData<ApiResponse>()
@@ -314,5 +351,46 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun getSizeChart(shop: String, source: String, product_id: String, tags: String, vendor: String) {
+        RetrofitUrlManager.getInstance().putDomain("douban", Urls.SIZECHART)
+        var hashMap = HashMap<String, String>()
+        hashMap.put("shop", shop)
+        hashMap.put("source", source)
+        hashMap.put("product", product_id)
+        hashMap.put("tags", tags)
+        hashMap.put("vendor", vendor)
+        Log.d("OKHttp", "" + SIZECHART + "?" + getPostDataString(hashMap))
+        sizeChartUrl.value = SIZECHART + "?" + getPostDataString(hashMap)
+        GlobalScope.launch(Dispatchers.Main) {
+            var result = async(Dispatchers.IO) {
+
+                URL(SIZECHART + "?" + getPostDataString(hashMap)).readText()
+            }
+            parseResponse(result.await())
+        }
+    }
+
+    private fun parseResponse(await: String) {
+        if (await.length == 0) {
+            sizeChartVisibility.value = false
+        } else {
+            sizeChartVisibility.value = true
+        }
+    }
+
+    @Throws(UnsupportedEncodingException::class)
+    private fun getPostDataString(params: HashMap<String, String>): String? {
+        val result = StringBuilder()
+        var first = true
+        for ((key, value) in params.entries) {
+            if (first) first = false else result.append("&")
+            result.append(URLEncoder.encode(key, "UTF-8"))
+            result.append("=")
+            result.append(URLEncoder.encode(value, "UTF-8"))
+        }
+        Log.i("POST_STRING", "" + result)
+        return result.toString()
     }
 }

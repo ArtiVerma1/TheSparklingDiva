@@ -36,6 +36,73 @@
                 bind:layout_constraintDimensionRatio="H,1:1.2"
                 bind:layout_constraintTop_toTopOf="parent" />
 
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="30dp"
+                bind:cardBackgroundColor="@color/white"
+                bind:cardCornerRadius="10dp"
+                bind:cardElevation="5dp"
+                bind:cardUseCompatPadding="true"
+                bind:layout_constraintBottom_toBottomOf="@+id/images"
+                bind:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/review_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:visibility="gone">
+
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
+                        android:id="@+id/rating_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0"
+                        bind:layout_constraintBottom_toBottomOf="parent"
+                        bind:layout_constraintStart_toStartOf="parent"
+                        bind:layout_constraintTop_toTopOf="parent"
+                        bind:texttype="normal" />
+
+                    <androidx.appcompat.widget.AppCompatRatingBar
+                        android:id="@+id/ratting_bar"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:numStars="1"
+                        android:rating="1"
+                        bind:layout_constraintBottom_toBottomOf="parent"
+                        bind:layout_constraintStart_toEndOf="@+id/rating_txt"
+                        bind:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/view1"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5dp"
+                        android:background="@color/gray_color"
+                        bind:layout_constraintBottom_toBottomOf="parent"
+                        bind:layout_constraintStart_toEndOf="@+id/ratting_bar"
+                        bind:layout_constraintTop_toTopOf="parent" />
+
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
+                        android:id="@+id/total_review"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="0"
+                        bind:layout_constraintBottom_toBottomOf="parent"
+                        bind:layout_constraintEnd_toEndOf="parent"
+                        bind:layout_constraintStart_toEndOf="@+id/view1"
+                        bind:layout_constraintTop_toTopOf="parent"
+                        bind:texttype="normal" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/out_of_stock"
                 android:layout_width="80dp"
@@ -51,7 +118,8 @@
                 android:layout_height="wrap_content"
                 android:padding="12dp"
                 bind:layout_constraintBottom_toBottomOf="@id/images"
-                bind:layout_constraintStart_toStartOf="@id/images" />
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintStart_toStartOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/aricon"
@@ -64,22 +132,22 @@
                 bind:layout_constraintBottom_toBottomOf="@id/images"
                 bind:layout_constraintEnd_toStartOf="@id/shareicon" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/shareicon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:onClick="@{view->clickhandlers.shareProduct(view,productdata)}"
-                android:padding="12dp"
-                android:src="@drawable/ic_share"
-                android:visibility="@{features.product_share ? View.VISIBLE : View.GONE}"
-                bind:layout_constraintEnd_toEndOf="parent"
-                bind:layout_constraintHorizontal_weight="0.1"
-                bind:layout_constraintStart_toEndOf="@+id/name"
-                bind:layout_constraintTop_toBottomOf="@+id/images" />
+            <!--            <androidx.appcompat.widget.AppCompatImageView-->
+            <!--                android:id="@+id/shareicon"-->
+            <!--                android:layout_width="50dp"-->
+            <!--                android:layout_height="50dp"-->
+            <!--                android:onClick="@{view->clickhandlers.shareProduct(view,productdata)}"-->
+            <!--                android:padding="12dp"-->
+            <!--                android:src="@drawable/ic_share"-->
+            <!--                android:visibility="@{features.product_share ? View.VISIBLE : View.GONE}"-->
+            <!--                bind:layout_constraintEnd_toEndOf="parent"-->
+            <!--                bind:layout_constraintHorizontal_weight="0.1"-->
+            <!--                bind:layout_constraintStart_toEndOf="@+id/name"-->
+            <!--                bind:layout_constraintTop_toBottomOf="@+id/images" />-->
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/name"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
@@ -87,35 +155,10 @@
                 android:gravity="center_vertical"
                 android:text="@{productdata.textdata}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                bind:layout_constraintEnd_toStartOf="@+id/shareicon"
-                bind:layout_constraintHorizontal_weight="0.9"
                 bind:layout_constraintStart_toStartOf="parent"
                 bind:layout_constraintTop_toBottomOf="@id/images"
                 bind:texttype="bold" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/rating_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/roboto_medium"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                bind:layout_constraintStart_toStartOf="@id/name"
-                bind:layout_constraintTop_toBottomOf="@id/name" />
-
-            <WebView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_vertical"
-                bind:layout_constraintEnd_toEndOf="parent"
-                bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/rating_txt"
-                bind:texttype="normal" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/specialprice"
@@ -127,7 +170,7 @@
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:visibility="gone"
                 bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/description"
+                bind:layout_constraintTop_toBottomOf="@id/name"
                 bind:texttype="bold" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
@@ -139,7 +182,7 @@
                 android:text="@{productdata.regularprice}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 bind:layout_constraintStart_toEndOf="@id/specialprice"
-                bind:layout_constraintTop_toBottomOf="@id/description"
+                bind:layout_constraintTop_toBottomOf="@id/name"
                 bind:texttype="normal" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
@@ -152,16 +195,18 @@
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:visibility="gone"
                 bind:layout_constraintStart_toEndOf="@id/regularprice"
-                bind:layout_constraintTop_toBottomOf="@id/description"
+                bind:layout_constraintTop_toBottomOf="@id/name"
                 bind:texttype="normal" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
-                android:id="@+id/barrier"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/gray_color"
+                android:id="@+id/available_qty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textStyle="normal"
                 bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/regularprice"
+                bind:layout_constraintTop_toBottomOf="@+id/regularprice"
                 bind:texttype="normal" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
@@ -169,54 +214,193 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/variantheading"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:visibility="visible"
                 bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/barrier"
+                bind:layout_constraintTop_toBottomOf="@id/available_qty"
                 bind:texttype="bold" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/productvariant"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/sizeChartSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="15dp"
+                android:onClick="@{view->clickhandlers.showSizeChart(view,productdata)}"
+                android:visibility="gone"
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintTop_toBottomOf="@id/available_qty">
+
+                <ImageView
+                    android:id="@+id/size_chart_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/size_chart_icon"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent" />
+
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    android:id="@+id/size_chart_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/size_chart"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toEndOf="@+id/size_chart_icon"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:texttype="normal" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/variant_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:visibility="visible"
+                android:orientation="vertical"
                 bind:layout_constraintStart_toStartOf="parent"
                 bind:layout_constraintTop_toBottomOf="@id/variantheading" />
+
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                android:id="@+id/variant_available_qty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="10dp"
+                bind:layout_constraintTop_toBottomOf="@+id/variant_container"
+                bind:texttype="normal" />
+
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                android:id="@+id/qty_title_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Quantity"
+                bind:layout_constraintTop_toBottomOf="@+id/variant_available_qty"
+                bind:texttype="normal" />
+
+            <LinearLayout
+                android:id="@+id/qtysection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toBottomOf="@+id/qty_title_txt">
+
+                <ImageView
+                    android:id="@+id/decrease"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/image"
+                    android:onClick="@{view->clickhandlers.decrease(view)}"
+                    android:src="@drawable/minu" />
+
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    android:id="@+id/quantity"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/round_corner_gray"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="10sp"
+                    bind:texttype="normal" />
+
+                <ImageView
+                    android:id="@+id/increase"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/image"
+                    android:onClick="@{view->clickhandlers.increase(view)}"
+                    android:src="@drawable/plus" />
+            </LinearLayout>
+
 
             <com.shopify.shopifyapp.customviews.MageNativeButton
                 android:id="@+id/addtocart"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_margin="2dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:onClick="@{(view) -> clickhandlers.addtoCart(view,productdata)}"
                 android:text="@string/addtocart"
                 bind:buttontype="normal"
-                bind:layout_constraintBottom_toTopOf="@id/review_section"
-                bind:layout_constraintEnd_toStartOf="@id/addtowish"
-                bind:layout_constraintHorizontal_weight=".5"
+                bind:layout_constraintBottom_toTopOf="@id/shareicon"
+                bind:layout_constraintEnd_toEndOf="parent"
                 bind:layout_constraintStart_toStartOf="parent"
-                bind:layout_constraintTop_toBottomOf="@id/productvariant" />
+                bind:layout_constraintTop_toBottomOf="@id/qtysection" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeButton
-                android:id="@+id/addtowish"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/shareicon"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_margin="2dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rect_drawable"
+                android:fontFamily="@font/normal"
                 android:gravity="center"
+                android:onClick="@{view->clickhandlers.shareProduct(view,productdata)}"
+                android:padding="4dp"
+                android:text="@string/shareheading"
+                android:visibility="@{features.product_share ? View.VISIBLE : View.GONE}"
+                bind:buttontype="normal"
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toBottomOf="@id/addtocart" />
+
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                android:id="@+id/description_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/description"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toBottomOf="@+id/shareicon"
+                bind:texttype="bold" />
+
+            <WebView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
+                bind:layout_constraintEnd_toEndOf="parent"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toBottomOf="@id/description_title"
+                bind:texttype="normal" />
+
+
+            <ImageView
+                android:id="@+id/addtowish"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
                 android:onClick="@{(view) -> clickhandlers.addtoWish(view,productdata)}"
-                android:text="@{productdata.addtowish}"
+                android:src="@drawable/wishlist_icon"
                 android:visibility="@{features.in_app_wishlist ? View.VISIBLE: View.GONE}"
                 bind:buttontype="normal"
-                bind:layout_constraintBottom_toTopOf="@id/review_section"
                 bind:layout_constraintEnd_toEndOf="parent"
-                bind:layout_constraintHorizontal_weight=".5"
-                bind:layout_constraintStart_toEndOf="@id/addtocart"
-                bind:layout_constraintTop_toBottomOf="@id/productvariant" />
+                bind:layout_constraintTop_toTopOf="@+id/images" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/review_section"
@@ -226,42 +410,68 @@
                 android:background="@color/white"
                 android:padding="10dp"
                 android:visibility="@{features.productReview ? View.VISIBLE : View.GONE}"
-                bind:layout_constraintTop_toBottomOf="@+id/addtowish">
+                bind:layout_constraintTop_toBottomOf="@+id/description">
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    android:id="@+id/ratting_review_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="@string/ratings_reviews"
-                    android:textSize="13sp"
                     bind:layout_constraintStart_toStartOf="parent"
-                    bind:layout_constraintTop_toTopOf="parent" />
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:texttype="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/view_all_but"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:onClick="@{view->clickhandlers.viewAllReview(view)}"
+                    android:text="@string/view_all"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@+id/ratting_review_title" />
+
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/review_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    bind:layout_constraintTop_toBottomOf="@+id/view_all_but"
+                    tools:listitem="@layout/review_list_item" />
+
+                <me.relex.circleindicator.CircleIndicator3
+                    android:id="@+id/review_indecator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@+id/review_list" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/rate_product_but"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rating_but_bg"
-                    android:fontFamily="@font/roboto_medium"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="@font/roboto_bold"
                     android:onClick="@{(view) -> clickhandlers.rateProduct(view,productdata)}"
                     android:padding="8dp"
                     android:text="@string/rate_product"
-                    android:textSize="12sp"
-                    bind:layout_constraintEnd_toEndOf="parent"
-                    bind:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/review_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    bind:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    bind:layout_constraintTop_toBottomOf="@+id/rate_product_but"
-                    tools:listitem="@layout/review_list_item" />
-
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="14sp"
+                    bind:constraint_referenced_ids="review_list,no_reviews"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@+id/review_indecator" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/no_reviews"
@@ -273,7 +483,7 @@
                     android:textSize="12sp"
                     bind:layout_constraintEnd_toEndOf="parent"
                     bind:layout_constraintStart_toStartOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@+id/rate_product_but" />
+                    bind:layout_constraintTop_toBottomOf="@+id/view_all_but" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

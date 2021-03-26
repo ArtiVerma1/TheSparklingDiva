@@ -30,6 +30,7 @@ class Urls {
         const val CLIENT: String = "magenative"
         const val TOKEN: String = "a2ds21R!3rT#R@R23r@#3f3ef"
         const val MulipassSecret: String = "1f4237c87f31090e5763feaa34962b72"
+        const val SIZECHART: String = "https://app.kiwisizing.com/size"
     }
 
     val shopdomain: String

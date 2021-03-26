@@ -42,7 +42,7 @@
     <string name="submit">Submit</string>
     <string name="passwordnotmatch">password not match</string>
     <string name="successfullogin">Successfully login</string>
-    <string name="variantheading">Select Options</string>
+    <string name="variantheading">Select Variants</string>
     <string name="addtocart">Add to Cart</string>
     <string name="addtowish">Add to Wishlist</string>
     <string name="selectvariant">Select Variant First !</string>
@@ -133,4 +133,12 @@
     <string name="email_validation">Please enter email here</string>
     <string name="review_submitted">Review submitted successfully</string>
     <string name="sorry_this_product_does_not_have_any_reviews">Sorry this product does not have any reviews</string>
+    <string name="avaibale_qty">Available Quantity : </string>
+    <string name="avaibale_qty_variant">Available Quantity</string>
+    <string name="shareheading">SHARE</string>
+    <string name="variant_quantity_warning">You have already added the maximum available quantities for this Variant</string>
+    <string name="description">Description</string>
+    <string name="out_of_stock">Out Of Stock</string>
+    <string name="view_all">View All</string>
+    <string name="size_chart">Size Chart</string>
 </resources>

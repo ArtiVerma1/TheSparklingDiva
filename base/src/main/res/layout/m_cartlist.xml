@@ -37,9 +37,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
+                    bind:listitem="@layout/m_cartitem"
                     android:layoutAnimation="@anim/layout_animation"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/giftcard_section"
                     bind:layout_behavior="@string/appbar_scrolling_view_behavior"></androidx.recyclerview.widget.RecyclerView>
 
                 <androidx.constraintlayout.widget.ConstraintLayout

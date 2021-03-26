@@ -99,6 +99,10 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     var cartcount_bottom: TextView? = null
     private val TAG = "NewBaseActivity"
 
+    companion object {
+        lateinit var themeColor: String
+    }
+
     @Inject
     lateinit var recylerAdapter: RecylerAdapter
     private var listDialog: BottomSheetDialog? = null
@@ -212,6 +216,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                     if (this@NewBaseActivity !is HomePage) {
                         toolbar.setBackgroundColor(Color.parseColor(value))
                     }
+                    themeColor = value
                     //   nav_view.menu.findItem(R.id.home_bottom).iconTintList = ColorStateList.valueOf(Color.parseColor(value))
                 }
 

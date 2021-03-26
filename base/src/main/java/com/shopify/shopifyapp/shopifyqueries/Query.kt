@@ -61,6 +61,9 @@ object Query {
                                             .availableForSale()
                                             .descriptionHtml()
                                             .description()
+                                            .tags()
+                                            .vendor()
+                                            .totalInventory()
                                             .variants({ args ->
                                                 args
                                                         .first(120)
@@ -72,6 +75,7 @@ object Query {
                                                                         productVariantQuery
                                                                                 .priceV2({ price -> price.amount().currencyCode() })
                                                                                 .price()
+                                                                                .quantityAvailable()
                                                                                 .presentmentPrices({ arg -> arg.first(25).presentmentCurrencies(list_currency) }, { price -> price.edges({ e -> e.cursor().node({ n -> n.price({ p -> p.amount().currencyCode() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }) }) })
                                                                                 .selectedOptions({ select -> select.name().value() })
                                                                                 .compareAtPriceV2({ compare -> compare.amount().currencyCode() })
@@ -116,6 +120,9 @@ object Query {
                     .availableForSale()
                     .descriptionHtml()
                     .description()
+                    .totalInventory()
+                    .tags()
+                    .vendor()
                     .variants({ args ->
                         args
                                 .first(120)
@@ -125,7 +132,9 @@ object Query {
                                     variantEdgeQuery
                                             .node({ productVariantQuery ->
                                                 productVariantQuery
+                                                        .title()
                                                         .priceV2({ p -> p.amount().currencyCode() })
+                                                        .quantityAvailable()
                                                         .presentmentPrices({ a -> a.first(50).presentmentCurrencies(list_currency) }, { pre -> pre.edges({ ed -> ed.node({ n -> n.price({ p -> p.currencyCode().amount() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }).cursor() }) })
                                                         .selectedOptions({ select -> select.name().value() })
                                                         .compareAtPriceV2({ c -> c.amount().currencyCode() })
@@ -220,6 +229,7 @@ object Query {
                                                     }
                                         }
                                     }
+                                    .totalInventory()
                                     .availableForSale()
                                     .descriptionHtml()
                                     .description()
@@ -248,6 +258,7 @@ object Query {
                                                                         .priceV2 { price: MoneyV2Query -> price.amount().currencyCode() }
                                                                         .presentmentPrices({ arg: PresentmentPricesArguments -> arg.first(25).presentmentCurrencies(list_currency) }) { price: ProductVariantPricePairConnectionQuery -> price.edges { e: ProductVariantPricePairEdgeQuery -> e.cursor().node { na: ProductVariantPricePairQuery -> na.price { pr: MoneyV2Query -> pr.amount().currencyCode() }.compareAtPrice { cp: MoneyV2Query -> cp.amount().currencyCode() } } } }
                                                                         .price()
+                                                                        .quantityAvailable()
                                                                         .title()
                                                                         .selectedOptions { select: SelectedOptionQuery -> select.name().value() }
                                                                         .compareAtPriceV2 { compare: MoneyV2Query -> compare.amount().currencyCode() }

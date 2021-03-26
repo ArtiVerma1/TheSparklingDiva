@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.utils
 
 import com.google.gson.JsonElement
+import com.shopify.shopifyapp.utils.Urls.Data.SIZECHART
 import io.reactivex.Single
 import org.json.JSONObject
 import retrofit2.http.*
@@ -38,4 +39,8 @@ interface ApiCallInterface {
                      @Query("review[author]") reviewAuthor: String?, @Query("review[email]") reviewEmail: String?, @Query("review[title]") reviewTitle: String?,
                      @Query("review[body]") reviewBody: String?): Single<JsonElement>
 
+
+    @GET(SIZECHART)
+    fun getSizeChart(@Query("shop") shop: String,@Query("source") source:String,@Query("product") productId: String?,
+    @Query("tags") tags:String,@Query("vendor") vendor:String):String
 }

@@ -15,6 +15,7 @@ import com.shopify.shopifyapp.jobservicessection.JobScheduler
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
 import com.shopify.shopifyapp.loginsection.activity.RegistrationActivity
 import com.shopify.shopifyapp.ordersection.activities.OrderList
+import com.shopify.shopifyapp.productsection.activities.AllReviewListActivity
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.activities.ZoomActivity
@@ -37,6 +38,7 @@ interface MageNativeAppComponent {
     fun doCollectionInjection(collectionList: CollectionList)
     fun doCollectionInjection(collectionList: CollectionListMenu)
     fun doProductViewInjection(product: ProductView)
+    fun doReviewListInjection(reviewListActivity: AllReviewListActivity)
     fun doZoomActivityInjection(base: ZoomActivity)
     fun doBaseActivityInjection(base: NewBaseActivity)
     fun doWishListActivityInjection(wish: WishList)

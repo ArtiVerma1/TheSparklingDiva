@@ -1526,7 +1526,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                 api.setValue(ApiResponse.success(result))
                             },
                             { throwable ->
-                                customLoader!!.dismiss()
+                                // customLoader!!.dismiss()
                                 api.setValue(ApiResponse.error(throwable))
                             }
                     ))

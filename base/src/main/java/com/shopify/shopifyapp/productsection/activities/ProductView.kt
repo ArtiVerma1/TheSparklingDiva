@@ -1,6 +1,10 @@
 package com.shopify.shopifyapp.productsection.activities
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
@@ -11,27 +15,37 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.activities.Weblink
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MProductviewBinding
 import com.shopify.shopifyapp.databinding.ReviewFormBinding
+import com.shopify.shopifyapp.databinding.SizeChartLayoutBinding
+import com.shopify.shopifyapp.databinding.SwatchesListBinding
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.productsection.adapters.ImagSlider
@@ -40,30 +54,39 @@ import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
 import com.shopify.shopifyapp.productsection.models.ReviewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
 import com.shopify.shopifyapp.utils.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigDecimal
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 class ProductView : NewBaseActivity() {
+    private var productName: String? = null
     private var binding: MProductviewBinding? = null
 
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: ProductViewModel? = null
-    private var variantlist: RecyclerView? = null
     private val TAG = "ProductView"
     var productID = "noid"
+    var variantId: ID? = null
+    var sizeChartUrl: String = ""
 
     @Inject
     lateinit var reviewAdapter: ReviewListAdapter
 
-    @Inject
+
     lateinit var adapter: VariantAdapter
     private var data: ListData? = null
     private var personamodel: PersonalisedViewModel? = null
     private var inStock: Boolean = true
+    private var totalVariant: Int? = null
+    private var variantValidation: JSONObject = JSONObject()
+    var reviewModel: ReviewModel? = null
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -77,7 +100,6 @@ class ProductView : NewBaseActivity() {
         binding?.features = featuresModel
         showBackButton()
         showTittle(" ")
-        variantlist = setLayout(binding!!.productvariant, "horizontal")
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
         model!!.context = this
@@ -93,6 +115,11 @@ class ProductView : NewBaseActivity() {
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)?.observe(this, Observer { this.consumeBadges(it) })
             model?.getReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)?.observe(this, Observer { this.consumeReview(it) })
+            binding?.reviewCard?.visibility = View.VISIBLE
+        }
+        if (featuresModel.sizeChartVisibility) {
+            model?.sizeChartVisibility?.observe(this, Observer { this.consumeSizeChartVisibility(it) })
+            model?.sizeChartUrl?.observe(this, Observer { this.consumeSizeChartURL(it) })
         }
 
         data = ListData()
@@ -106,6 +133,20 @@ class ProductView : NewBaseActivity() {
             } else {
                 model!!.Response().observe(this, Observer<GraphQLResponse> { this.consumeResponse(it) })
             }
+        }
+        binding?.variantAvailableQty?.textSize = 14f
+        binding?.qtyTitleTxt?.textSize = 14f
+    }
+
+    private fun consumeSizeChartURL(it: String?) {
+        sizeChartUrl = it!!
+    }
+
+    private fun consumeSizeChartVisibility(it: Boolean?) {
+        if (it!!) {
+            binding?.sizeChartSection?.visibility = View.VISIBLE
+        } else {
+            binding?.sizeChartSection?.visibility = View.GONE
         }
     }
 
@@ -126,7 +167,8 @@ class ProductView : NewBaseActivity() {
     private fun consumeBadges(response: ApiResponse?) {
         if (response?.data != null) {
             var data = JSONObject(response?.data.toString()).getJSONObject("data")
-            binding?.ratingTxt?.text = data.getJSONObject(getBase64Decode(productID)).getString("total-rating") + " " + getString(R.string.rating)
+            binding?.ratingTxt?.text = data.getJSONObject(getBase64Decode(productID)).getString("total-rating").substring(0, 3)
+            binding?.totalReview?.text = data.getJSONObject(getBase64Decode(productID)).getString("total-reviews")
         }
     }
 
@@ -134,15 +176,18 @@ class ProductView : NewBaseActivity() {
         if (response?.data != null) {
             try {
                 Log.d(TAG, "consumeReview: " + JSONObject(response.data.toString()))
-
                 if (JSONObject(response.data.toString()).getJSONObject("data").has("reviews")) {
-                    var reviewModel = Gson().fromJson<ReviewModel>(response.data.toString(), ReviewModel::class.java) as ReviewModel
-                    if (reviewModel.success!!) {
-                        if (reviewModel.data?.reviews?.size!! > 0) {
+                    reviewModel = Gson().fromJson<ReviewModel>(response.data.toString(), ReviewModel::class.java) as ReviewModel
+                    if (reviewModel?.success!!) {
+                        if (reviewModel?.data?.reviews?.size!! > 0) {
                             binding?.noReviews?.visibility = View.GONE
                             binding?.reviewList?.visibility = View.VISIBLE
-                            reviewAdapter.setData(reviewModel.data?.reviews)
+                            binding?.viewAllBut?.visibility = View.VISIBLE
+                            binding?.reviewIndecator?.visibility = View.VISIBLE
+                            reviewAdapter.setData(reviewModel?.data?.reviews)
                             binding?.reviewList?.adapter = reviewAdapter
+                            binding?.reviewIndecator?.tintIndicator(Color.parseColor(themeColor))
+                            binding?.reviewIndecator?.setViewPager(binding?.reviewList)
                         }
                     }
                 }
@@ -150,6 +195,8 @@ class ProductView : NewBaseActivity() {
                 e.printStackTrace()
                 binding?.noReviews?.visibility = View.VISIBLE
                 binding?.reviewList?.visibility = View.GONE
+                binding?.reviewIndecator?.visibility = View.GONE
+                binding?.viewAllBut?.visibility = View.GONE
             }
         }
     }
@@ -165,21 +212,59 @@ class ProductView : NewBaseActivity() {
     }
 
     private fun filterResponse(list: List<Storefront.ProductVariantEdge>) {
-        adapter!!.setData(list, model, data, variantCallback_ = object : VariantAdapter.VariantCallback {
-            override fun clickVariant(variant: Storefront.ProductVariantEdge) {
-                Log.d(TAG, "clickVariant: " + variant)
-                data?.regularprice = CurrencyFormatter.setsymbol(variant.node.priceV2.amount, variant.node.priceV2.currencyCode.toString())
-                //  data?.specialprice = CurrencyFormatter.setsymbol(variant?.node?.compareAtPriceV2?.amount!!, variant?.node?.compareAtPriceV2?.currencyCode?.toString()!!)
-                // data?.offertext = getDiscount(data?.regularprice?.toDouble()!!, data?.specialprice?.toDouble()!!).toString() + "%off"
-
-            }
-        })
-        variantlist!!.adapter = adapter
-        adapter!!.notifyDataSetChanged()
         if (list.size > 1) {
             binding!!.variantheading.visibility = View.VISIBLE
         } else {
             binding!!.variantheading.visibility = View.GONE
+        }
+        if (list.size > 0) {
+            var swatches_object = JSONObject()
+            for (j in 0 until list.size) {
+                if (list.get(j).node.selectedOptions.size > 0) {
+                    for (i in 0 until list.get(j).node.selectedOptions.size) {
+                        swatches_object.accumulate(list.get(j).node.selectedOptions.get(i).name, list.get(j).node.selectedOptions.get(i).value)
+                    }
+                }
+            }
+            Log.d(TAG, "filterResponse: " + swatches_object)
+            var variant_keys = swatches_object.names() as JSONArray
+            var swatechView: SwatchesListBinding? = null
+            var variant_data: MutableSet<String>? = null
+            totalVariant = variant_keys.length()
+            for (i in 0 until variant_keys.length()) {
+                variant_data = mutableSetOf()
+                swatechView = DataBindingUtil.inflate(layoutInflater, R.layout.swatches_list, null, false)
+                swatechView.variantTitle.text = variant_keys.getString(i)
+                swatechView.variantTitle.setTag(variant_keys.getString(i))
+                swatechView.variantTitle.textSize = 14f
+                if (swatches_object.optJSONArray(variant_keys.getString(i)) != null) {
+                    for (j in 0 until swatches_object.getJSONArray(variant_keys.getString(i)).length()) {
+                        variant_data.add(swatches_object.getJSONArray(variant_keys.getString(i)).getString(j))
+                    }
+                } else {
+                    variant_data.add(swatches_object.getString(variant_keys.getString(i)))
+                }
+                adapter = VariantAdapter()
+                adapter!!.setData(list, variant_data.toList(), variant_keys.getString(i), model, data, variantCallback_ = object : VariantAdapter.VariantCallback {
+                    override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
+                        variantId = variant.node.id
+                        variantValidation.accumulate(variant_title, variantId)
+                        binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
+                        data?.regularprice = CurrencyFormatter.setsymbol(variant.node.priceV2.amount, variant.node.priceV2.currencyCode.toString())
+                        if (variant.node.quantityAvailable == 0) {
+                            binding?.addtocart?.text = getString(R.string.out_of_stock)
+                            inStock = false
+                            adapter.notifyDataSetChanged()
+                        } else {
+                            binding?.addtocart?.text = getString(R.string.addtocart)
+                            inStock = true
+                        }
+                    }
+                })
+                setLayout(swatechView.variantList, "3grid")
+                swatechView.variantList.adapter = adapter
+                binding?.variantContainer?.addView(swatechView.root)
+            }
         }
     }
 
@@ -260,8 +345,19 @@ class ProductView : NewBaseActivity() {
                         }
                     }
                 }
-
             }
+
+            var tags_data: StringBuilder = StringBuilder()
+            if (productedge.tags.size > 0) {
+                productedge.tags.forEach {
+                    tags_data.append("$it,")
+                }
+                Log.d(TAG, "setProductData: " + tags_data.substring(0, tags_data.length - 1))
+            } else {
+                tags_data.append("")
+            }
+
+            model!!.getSizeChart(Urls(application as MyApplication).shopdomain, "magenative", getBase64Decode(productID)!!, tags_data.toString(), productedge.vendor)
             if (Constant.ispersonalisedEnable) {
                 model!!.getRecommendations(productedge!!.id.toString())
             }
@@ -277,7 +373,8 @@ class ProductView : NewBaseActivity() {
                     binding?.shareicon?.visibility = View.VISIBLE
                 }
             }
-
+            binding?.availableQty?.textSize = 14f
+            binding?.availableQty?.text = getString(R.string.avaibale_qty) + productedge.totalInventory
             val variant = productedge!!.variants.edges[0].node
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
             slider.setData(productedge.images.edges)
@@ -285,34 +382,18 @@ class ProductView : NewBaseActivity() {
             binding!!.images.adapter = slider
             binding!!.indicator.setViewPager(binding!!.images)
             data!!.textdata = productedge.title
+            productName = productedge.title
             Log.i("here", productedge.descriptionHtml)
-            /* data!!.descriptionhmtl = Html.fromHtml(productedge.description)*/
-            /*Html.fromHtml(productedge.descriptionHtml)*/
-            /*
-            * Testing Code for images in HTML
-            * */
-            /* data!!.descriptionhmtl = Html.fromHtml(productedge.descriptionHtml, object : Html.ImageGetter {
-                 override fun getDrawable(source: String): Drawable? {
-
-                     Log.i("here",source)
-                     *//*val bmp: Drawable? = Drawable.createFromPath(source)
-                    bmp?.setBounds(0, 0, bmp.getIntrinsicWidth(), bmp.getIntrinsicHeight())
-                    return bmp*//*
-                    val d = LevelListDrawable()
-                    val empty = resources.getDrawable(R.mipmap.ic_launcher)
-                    d.addLevel(0, 0, empty)
-                    d.setBounds(0, 0, empty.intrinsicWidth, empty.intrinsicHeight)
-
-                    LoadImage().execute(source, d)
-
-                    return d
-                }
-            }, null)*/
             binding?.description?.loadData(productedge.descriptionHtml, "text/html", "utf-8")
+
             if (model?.isInwishList(model?.id!!)!!) {
                 data!!.addtowish = resources.getString(R.string.alreadyinwish)
+                Glide.with(this).load(R.drawable.wishlist_selected)
+                        .into(binding?.addtowish!!)
             } else {
                 data!!.addtowish = resources.getString(R.string.addtowish)
+                Glide.with(this).load(R.drawable.wishlist_icon)
+                        .into(binding?.addtowish!!)
             }
 
             if (model!!.presentmentCurrency == "nopresentmentcurrency") {
@@ -324,7 +405,6 @@ class ProductView : NewBaseActivity() {
                         data!!.regularprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
                         data!!.specialprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
                         data!!.offertext = getDiscount(special, regular).toString() + "%off"
-
                     } else {
                         data!!.regularprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
                         data!!.specialprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
@@ -351,7 +431,6 @@ class ProductView : NewBaseActivity() {
                         data!!.regularprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
                         data!!.specialprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
                         data!!.offertext = getDiscount(special, regular).toString() + "%off"
-
                     } else {
                         data!!.regularprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
                         data!!.specialprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
@@ -369,6 +448,7 @@ class ProductView : NewBaseActivity() {
                     binding!!.regularprice.paintFlags = binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             }
+            binding?.regularprice?.textSize = 14f
             model!!.filterList(productedge.variants.edges)
             binding!!.productdata = data
             binding!!.clickhandlers = ClickHandlers()
@@ -401,17 +481,35 @@ class ProductView : NewBaseActivity() {
     inner class ClickHandlers {
         fun addtoCart(view: View, data: ListData) {
             if (inStock) {
-                if (Constant.current == null) {
-                    Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
+                if (variantValidation.names() != null) {
+                    if (variantValidation.names().length() >= totalVariant!!) {
+                        model!!.addToCart(variantId.toString(), binding?.quantity?.text.toString().toInt())
+                        Toast.makeText(view.context, resources.getString(R.string.successcart), Toast.LENGTH_LONG).show()
+                        invalidateOptionsMenu()
+                    } else {
+                        Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
+                    }
                 } else {
-                    model!!.addToCart(Constant.current!!.variant_id!!)
-                    Toast.makeText(view.context, resources.getString(R.string.successcart), Toast.LENGTH_LONG).show()
-                    invalidateOptionsMenu()
+                    Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
                 }
             } else {
                 Toast.makeText(view.context, getString(R.string.outofstock_warning), Toast.LENGTH_SHORT).show()
             }
+        }
 
+        fun showSizeChart(view: View, data: ListData) {
+            var dialog = Dialog(this@ProductView, R.style.WideDialog)
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+            var size_binding = DataBindingUtil.inflate<SizeChartLayoutBinding>(layoutInflater, R.layout.size_chart_layout, null, false)
+            dialog.setContentView(size_binding.root)
+            size_binding.webview.settings.javaScriptEnabled = true
+            size_binding.webview.settings.useWideViewPort = true
+            size_binding.webview.loadUrl(sizeChartUrl)
+            size_binding.closeBut.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
         }
 
         fun addtoWish(view: View, data: ListData) {
@@ -420,15 +518,48 @@ class ProductView : NewBaseActivity() {
                 if (model!!.setWishList(data.product?.id.toString())) {
                     Toast.makeText(view.context, resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
                     data.addtowish = resources.getString(R.string.alreadyinwish)
+                    Glide.with(this@ProductView).load(R.drawable.wishlist_selected)
+                            .into(binding?.addtowish!!)
+                } else {
+                    model!!.deleteData(data.product?.id.toString())
+                    data!!.addtowish = resources.getString(R.string.addtowish)
+                    Glide.with(this@ProductView).load(R.drawable.wishlist_icon)
+                            .into(binding?.addtowish!!)
                 }
             } else {
                 Toast.makeText(view.context, getString(R.string.outofstock_warning), Toast.LENGTH_SHORT).show()
             }
+        }
 
+        fun viewAllReview(view: View) {
+            var intent = Intent(this@ProductView, AllReviewListActivity::class.java)
+            intent.putExtra("reviewList", reviewModel)
+            intent.putExtra("product_name", productName)
+            startActivity(intent)
+            Constant.activityTransition(view.context)
+        }
+
+        fun decrease(view: View) {
+            if ((binding!!.quantity.text.toString()).toInt() > 1) {
+                var quantity: Int = binding!!.quantity.text.toString().toInt()
+                quantity--
+                binding!!.quantity.text = quantity.toString()
+            }
+        }
+
+        fun increase(view: View) {
+            Log.d(TAG, "increase: " + model?.getQtyInCart(variantId.toString()))
+            var total = binding!!.quantity.text.toString().toInt() + model?.getQtyInCart(variantId.toString())!!
+            if (total == binding?.variantAvailableQty?.text.toString().split(" ").get(0).toInt()) {
+                Toast.makeText(this@ProductView, getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+            } else {
+                var quantity: Int = binding!!.quantity.text.toString().toInt()
+                quantity++
+                binding!!.quantity.text = quantity.toString()
+            }
         }
 
         fun shareProduct(view: View, data: ListData) {
-            //Toast.makeText(ProductView.this,data.getProduct().getOnlineStoreUrl(),Toast.LENGTH_LONG).show();
             val shareString = resources.getString(R.string.hey) + "  " + data.product!!.title + "  " + resources.getString(R.string.on) + "  " + resources.getString(R.string.app_name) + "\n" + data.product!!.onlineStoreUrl + "?pid=" + data.product!!.id.toString()
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
@@ -451,7 +582,7 @@ class ProductView : NewBaseActivity() {
         }
 
         fun rateProduct(view: View, data: ListData) {
-            var bottomsheet = BottomSheetDialog(this@ProductView, R.style.WideDialog)
+            var bottomsheet = Dialog(this@ProductView, R.style.WideDialog)
             bottomsheet.window?.setBackgroundDrawableResource(android.R.color.transparent)
             bottomsheet.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
             var reviewFormBinding = DataBindingUtil.inflate<ReviewFormBinding>(layoutInflater, R.layout.review_form, null, false)
@@ -483,7 +614,6 @@ class ProductView : NewBaseActivity() {
             bottomsheet.show()
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.m_product, menu)

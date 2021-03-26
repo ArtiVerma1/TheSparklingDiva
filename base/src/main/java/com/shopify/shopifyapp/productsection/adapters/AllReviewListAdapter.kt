@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.basesection.activities.NewBaseActivity.Companion.themeColor
-import com.shopify.shopifyapp.databinding.ReviewListItemBinding
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.databinding.AllReviewListItemBinding
 import com.shopify.shopifyapp.productsection.models.Review
 import javax.inject.Inject
 
-class ReviewListAdapter @Inject
-constructor() : RecyclerView.Adapter<ReviewListAdapter.ReviewListViewHolder>() {
+class AllReviewListAdapter @Inject constructor() : RecyclerView.Adapter<AllReviewListAdapter.AllReviewListViewHolder>() {
 
     var reviwList: List<Review>? = null
 
@@ -22,34 +21,30 @@ constructor() : RecyclerView.Adapter<ReviewListAdapter.ReviewListViewHolder>() {
         this.reviwList = reviwList
     }
 
-    class ReviewListViewHolder : RecyclerView.ViewHolder {
-        var binding: ReviewListItemBinding? = null
+    class AllReviewListViewHolder : RecyclerView.ViewHolder {
+        var binding: AllReviewListItemBinding? = null
 
-        constructor(itemBinding: ReviewListItemBinding) : super(itemBinding.root) {
+        constructor(itemBinding: AllReviewListItemBinding) : super(itemBinding.root) {
             this.binding = itemBinding
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewListViewHolder {
-        var binding = DataBindingUtil.inflate<ReviewListItemBinding>(LayoutInflater.from(parent.context), R.layout.review_list_item, parent, false)
-        binding.root.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllReviewListViewHolder {
+        var binding = DataBindingUtil.inflate<AllReviewListItemBinding>(LayoutInflater.from(parent.context), R.layout.all_review_list_item, parent, false)
         var gradientDrawable = GradientDrawable()
         gradientDrawable.setSize(binding.circularName.layoutParams.width, binding.circularName.layoutParams.height)
         gradientDrawable.cornerRadius = (binding.circularName.layoutParams.width / 2).toFloat()
-        gradientDrawable.setStroke(2, Color.parseColor(themeColor))
+        gradientDrawable.setStroke(2, Color.parseColor(NewBaseActivity.themeColor))
         binding.circularName.background = gradientDrawable
-        return ReviewListViewHolder(binding)
+        return AllReviewListViewHolder(binding)
     }
 
 
     override fun getItemCount(): Int {
-        if (reviwList?.size!! <= 5)
-            return reviwList?.size!!
-        else
-            return 5
+        return reviwList?.size!!
     }
 
-    override fun onBindViewHolder(holder: ReviewListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AllReviewListViewHolder, position: Int) {
         holder.binding?.reviewList = reviwList?.get(position)
         holder.binding?.ratingBar?.rating = reviwList?.get(position)?.rating?.toFloat()!!
         if (reviwList?.get(position)?.reviewerName?.contains(" ")!!) {

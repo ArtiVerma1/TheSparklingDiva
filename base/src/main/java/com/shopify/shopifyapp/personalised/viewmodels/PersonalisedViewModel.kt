@@ -97,7 +97,7 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
                         errormessage.append(error.message())
                     }
                     Log.i("MageNatyive", "ERROR" + errormessage.toString())
-                    // message.setValue(errormessage.toString())
+                   // message.setValue(errormessage.toString())
                 } else {
                     try {
                         val edge = result.data!!.node as Storefront.Product
