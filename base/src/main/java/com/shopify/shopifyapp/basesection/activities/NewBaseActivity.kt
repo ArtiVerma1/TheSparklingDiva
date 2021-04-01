@@ -378,6 +378,13 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                 }
 
             }
+            "4grid" -> {
+                view.layoutManager = GridLayoutManager(this, 4)
+                if (view.itemDecorationCount == 0) {
+                    view.addItemDecoration(GridSpacingItemDecoration(4, dpToPx(6), true))
+                }
+
+            }
             "customisablegrid" -> {
                 view.layoutManager = GridLayoutManager(this, 3)
 //                if (view.itemDecorationCount == 0) {

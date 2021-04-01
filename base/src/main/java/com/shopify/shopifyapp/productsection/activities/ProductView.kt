@@ -1,8 +1,6 @@
 package com.shopify.shopifyapp.productsection.activities
 
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
@@ -11,24 +9,16 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Base64
 import android.util.Log
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.LinearLayout
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
@@ -38,7 +28,6 @@ import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
-import com.shopify.shopifyapp.basesection.activities.Weblink
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
@@ -214,8 +203,12 @@ class ProductView : NewBaseActivity() {
     private fun filterResponse(list: List<Storefront.ProductVariantEdge>) {
         if (list.size > 1) {
             binding!!.variantheading.visibility = View.VISIBLE
+            binding!!.variantContainer.visibility = View.VISIBLE
         } else {
             binding!!.variantheading.visibility = View.GONE
+            binding!!.variantContainer.visibility = View.GONE
+            binding?.variantAvailableQty?.visibility = View.GONE
+
         }
         if (list.size > 0) {
             var swatches_object = JSONObject()
@@ -245,25 +238,39 @@ class ProductView : NewBaseActivity() {
                     variant_data.add(swatches_object.getString(variant_keys.getString(i)))
                 }
                 adapter = VariantAdapter()
-                adapter!!.setData(list, variant_data.toList(), variant_keys.getString(i), model, data, variantCallback_ = object : VariantAdapter.VariantCallback {
-                    override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
-                        variantId = variant.node.id
-                        variantValidation.accumulate(variant_title, variantId)
-                        binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
-                        data?.regularprice = CurrencyFormatter.setsymbol(variant.node.priceV2.amount, variant.node.priceV2.currencyCode.toString())
-                        if (variant.node.quantityAvailable == 0) {
-                            binding?.addtocart?.text = getString(R.string.out_of_stock)
-                            inStock = false
-                            adapter.notifyDataSetChanged()
-                        } else {
-                            binding?.addtocart?.text = getString(R.string.addtocart)
-                            inStock = true
-                        }
+                if (variant_data.toList().size == 1) {
+                    variantId = list.get(0).node.id
+                    variantValidation.accumulate("title", variantId)
+                    binding?.variantAvailableQty?.text = list.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
+                    data?.regularprice = CurrencyFormatter.setsymbol(list.get(0).node.priceV2.amount, list.get(0).node.priceV2.currencyCode.toString())
+                    if (list.get(0).node.quantityAvailable == 0) {
+                        binding?.addtocart?.text = getString(R.string.out_of_stock)
+                        inStock = false
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        binding?.addtocart?.text = getString(R.string.addtocart)
+                        inStock = true
                     }
-                })
-                setLayout(swatechView.variantList, "3grid")
-                swatechView.variantList.adapter = adapter
-                binding?.variantContainer?.addView(swatechView.root)
+                } else {
+                    adapter!!.setData(list, variant_data.toList(), variant_keys.getString(i), model, data, this, variantCallback_ = object : VariantAdapter.VariantCallback {
+                        override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
+                            variantId = variant.node.id
+                            variantValidation.accumulate(variant_title, variantId)
+                            binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
+                            data?.regularprice = CurrencyFormatter.setsymbol(variant.node.priceV2.amount, variant.node.priceV2.currencyCode.toString())
+                            if (variant.node.quantityAvailable == 0) {
+                                binding?.addtocart?.text = getString(R.string.out_of_stock)
+                                inStock = false
+                                adapter.notifyDataSetChanged()
+                            } else {
+                                binding?.addtocart?.text = getString(R.string.addtocart)
+                                inStock = true
+                            }
+                        }
+                    })
+                    swatechView.variantList.adapter = adapter
+                    binding?.variantContainer?.addView(swatechView.root)
+                }
             }
         }
     }
@@ -328,6 +335,8 @@ class ProductView : NewBaseActivity() {
     }
 
     private fun setProductData(productedge: Storefront.Product?) {
+        var video_thumbnail: String? = null
+        var video_link: String? = null
         try {
             loop@ for (i in 0..productedge!!.media.edges.size - 1) {
                 var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
@@ -344,6 +353,15 @@ class ProductView : NewBaseActivity() {
                             break@loop
                         }
                     }
+                }
+            }
+            for (i in 0 until productedge!!.media.edges.size) {
+                var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
+                if (a.equals("ExternalVideo")) {
+                    var externalVideo = productedge!!.media.edges.get(i).node as Storefront.ExternalVideo
+                    Log.d(TAG, "externalVideo: " + externalVideo.previewImage.originalSrc)
+                    video_thumbnail = externalVideo.previewImage.originalSrc
+                    video_link = externalVideo.embeddedUrl
                 }
             }
 
@@ -377,7 +395,11 @@ class ProductView : NewBaseActivity() {
             binding?.availableQty?.text = getString(R.string.avaibale_qty) + productedge.totalInventory
             val variant = productedge!!.variants.edges[0].node
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-            slider.setData(productedge.images.edges)
+            if (video_thumbnail == null) {
+                slider.setData(productedge.images.edges)
+            } else {
+                slider.setData(productedge.images.edges, video_thumbnail!!, video_link!!)
+            }
             data!!.product = productedge
             binding!!.images.adapter = slider
             binding!!.indicator.setViewPager(binding!!.images)
@@ -548,14 +570,22 @@ class ProductView : NewBaseActivity() {
         }
 
         fun increase(view: View) {
-            Log.d(TAG, "increase: " + model?.getQtyInCart(variantId.toString()))
-            var total = binding!!.quantity.text.toString().toInt() + model?.getQtyInCart(variantId.toString())!!
-            if (total == binding?.variantAvailableQty?.text.toString().split(" ").get(0).toInt()) {
-                Toast.makeText(this@ProductView, getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+            if (variantValidation.names() != null) {
+                if (variantValidation.names().length() >= totalVariant!!) {
+                    Log.d(TAG, "increase: " + model?.getQtyInCart(variantId.toString()))
+                    var total = binding!!.quantity.text.toString().toInt() + model?.getQtyInCart(variantId.toString())!!
+                    if (total == binding?.variantAvailableQty?.text.toString().split(" ").get(0).toInt()) {
+                        Toast.makeText(this@ProductView, getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                    } else {
+                        var quantity: Int = binding!!.quantity.text.toString().toInt()
+                        quantity++
+                        binding!!.quantity.text = quantity.toString()
+                    }
+                } else {
+                    Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
+                }
             } else {
-                var quantity: Int = binding!!.quantity.text.toString().toInt()
-                quantity++
-                binding!!.quantity.text = quantity.toString()
+                Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
             }
         }
 
@@ -570,15 +600,21 @@ class ProductView : NewBaseActivity() {
         }
 
         fun showAR(view: View, data: ListData) {
-            var sceneViewerIntent = Intent(Intent.ACTION_VIEW)
-            var intentUri: Uri =
-                    Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
-                            .appendQueryParameter("file", data.arimage)
-                            .build()
-            sceneViewerIntent.setData(intentUri)
-            sceneViewerIntent.setPackage("com.google.ar.core")
-            startActivity(sceneViewerIntent)
-            Constant.activityTransition(view.context)
+            try {
+                var sceneViewerIntent = Intent(Intent.ACTION_VIEW)
+                var intentUri: Uri =
+                        Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+                                .appendQueryParameter("file", data.arimage)
+                                .build()
+                sceneViewerIntent.setData(intentUri)
+                sceneViewerIntent.setPackage("com.google.ar.core")
+                startActivity(sceneViewerIntent)
+                Constant.activityTransition(view.context)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this@ProductView, getString(R.string.ar_error_text), Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         fun rateProduct(view: View, data: ListData) {

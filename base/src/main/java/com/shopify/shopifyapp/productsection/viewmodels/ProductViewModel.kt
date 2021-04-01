@@ -364,11 +364,16 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         Log.d("OKHttp", "" + SIZECHART + "?" + getPostDataString(hashMap))
         sizeChartUrl.value = SIZECHART + "?" + getPostDataString(hashMap)
         GlobalScope.launch(Dispatchers.Main) {
-            var result = async(Dispatchers.IO) {
-
-                URL(SIZECHART + "?" + getPostDataString(hashMap)).readText()
+            try {
+                coroutineScope {
+                    var result = async(Dispatchers.IO) {
+                        URL(SIZECHART + "?" + getPostDataString(hashMap)).readText()
+                    }
+                    parseResponse(result.await())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            parseResponse(result.await())
         }
     }
 

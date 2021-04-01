@@ -21,7 +21,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".productsection.activities.AllReviewListActivity"></activity>
+        <activity android:name=".productsection.activities.VideoPlayerActivity"></activity>
+        <activity android:name=".productsection.activities.AllReviewListActivity" />
         <activity android:name=".productsection.activities.ZoomActivity" />
         <activity android:name=".collectionsection.activities.CollectionListMenu" />
         <activity android:name=".checkoutsection.activities.OrderSuccessActivity" />

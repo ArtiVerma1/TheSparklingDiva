@@ -11,8 +11,12 @@ import com.shopify.shopifyapp.productsection.fragments.ImageFragment
 
 class ImagSlider(fm: FragmentManager, behavior: Int) : FragmentStatePagerAdapter(fm, behavior) {
     private var images: List<Storefront.ImageEdge>? = null
-    fun setData(images: List<Storefront.ImageEdge>) {
+    private var video_thumbnail: String? = null
+    private var videoLink: String? = null
+    fun setData(images: List<Storefront.ImageEdge>, video_thumbnail: String? = null, videoLink: String? = null) {
         this.images = images
+        this.videoLink = videoLink
+        this.video_thumbnail = video_thumbnail
     }
 
     override fun getItem(position: Int): Fragment {
@@ -20,7 +24,13 @@ class ImagSlider(fm: FragmentManager, behavior: Int) : FragmentStatePagerAdapter
         try {
             fragment = ImageFragment(images!!)
             val bundle = Bundle()
-            bundle.putString("url", images!![position].node.originalSrc)
+            if (position == 1 && video_thumbnail != null) {
+                bundle.putString("url", video_thumbnail)
+                bundle.putString("type", "video")
+                bundle.putString("video_link", videoLink)
+            } else {
+                bundle.putString("url", images!![position].node.originalSrc)
+            }
             fragment.arguments = bundle
         } catch (e: Exception) {
             e.printStackTrace()

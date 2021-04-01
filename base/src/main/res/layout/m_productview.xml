@@ -125,12 +125,16 @@
                 android:id="@+id/aricon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginTop="15dp"
                 android:onClick="@{view->clickhandlers.showAR(view,productdata)}"
                 android:padding="12dp"
+                android:translationZ="10dp"
+                android:background="@drawable/white_solid_circle"
                 android:src="@drawable/ic_augmentedreality"
                 android:visibility="gone"
-                bind:layout_constraintBottom_toBottomOf="@id/images"
-                bind:layout_constraintEnd_toStartOf="@id/shareicon" />
+                bind:layout_constraintEnd_toEndOf="@+id/addtowish"
+                bind:layout_constraintStart_toStartOf="@+id/addtowish"
+                bind:layout_constraintTop_toBottomOf="@+id/addtowish" />
 
             <!--            <androidx.appcompat.widget.AppCompatImageView-->
             <!--                android:id="@+id/shareicon"-->
@@ -391,11 +395,15 @@
 
             <ImageView
                 android:id="@+id/addtowish"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:translationZ="10dp"
+                android:tint="@android:color/holo_red_light"
+                android:background="@drawable/white_solid_circle"
                 android:onClick="@{(view) -> clickhandlers.addtoWish(view,productdata)}"
+                android:padding="10dp"
                 android:src="@drawable/wishlist_icon"
                 android:visibility="@{features.in_app_wishlist ? View.VISIBLE: View.GONE}"
                 bind:buttontype="normal"

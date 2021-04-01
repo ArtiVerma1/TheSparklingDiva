@@ -1,10 +1,12 @@
 package com.shopify.shopifyapp.productsection.adapters
 
+import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +21,9 @@ import com.shopify.shopifyapp.databinding.SwatchesListItemBinding
 import com.shopify.shopifyapp.productsection.models.VariantData
 import com.shopify.shopifyapp.productsection.viewholders.VariantItem
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import java.lang.IndexOutOfBoundsException
 
@@ -27,6 +32,7 @@ import javax.inject.Inject
 class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
     private var variants: List<Storefront.ProductVariantEdge>? = null
     private var model: ProductViewModel? = null
+    private var context: Context? = null
     private var data: ListData? = null
     private var variant_data: List<String>? = null
     private val TAG = "VariantAdapter"
@@ -70,19 +76,21 @@ class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
             variantCallback?.clickVariant(variants?.get(position)!!, variant_title!!)
             notifyDataSetChanged()
         }
+
     }
 
     override fun getItemCount(): Int {
         return variant_data?.size!!
     }
 
-    fun setData(variants: List<Storefront.ProductVariantEdge>, variant_data: List<String>, variant_title: String, model: ProductViewModel?, data: ListData?, variantCallback_: VariantCallback) {
+    fun setData(variants: List<Storefront.ProductVariantEdge>, variant_data: List<String>, variant_title: String, model: ProductViewModel?, data: ListData?, context: Context, variantCallback_: VariantCallback) {
         this.variants = variants
         this.model = model
         this.data = data
         this.variant_title = variant_title
         this.variant_data = variant_data
         variantCallback = variantCallback_
+        this.context = context
     }
 
 }

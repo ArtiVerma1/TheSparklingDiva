@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="22dp"
             android:paddingTop="8dp"
+            android:singleLine="true"
             android:paddingEnd="22dp"
             android:paddingBottom="8dp"
             app:texttype="normal" />
