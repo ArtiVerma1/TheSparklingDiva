@@ -43,8 +43,11 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     private val fireBaseResponseMutableLiveData = MutableLiveData<FireBaseResponse>()
     private val notification_compaign = MutableLiveData<Boolean>()
     val errorMessageResponse = MutableLiveData<String>()
+    var filteredproducts: MutableLiveData<MutableList<Storefront.ProductEdge>>? = MutableLiveData<MutableList<Storefront.ProductEdge>>()
+    var presentmentcurrency: String? = null
     var appLocalData: AppLocalData = AppLocalData()
     val message = MutableLiveData<String>()
+    var searchcursor: String = "nocursor"
 
     companion object {
         var featuresModel: FeaturesModel = FeaturesModel()
@@ -54,6 +57,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     val isLogin: Boolean
         get() = repository.isLogin
 
+
     fun Response(shop: String): MutableLiveData<LocalDbResponse> {
         val handler = Handler()
         handler.postDelayed({ // Do something after 5s = 5000ms
@@ -61,6 +65,22 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
         }, 2000)
 
         return responseLiveData
+    }
+
+    fun setPresentmentCurrencyForModel() {
+        try {
+            val runnable = Runnable {
+                if (repository.localData[0].currencycode == null) {
+                    presentmentcurrency = "nopresentmentcurrency"
+                } else {
+                    presentmentcurrency = repository.localData[0].currencycode
+                }
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     fun getNotificationCompaign(): MutableLiveData<Boolean> {
@@ -86,6 +106,70 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     }
 
+    public fun getProductsByKeywords(keyword: String): Unit {
+        var currency_list = ArrayList<Storefront.CurrencyCode>()
+        if (presentmentcurrency != "nopresentmentcurrency") {
+            currency_list.add(Storefront.CurrencyCode.valueOf(presentmentcurrency!!))
+        }
+        try {
+            val call = repository.graphClient.queryGraph(Query.getSearchProducts(keyword, searchcursor, currency_list))
+            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invokeProduct(result) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return Unit
+    }
+
+    private fun invokeProduct(result: GraphCallResult<Storefront.QueryRoot>) {
+        if (result is GraphCallResult.Success<*>) {
+            consumeProductResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeProductResponse(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+    }
+
+    private fun consumeProductResponse(reponse: GraphQLResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    Log.i("MageNative", "1" + errormessage);
+                    message.setValue(errormessage.toString())
+                } else {
+                    filterProduct(result.data!!.products.edges)
+                }
+            }
+            Status.ERROR -> {
+                Log.i("MageNative", "2" + reponse.error!!.error.message);
+                message.setValue(reponse.error!!.error.message)
+            }
+            else -> {
+            }
+        }
+    }
+
+    fun filterProduct(list: MutableList<Storefront.ProductEdge>) {
+        try {
+            disposables.add(repository.getProductList(list)
+                    .subscribeOn(Schedulers.io())
+//                     { x -> x.node.availableForSale }
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result -> filteredproducts!!.value = result })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
     private fun currencyResponse(result: GraphCallResult<Storefront.QueryRoot>) {
         if (result is GraphCallResult.Success<*>) {
             consumeResponseCurrency(GraphQLResponse.success(result as GraphCallResult.Success<*>))
@@ -93,6 +177,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
             consumeResponseCurrency(GraphQLResponse.error(result as GraphCallResult.Failure))
         }
     }
+
 
     private fun consumeResponseCurrency(reponse: GraphQLResponse) {
         when (reponse.status) {

@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.ktx.Firebase
+import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.MyApplication.Companion.dataBaseReference
@@ -47,6 +48,8 @@ class Splash : AppCompatActivity() {
     private var product_id: String? = null
     private var tm: JobScheduler? = null
     private lateinit var auth: FirebaseAuth
+    private var productTitle: String? = null
+    private var productData: Storefront.Product? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +58,8 @@ class Splash : AppCompatActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doSplashInjection(this)
         splashmodel = ViewModelProvider(this, viewModelFactory).get(SplashViewModel::class.java)
         splashmodel!!.message.observe(this, Observer<String> { this.showToast(it) })
+        splashmodel?.setPresentmentCurrencyForModel()
+        splashmodel!!.filteredproducts!!.observe(this, Observer<MutableList<Storefront.ProductEdge>> { this.setProductData(it) })
         initializeFirebase();
         val mServiceComponent = ComponentName(this, com.shopify.shopifyapp.jobservicessection.JobScheduler::class.java)
         val builder = JobInfo.Builder(101, mServiceComponent)
@@ -73,10 +78,21 @@ class Splash : AppCompatActivity() {
             val appLinkAction = appLinkIntent.action
             if (appLinkIntent.data != null) {
                 if (appLinkIntent.data!!.getQueryParameters("pid") != null) {
-                    product_id = appLinkIntent.data!!.getQueryParameters("pid")[0]
+                    try {
+                        product_id = appLinkIntent.data!!.getQueryParameters("pid")[0]
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        var link_array = appLinkIntent.data!!.toString().replace("https://", "").split("/")
+                        productTitle = link_array.get(link_array.size - 1)
+                        splashmodel?.getProductsByKeywords(productTitle!!)
+                    }
                 }
             }
         }
+    }
+
+    private fun setProductData(product: MutableList<Storefront.ProductEdge>?) {
+        productData = product?.get(0)?.node
     }
 
     private fun showToast(it: String?) {
@@ -153,6 +169,12 @@ class Splash : AppCompatActivity() {
                 intent = arrayOfNulls(2)
                 val product = Intent(this@Splash, ProductView::class.java)
                 product.putExtra("ID", product_id)
+                intent[1] = product
+            } else if (productData != null) {
+                intent = arrayOfNulls(2)
+                val product = Intent(this@Splash, ProductView::class.java)
+                product.putExtra("product", productData)
+                product.putExtra("tittle", productTitle)
                 intent[1] = product
             } else {
                 intent = arrayOfNulls(1)

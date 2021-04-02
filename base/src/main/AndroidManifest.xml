@@ -21,11 +21,21 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".productsection.activities.VideoPlayerActivity"></activity>
-        <activity android:name=".productsection.activities.AllReviewListActivity" />
-        <activity android:name=".productsection.activities.ZoomActivity" />
-        <activity android:name=".collectionsection.activities.CollectionListMenu" />
-        <activity android:name=".checkoutsection.activities.OrderSuccessActivity" />
+        <activity
+            android:name=".productsection.activities.VideoPlayerActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".productsection.activities.AllReviewListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".productsection.activities.ZoomActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".collectionsection.activities.CollectionListMenu"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".checkoutsection.activities.OrderSuccessActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".notificationsection.FirebaseInstanceIDService">
             <intent-filter>
@@ -43,7 +53,9 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name=".basesection.activities.Splash">
+        <activity
+            android:name=".basesection.activities.Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,44 +76,65 @@
         </activity>
         <activity
             android:name=".addresssection.activities.AddressList"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".basesection.activities.Weblink" />
-        <activity android:name=".basesection.activities.NewBaseActivity" />
+        <activity
+            android:name=".basesection.activities.Weblink"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".basesection.activities.NewBaseActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".productsection.activities.ProductList"
-            android:launchMode="singleTop" />
-        <activity android:name=".productsection.activities.ProductView" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".productsection.activities.ProductView"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".collectionsection.activities.CollectionList"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".wishlistsection.activities.WishList"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".cartsection.activities.CartList"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ordersection.activities.OrderList"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".searchsection.activities.AutoSearch"
-            android:launchMode="singleTop" />
-        <activity android:name=".checkoutsection.activities.CheckoutWeblink" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".checkoutsection.activities.CheckoutWeblink"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".trialsection.activities.TrialExpired"
-            android:launchMode="singleTask" />
-        <activity android:name=".homesection.activities.HomePage" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homesection.activities.HomePage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".loginsection.activity.LoginActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".userprofilesection.activities.UserProfile"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".loginsection.activity.RegistrationActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".searchsection.activities.SearchByScanner"
