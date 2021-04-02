@@ -7,14 +7,14 @@ import androidx.databinding.library.baseAdapters.BR
 class FeaturesModel : BaseObservable() {
 
     @Bindable
-    var sizeChartVisibility: Boolean = true
+    var sizeChartVisibility: Boolean = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.sizeChartVisibility)
         }
 
     @Bindable
-    var productReview: Boolean? = true
+    var productReview: Boolean? = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.productReview)
@@ -22,7 +22,7 @@ class FeaturesModel : BaseObservable() {
 
 
     @Bindable
-    var outOfStock: Boolean? = true
+    var outOfStock: Boolean? = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.outOfStock)
