@@ -32,7 +32,7 @@ interface ApiCallInterface {
     fun getBadges(@Query("mid") mid: String?, @Query("product_id") productId: String?): Single<JsonElement>
 
     @GET("index.php/shopifymobile/productreviewapi/product")
-    fun getReviewsList(@Query("mid") mid: String?, @Query("product_id") productId: String?): Single<JsonElement>
+    fun getReviewsList(@Query("mid") mid: String?, @Query("product_id") productId: String?, @Query("page") page: Int): Single<JsonElement>
 
     @GET("index.php/shopifymobile/productreviewapi/create")
     fun createReview(@Query("mid") mid: String?, @Query("review[rating]") reviewRating: String?, @Query("product_id") productId: String?,
@@ -41,6 +41,6 @@ interface ApiCallInterface {
 
 
     @GET(SIZECHART)
-    fun getSizeChart(@Query("shop") shop: String,@Query("source") source:String,@Query("product") productId: String?,
-    @Query("tags") tags:String,@Query("vendor") vendor:String):String
+    fun getSizeChart(@Query("shop") shop: String, @Query("source") source: String, @Query("product") productId: String?,
+                     @Query("tags") tags: String, @Query("vendor") vendor: String): String
 }

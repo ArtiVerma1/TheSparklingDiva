@@ -49,7 +49,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<GraphQLResponse>()
-    var reviewResponse: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
+    var reviewResponse: MutableLiveData<ApiResponse>? = null
     var reviewBadges: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
     var createreviewResponse = MutableLiveData<ApiResponse>()
     var sizeChartVisibility = MutableLiveData<Boolean>()
@@ -58,8 +58,9 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     val filteredlist = MutableLiveData<List<Storefront.ProductVariantEdge>>()
 
 
-    fun getReviews(mid: String, product_id: String): MutableLiveData<ApiResponse> {
-        getProductReviews(mid, product_id)
+    fun getReviews(mid: String, product_id: String, page: Int): MutableLiveData<ApiResponse> {
+        reviewResponse = MutableLiveData<ApiResponse>()
+        getProductReviews(mid, product_id, page)
         return reviewResponse!!
     }
 
@@ -68,9 +69,9 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         return reviewBadges!!
     }
 
-    fun getProductReviews(mid: String, product_id: String) {
+    fun getProductReviews(mid: String, product_id: String, page: Int) {
 
-        doRetrofitCall(repository.getProductReviews(mid, product_id), disposables, customResponse = object : CustomResponse {
+        doRetrofitCall(repository.getProductReviews(mid, product_id, page), disposables, customResponse = object : CustomResponse {
             override fun onSuccessRetrofit(result: JsonElement) {
                 reviewResponse?.setValue(ApiResponse.success(result))
             }

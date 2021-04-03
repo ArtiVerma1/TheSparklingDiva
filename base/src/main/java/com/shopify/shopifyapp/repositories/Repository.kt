@@ -208,8 +208,8 @@ class Repository {
         return appdatabase.getLivePreviewDao().getPreviewDetails
     }
 
-    fun getProductReviews(mid: String, product_id: String): Single<JsonElement> {
-        return apiCallInterface.getReviewsList(mid, product_id)
+    fun getProductReviews(mid: String, product_id: String, page: Int): Single<JsonElement> {
+        return apiCallInterface.getReviewsList(mid, product_id,page)
     }
 
     fun getbadgeReviews(mid: String, product_id: String): Single<JsonElement> {
@@ -220,7 +220,7 @@ class Repository {
         return apiCallInterface.createReview(mid, reviewRating, product_id, reviewAuthor, reviewEmail, reviewTitle, reviewBody)
     }
 
-    fun sizeChart(shop: String, source: String, product_id: String, tags: String, vendor: String):String {
+    fun sizeChart(shop: String, source: String, product_id: String, tags: String, vendor: String): String {
         return apiCallInterface.getSizeChart(shop, source, product_id, tags, vendor)
     }
 

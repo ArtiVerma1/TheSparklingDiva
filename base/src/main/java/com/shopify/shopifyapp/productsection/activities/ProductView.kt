@@ -103,7 +103,7 @@ class ProductView : NewBaseActivity() {
         }
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)?.observe(this, Observer { this.consumeBadges(it) })
-            model?.getReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)?.observe(this, Observer { this.consumeReview(it) })
+            model?.getReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!, 1)?.observe(this, Observer { this.consumeReview(it) })
             binding?.reviewCard?.visibility = View.VISIBLE
         }
         if (featuresModel.sizeChartVisibility) {
@@ -146,7 +146,7 @@ class ProductView : NewBaseActivity() {
                 Toast.makeText(this, getString(R.string.review_submitted), Toast.LENGTH_SHORT).show()
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(2000)
-                    model?.getProductReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)
+                    model?.getProductReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!, 1)
                     model?.getbadgeReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)
                 }
             }
@@ -557,6 +557,7 @@ class ProductView : NewBaseActivity() {
             var intent = Intent(this@ProductView, AllReviewListActivity::class.java)
             intent.putExtra("reviewList", reviewModel)
             intent.putExtra("product_name", productName)
+            intent.putExtra("product_id", getBase64Decode(productID))
             startActivity(intent)
             Constant.activityTransition(view.context)
         }

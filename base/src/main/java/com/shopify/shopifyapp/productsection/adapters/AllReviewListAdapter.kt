@@ -14,10 +14,10 @@ import javax.inject.Inject
 
 class AllReviewListAdapter @Inject constructor() : RecyclerView.Adapter<AllReviewListAdapter.AllReviewListViewHolder>() {
 
-    var reviwList: List<Review>? = null
+    var reviwList: ArrayList<Review>? = null
 
 
-    fun setData(reviwList: List<Review>?) {
+    fun setData(reviwList: ArrayList<Review>?) {
         this.reviwList = reviwList
     }
 
