@@ -70,10 +70,12 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     fun setPresentmentCurrencyForModel() {
         try {
             val runnable = Runnable {
-                if (repository.localData[0].currencycode == null) {
-                    presentmentcurrency = "nopresentmentcurrency"
-                } else {
-                    presentmentcurrency = repository.localData[0].currencycode
+                if(!repository.localData.isEmpty()) {
+                    if (repository.localData[0].currencycode == null) {
+                        presentmentcurrency = "nopresentmentcurrency"
+                    } else {
+                        presentmentcurrency = repository.localData[0].currencycode
+                    }
                 }
             }
             Thread(runnable).start()

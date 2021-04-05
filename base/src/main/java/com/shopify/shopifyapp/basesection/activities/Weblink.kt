@@ -12,10 +12,12 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
+import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MWebpageBinding
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.loader_section.CustomLoader
+import com.shopify.shopifyapp.utils.Urls
 
 class Weblink : NewBaseActivity() {
     private var webView: WebView? = null
@@ -38,7 +40,7 @@ class Weblink : NewBaseActivity() {
         if (getIntent().getStringExtra("link")!!.contains("https")) {
             currentUrl = getIntent().getStringExtra("link")
         } else {
-            currentUrl = "https://" + getResources().getString(R.string.shopdomain) + getIntent().getStringExtra("link")
+            currentUrl = "https://" + Urls(MyApplication.context).shopdomain + getIntent().getStringExtra("link")
         }
         customLoader = CustomLoader(this)
         customLoader?.show()
