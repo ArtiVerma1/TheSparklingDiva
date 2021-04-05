@@ -375,6 +375,7 @@ class LeftMenu : BaseFragment() {
                                     binding.menudata = menuData
                                     binding.clickdata = ClickHandlers(currentcontext)
                                     if (array.getJSONObject(i).has("menus")) {
+                                        binding.root.findViewById<View>(R.id.expand_collapse).visibility = View.VISIBLE
                                         updateMenu(array.getJSONObject(i).getJSONArray("menus"), binding.root.findViewById(R.id.submenus))
                                     }
                                     menulist.addView(binding.root)

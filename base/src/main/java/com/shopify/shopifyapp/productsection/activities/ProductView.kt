@@ -256,6 +256,7 @@ class ProductView : NewBaseActivity() {
                         override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
                             variantId = variant.node.id
                             variantValidation.accumulate(variant_title, variantId)
+                            binding?.variantAvailableQty?.visibility = View.VISIBLE
                             binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
                             data?.regularprice = CurrencyFormatter.setsymbol(variant.node.priceV2.amount, variant.node.priceV2.currencyCode.toString())
                             if (variant.node.quantityAvailable == 0) {
@@ -640,6 +641,9 @@ class ProductView : NewBaseActivity() {
                     reviewFormBinding.bodyEdt.requestFocus()
                 } else if (TextUtils.isEmpty(reviewFormBinding.emailEdt.text.toString().trim())) {
                     reviewFormBinding.emailEdt.error = getString(R.string.email_validation)
+                    reviewFormBinding.emailEdt.requestFocus()
+                } else if (!model?.isValidEmail(reviewFormBinding.emailEdt.text.toString().trim())!!) {
+                    reviewFormBinding.emailEdt.error = resources.getString(R.string.invalidemail)
                     reviewFormBinding.emailEdt.requestFocus()
                 } else {
                     model?.getcreateReview(Urls(application as MyApplication).mid, reviewFormBinding.ratingBar.rating.toString(), getBase64Decode(productID)!!,

@@ -6,7 +6,9 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -23,7 +25,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.gson.JsonElement
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.R2.id.view
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
@@ -44,7 +45,6 @@ import kotlinx.android.synthetic.main.m_newbaseactivity.*
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 class HomePage : NewBaseActivity() {
     private var binding: MHomepageModifiedBinding? = null
@@ -72,7 +72,7 @@ class HomePage : NewBaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doHomePageInjection(this)
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
-
+        showHumburger()
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })
         homemodel!!.getHomePageData()?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
@@ -84,7 +84,6 @@ class HomePage : NewBaseActivity() {
         }
         homemodel!!.hasBannerOnTop.observe(this, Observer { this.ConsumeBanner(it) })
         homemodel!!.hasFullSearchOnTop.observe(this, Observer { this.consumeFullSearch(it) })
-        showHumburger()
         scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
             if (scrollY > oldScrollY) {
                 Log.i(TAG, "Scroll DOWN")
@@ -154,7 +153,13 @@ class HomePage : NewBaseActivity() {
         hasBanner = it
     }
 
+    override fun onPause() {
+        super.onPause()
+        drawer_layout.closeDrawers()
+    }
+
     fun setToggle(toolbar: androidx.appcompat.widget.Toolbar) {
+        showHumburger()
         setSupportActionBar(toolbar)
         Objects.requireNonNull<ActionBar>(supportActionBar).setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)

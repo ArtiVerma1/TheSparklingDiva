@@ -42,6 +42,7 @@ import java.io.UnsupportedEncodingException
 import java.lang.Runnable
 import java.net.URL
 import java.net.URLEncoder
+import java.util.regex.Pattern
 
 class ProductViewModel(private val repository: Repository) : ViewModel() {
     var handle = ""
@@ -398,5 +399,10 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         }
         Log.i("POST_STRING", "" + result)
         return result.toString()
+    }
+
+    fun isValidEmail(target: String): Boolean {
+        val emailPattern = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE)
+        return emailPattern.matcher(target).matches()
     }
 }

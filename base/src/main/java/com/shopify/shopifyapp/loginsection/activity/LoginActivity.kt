@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.loginsection.activity
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -25,6 +27,7 @@ import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MLoginPageBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.cartsection.activities.CartList
+import com.shopify.shopifyapp.databinding.MForgotbottomsheetBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loginsection.viewmodels.LoginViewModel
 import com.shopify.shopifyapp.utils.Constant
@@ -39,7 +42,7 @@ class LoginActivity : NewBaseActivity() {
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: LoginViewModel? = null
-    private var sheet: BottomSheetBehavior<*>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)
@@ -48,8 +51,6 @@ class LoginActivity : NewBaseActivity() {
         showBackButton()
         showTittle(resources.getString(R.string.login))
         (application as MyApplication).mageNativeAppComponent!!.doLoginActivtyInjection(this)
-        sheet = BottomSheetBehavior.from(binding!!.includedforgot.bottomSheet)
-        sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
         model = ViewModelProviders.of(this, factory).get(LoginViewModel::class.java)
         model!!.context = this
         model!!.Response().observe(this, Observer<Storefront.CustomerAccessToken> { this.consumeResponse(it) })
@@ -139,32 +140,30 @@ class LoginActivity : NewBaseActivity() {
         }
 
         fun forgotPass(view: View) {
-            if (sheet!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                sheet!!.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-            if (sheet!!.state == BottomSheetBehavior.STATE_EXPANDED) {
-                sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
-        }
-
-        fun forgotPassword(view: View) {
-            if (binding!!.includedforgot.email.text!!.toString().isEmpty()) {
-                binding!!.includedforgot.email.error = resources.getString(R.string.empty)
-                binding!!.includedforgot.email.requestFocus()
-            } else {
-                if (!model!!.isValidEmail(binding!!.includedforgot.email.text!!.toString())) {
-                    binding!!.includedforgot.email.error = resources.getString(R.string.invalidemail)
-                    binding!!.includedforgot.email.requestFocus()
+            var dialog = Dialog(this@LoginActivity, R.style.WideDialog)
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+            var mForgotbottomsheetBinding = DataBindingUtil.inflate<MForgotbottomsheetBinding>(layoutInflater, R.layout.m_forgotbottomsheet, null, false)
+            dialog.setContentView(mForgotbottomsheetBinding.root)
+            mForgotbottomsheetBinding.login.setOnClickListener {
+                if (mForgotbottomsheetBinding!!.email.text!!.toString().isEmpty()) {
+                    mForgotbottomsheetBinding.email.error = resources.getString(R.string.empty)
+                    mForgotbottomsheetBinding.email.requestFocus()
                 } else {
-                    model!!.recoverCustomer(binding!!.includedforgot.email.text!!.toString())
-                    sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
-                    binding!!.includedforgot.email.setText(" ")
+                    if (!model!!.isValidEmail(mForgotbottomsheetBinding.email.text!!.toString())) {
+                        mForgotbottomsheetBinding.email.error = resources.getString(R.string.invalidemail)
+                        mForgotbottomsheetBinding.email.requestFocus()
+                    } else {
+                        model!!.recoverCustomer(mForgotbottomsheetBinding.email.text!!.toString())
+                        mForgotbottomsheetBinding.email.setText(" ")
+                        dialog.dismiss()
+                    }
                 }
             }
-        }
-
-        fun closeForgotDialog(view: View) {
-            sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
+            mForgotbottomsheetBinding.closeBut.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
         }
     }
 }
