@@ -14,6 +14,7 @@ import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.dependecyinjection.Body
@@ -50,6 +51,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<GraphQLResponse>()
+    val recommendedLiveData = MutableLiveData<GraphQLResponse>()
     var reviewResponse: MutableLiveData<ApiResponse>? = null
     var reviewBadges: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
     var createreviewResponse = MutableLiveData<ApiResponse>()
@@ -132,6 +134,16 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
             return count[0]
         }
 
+    fun shopifyRecommended() {
+        var currency_list = ArrayList<Storefront.CurrencyCode>()
+        if (presentmentCurrency != "nopresentmentcurrency") {
+            currency_list.add(Storefront.CurrencyCode.valueOf(presentmentCurrency!!))
+        }
+        if (SplashViewModel.featuresModel.recommendedProducts) {
+            getRecommendedProducts(currency_list)
+        }
+    }
+
     fun Response(): MutableLiveData<GraphQLResponse> {
         var currency_list = ArrayList<Storefront.CurrencyCode>()
         if (presentmentCurrency != "nopresentmentcurrency") {
@@ -144,6 +156,26 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
             getProductsByHandle(currency_list)
         }
         return responseLiveData
+    }
+
+    private fun getRecommendedProducts(currencyList: ArrayList<Storefront.CurrencyCode>) {
+        try {
+            doGraphQLQueryGraph(repository, Query.recommendedProducts(id, currencyList), customResponse = object : CustomResponse {
+                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                    invokeRecommended(result)
+                }
+            }, context = context)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun invokeRecommended(result: GraphCallResult<Storefront.QueryRoot>) {
+        if (result is GraphCallResult.Success<*>) {
+            recommendedLiveData.setValue(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            recommendedLiveData.setValue(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
     }
 
     private fun getProductsById(currency_list: ArrayList<Storefront.CurrencyCode>) {

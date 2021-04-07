@@ -126,11 +126,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="15dp"
+                android:background="@drawable/white_solid_circle"
                 android:onClick="@{view->clickhandlers.showAR(view,productdata)}"
                 android:padding="12dp"
-                android:translationZ="10dp"
-                android:background="@drawable/white_solid_circle"
                 android:src="@drawable/ic_augmentedreality"
+                android:translationZ="10dp"
                 android:visibility="gone"
                 bind:layout_constraintEnd_toEndOf="@+id/addtowish"
                 bind:layout_constraintStart_toStartOf="@+id/addtowish"
@@ -400,12 +400,12 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:translationZ="10dp"
-                android:tint="@android:color/holo_red_light"
                 android:background="@drawable/white_solid_circle"
                 android:onClick="@{(view) -> clickhandlers.addtoWish(view,productdata)}"
                 android:padding="10dp"
                 android:src="@drawable/wishlist_icon"
+                android:tint="@android:color/holo_red_light"
+                android:translationZ="10dp"
                 android:visibility="@{features.in_app_wishlist ? View.VISIBLE: View.GONE}"
                 bind:buttontype="normal"
                 bind:layout_constraintEnd_toEndOf="parent"
@@ -503,7 +503,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/main_color_gray_lt"
                 android:visibility="gone"
-                bind:layout_constraintBottom_toBottomOf="parent"
+                bind:layout_constraintBottom_toTopOf="@+id/shopifyrecommended_section"
                 bind:layout_constraintTop_toBottomOf="@id/review_section">
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
@@ -529,6 +529,40 @@
                     bind:layout_behavior="@string/appbar_scrolling_view_behavior"
                     bind:layout_constraintBottom_toBottomOf="parent"
                     bind:layout_constraintTop_toBottomOf="@id/personalisedyext"></androidx.recyclerview.widget.RecyclerView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/shopifyrecommended_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/main_color_gray_lt"
+                android:visibility="gone"
+                bind:layout_constraintBottom_toBottomOf="parent"
+                bind:layout_constraintTop_toBottomOf="@id/personalisedsection">
+
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    android:id="@+id/shopifyrecommended_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_margin="8dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/you_may_also_like"
+                    android:textAllCaps="true"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:texttype="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/shopifyrecommended_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@color/white"
+                    android:layoutAnimation="@anim/layout_animation"
+                    bind:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintTop_toBottomOf="@id/shopifyrecommended_title"></androidx.recyclerview.widget.RecyclerView>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

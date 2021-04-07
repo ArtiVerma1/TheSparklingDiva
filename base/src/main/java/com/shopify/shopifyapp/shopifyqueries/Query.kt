@@ -113,6 +113,12 @@ object Query {
         }
     }
 
+    fun recommendedProducts(product_id: String, list_currency: List<Storefront.CurrencyCode>): Storefront.QueryRootQuery {
+        return Storefront.query { root ->
+            root.productRecommendations(ID(product_id), productQuery(list_currency))
+        }
+    }
+
     fun productQuery(list_currency: List<Storefront.CurrencyCode>): Storefront.ProductQueryDefinition {
         return Storefront.ProductQueryDefinition { product ->
             product

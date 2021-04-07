@@ -148,6 +148,9 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             productintent.putExtra("ID", data.product!!.id.toString())
             productintent.putExtra("tittle", data.textdata)
             productintent.putExtra("product", data.product)
+            productintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            productintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            productintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             view.context.startActivity(productintent)
             Constant.activityTransition(view.context)
         }

@@ -124,8 +124,42 @@ class ProductView : NewBaseActivity() {
                 model!!.Response().observe(this, Observer<GraphQLResponse> { this.consumeResponse(it) })
             }
         }
+        model!!.recommendedLiveData.observe(this, Observer { this.consumeRecommended(it) })
+        model!!.shopifyRecommended()
         binding?.variantAvailableQty?.textSize = 14f
         binding?.qtyTitleTxt?.textSize = 14f
+    }
+
+    private fun consumeRecommended(reponse: GraphQLResponse?) {
+        when (reponse?.status) {
+            Status.SUCCESS -> {
+                val result = (reponse?.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    Toast.makeText(this, "" + errormessage, Toast.LENGTH_SHORT).show()
+                } else {
+                    var recommendedList = result.data!!.productRecommendations as ArrayList<Storefront.Product>?
+                    if (recommendedList?.size!! > 0) {
+                        Log.d(TAG, "consumeRecommended: " + recommendedList.size)
+                        binding!!.shopifyrecommendedSection.visibility = View.VISIBLE
+                        setLayout(binding!!.shopifyrecommendedList, "horizontal")
+                        personalisedadapter=PersonalisedAdapter()
+                        personalisedadapter.setData(recommendedList)
+                        binding!!.shopifyrecommendedList.adapter = personalisedadapter
+                    }
+                }
+            }
+            Status.ERROR -> Toast.makeText(this, reponse.error!!.error.message, Toast.LENGTH_SHORT).show()
+            else -> {
+            }
+        }
     }
 
     private fun consumeSizeChartURL(it: String?) {

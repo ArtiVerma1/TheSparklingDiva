@@ -31,7 +31,7 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
     }
 
     interface ItemClick {
-        fun variantSelection(variantData: VariantData)
+        fun variantSelection(variantData: Storefront.ProductVariantEdge)
     }
 
     class QuickVariantViewHolder : RecyclerView.ViewHolder {
@@ -78,7 +78,7 @@ class QuickVariantAdapter : RecyclerView.Adapter<QuickVariantAdapter.QuickVarian
             }
         }
         holder.customVariantListitemBinding?.mainview?.setOnClickListener {
-            itemClickVariant?.variantSelection(data)
+            itemClickVariant?.variantSelection(variants?.get(position)!!)
             selectedPosition = position
             notifyDataSetChanged()
         }
