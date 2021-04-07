@@ -243,7 +243,7 @@ class ProductView : NewBaseActivity() {
                     variantId = list.get(0).node.id
                     variantValidation.accumulate("title", variantId)
                     binding?.variantAvailableQty?.text = list.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
-                    data?.regularprice = CurrencyFormatter.setsymbol(list.get(0).node.priceV2.amount, list.get(0).node.priceV2.currencyCode.toString())
+                    setProductPrice(list.get(0).node)
                     if (list.get(0).node.quantityAvailable == 0) {
                         binding?.addtocart?.text = getString(R.string.out_of_stock)
                         inStock = false
@@ -395,7 +395,7 @@ class ProductView : NewBaseActivity() {
                 }
             }
             binding?.availableQty?.textSize = 14f
-            binding?.availableQty?.text = getString(R.string.avaibale_qty) + productedge.totalInventory
+            binding?.availableQty?.text = getString(R.string.avaibale_qty) + " " + productedge.totalInventory
             val variant = productedge!!.variants.edges[0].node
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
             if (video_thumbnail == null) {
@@ -434,7 +434,6 @@ class ProductView : NewBaseActivity() {
 
     private fun setProductPrice(variant: Storefront.ProductVariant?) {
         if (model!!.presentmentCurrency == "nopresentmentcurrency") {
-            data!!.regularprice = CurrencyFormatter.setsymbol(variant?.priceV2?.amount!!, variant?.priceV2?.currencyCode.toString())
             if (variant?.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(variant.compareAtPriceV2.amount)
                 val regular = java.lang.Double.valueOf(variant.priceV2.amount)
@@ -448,15 +447,20 @@ class ProductView : NewBaseActivity() {
                     data!!.offertext = getDiscount(regular, special).toString() + "%off"
                 }
                 data!!.isStrike = true
+                binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
+                binding!!.specialprice.setTextColor(resources.getColor(R.color.red))
+                var typeface = Typeface.createFromAsset(assets, "fonts/normal.ttf")
+                binding!!.regularprice.setTypeface(typeface)
                 binding!!.regularprice.paintFlags = binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 binding!!.specialprice.visibility = View.VISIBLE
                 binding!!.offertext.visibility = View.VISIBLE
                 binding!!.offertext.setTextColor(resources.getColor(R.color.green))
             } else {
+                data!!.regularprice = CurrencyFormatter.setsymbol(variant?.priceV2?.amount!!, variant?.priceV2?.currencyCode.toString())
                 data!!.isStrike = false
                 binding!!.specialprice.visibility = View.GONE
                 binding!!.offertext.visibility = View.GONE
-                binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
+                binding!!.regularprice.setTextColor(resources.getColor(R.color.red))
                 binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(assets, "fonts/bold.ttf")
                 binding!!.regularprice.setTypeface(typeface)
@@ -464,9 +468,8 @@ class ProductView : NewBaseActivity() {
             }
         } else {
             val edge = variant?.presentmentPrices?.edges?.get(0)
-            data!!.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
-            if (variant.compareAtPriceV2 != null) {
-                val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
+            if (variant?.compareAtPriceV2 != null) {
+                val special = java.lang.Double.valueOf(edge?.node?.compareAtPrice?.amount!!)
                 val regular = java.lang.Double.valueOf(edge.node.price.amount)
                 if (BigDecimal.valueOf(special).compareTo(BigDecimal.valueOf(regular)) == 1) {
                     data!!.regularprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
@@ -478,15 +481,20 @@ class ProductView : NewBaseActivity() {
                     data!!.offertext = getDiscount(regular, special).toString() + "%off"
                 }
                 data!!.isStrike = true
+                binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
+                binding!!.specialprice.setTextColor(resources.getColor(R.color.red))
+                var typeface = Typeface.createFromAsset(assets, "fonts/normal.ttf")
+                binding!!.regularprice.setTypeface(typeface)
                 binding!!.regularprice.paintFlags = binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 binding!!.specialprice.visibility = View.VISIBLE
                 binding!!.offertext.visibility = View.VISIBLE
                 binding!!.offertext.setTextColor(resources.getColor(R.color.green))
             } else {
+                data!!.regularprice = CurrencyFormatter.setsymbol(edge!!.node.price.amount, edge.node.price.currencyCode.toString())
                 data!!.isStrike = false
                 binding!!.specialprice.visibility = View.GONE
                 binding!!.offertext.visibility = View.GONE
-                binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
+                binding!!.regularprice.setTextColor(resources.getColor(R.color.red))
                 binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(assets, "fonts/bold.ttf")
                 binding!!.regularprice.setTypeface(typeface)
