@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
@@ -24,10 +25,12 @@ import com.shopify.shopifyapp.databinding.MProductlistitemBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.customviews.MageNativeRadioButton
+import com.shopify.shopifyapp.databinding.SortDialogLayoutBinding
 import com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter
 import com.shopify.shopifyapp.productsection.viewmodels.ProductListModel
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
+import kotlinx.android.synthetic.main.m_productmain.view.*
 
 import javax.inject.Inject
 
@@ -37,14 +40,12 @@ class ProductList : NewBaseActivity() {
 
     @Inject
     lateinit var factory: ViewModelFactory
-    private var productListModel: ProductListModel? = null
+    var productListModel: ProductListModel? = null
     private var products: MutableList<Storefront.ProductEdge>? = null
     private var productcursor: String? = null
 
     @Inject
     lateinit var product_adapter: ProductRecylerAdapter
-    private var sheet: BottomSheetBehavior<*>? = null
-    private var sortselction: RadioGroup? = null
     private var flag = true
     private val recyclerViewOnScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -75,15 +76,11 @@ class ProductList : NewBaseActivity() {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_productlistitem, group, true)
-        binding!!.handler = Handler()
         productlist = setLayout(binding!!.root.findViewById(R.id.productlist), "grid")
-        sheet = BottomSheetBehavior.from(binding!!.root.findViewById<View>(R.id.bottom_sheet))
-        sortselction = binding!!.root.findViewById(R.id.sortselction)
         showBackButton()
         if (intent.hasExtra("tittle") && intent.getStringExtra("tittle") != null) {
             showTittle(intent.getStringExtra("tittle"))
         }
-        //setPanelBackgroundColor(HomePageViewModel.panel_bg_color!!)
         (application as MyApplication).mageNativeAppComponent!!.doProductListInjection(this)
         productListModel = ViewModelProvider(this, factory).get(ProductListModel::class.java)
         productListModel!!.context = this
@@ -102,35 +99,65 @@ class ProductList : NewBaseActivity() {
         productListModel!!.Response()
         productListModel!!.filteredproducts.observe(this, Observer<MutableList<Storefront.ProductEdge>> { this.setRecylerData(it) })
         productlist!!.addOnScrollListener(recyclerViewOnScrollListener)
-        sortselction!!.setOnCheckedChangeListener { group, checkedId ->
-            val selectedId = group.checkedRadioButtonId
-            val radioButton = findViewById<View>(selectedId) as MageNativeRadioButton
-            appySort(radioButton)
+        binding?.mainview?.sort_but?.setOnClickListener {
+            openSortDialog()
         }
+    }
 
-        binding!!.view.setOnClickListener() {
-            if (sheet!!.state == BottomSheetBehavior.STATE_EXPANDED) {
-                sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
+    private fun openSortDialog() {
+        var dialog = BottomSheetDialog(this, R.style.WideDialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        var sortDialogLayoutBinding = DataBindingUtil.inflate<SortDialogLayoutBinding>(layoutInflater, R.layout.sort_dialog_layout, null, false)
+        dialog.setContentView(sortDialogLayoutBinding.root)
+        sortDialogLayoutBinding.atoz.setOnClickListener {
+            if (flag) {
+                productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.TITLE
+            } else {
+                productListModel!!.keys = Storefront.ProductSortKeys.TITLE
             }
+            productListModel!!.isDirection = false
+            products = null
+            productListModel!!.number = 10
+            productListModel!!.cursor = "nocursor"
+            dialog.dismiss()
         }
-        sheet!!.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    sheet!!.state = BottomSheetBehavior.STATE_EXPANDED
-                }
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    binding!!.view.visibility = View.VISIBLE
-                }
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    binding!!.view.visibility = View.GONE
-                }
+        sortDialogLayoutBinding.ztoa.setOnClickListener {
+            if (flag) {
+                productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.TITLE
+            } else {
+                productListModel!!.keys = Storefront.ProductSortKeys.TITLE
             }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding!!.view.visibility = View.VISIBLE
-                binding!!.view.alpha = slideOffset
+            productListModel!!.isDirection = true
+            products = null
+            productListModel!!.number = 10
+            productListModel!!.cursor = "nocursor"
+            dialog.dismiss()
+        }
+        sortDialogLayoutBinding.htol.setOnClickListener {
+            if (flag) {
+                productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.PRICE
+            } else {
+                productListModel!!.keys = Storefront.ProductSortKeys.PRICE
             }
-        })
+            productListModel!!.isDirection = true
+            products = null
+            productListModel!!.number = 10
+            productListModel!!.cursor = "nocursor"
+            dialog.dismiss()
+        }
+        sortDialogLayoutBinding.ltoh.setOnClickListener {
+            if (flag) {
+                productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.PRICE
+            } else {
+                productListModel!!.keys = Storefront.ProductSortKeys.PRICE
+            }
+            productListModel!!.isDirection = false
+            products = null
+            productListModel!!.number = 10
+            productListModel!!.cursor = "nocursor"
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun collectionResponse(it: Storefront.Collection?) {
@@ -165,56 +192,10 @@ class ProductList : NewBaseActivity() {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
-    private fun appySort(radioButton: MageNativeRadioButton) {
-        try {
-
-            when (radioButton.tag.toString()) {
-                "atoz" -> {
-                    if (flag) {
-                        productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.TITLE
-                    } else {
-                        productListModel!!.keys = Storefront.ProductSortKeys.TITLE
-                    }
-                    productListModel!!.isDirection = false
-                }
-                "ztoa" -> {
-                    if (flag) {
-                        productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.TITLE
-                    } else {
-                        productListModel!!.keys = Storefront.ProductSortKeys.TITLE
-                    }
-                    productListModel!!.isDirection = true
-                }
-                "htol" -> {
-                    if (flag) {
-                        productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.PRICE
-                    } else {
-                        productListModel!!.keys = Storefront.ProductSortKeys.PRICE
-                    }
-                    productListModel!!.isDirection = true
-                }
-                "ltoh" -> {
-                    if (flag) {
-                        productListModel!!.sortKeys = Storefront.ProductCollectionSortKeys.PRICE
-                    } else {
-                        productListModel!!.keys = Storefront.ProductSortKeys.PRICE
-                    }
-                    productListModel!!.isDirection = false
-                }
-            }
-            products = null
-            productListModel!!.number = 10
-            productListModel!!.cursor = "nocursor"
-            sheet!!.state = BottomSheetBehavior.STATE_COLLAPSED
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }
-
     private fun setRecylerData(products: MutableList<Storefront.ProductEdge>) {
         try {
             if (products.size > 0) {
+                binding?.mainview?.productListContainer?.visibility = View.VISIBLE
                 product_adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
                 if (this.products == null) {
                     this.products = products
@@ -236,15 +217,4 @@ class ProductList : NewBaseActivity() {
 
     }
 
-    inner class Handler {
-        fun openSort(view: View) {
-            if (sheet!!.state != BottomSheetBehavior.STATE_EXPANDED) {
-                sheet!!.setState(BottomSheetBehavior.STATE_EXPANDED)
-                sortselction?.visibility = View.VISIBLE
-            } else {
-                sheet!!.setState(BottomSheetBehavior.STATE_COLLAPSED)
-                sortselction?.visibility = View.GONE
-            }
-        }
-    }
 }

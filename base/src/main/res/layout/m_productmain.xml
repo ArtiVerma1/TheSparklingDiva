@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <variable
-            name="handler"
-            type="com.shopify.shopifyapp.productsection.activities.ProductList.Handler" />
-    </data>
-    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/productListContainer"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-       >
+        android:visibility="gone">
+
+        <com.shopify.shopifyapp.customviews.MageNativeTextView
+            android:id="@+id/sort_but"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/black_border_shape"
+            android:gravity="center"
+            android:text="@string/sort"
+            app:layout_constraintTop_toTopOf="parent"
+            app:texttype="normal" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productlist"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
             android:background="@color/white"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sort_but" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

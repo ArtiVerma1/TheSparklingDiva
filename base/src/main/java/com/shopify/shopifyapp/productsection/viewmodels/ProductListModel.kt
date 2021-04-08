@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.productsection.viewmodels
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,7 @@ import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
+import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
@@ -233,6 +235,70 @@ class ProductListModel(var repository: Repository) : ViewModel() {
             e.printStackTrace()
         }
 
+    }
+
+    public fun isInwishList(product_id: String): Boolean {
+        val isadded = booleanArrayOf(false)
+        try {
+            val executor = Executors.newSingleThreadExecutor()
+            val callable = Callable {
+                if (repository.getSingleData(product_id) != null) {
+
+                    Log.i("MageNative", "item already in wishlist : ")
+                    isadded[0] = true
+                }
+                isadded[0]
+            }
+            val future = executor.submit(callable)
+            isadded[0] = future.get()
+            executor.shutdown()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return isadded[0]
+    }
+
+    fun deleteData(product_id: String) {
+        try {
+            val runnable = Runnable {
+                try {
+                    val data = repository.getSingleData(product_id)
+                    repository.deleteSingleData(data)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    fun setWishList(product_id: String): Boolean {
+        val isadded = booleanArrayOf(false)
+        try {
+            val executor = Executors.newSingleThreadExecutor()
+            val callable = Callable {
+                if (repository.getSingleData(product_id) == null) {
+                    Log.i("MageNative", "WishListCount : " + repository.wishListData.size)
+                    val data = ItemData()
+                    data.product_id = product_id
+                    repository.insertWishListData(data)
+                    Log.i("MageNative", "WishListCount 2: " + repository.wishListData.size)
+                    isadded[0] = true
+                }
+                isadded[0]
+            }
+            val future = executor.submit(callable)
+            isadded[0] = future.get()
+            executor.shutdown()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return isadded[0]
     }
 
     override fun onCleared() {

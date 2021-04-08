@@ -143,4 +143,5 @@
     <string name="size_chart">Size Chart</string>
     <string name="ar_error_text">Sorry this device does not support AR feature</string>
     <string name="you_may_also_like">You May Also Like</string>
+    <string name="sort">Sort</string>
 </resources>

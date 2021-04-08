@@ -1,23 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="handler"
-            type="com.shopify.shopifyapp.productsection.activities.ProductList.Handler" />
-    </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/mainview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <include layout="@layout/m_productmain"
-            bind:handler="@{handler}"/>
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-        <include layout="@layout/m_bottomsheet"
-            bind:handler="@{handler}"/>
+        <include layout="@layout/m_productmain" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
 

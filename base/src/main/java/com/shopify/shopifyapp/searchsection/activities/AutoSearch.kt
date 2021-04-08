@@ -122,6 +122,8 @@ class AutoSearch : NewBaseActivity() {
                 Log.d(TAG, "afterTextChanged: " + s.toString())
             }
         })
+
+        binding?.searchtext?.requestFocus()
     }
 
     private fun showToast(msg: String) {

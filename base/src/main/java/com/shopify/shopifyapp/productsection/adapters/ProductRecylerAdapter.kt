@@ -3,18 +3,22 @@ package com.shopify.shopifyapp.productsection.adapters
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.shopify.shopifyapp.databinding.MProductitemBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
+import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.viewholders.ProductItem
 import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
@@ -80,6 +84,10 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     data.specialprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
                     data.offertext = getDiscount(regular, special).toString() + "%off"
                 }
+                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.black)!!)
+                holder.binding!!.specialprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                var typeface = Typeface.createFromAsset(activity?.assets, "fonts/normal.ttf")
+                holder.binding!!.regularprice.setTypeface(typeface)
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 holder.binding!!.specialprice.visibility = View.VISIBLE
                 holder.binding!!.offertext.visibility = View.VISIBLE
@@ -87,6 +95,10 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             } else {
                 holder.binding!!.specialprice.visibility = View.GONE
                 holder.binding!!.offertext.visibility = View.GONE
+                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                holder.binding!!.regularprice.textSize = 15f
+                var typeface = Typeface.createFromAsset(activity?.assets, "fonts/bold.ttf")
+                holder.binding!!.regularprice.setTypeface(typeface)
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         } else {
@@ -105,6 +117,10 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     data.specialprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
                     data.offertext = getDiscount(regular, special).toString() + "%off"
                 }
+                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.black)!!)
+                holder.binding!!.specialprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                var typeface = Typeface.createFromAsset(activity?.assets, "fonts/normal.ttf")
+                holder.binding!!.regularprice.setTypeface(typeface)
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 holder.binding!!.specialprice.visibility = View.VISIBLE
                 holder.binding!!.offertext.visibility = View.VISIBLE
@@ -112,7 +128,24 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             } else {
                 holder.binding!!.specialprice.visibility = View.GONE
                 holder.binding!!.offertext.visibility = View.GONE
+                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                holder.binding!!.regularprice.textSize = 15f
+                var typeface = Typeface.createFromAsset(activity?.assets, "fonts/bold.ttf")
+                holder.binding!!.regularprice.setTypeface(typeface)
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+        }
+        if (SplashViewModel.featuresModel.in_app_wishlist) {
+            if ((activity as ProductList).productListModel?.isInwishList(data.product?.id.toString())!!) {
+                data!!.addtowish = activity?.resources?.getString(R.string.alreadyinwish)
+                Glide.with(activity!!)
+                        .load(R.drawable.wishlist_selected)
+                        .into(holder?.binding?.wishlistBut!!)
+            } else {
+                data!!.addtowish = activity?.resources?.getString(R.string.addtowish)
+                Glide.with(activity!!)
+                        .load(R.drawable.wishlist_icon)
+                        .into(holder?.binding?.wishlistBut!!)
             }
         }
 
@@ -128,6 +161,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
         if (this.products[position].node.images.edges.size > 0) {
             model.imageurl = this.products[position].node.images.edges[0].node.transformedSrc
         }
+        holder?.binding?.features = SplashViewModel.featuresModel
         holder.binding!!.commondata = model
         holder.binding!!.clickproduct = Product(position)
         //  holder.setIsRecyclable(false)
@@ -153,6 +187,18 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             productintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             view.context.startActivity(productintent)
             Constant.activityTransition(view.context)
+        }
+
+        fun wishListAdd(view: View, data: ListData) {
+            if ((activity as ProductList).productListModel?.setWishList(data.product?.id.toString())!!) {
+                Toast.makeText(view.context, view.context.resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
+                data.addtowish = view.context.resources.getString(R.string.alreadyinwish)
+            } else {
+                (activity as ProductList).productListModel?.deleteData(data.product?.id.toString())
+                data!!.addtowish = view.context.resources.getString(R.string.addtowish)
+            }
+            notifyDataSetChanged()
+            (activity as ProductList).invalidateOptionsMenu()
         }
 
         fun addCart(view: View, data: ListData) {
