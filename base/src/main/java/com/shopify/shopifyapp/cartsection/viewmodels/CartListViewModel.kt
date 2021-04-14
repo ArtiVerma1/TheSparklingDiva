@@ -1,23 +1,15 @@
 package com.shopify.shopifyapp.cartsection.viewmodels
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Base64
 import android.util.Log
-
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import com.shopify.buy3.GraphCallResult
-import com.shopify.buy3.GraphResponse
-import com.shopify.buy3.MutationGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.graphql.support.ID
-import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.cartsection.models.CartListItem
-import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.dependecyinjection.Body
@@ -35,15 +27,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
-import org.json.JSONArray
-import org.json.JSONObject
-import java.util.*
-
 import java.util.concurrent.Callable
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
-import kotlin.collections.ArrayList
 
 class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val data = MutableLiveData<Storefront.Checkout>()
@@ -414,6 +399,18 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         disposables.clear()
     }
 
+    fun clearCartData() {
+        try {
+            val runnable = Runnable {
+                repository.deletecart()
+                prepareCart()
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     fun applyGiftCard(gift_card: String, checkoutId: ID?) {
         var list = ArrayList<String>()
         list.add(gift_card)
@@ -423,8 +420,69 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             }
         }, context = context)
 
-
     }
+
+    fun doGooglePay(checkoutId: ID?, totalPrice: String, idempotencyKey: String, billingAddressInput: Storefront.MailingAddressInput) {
+        val input = Storefront.TokenizedPaymentInputV3(Storefront.MoneyInput(totalPrice, presentCurrency as Storefront.CurrencyCode), idempotencyKey,
+                billingAddressInput, "google_pay", Storefront.PaymentTokenType.GOOGLE_PAY)
+
+        doGraphQLMutateGraph(repository, Mutation.checkoutWithGpay(checkoutId!!, input), customResponse = object : CustomResponse {
+            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                invokeGooglePay(result)
+            }
+        }, context = context)
+    }
+
+    private fun invokeGooglePay(result: GraphCallResult<Storefront.Mutation>) {
+        if (result is GraphCallResult.Success<*>) {
+            consumeResponseGooglePay(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeResponseGooglePay(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+        return Unit
+    }
+
+    private fun consumeResponseGooglePay(response: GraphQLResponse) {
+        try {
+            when (response.status) {
+                Status.SUCCESS -> {
+                    val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                    if (result.hasErrors) {
+                        val errors = result.errors
+                        val iterator = errors.iterator()
+                        val errormessage = StringBuilder()
+                        var error: Error? = null
+                        while (iterator.hasNext()) {
+                            error = iterator.next()
+                            errormessage.append(error.message())
+                        }
+                        message.setValue(errormessage.toString())
+                    } else {
+                        val payload = result.data!!.checkoutCompleteWithTokenizedPaymentV3
+                        if (payload.checkoutUserErrors.size > 0) {
+                            val iterator = payload.checkoutUserErrors.iterator()
+                            var error: Storefront.CheckoutUserError? = null
+                            while (iterator.hasNext()) {
+                                error = iterator.next() as Storefront.CheckoutUserError
+                                message.setValue(error.message)
+                            }
+                        } else {
+                            val checkout = payload.checkout
+                            getRecommendations(checkout)
+                            getYouMayRecommendations(checkout)
+                            data.setValue(checkout)
+                        }
+                    }
+                }
+                Status.ERROR -> message.setValue(response.error!!.error.message)
+                else -> {
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
     fun invokeGift(result: GraphCallResult<Storefront.Mutation>): Unit {
         if (result is GraphCallResult.Success<*>) {

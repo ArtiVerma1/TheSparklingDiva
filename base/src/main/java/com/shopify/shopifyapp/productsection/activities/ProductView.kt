@@ -69,7 +69,6 @@ class ProductView : NewBaseActivity() {
     @Inject
     lateinit var reviewAdapter: ReviewListAdapter
 
-
     lateinit var adapter: VariantAdapter
     private var data: ListData? = null
     private var personamodel: PersonalisedViewModel? = null
@@ -89,7 +88,6 @@ class ProductView : NewBaseActivity() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_productview, group, true)
         binding?.features = featuresModel
         showBackButton()
-        showTittle(" ")
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
         model!!.context = this
@@ -150,7 +148,7 @@ class ProductView : NewBaseActivity() {
                         Log.d(TAG, "consumeRecommended: " + recommendedList.size)
                         binding!!.shopifyrecommendedSection.visibility = View.VISIBLE
                         setLayout(binding!!.shopifyrecommendedList, "horizontal")
-                        personalisedadapter=PersonalisedAdapter()
+                        personalisedadapter = PersonalisedAdapter()
                         personalisedadapter.setData(recommendedList)
                         binding!!.shopifyrecommendedList.adapter = personalisedadapter
                     }
@@ -278,14 +276,6 @@ class ProductView : NewBaseActivity() {
                     variantValidation.accumulate("title", variantId)
                     binding?.variantAvailableQty?.text = list.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
                     setProductPrice(list.get(0).node)
-                    if (list.get(0).node.quantityAvailable == 0) {
-                        binding?.addtocart?.text = getString(R.string.out_of_stock)
-                        inStock = false
-                        adapter.notifyDataSetChanged()
-                    } else {
-                        binding?.addtocart?.text = getString(R.string.addtocart)
-                        inStock = true
-                    }
                 } else {
                     adapter!!.setData(list, variant_data.toList(), variant_keys.getString(i), model, data, this, variantCallback_ = object : VariantAdapter.VariantCallback {
                         override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
@@ -401,7 +391,8 @@ class ProductView : NewBaseActivity() {
                     video_link = externalVideo.embeddedUrl
                 }
             }
-
+            Log.d(TAG, "setProductData: " + productedge.handle)
+            Log.d(TAG, "setProductData: " + productedge.id)
             var tags_data: StringBuilder = StringBuilder()
             if (productedge.tags.size > 0) {
                 productedge.tags.forEach {
@@ -442,6 +433,7 @@ class ProductView : NewBaseActivity() {
             binding!!.indicator.setViewPager(binding!!.images)
             data!!.textdata = productedge.title
             productName = productedge.title
+            showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
             binding?.description?.loadData(productedge.descriptionHtml, "text/html", "utf-8")
 
@@ -482,7 +474,7 @@ class ProductView : NewBaseActivity() {
                 }
                 data!!.isStrike = true
                 binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
-                binding!!.specialprice.setTextColor(resources.getColor(R.color.red))
+                binding!!.specialprice.setTextColor(resources.getColor(R.color.price_red))
                 var typeface = Typeface.createFromAsset(assets, "fonts/normal.ttf")
                 binding!!.regularprice.setTypeface(typeface)
                 binding!!.regularprice.paintFlags = binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -494,7 +486,7 @@ class ProductView : NewBaseActivity() {
                 data!!.isStrike = false
                 binding!!.specialprice.visibility = View.GONE
                 binding!!.offertext.visibility = View.GONE
-                binding!!.regularprice.setTextColor(resources.getColor(R.color.red))
+                binding!!.regularprice.setTextColor(resources.getColor(R.color.price_red))
                 binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(assets, "fonts/bold.ttf")
                 binding!!.regularprice.setTypeface(typeface)
@@ -516,7 +508,7 @@ class ProductView : NewBaseActivity() {
                 }
                 data!!.isStrike = true
                 binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
-                binding!!.specialprice.setTextColor(resources.getColor(R.color.red))
+                binding!!.specialprice.setTextColor(resources.getColor(R.color.price_red))
                 var typeface = Typeface.createFromAsset(assets, "fonts/normal.ttf")
                 binding!!.regularprice.setTypeface(typeface)
                 binding!!.regularprice.paintFlags = binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -528,7 +520,7 @@ class ProductView : NewBaseActivity() {
                 data!!.isStrike = false
                 binding!!.specialprice.visibility = View.GONE
                 binding!!.offertext.visibility = View.GONE
-                binding!!.regularprice.setTextColor(resources.getColor(R.color.red))
+                binding!!.regularprice.setTextColor(resources.getColor(R.color.price_red))
                 binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(assets, "fonts/bold.ttf")
                 binding!!.regularprice.setTypeface(typeface)

@@ -1,8 +1,10 @@
 package com.shopify.shopifyapp.cartsection.activities
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
@@ -18,6 +20,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.gson.JsonElement
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
@@ -48,6 +51,7 @@ class CartList : NewBaseActivity() {
     private var personamodel: PersonalisedViewModel? = null
     private var count: Int = 1
     private val TAG = "CartList"
+    private var grandTotal: String? = null
 
     @Inject
     lateinit var adapter: CartListAdapter
@@ -94,6 +98,7 @@ class CartList : NewBaseActivity() {
         binding!!.proceedtocheck.textSize = 13f
         binding!!.handler = ClickHandler()
     }
+
 
     private fun consumeResponseDiscount(it: Storefront.Mutation?) {
         Log.d(TAG, "consumeResponseDiscount: " + it!!.checkoutDiscountCodeApplyV2)
@@ -249,6 +254,7 @@ class CartList : NewBaseActivity() {
                 bottomData.tax = CurrencyFormatter.setsymbol(checkout.totalTaxV2.amount, checkout.totalTaxV2.currencyCode.toString())
             }
             bottomData.grandtotal = CurrencyFormatter.setsymbol(checkout.totalPriceV2.amount, checkout.totalPriceV2.currencyCode.toString())
+            grandTotal = checkout.totalPriceV2.amount
             bottomData.checkouturl = checkout.webUrl
             binding!!.bottomdata = bottomData
             binding!!.root.visibility = View.VISIBLE
@@ -272,6 +278,7 @@ class CartList : NewBaseActivity() {
         return true
     }
 
+
     override fun onResume() {
         super.onResume()
         invalidateOptionsMenu()
@@ -281,8 +288,6 @@ class CartList : NewBaseActivity() {
     inner class ClickHandler {
         fun loadCheckout(view: View, data: CartBottomData) {
             showApplyCouponDialog(data)
-
-
         }
 
         fun applyGiftCard(view: View, bottomData: CartBottomData) {
@@ -295,6 +300,24 @@ class CartList : NewBaseActivity() {
             } else if ((view as MageNativeButton).text == getString(R.string.remove)) {
                 model!!.removeGiftCard(bottomData.giftcardID, bottomData.checkoutId)
             }
+        }
+
+        fun clearCart(view: View) {
+            var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
+            alertDialog.setTitleText(getString(R.string.warning_message))
+            alertDialog.setContentText(getString(R.string.delete_cart_warning))
+            alertDialog.setConfirmText(getString(R.string.yes_delete))
+            alertDialog.setCancelText(getString(R.string.no))
+            alertDialog.setConfirmClickListener { sweetAlertDialog ->
+                sweetAlertDialog.setTitleText(getString(R.string.deleted))
+                        .setContentText(getString(R.string.cart_deleted_message))
+                        .setConfirmText(getString(R.string.done))
+                        .showCancelButton(false)
+                        .setConfirmClickListener(null)
+                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
+                model!!.clearCartData()
+            }
+            alertDialog.show()
         }
 
         private fun showApplyCouponDialog(data: CartBottomData) {
@@ -338,9 +361,7 @@ class CartList : NewBaseActivity() {
                 Constant.activityTransition(this@CartList)
                 count++
             }
-
         }
-
 
         fun showPopUp(data: CartBottomData) {
             try {
@@ -381,7 +402,6 @@ class CartList : NewBaseActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
     }
 }

@@ -1,19 +1,31 @@
 package com.shopify.shopifyapp.personalised.adapters
 
+import android.content.Intent
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.databinding.MPersonalisedBinding
+import com.shopify.shopifyapp.productsection.activities.ProductList
+import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter
 import com.shopify.shopifyapp.productsection.viewholders.ProductItem
+import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -61,6 +73,9 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                         data.specialprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
                         data.offertext = getDiscount(regular, special).toString() + "%off"
                     }
+                    holder.personalbinding!!.regularprice.textSize = 13f
+                    var typeface = Typeface.createFromAsset(holder?.personalbinding?.regularprice?.context?.assets, "fonts/normal.ttf")
+                    holder.personalbinding!!.regularprice.setTypeface(typeface)
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     holder.personalbinding!!.specialprice.visibility = View.VISIBLE
                     //holder.personalbinding!!.offertext.visibility = View.VISIBLE
@@ -68,6 +83,9 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                 } else {
                     holder.personalbinding!!.specialprice.visibility = View.GONE
                     //holder.personalbinding!!.offertext.visibility = View.GONE
+                    holder.personalbinding!!.regularprice.textSize = 15f
+                    var typeface = Typeface.createFromAsset(holder?.personalbinding?.regularprice?.context?.assets, "fonts/bold.ttf")
+                    holder.personalbinding!!.regularprice.setTypeface(typeface)
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             } else {
@@ -86,21 +104,42 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                         data.specialprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
                         data.offertext = getDiscount(regular, special).toString() + "%off"
                     }
+                    holder.personalbinding!!.regularprice.textSize = 13f
+                    var typeface = Typeface.createFromAsset(holder?.personalbinding?.regularprice?.context?.assets, "fonts/normal.ttf")
+                    holder.personalbinding!!.regularprice.setTypeface(typeface)
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     holder.personalbinding!!.specialprice.visibility = View.VISIBLE
                     //    holder.personalbinding!!.offertext.visibility = View.VISIBLE
                     //   holder.personalbinding!!.offertext.setTextColor(holder.personalbinding!!.offertext.context!!.resources.getColor(R.color.green))
                 } else {
+                    holder.personalbinding!!.regularprice.textSize = 15f
+                    var typeface = Typeface.createFromAsset(holder?.personalbinding?.regularprice?.context?.assets, "fonts/bold.ttf")
+                    holder.personalbinding!!.regularprice.setTypeface(typeface)
                     holder.personalbinding!!.specialprice.visibility = View.GONE
                     // holder.personalbinding!!.offertext.visibility = View.GONE
                     holder.personalbinding!!.regularprice.paintFlags = holder.personalbinding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             }
+
+            if (SplashViewModel.featuresModel.in_app_wishlist) {
+                if ((holder?.personalbinding?.wishlistBut?.context as NewBaseActivity).leftMenuViewModel?.isInwishList(data.product?.id.toString())!!) {
+                    data!!.addtowish = holder?.personalbinding?.wishlistBut?.context?.resources?.getString(R.string.alreadyinwish)
+                    Glide.with((holder?.personalbinding?.wishlistBut?.context as NewBaseActivity)!!)
+                            .load(R.drawable.wishlist_selected)
+                            .into(holder?.personalbinding?.wishlistBut!!)
+                } else {
+                    data!!.addtowish = holder?.personalbinding?.wishlistBut?.context?.resources?.getString(R.string.addtowish)
+                    Glide.with((holder?.personalbinding?.wishlistBut?.context as NewBaseActivity)!!)
+                            .load(R.drawable.wishlist_icon)
+                            .into(holder?.personalbinding?.wishlistBut!!)
+                }
+            }
+            holder?.personalbinding?.features = SplashViewModel.featuresModel
             holder.personalbinding!!.listdata = data
             val model = CommanModel()
             model.imageurl = pro?.images?.edges?.get(0)?.node?.transformedSrc
             holder.personalbinding!!.commondata = model
-            holder.personalbinding!!.clickproduct = ProductRecylerAdapter().Product(position)
+            holder.personalbinding!!.clickproduct = PersonalisedProduct(position)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -112,6 +151,32 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
 
     fun getDiscount(regular: Double, special: Double): Int {
         return ((regular - special) / regular * 100).toInt()
+    }
+
+    inner class PersonalisedProduct(var position: Int) {
+        fun productClick(view: View, data: ListData) {
+            val productintent = Intent(view.context, ProductView::class.java)
+            productintent.putExtra("ID", data.product!!.id.toString())
+            productintent.putExtra("tittle", data.textdata)
+            productintent.putExtra("product", data.product)
+            productintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            productintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            productintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            view.context.startActivity(productintent)
+            Constant.activityTransition(view.context)
+        }
+
+        fun wishListAdd(view: View, data: ListData) {
+            if ((view.context as NewBaseActivity).leftMenuViewModel?.setWishList(data.product?.id.toString())!!) {
+                Toast.makeText(view.context, view.context.resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
+                data.addtowish = view.context.resources.getString(R.string.alreadyinwish)
+            } else {
+                (view.context as NewBaseActivity).leftMenuViewModel?.deleteData(data.product?.id.toString())
+                data!!.addtowish = view.context.resources.getString(R.string.addtowish)
+            }
+            notifyDataSetChanged()
+            (view.context as NewBaseActivity).invalidateOptionsMenu()
+        }
     }
 
 }

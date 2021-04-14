@@ -12,6 +12,7 @@ import com.shopify.buy3.GraphResponse
 import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.GraphQLResponse
@@ -123,15 +124,26 @@ class SearchListModel(private val repository: Repository) : ViewModel() {
 
     fun filterProduct(list: MutableList<Storefront.ProductEdge>) {
         try {
-            disposables.add(repository.getProductList(list)
-                    .subscribeOn(Schedulers.io())
-                    .filter { x -> x.node.availableForSale }
-                    .toList()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { result ->
-                        filteredproducts!!.value = result
+            if (SplashViewModel.featuresModel.outOfStock!!) {
+                disposables.add(repository.getProductList(list)
+                        .subscribeOn(Schedulers.io())
+                        .toList()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { result ->
+                            filteredproducts!!.value = result
 
-                    })
+                        })
+            } else {
+                disposables.add(repository.getProductList(list)
+                        .subscribeOn(Schedulers.io())
+                        .filter { x -> x.node.availableForSale }
+                        .toList()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { result ->
+                            filteredproducts!!.value = result
+
+                        })
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

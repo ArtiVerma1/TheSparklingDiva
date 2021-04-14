@@ -144,4 +144,11 @@
     <string name="ar_error_text">Sorry this device does not support AR feature</string>
     <string name="you_may_also_like">You May Also Like</string>
     <string name="sort">Sort</string>
+    <string name="click_here_to_clear_your_cart">Click here to clear your cart</string>
+    <string name="warning_message">Warning !</string>
+    <string name="delete_cart_warning">Do you want to clear your all items from cart ?</string>
+    <string name="yes_delete">Yes ! Delete</string>
+    <string name="deleted">Deleted!</string>
+    <string name="cart_deleted_message">Your cart items deleted successfully</string>
+    <string name="done">Done</string>
 </resources>

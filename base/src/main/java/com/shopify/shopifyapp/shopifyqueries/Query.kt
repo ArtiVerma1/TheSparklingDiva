@@ -74,6 +74,7 @@ object Query {
                                             .description()
                                             .tags()
                                             .vendor()
+                                            .handle()
                                             .totalInventory()
                                             .variants({ args ->
                                                 args
@@ -139,6 +140,7 @@ object Query {
                     .description()
                     .totalInventory()
                     .tags()
+                    .handle()
                     .media({ m -> m.first(10) }, { me ->
                         me.edges({ e ->
                             e.node({ n ->
@@ -273,6 +275,7 @@ object Query {
                                     .availableForSale()
                                     .descriptionHtml()
                                     .description()
+                                    .handle()
                                     .media({ m -> m.first(10) }, { me ->
                                         me.edges({ e ->
                                             e.node({ n ->

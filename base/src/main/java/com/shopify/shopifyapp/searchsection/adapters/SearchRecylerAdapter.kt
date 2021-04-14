@@ -14,6 +14,7 @@ import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MSearchitemBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.searchsection.viewholders.SearechItem
 import com.shopify.shopifyapp.utils.Constant
@@ -107,6 +108,14 @@ constructor() : RecyclerView.Adapter<SearechItem>() {
                 holder.binding.specialprice.visibility = View.GONE
                 holder.binding.offertext.visibility = View.GONE
                 holder.binding.regularprice.paintFlags = holder.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+        }
+
+        if (SplashViewModel.featuresModel.outOfStock!!) {
+            if (!this.products!![position].node.availableForSale) {
+                holder?.binding?.outOfStock?.visibility = View.VISIBLE
+            } else {
+                holder?.binding?.outOfStock?.visibility = View.GONE
             }
         }
         holder.binding.listdata = data

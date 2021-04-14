@@ -154,6 +154,7 @@ class Repository {
         return appdatabase.cartItemDataDao.getSingleData(id)
     }
 
+
     fun addSingLeItem(data: CartItemData) {
         appdatabase.cartItemDataDao.insert(data)
     }

@@ -109,5 +109,7 @@ dependencies {
     implementation 'me.relex:circleindicator:2.1.6'
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.13.2'
+    //Sweet Alert Dialog
+    implementation 'com.github.f0ris.sweetalert:library:1.6.2'
 }
 apply plugin: 'com.google.gms.google-services'

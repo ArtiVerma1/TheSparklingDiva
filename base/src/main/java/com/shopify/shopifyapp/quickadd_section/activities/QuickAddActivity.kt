@@ -14,6 +14,7 @@ import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.databinding.ActivityQuickAddBinding
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
@@ -26,6 +27,9 @@ import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import com.shopify.shopifyapp.wishlistsection.viewmodels.WishListViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class QuickAddActivity(context: Context, var activity: Context? = null, theme: Int, var product_id: String, var repository: Repository, var wishListViewModel: WishListViewModel? = null, var position: Int? = null, var wishlistData: MutableList<Storefront.Product>? = null) : BottomSheetDialog(context, theme) {
@@ -168,9 +172,13 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     repository.updateSingLeItem(data)
                 }
                 Log.i("MageNative", "CartCount : " + repository.allCartItems.size)
-
             }
             Thread(runnable).start()
+            GlobalScope.launch(Dispatchers.Main) {
+                if (activity is NewBaseActivity) {
+                    (activity as NewBaseActivity).invalidateOptionsMenu()
+                }
+            }
             if (wishListViewModel != null) {
                 if (activity is WishList) {
                     wishListViewModel!!.deleteData(product_id)

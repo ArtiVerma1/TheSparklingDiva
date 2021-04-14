@@ -85,7 +85,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     data.offertext = getDiscount(regular, special).toString() + "%off"
                 }
                 holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.black)!!)
-                holder.binding!!.specialprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                holder.binding!!.specialprice.setTextColor(activity?.resources?.getColor(R.color.price_red)!!)
                 var typeface = Typeface.createFromAsset(activity?.assets, "fonts/normal.ttf")
                 holder.binding!!.regularprice.setTypeface(typeface)
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -95,7 +95,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             } else {
                 holder.binding!!.specialprice.visibility = View.GONE
                 holder.binding!!.offertext.visibility = View.GONE
-                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.price_red)!!)
                 holder.binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(activity?.assets, "fonts/bold.ttf")
                 holder.binding!!.regularprice.setTypeface(typeface)
@@ -118,7 +118,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     data.offertext = getDiscount(regular, special).toString() + "%off"
                 }
                 holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.black)!!)
-                holder.binding!!.specialprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                holder.binding!!.specialprice.setTextColor(activity?.resources?.getColor(R.color.price_red)!!)
                 var typeface = Typeface.createFromAsset(activity?.assets, "fonts/normal.ttf")
                 holder.binding!!.regularprice.setTypeface(typeface)
                 holder.binding!!.regularprice.paintFlags = holder.binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -128,7 +128,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             } else {
                 holder.binding!!.specialprice.visibility = View.GONE
                 holder.binding!!.offertext.visibility = View.GONE
-                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.red)!!)
+                holder.binding!!.regularprice.setTextColor(activity?.resources?.getColor(R.color.price_red)!!)
                 holder.binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(activity?.assets, "fonts/bold.ttf")
                 holder.binding!!.regularprice.setTypeface(typeface)

@@ -237,6 +237,8 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
     private fun consumeCartCount(it: List<CartItemData>?) {
         cartcount_bottom?.text = "" + it?.size
+        cartCount=  it?.size!!
+        invalidateOptionsMenu()
     }
 
     init {

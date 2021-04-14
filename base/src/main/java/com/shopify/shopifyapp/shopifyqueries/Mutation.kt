@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.shopifyqueries
 
 import com.shopify.buy3.Storefront
+import com.shopify.graphql.support.ID
 
 object Mutation {
     fun createCheckout(inputs: Storefront.CheckoutCreateInput, list_currency: List<Storefront.CurrencyCode>): Storefront.MutationQuery {
@@ -65,4 +66,19 @@ object Mutation {
         return createcheckoutmutation
     }
 
+    fun checkoutWithGpay(checkoutID: ID, input: Storefront.TokenizedPaymentInputV3): Storefront.MutationQuery {
+        return Storefront.mutation { it ->
+            it.checkoutCompleteWithTokenizedPaymentV3(ID(""), input) { _queryBuilder ->
+                _queryBuilder.payment { paymentquery ->
+                    paymentquery.ready().errorMessage()
+                }
+                        .checkout { checkoutQuery ->
+                            checkoutQuery.ready()
+                        }
+                        .checkoutUserErrors { userErrorQuery ->
+                            userErrorQuery.field().code().message()
+                        }
+            }
+        }
+    }
 }

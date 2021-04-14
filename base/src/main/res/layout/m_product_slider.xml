@@ -124,7 +124,7 @@
                 android:maxLines="1"
                 android:text="@{productslider.timertextmessage}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                android:visibility="gone"
+                android:visibility="@{productslider.timericon}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

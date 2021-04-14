@@ -36,17 +36,17 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var in_app_wishlist: Boolean = false
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.in_app_wishlist)
-        }
-
-    @Bindable
     var showBottomNavigation: Boolean = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.showBottomNavigation)
+        }
+
+    @Bindable
+    var in_app_wishlist: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.in_app_wishlist)
         }
 
     @Bindable

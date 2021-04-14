@@ -1,9 +1,12 @@
 package com.shopify.shopifyapp.cartsection.adapters
 
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 
@@ -54,12 +57,15 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
                 item.normalprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.compareAtPrice.amount, variant.presentmentPrices.edges[0].node.compareAtPrice.currencyCode.toString())
                 item.specialprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.price.amount, variant.presentmentPrices.edges[0].node.price.currencyCode.toString())
                 item.offertext = getDiscount(special, regular).toString() + "%off"
-
             } else {
                 item.normalprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.price.amount, variant.presentmentPrices.edges[0].node.price.currencyCode.toString())
                 item.specialprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.compareAtPrice.amount, variant.presentmentPrices.edges[0].node.compareAtPrice.currencyCode.toString())
                 item.offertext = getDiscount(regular, special).toString() + "%off"
             }
+            holder.binding!!.regularprice.setTextColor(holder.binding!!.regularprice.context.resources?.getColor(R.color.black)!!)
+            holder.binding!!.specialprice.setTextColor(holder.binding!!.specialprice.context?.resources?.getColor(R.color.price_red)!!)
+            var typeface = Typeface.createFromAsset(holder.binding!!.regularprice.context?.assets, "fonts/normal.ttf")
+            holder.binding!!.regularprice.setTypeface(typeface)
             holder.binding.regularprice.paintFlags = holder.binding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             holder.binding.specialprice.visibility = View.VISIBLE
             holder.binding.offertext.visibility = View.VISIBLE
@@ -67,6 +73,15 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         } else {
             holder.binding.specialprice.visibility = View.GONE
             holder.binding.offertext.visibility = View.GONE
+            holder.binding!!.specialprice.visibility = View.GONE
+            holder.binding!!.offertext.visibility = View.GONE
+            holder.binding!!.regularprice.setTextColor(holder.binding!!.regularprice.context?.resources?.getColor(R.color.price_red)!!)
+            holder.binding!!.regularprice.textSize = 13f
+            var layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams.marginStart = 0
+            holder.binding!!.regularprice.layoutParams = layoutParams
+            var typeface = Typeface.createFromAsset(holder.binding!!.regularprice.context?.assets, "fonts/bold.ttf")
+            holder.binding!!.regularprice.setTypeface(typeface)
             holder.binding.regularprice.paintFlags = holder.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
         val model = CommanModel()
@@ -74,9 +89,9 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         holder.binding.commondata = model
         item.image = variant?.image?.originalSrc
         item.qty = data?.get(position)!!.node.quantity!!.toString()
-        holder.binding.name.textSize = 12f
+        holder.binding.name.textSize = 14f
         holder.binding.specialprice.textSize = 13f
-        holder.binding.regularprice.textSize = 11f
+        // holder.binding.regularprice.textSize = 11f
         holder.binding.offertext.textSize = 11f
         holder.binding.variantOne.textSize = 11f
         holder.binding.variantTwo.textSize = 11f
@@ -86,7 +101,6 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         holder.binding.quantity.textSize = 11f
         holder.binding.handlers = ClickHandlers()
         setVariants(item, holder, variant.selectedOptions)
-
     }
 
     private fun setVariants(item: CartListItem, holder: CartItem, selectedOptions: List<Storefront.SelectedOption>) {
@@ -117,7 +131,6 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     override fun getItemCount(): Int {
