@@ -1,6 +1,11 @@
 package com.shopify.shopifyapp.utils
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_GETPRODUCTID
+import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWCOUNT
+import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWCREATE
+import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWINDEX
 import com.shopify.shopifyapp.utils.Urls.Data.SIZECHART
 import io.reactivex.Single
 import org.json.JSONObject
@@ -43,4 +48,18 @@ interface ApiCallInterface {
     @GET(SIZECHART)
     fun getSizeChart(@Query("shop") shop: String, @Query("source") source: String, @Query("product") productId: String?,
                      @Query("tags") tags: String, @Query("vendor") vendor: String): String
+
+    @GET(JUDGEME_REVIEWCOUNT)
+    fun getJudgemeReviewCount(@Query("api_token") api_token: String, @Query("shop_domain") shop_domain: String, @Query("product_id") product_id: String): Single<JsonElement>
+
+    @GET(JUDGEME_REVIEWINDEX)
+    fun getJudgemeIndex(@Query("api_token") api_token: String, @Query("shop_domain") shop_domain: String, @Query("per_page") per_page: Int
+                        , @Query("page") page: Int, @Query("product_id") product_id: String): Single<JsonElement>
+
+    @POST(JUDGEME_REVIEWCREATE)
+    fun createJudgemeReview(@Body params: JsonObject): Single<JsonElement>
+
+
+    @GET
+    fun getJudgemeProductID(@Url url: String, @Query("api_token") api_token: String, @Query("shop_domain") shop_domain: String, @Query("handle") handle: String): Single<JsonElement>
 }

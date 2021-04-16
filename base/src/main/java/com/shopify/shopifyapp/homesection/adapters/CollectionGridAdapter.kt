@@ -78,6 +78,11 @@ constructor() : RecyclerView.Adapter<CollectionItem>() {
                     drawable.setStroke(1, Color.parseColor(background.getString("color")))
                     binding.main.background = drawable
                 }
+            } else if (jsonObject.getString("item_border").equals("0")) {
+                if (jsonObject.getString("item_shape").equals("rounded")) {
+                    binding.card.cardElevation = 0f
+                    binding.card.radius = 0f
+                }
             }
             var background = JSONObject(jsonObject.getString("cell_background_color"))
             binding.name.setBackgroundColor(Color.parseColor(background.getString("color")))

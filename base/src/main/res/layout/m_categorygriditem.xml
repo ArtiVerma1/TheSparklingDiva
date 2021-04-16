@@ -44,7 +44,7 @@
                     android:scaleType="fitXY"
                     app:imageUrl="@{commondata.imageurl}"
                     app:layout_constraintBottom_toTopOf="@id/name"
-                    app:layout_constraintDimensionRatio="H,1:1.2"
+                    app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView

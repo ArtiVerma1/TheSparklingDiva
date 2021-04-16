@@ -31,6 +31,13 @@ class Urls {
         const val TOKEN: String = "a2ds21R!3rT#R@R23r@#3f3ef"
         const val MulipassSecret: String = "1f4237c87f31090e5763feaa34962b72"
         const val SIZECHART: String = "https://app.kiwisizing.com/size"
+        const val JUDGEME_BASEURL: String = "https://judge.me/api/v1/"
+        const val JUDGEME_REVIEWCOUNT: String = JUDGEME_BASEURL + "reviews/count/"
+        const val JUDGEME_REVIEWINDEX: String = JUDGEME_BASEURL + "reviews"
+        const val JUDGEME_REVIEWCREATE: String = JUDGEME_BASEURL + "reviews"
+        const val JUDGEME_GETPRODUCTID: String = JUDGEME_BASEURL + "products/"
+        const val JUDGEME_APITOKEN: String = "R8kqByFI_qHiHHQj6ZV1yWCYveQ"
+
     }
 
     val shopdomain: String

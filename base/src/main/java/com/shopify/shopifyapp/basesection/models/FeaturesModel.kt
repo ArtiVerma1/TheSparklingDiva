@@ -43,6 +43,13 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
+    var judgemeProductReview: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.judgemeProductReview)
+        }
+
+    @Bindable
     var in_app_wishlist: Boolean = false
         set(value) {
             field = value

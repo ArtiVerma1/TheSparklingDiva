@@ -102,7 +102,6 @@
                         android:gravity="center"
                         android:text="@{listdata.specialprice == null ? listdata.regularprice:listdata.specialprice}"
                         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/regularprice"

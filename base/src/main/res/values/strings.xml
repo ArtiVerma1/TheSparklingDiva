@@ -163,4 +163,7 @@
     <string name="deleted">Deleted!</string>
     <string name="cart_deleted_message">Your cart items deleted successfully</string>
     <string name="done">Done</string>
+    <string name="write_a_review">Write A Review</string>
+    <string name="reviews">Reviews</string>
+    <string name="add_images">Add Images</string>
 </resources>

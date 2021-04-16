@@ -12,13 +12,11 @@ import com.shopify.shopifyapp.collectionsection.activities.CollectionListMenu
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.jobservicessection.JobScheduler
+import com.shopify.shopifyapp.productsection.activities.JudgeMeCreateReview
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
 import com.shopify.shopifyapp.loginsection.activity.RegistrationActivity
 import com.shopify.shopifyapp.ordersection.activities.OrderList
-import com.shopify.shopifyapp.productsection.activities.AllReviewListActivity
-import com.shopify.shopifyapp.productsection.activities.ProductList
-import com.shopify.shopifyapp.productsection.activities.ProductView
-import com.shopify.shopifyapp.productsection.activities.ZoomActivity
+import com.shopify.shopifyapp.productsection.activities.*
 import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
@@ -38,7 +36,9 @@ interface MageNativeAppComponent {
     fun doCollectionInjection(collectionList: CollectionList)
     fun doCollectionInjection(collectionList: CollectionListMenu)
     fun doProductViewInjection(product: ProductView)
+    fun doJudgeMeReviewInjection(judgeMeCreateReview: JudgeMeCreateReview)
     fun doReviewListInjection(reviewListActivity: AllReviewListActivity)
+    fun doAllJudgeMeReviewListInjection(judgeMeReviews: AllJudgeMeReviews)
     fun doZoomActivityInjection(base: ZoomActivity)
     fun doBaseActivityInjection(base: NewBaseActivity)
     fun doWishListActivityInjection(wish: WishList)

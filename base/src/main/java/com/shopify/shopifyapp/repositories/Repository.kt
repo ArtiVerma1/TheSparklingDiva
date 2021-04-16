@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.shopify.buy3.GraphClient
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
@@ -210,7 +211,7 @@ class Repository {
     }
 
     fun getProductReviews(mid: String, product_id: String, page: Int): Single<JsonElement> {
-        return apiCallInterface.getReviewsList(mid, product_id,page)
+        return apiCallInterface.getReviewsList(mid, product_id, page)
     }
 
     fun getbadgeReviews(mid: String, product_id: String): Single<JsonElement> {
@@ -223,6 +224,22 @@ class Repository {
 
     fun sizeChart(shop: String, source: String, product_id: String, tags: String, vendor: String): String {
         return apiCallInterface.getSizeChart(shop, source, product_id, tags, vendor)
+    }
+
+    fun judgemeReviewCount(product_id: String, apiToken: String, shopDomain: String): Single<JsonElement> {
+        return apiCallInterface.getJudgemeReviewCount(apiToken, shopDomain, product_id)
+    }
+
+    fun judgemeReviewIndex(apiToken: String, shopDomain: String, per_page: Int, page: Int, product_id: String): Single<JsonElement> {
+        return apiCallInterface.getJudgemeIndex(apiToken, shopDomain, per_page, page, product_id)
+    }
+
+    fun judgemeReviewCreate(params: JsonObject): Single<JsonElement> {
+        return apiCallInterface.createJudgemeReview(params)
+    }
+
+    fun judgemeProductID(url: String, handle: String, apiToken: String, shopDomain: String): Single<JsonElement> {
+        return apiCallInterface.getJudgemeProductID(url, apiToken, shopDomain, handle)
     }
 
 }

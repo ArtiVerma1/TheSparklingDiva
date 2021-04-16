@@ -1,18 +1,15 @@
 package com.shopify.shopifyapp.productsection.viewmodels
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Base64
 import android.util.Log
-import android.widget.Toast
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 
 import com.shopify.buy3.GraphCallResult
-import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
@@ -22,7 +19,6 @@ import com.shopify.shopifyapp.dependecyinjection.InnerData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.network_transaction.doRetrofitCall
-import com.shopify.shopifyapp.productsection.models.VariantData
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.ApiResponse
@@ -30,9 +26,7 @@ import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.utils.Urls.Data.SIZECHART
 import java.util.concurrent.Callable
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -55,11 +49,64 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var reviewResponse: MutableLiveData<ApiResponse>? = null
     var reviewBadges: MutableLiveData<ApiResponse>? = MutableLiveData<ApiResponse>()
     var createreviewResponse = MutableLiveData<ApiResponse>()
+    var getjudgeMeProductID = MutableLiveData<ApiResponse>()
+    var getjudgeMeReviewCount = MutableLiveData<ApiResponse>()
+    var getjudgeMeReviewCreate = MutableLiveData<ApiResponse>()
+    var getjudgeMeReviewIndex = MutableLiveData<ApiResponse>()
     var sizeChartVisibility = MutableLiveData<Boolean>()
     var sizeChartUrl = MutableLiveData<String>()
     lateinit var context: Context
+    private val TAG = "ProductViewModel"
     val filteredlist = MutableLiveData<List<Storefront.ProductVariantEdge>>()
 
+
+    fun judgemeProductID(url: String, handle: String, apiToken: String, shopDomain: String) {
+        doRetrofitCall(repository.judgemeProductID(url, handle, apiToken, shopDomain), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getjudgeMeProductID.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getjudgeMeProductID.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
+
+    fun judgemeReviewCount(product_id: String, apiToken: String, shopDomain: String) {
+        doRetrofitCall(repository.judgemeReviewCount(product_id, apiToken, shopDomain), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getjudgeMeReviewCount.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getjudgeMeReviewCount.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
+
+    fun judgemeReviewCreate(params: JsonObject) {
+        doRetrofitCall(repository.judgemeReviewCreate(params), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getjudgeMeReviewCreate.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getjudgeMeReviewCreate.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
+
+    fun judgemeReviewIndex(product_id: String, apiToken: String, shopDomain: String, per_page: Int, page: Int) {
+        doRetrofitCall(repository.judgemeReviewIndex(apiToken, shopDomain, per_page, page, product_id), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getjudgeMeReviewIndex.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getjudgeMeReviewIndex.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
 
     fun getReviews(mid: String, product_id: String, page: Int): MutableLiveData<ApiResponse> {
         reviewResponse = MutableLiveData<ApiResponse>()
@@ -387,7 +434,8 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getSizeChart(shop: String, source: String, product_id: String, tags: String, vendor: String) {
+    fun getSizeChart(shop: String, source: String, product_id: String, tags: String, vendor: String, collections: String? = null) {
+        //   Log.d(TAG, "getSizeChart: "+collections)
         RetrofitUrlManager.getInstance().putDomain("douban", Urls.SIZECHART)
         var hashMap = HashMap<String, String>()
         hashMap.put("shop", shop)
@@ -395,6 +443,9 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         hashMap.put("product", product_id)
         hashMap.put("tags", tags)
         hashMap.put("vendor", vendor)
+        if (collections != null) {
+            hashMap.put("collections", collections)
+        }
         Log.d("OKHttp", "" + SIZECHART + "?" + getPostDataString(hashMap))
         sizeChartUrl.value = SIZECHART + "?" + getPostDataString(hashMap)
         GlobalScope.launch(Dispatchers.Main) {

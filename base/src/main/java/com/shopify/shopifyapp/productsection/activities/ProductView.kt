@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.productsection.activities
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -17,8 +18,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.JsonElement
@@ -41,6 +40,7 @@ import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.productsection.adapters.ImagSlider
 import com.shopify.shopifyapp.productsection.adapters.ReviewListAdapter
 import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
+import com.shopify.shopifyapp.productsection.models.Review
 import com.shopify.shopifyapp.productsection.models.ReviewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
 import com.shopify.shopifyapp.utils.*
@@ -55,6 +55,7 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 class ProductView : NewBaseActivity() {
+    private var product_handle: String? = null
     private var productName: String? = null
     private var binding: MProductviewBinding? = null
 
@@ -76,6 +77,10 @@ class ProductView : NewBaseActivity() {
     private var totalVariant: Int? = null
     private var variantValidation: JSONObject = JSONObject()
     var reviewModel: ReviewModel? = null
+    private var external_id: String? = null
+    private var judgeme_productid: String? = null
+    private var reviewList: ArrayList<Review>? = null
+
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -122,10 +127,73 @@ class ProductView : NewBaseActivity() {
                 model!!.Response().observe(this, Observer<GraphQLResponse> { this.consumeResponse(it) })
             }
         }
+
         model!!.recommendedLiveData.observe(this, Observer { this.consumeRecommended(it) })
         model!!.shopifyRecommended()
+        if (featuresModel.judgemeProductReview) {
+            model?.getjudgeMeProductID?.observe(this, Observer { this.consumeJudgeMeProductID(it) })
+            model?.getjudgeMeReviewCount?.observe(this, Observer { this.consumeJudgeMeReviewCount(it) })
+            model?.getjudgeMeReviewIndex?.observe(this, Observer { this.consumeJudgeMeReview(it) })
+        }
         binding?.variantAvailableQty?.textSize = 14f
         binding?.qtyTitleTxt?.textSize = 14f
+    }
+
+    private fun consumeJudgeMeReview(response: ApiResponse?) {
+        Log.d(TAG, "consumeJudgeMeReview: " + response?.data)
+        var responseData = JSONObject(response?.data.toString())
+        var reviews = responseData.getJSONArray("reviews")
+        reviewList = ArrayList<Review>()
+        var review_model: Review? = null
+        for (i in 0 until reviews.length()) {
+            review_model = Review(reviews.getJSONObject(i).getString("body"),
+                    reviews.getJSONObject(i).getString("id"),
+                    reviews.getJSONObject(i).getString("rating"),
+                    reviews.getJSONObject(i).getString("rating"),
+                    reviews.getJSONObject(i).getString("created_at"),
+                    reviews.getJSONObject(i).getJSONObject("reviewer").getString("name"),
+                    reviews.getJSONObject(i).getString("title")
+            )
+            reviewList?.add(review_model)
+        }
+
+        if (reviewList?.size!! > 0) {
+            binding?.judgemeNoReviews?.visibility = View.GONE
+            binding?.judgemeReviewList?.visibility = View.VISIBLE
+            binding?.judgemeViewAllBut?.visibility = View.VISIBLE
+            binding?.judgemeReviewIndecator?.visibility = View.VISIBLE
+            reviewAdapter = ReviewListAdapter()
+            reviewAdapter.setData(reviewList)
+            binding?.judgemeReviewList?.adapter = reviewAdapter
+            binding?.judgemeReviewIndecator?.tintIndicator(Color.parseColor(themeColor))
+            binding?.judgemeReviewIndecator?.setViewPager(binding?.judgemeReviewList)
+        } else {
+            binding?.judgemeNoReviews?.visibility = View.VISIBLE
+            binding?.judgemeReviewList?.visibility = View.GONE
+            binding?.judgemeReviewIndecator?.visibility = View.GONE
+            binding?.judgemeViewAllBut?.visibility = View.GONE
+        }
+
+    }
+
+    private fun consumeJudgeMeReviewCount(response: ApiResponse?) {
+        Log.d(TAG, "consumeJudgeMeReviewCount: " + response?.data)
+        binding?.judgemeReviewCardSection?.visibility = View.VISIBLE
+        binding?.judgemeRatingTxt?.text = JSONObject(response?.data.toString()).getString("count") + " " + getString(R.string.reviews)
+    }
+
+    private fun consumeJudgeMeProductID(response: ApiResponse?) {
+        Log.d(TAG, "consumeJudgeMeProductID: " + response?.data)
+        if (response?.data != null) {
+            var responseData = JSONObject(response?.data.toString())
+            if (responseData.has("product")) {
+                var product = responseData.getJSONObject("product")
+                model?.judgemeReviewCount(product.getString("id"), Urls.JUDGEME_APITOKEN, Urls(application as MyApplication).shopdomain)
+                model?.judgemeReviewIndex(product.getString("id"), Urls.JUDGEME_APITOKEN, Urls(application as MyApplication).shopdomain, 5, 1)
+                external_id = product.getString("external_id")
+                judgeme_productid = product.getString("id")
+            }
+        }
     }
 
     private fun consumeRecommended(reponse: GraphQLResponse?) {
@@ -392,6 +460,10 @@ class ProductView : NewBaseActivity() {
                 }
             }
             Log.d(TAG, "setProductData: " + productedge.handle)
+            product_handle = productedge.handle
+            if (featuresModel.judgemeProductReview!!) {
+                model?.judgemeProductID(Urls.JUDGEME_GETPRODUCTID + productedge.handle, productedge.handle, Urls.JUDGEME_APITOKEN, Urls(application as MyApplication).shopdomain)
+            }
             Log.d(TAG, "setProductData: " + productedge.id)
             var tags_data: StringBuilder = StringBuilder()
             if (productedge.tags.size > 0) {
@@ -402,8 +474,22 @@ class ProductView : NewBaseActivity() {
             } else {
                 tags_data.append("")
             }
+            if (featuresModel.sizeChartVisibility!!) {
+                var collections: String? = null
+                if (productedge?.collections != null) {
+                    if (productedge?.collections?.edges?.size!! > 0) {
+                        var buffer = StringBuffer()
+                        for (i in 0 until productedge.collections.edges.size) {
+                            buffer.append(getBase64Decode(productedge.collections.edges.get(i).node.id.toString())).append(",")
+                        }
+                        collections = buffer.substring(0, buffer.length - 1)
+                    } else {
+                        collections = getBase64Decode(productedge.collections.edges.get(0).node.id.toString())
+                    }
+                }
+                model!!.getSizeChart(Urls(application as MyApplication).shopdomain, "magenative", getBase64Decode(productID)!!, tags_data.toString(), productedge.vendor, collections)
+            }
 
-            model!!.getSizeChart(Urls(application as MyApplication).shopdomain, "magenative", getBase64Decode(productID)!!, tags_data.toString(), productedge.vendor)
             if (Constant.ispersonalisedEnable) {
                 model!!.getRecommendations(productedge!!.id.toString())
             }
@@ -612,6 +698,15 @@ class ProductView : NewBaseActivity() {
             Constant.activityTransition(view.context)
         }
 
+        fun viewAllJudgeMeReview(view: View) {
+            var intent = Intent(this@ProductView, AllJudgeMeReviews::class.java)
+            intent.putExtra("reviewList", reviewList)
+            intent.putExtra("product_name", productName)
+            intent.putExtra("product_id", judgeme_productid)
+            startActivity(intent)
+            Constant.activityTransition(view.context)
+        }
+
         fun decrease(view: View) {
             if ((binding!!.quantity.text.toString()).toInt() > 1) {
                 var quantity: Int = binding!!.quantity.text.toString().toInt()
@@ -665,7 +760,6 @@ class ProductView : NewBaseActivity() {
                 e.printStackTrace()
                 Toast.makeText(this@ProductView, getString(R.string.ar_error_text), Toast.LENGTH_SHORT).show()
             }
-
         }
 
         fun rateProduct(view: View, data: ListData) {
@@ -702,6 +796,24 @@ class ProductView : NewBaseActivity() {
                 }
             }
             bottomsheet.show()
+        }
+
+        fun rateProductJudgeMe(view: View, data: ListData) {
+            var intent = Intent(this@ProductView, JudgeMeCreateReview::class.java)
+            intent.putExtra("external_id", external_id)
+            startActivityForResult(intent, 105)
+            Constant.activityTransition(view.context)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 105) {
+            if (featuresModel.judgemeProductReview) {
+                if (featuresModel.judgemeProductReview!!) {
+                    model?.judgemeProductID(Urls.JUDGEME_GETPRODUCTID + product_handle, product_handle!!, Urls.JUDGEME_APITOKEN, Urls(application as MyApplication).shopdomain)
+                }
+            }
         }
     }
 

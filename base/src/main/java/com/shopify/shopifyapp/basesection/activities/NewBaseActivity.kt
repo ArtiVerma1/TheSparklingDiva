@@ -237,7 +237,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
     private fun consumeCartCount(it: List<CartItemData>?) {
         cartcount_bottom?.text = "" + it?.size
-        cartCount=  it?.size!!
+        cartCount = it?.size!!
         invalidateOptionsMenu()
     }
 
@@ -415,6 +415,10 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         wishitem.setActionView(R.layout.m_wishcount)
         cartitem.setActionView(R.layout.m_count)
         val search = item?.actionView
+        if (this@NewBaseActivity !is HomePage) {
+            search.visibility = View.GONE
+            item.isVisible = false
+        }
         search?.setOnClickListener {
             val searchpage = Intent(this@NewBaseActivity, AutoSearch::class.java)
             startActivity(searchpage)
