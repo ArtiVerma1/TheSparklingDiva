@@ -22,11 +22,12 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:onClick="@{(view) -> categorydata.gridClick(view,categorydata)}"
             app:cardCornerRadius="10dp"
             app:cardElevation="0dp"
             app:cardUseCompatPadding="true"
+            app:cardPreventCornerOverlap="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -50,16 +51,17 @@
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/name"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="8dp"
                     android:gravity="start|center_vertical"
                     android:maxLines="2"
+                    android:ellipsize="end"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:paddingBottom="5dp"
                     android:text="@{categorydata.category_name}"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                    app:layout_constraintTop_toBottomOf="@id/image"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:texttype="normal" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

@@ -1111,6 +1111,14 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
                     binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
                     productSlider.timertextmessage = jsonObject.getString("item_deal_message")
+
+//                    if (jsonObject.getString("item_deal_message").equals("{deal-time}")) {
+//                        binding.timerMessage.text = ""
+//                    } else if (jsonObject.getString("item_deal_message")?.contains("{")!!) {
+//                        binding.timerMessage.text = jsonObject.getString("item_deal_message").split("{").get(1).split("}").get(1)
+//                    } else {
+//                        binding.timerMessage.text = jsonObject.getString("item_deal_message")
+//                    }
                     var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
                     var sdf = SimpleDateFormat(DATE_FORMAT)
                     sdf.setTimeZone(TimeZone.getTimeZone("UTC"))

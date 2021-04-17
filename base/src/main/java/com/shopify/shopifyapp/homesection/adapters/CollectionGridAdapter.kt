@@ -46,13 +46,13 @@ constructor() : RecyclerView.Adapter<CollectionItem>() {
         val binding = DataBindingUtil.inflate<MCategorygriditemBinding>(LayoutInflater.from(parent.context), R.layout.m_categorygriditem, parent, false)
         try {
 
-            if (jsonObject.getString("item_shape").equals("rounded")) {
-                binding.card.cardElevation = 3f
-                binding.card.radius = 10f
-            } else {
-                binding.card.cardElevation = 0f
-                binding.card.radius = 0f
-            }
+//            if (jsonObject.getString("item_shape").equals("rounded")) {
+//                binding.card.cardElevation = 3f
+//                binding.card.radius = 10f
+//            } else {
+//                binding.card.cardElevation = 0f
+//                binding.card.radius = 0f
+//            }
             when (jsonObject.getString("item_text_alignment")) {
                 "center" -> {
                     binding.name.gravity = Gravity.CENTER
@@ -77,11 +77,17 @@ constructor() : RecyclerView.Adapter<CollectionItem>() {
                     drawable.shape = GradientDrawable.RECTANGLE
                     drawable.setStroke(1, Color.parseColor(background.getString("color")))
                     binding.main.background = drawable
+                } else if (jsonObject.getString("item_shape").equals("rounded")) {
+                    binding.card.cardElevation = 3f
+                    binding.card.radius = 10f
                 }
             } else if (jsonObject.getString("item_border").equals("0")) {
-                if (jsonObject.getString("item_shape").equals("rounded")) {
+                if (!jsonObject.getString("item_shape").equals("rounded")) {
                     binding.card.cardElevation = 0f
                     binding.card.radius = 0f
+                } else if (jsonObject.getString("item_shape").equals("rounded")) {
+                    binding.card.radius = 10f
+                    binding.card.cardElevation = 0f
                 }
             }
             var background = JSONObject(jsonObject.getString("cell_background_color"))

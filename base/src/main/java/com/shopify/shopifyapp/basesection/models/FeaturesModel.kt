@@ -29,7 +29,7 @@ class FeaturesModel : BaseObservable() {
 
 
     @Bindable
-    var outOfStock: Boolean? = false
+    var outOfStock: Boolean? = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.outOfStock)
