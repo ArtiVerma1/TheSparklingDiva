@@ -32,18 +32,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                bind:imageUrl="@{commondata.imageurl}" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/hv_shadow">
+                android:background="@drawable/angryimg">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    bind:imageUrl="@{commondata.imageurl}" />
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/name"

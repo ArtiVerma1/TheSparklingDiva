@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:padding="8dp"
         android:id="@+id/panelbackgroundcolor"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +19,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/headerback"
+            android:padding="8dp"
             android:visibility="@{productslider.headertextvisibility}">
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="0dp"

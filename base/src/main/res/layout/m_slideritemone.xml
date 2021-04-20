@@ -22,7 +22,9 @@
         android:id="@+id/card"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        app:cardPreventCornerOverlap="false"
         app:cardCornerRadius="16dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +34,7 @@
             android:layout_marginStart="1.2dp"
             android:layout_marginTop="1.2dp"
             android:layout_marginEnd="1.2dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="1.2dp"
             android:onClick="@{(view) -> clickproduct.productClick(view,listdata)}">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -64,6 +66,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/image">
 

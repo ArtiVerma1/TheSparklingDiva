@@ -30,8 +30,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{productslider.headertext}"
@@ -143,8 +143,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:onClick="@{view->productslider.navigateToPage(view,productslider.hvtypeone,productslider.hvvalueone)}"
-                app:layout_constraintEnd_toStartOf="@id/secondhvsection"
-                app:layout_constraintHorizontal_weight=".5"
+                app:layout_constraintEnd_toStartOf="@+id/secondhvsection"
+                app:layout_constraintHorizontal_weight="0.6"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.cardview.widget.CardView
@@ -152,18 +152,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/hvimagOne"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        bind:imageUrl="@{productslider.hvimageone}" />
+
+
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/hv_shadow">
+                        android:background="@drawable/angryimg">
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/hvimagOne"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitXY"
-                            bind:imageUrl="@{productslider.hvimageone}" />
 
                         <com.shopify.shopifyapp.customviews.MageNativeTextView
                             android:id="@+id/hvnameone"
@@ -184,7 +186,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -193,7 +194,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="0.3"
+                app:layout_constraintHorizontal_weight="0.4"
                 app:layout_constraintStart_toEndOf="@id/firsthvsection">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -202,26 +203,25 @@
                     android:layout_height="0dp"
                     android:onClick="@{view->productslider.navigateToPage(view,productslider.hvtypetwo,productslider.hvvaluetwo)}"
                     app:layout_constraintBottom_toTopOf="@id/thirdhvcard"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_weight=".5">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/card_two"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/hvimagtwo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            bind:imageUrl="@{productslider.hvimagetwo}" />
+
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/hv_shadow">
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/hvimagtwo"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true"
-                                android:scaleType="fitXY"
-                                bind:imageUrl="@{productslider.hvimagetwo}" />
+                            android:background="@drawable/angryimg">
 
 
                             <com.shopify.shopifyapp.customviews.MageNativeTextView
@@ -253,26 +253,25 @@
                     android:layout_marginTop="10dp"
                     android:onClick="@{view->productslider.navigateToPage(view,productslider.hvtypethree,productslider.hvvaluethree)}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/secondhvcard"
-                    app:layout_constraintVertical_weight=".5">
+                    app:layout_constraintTop_toBottomOf="@id/secondhvcard">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/card_three"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/hvimagthree"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            bind:imageUrl="@{productslider.hvimagethree}" />
+
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/hv_shadow">
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/hvimagthree"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true"
-                                android:scaleType="fitXY"
-                                bind:imageUrl="@{productslider.hvimagethree}" />
+                            android:background="@drawable/angryimg">
 
 
                             <com.shopify.shopifyapp.customviews.MageNativeTextView

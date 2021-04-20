@@ -14,7 +14,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -46,7 +46,6 @@ import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import com.shopify.shopifyapp.homesection.models.ProductSlider
 import com.shopify.shopifyapp.homesection.models.StandAloneBanner
 import com.shopify.shopifyapp.network_transaction.CustomResponse
-import com.shopify.shopifyapp.network_transaction.customLoader
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
@@ -1285,11 +1284,11 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                         } else {
                                             when (jsonObject.getString("item_in_a_row")) {
                                                 "2" -> {
-                                                    gridtwo = ProductSliderListAdapter()
-                                                    gridtwo!!.presentmentcurrency = presentmentCurrency
+                                                   var productTwoGridAdapter = ProductTwoGridAdapter()
+                                                    productTwoGridAdapter!!.presentmentcurrency = presentmentCurrency
                                                     context.setLayout(productdata!!, "grid")
-                                                    gridtwo!!.setData(list, context, jsonObject, repository)
-                                                    productdata!!.adapter = gridtwo
+                                                    productTwoGridAdapter!!.setData(list, context, jsonObject, repository)
+                                                    productdata!!.adapter = productTwoGridAdapter
                                                 }
                                                 "3" -> {
                                                     gridAdapter = ProductSliderGridAdapter()
@@ -1338,11 +1337,11 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                         } else {
                                             when (jsonObject.getString("item_in_a_row")) {
                                                 "2" -> {
-                                                    gridtwo = ProductSliderListAdapter()
-                                                    gridtwo!!.presentmentcurrency = presentmentCurrency
+                                                    var productTwoGridAdapter = ProductTwoGridAdapter()
+                                                    productTwoGridAdapter!!.presentmentcurrency = presentmentCurrency
                                                     context.setLayout(productdata!!, "grid")
-                                                    gridtwo!!.setData(list, context, jsonObject, repository)
-                                                    productdata!!.adapter = gridtwo
+                                                    productTwoGridAdapter!!.setData(list, context, jsonObject, repository)
+                                                    productdata!!.adapter = productTwoGridAdapter
                                                 }
                                                 "3" -> {
                                                     gridAdapter = ProductSliderGridAdapter()
