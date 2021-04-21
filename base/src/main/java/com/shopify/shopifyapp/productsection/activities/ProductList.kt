@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
@@ -24,9 +22,9 @@ import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MProductlistitemBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.cartsection.activities.CartList
-import com.shopify.shopifyapp.customviews.MageNativeRadioButton
 import com.shopify.shopifyapp.databinding.SortDialogLayoutBinding
-import com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter
+import com.shopify.shopifyapp.productsection.adapters.ProductRecyclerListAdapter
+import com.shopify.shopifyapp.productsection.adapters.ProductRecylerGridAdapter
 import com.shopify.shopifyapp.productsection.viewmodels.ProductListModel
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
@@ -43,9 +41,13 @@ class ProductList : NewBaseActivity() {
     var productListModel: ProductListModel? = null
     private var products: MutableList<Storefront.ProductEdge>? = null
     private var productcursor: String? = null
+    private var listEnabled: Boolean = false
 
     @Inject
-    lateinit var product_adapter: ProductRecylerAdapter
+    lateinit var product_grid_adapter: ProductRecylerGridAdapter
+
+    @Inject
+    lateinit var product_list_adapter: ProductRecyclerListAdapter
     private var flag = true
     private val recyclerViewOnScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -101,6 +103,20 @@ class ProductList : NewBaseActivity() {
         productlist!!.addOnScrollListener(recyclerViewOnScrollListener)
         binding?.mainview?.sort_but?.setOnClickListener {
             openSortDialog()
+        }
+        binding?.mainview?.grid_but?.setOnClickListener {
+            listEnabled = false
+            products = null
+            productListModel!!.cursor = "nocursor"
+            binding?.mainview?.productListContainer?.visibility = View.GONE
+            productlist = setLayout(binding!!.root.findViewById(R.id.productlist), "grid")
+        }
+        binding?.mainview?.list_but?.setOnClickListener {
+            productlist?.layoutManager = LinearLayoutManager(this)
+            listEnabled = true
+            products = null
+            binding?.mainview?.productListContainer?.visibility = View.GONE
+            productListModel!!.cursor = "nocursor"
         }
     }
 
@@ -196,17 +212,31 @@ class ProductList : NewBaseActivity() {
         try {
             if (products.size > 0) {
                 binding?.mainview?.productListContainer?.visibility = View.VISIBLE
-                product_adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
-                if (this.products == null) {
-                    this.products = products
-                    product_adapter!!.setData(this.products, this@ProductList, productListModel!!.repository)
-                    productlist!!.adapter = product_adapter
+                if (!listEnabled) {
+                    product_grid_adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
+                    if (this.products == null) {
+                        this.products = products
+                        product_grid_adapter!!.setData(this.products, this@ProductList, productListModel!!.repository)
+                        productlist!!.adapter = product_grid_adapter
+                    } else {
+                        this.products!!.addAll(products)
+                        product_grid_adapter!!.notifyDataSetChanged()
+                    }
+                    productcursor = this.products!![this.products!!.size - 1].cursor
+                    Log.i("MageNative", "Cursor : " + productcursor!!)
                 } else {
-                    this.products!!.addAll(products)
-                    product_adapter!!.notifyDataSetChanged()
+                    product_list_adapter!!.presentmentcurrency = productListModel!!.presentmentCurrency
+                    if (this.products == null) {
+                        this.products = products
+                        product_list_adapter!!.setData(this.products, this@ProductList, productListModel!!.repository)
+                        productlist!!.adapter = product_list_adapter
+                    } else {
+                        this.products!!.addAll(products)
+                        product_list_adapter!!.notifyDataSetChanged()
+                    }
+                    productcursor = this.products!![this.products!!.size - 1].cursor
+                    Log.i("MageNative", "Cursor : " + productcursor!!)
                 }
-                productcursor = this.products!![this.products!!.size - 1].cursor
-                Log.i("MageNative", "Cursor : " + productcursor!!)
             } else {
                 showToast(resources.getString(R.string.noproducts))
             }

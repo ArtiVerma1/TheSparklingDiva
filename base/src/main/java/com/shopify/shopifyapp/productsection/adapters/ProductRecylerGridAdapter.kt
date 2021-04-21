@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.R2.style.WideDialogFull
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
@@ -28,7 +29,7 @@ import com.shopify.shopifyapp.utils.CurrencyFormatter
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class ProductRecylerAdapter @Inject
+class ProductRecylerGridAdapter @Inject
 constructor() : RecyclerView.Adapter<ProductItem>() {
     private var layoutInflater: LayoutInflater? = null
     lateinit var products: MutableList<Storefront.ProductEdge>

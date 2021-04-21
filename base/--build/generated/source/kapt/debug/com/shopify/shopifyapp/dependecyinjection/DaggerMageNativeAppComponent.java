@@ -45,7 +45,7 @@ import com.shopify.shopifyapp.productsection.activities.ProductList;
 import com.shopify.shopifyapp.productsection.activities.ProductList_MembersInjector;
 import com.shopify.shopifyapp.productsection.activities.ProductView;
 import com.shopify.shopifyapp.productsection.activities.ProductView_MembersInjector;
-import com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter;
+import com.shopify.shopifyapp.productsection.adapters.ProductRecylerGridAdapter;
 import com.shopify.shopifyapp.productsection.adapters.VariantAdapter;
 import com.shopify.shopifyapp.repositories.Repository;
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch;

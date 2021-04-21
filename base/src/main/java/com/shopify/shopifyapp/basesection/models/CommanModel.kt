@@ -180,11 +180,11 @@ class CommanModel : BaseObservable() {
 
                         override fun onNext(s: String) {
                             view.loadCircularImage<String>(s, 2f, Color.parseColor(view.tag.toString()))
-                            /*  Glide.with(view.context)
-                                      .load(s)
-                                      .thumbnail(0.5f)
-                                      .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
-                                      .into(view)*/
+//                            Glide.with(view.context)
+//                                    .load(s)
+//                                    .thumbnail(0.5f)
+//                                    .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
+//                                    .into(view)
                         }
 
                         override fun onError(e: Throwable) {

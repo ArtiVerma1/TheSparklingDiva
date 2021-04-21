@@ -10,6 +10,12 @@ class ListData : BaseObservable() {
 
     var textdata: String? = null
     var product: Storefront.Product? = null
+    @Bindable
+    var image_url:String?=null
+    set(value) {
+        field=value
+        notifyPropertyChanged(BR.image_url)
+    }
 
     var description: String? = null
     var descriptionhmtl: Spanned? = null

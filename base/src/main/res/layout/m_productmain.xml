@@ -6,18 +6,47 @@
         android:id="@+id/productListContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:visibility="gone">
 
         <com.shopify.shopifyapp.customviews.MageNativeTextView
             android:id="@+id/sort_but"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="45dp"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/black_border_shape"
             android:gravity="center"
             android:text="@string/sort"
+            app:layout_constraintEnd_toStartOf="@+id/grid_but"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:texttype="normal" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/grid_but"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/sort_but"
+            app:layout_constraintEnd_toStartOf="@+id/list_but"
+            app:layout_constraintStart_toEndOf="@+id/sort_but"
+            app:layout_constraintTop_toTopOf="@+id/sort_but"
+            app:srcCompat="@drawable/grid_icon" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/list_but"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/sort_but"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/grid_but"
+            app:layout_constraintTop_toTopOf="@+id/sort_but"
+            app:srcCompat="@drawable/list_icon" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productlist"

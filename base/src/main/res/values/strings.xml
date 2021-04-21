@@ -166,4 +166,7 @@
     <string name="write_a_review">Write A Review</string>
     <string name="reviews">Reviews</string>
     <string name="add_images">Add Images</string>
+    <string name="share_this">Share This</string>
+    <string name="my_favorite">My Favorite</string>
+    <string name="not_intrested_in">Not Intrested In</string>
 </resources>

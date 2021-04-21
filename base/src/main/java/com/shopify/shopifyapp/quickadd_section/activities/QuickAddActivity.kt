@@ -27,13 +27,11 @@ import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import com.shopify.shopifyapp.wishlistsection.viewmodels.WishListViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import java.lang.Runnable
 
 class QuickAddActivity(context: Context, var activity: Context? = null, theme: Int, var product_id: String, var repository: Repository, var wishListViewModel: WishListViewModel? = null, var position: Int? = null, var wishlistData: MutableList<Storefront.Product>? = null) : BottomSheetDialog(context, theme) {
-    lateinit var binding: ActivityQuickAddBinding
+    var binding: ActivityQuickAddBinding? = null
     private val TAG = "QuickAddActivity"
     lateinit var app: MyApplication
     private var inStock: Boolean = true
@@ -45,14 +43,11 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_quick_add, null, false)
-        setContentView(binding.root)
+        setContentView(binding?.root!!)
         this.window?.setBackgroundDrawableResource(android.R.color.transparent)
         bottomSheetDialog = this
-        currency_list = ArrayList<Storefront.CurrencyCode>()
-        if (repository.localData[0].currencycode != null) {
-            presentment_currency = repository.localData[0].currencycode!!
-            currency_list?.add(Storefront.CurrencyCode.valueOf(presentment_currency))
-        }
+
+        //   binding?.availableQty?.textSize = 12f
         initView()
 
     }
@@ -68,17 +63,21 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
         return variant_qty
     }
 
-    private fun initView() {
-        binding?.availableQty?.textSize = 12f
+    fun initView() {
+        currency_list = ArrayList<Storefront.CurrencyCode>()
+        if (repository.localData[0].currencycode != null) {
+            presentment_currency = repository.localData[0].currencycode!!
+            currency_list?.add(Storefront.CurrencyCode.valueOf(presentment_currency))
+        }
+        binding?.availableQty?.textSize = 14f
         quickVariantAdapter = QuickVariantAdapter()
         doGraphQLQueryGraph(repository, Query.getProductById(product_id!!, currency_list!!), customResponse = object : CustomResponse {
             override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                 invoke(result)
             }
         }, context = context)
-        binding.handler = VariantClickHandler()
+        binding?.handler = VariantClickHandler()
         setPresentmentCurrencyForModel()
-
     }
 
     private fun setPresentmentCurrencyForModel() {
@@ -120,6 +119,11 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     }
                     Toast.makeText(context, "" + errormessage, Toast.LENGTH_SHORT).show()
                 } else {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        delay(500)
+                        this@QuickAddActivity.show()
+                    }
+
                     var productedge: Storefront.Product? = null
                     productedge = result.data!!.node as Storefront.Product
                     // a.previewImage
@@ -141,18 +145,18 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                 binding?.availableQty?.visibility = View.VISIBLE
                 binding?.availableQty?.text = variantData.node.quantityAvailable.toString() + " " + context.resources.getString(R.string.avaibale_qty_variant)
                 if (variantData.node.quantityAvailable == 0) {
-                    binding.addCart.text = context.getString(R.string.out_of_stock)
+                    binding?.addCart?.text = context.getString(R.string.out_of_stock)
                     inStock = false
                 } else {
-                    binding.addCart.text = context.getString(R.string.addtocart)
+                    binding?.addCart?.text = context.getString(R.string.addtocart)
                     inStock = true
                 }
                 Log.d(TAG, "variantSelection: " + variantData.node.id)
             }
         })
-        binding.variantList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        binding?.variantList?.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         selectedPosition = -1
-        binding.variantList.adapter = quickVariantAdapter
+        binding?.variantList?.adapter = quickVariantAdapter
 
     }
 
@@ -215,9 +219,9 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
         }
 
         fun decrease(view: View) {
-            if ((binding.quantity.text.toString()).toInt() > 1) {
+            if ((binding?.quantity?.text?.toString())?.toInt() ?: 0 > 1) {
                 quantity--
-                binding.quantity.text = quantity.toString()
+                binding?.quantity?.text = quantity.toString()
             }
         }
 
@@ -230,7 +234,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
                 } else {
                     quantity++
-                    binding.quantity.text = quantity.toString()
+                    binding?.quantity?.text = quantity.toString()
                 }
             }
         }

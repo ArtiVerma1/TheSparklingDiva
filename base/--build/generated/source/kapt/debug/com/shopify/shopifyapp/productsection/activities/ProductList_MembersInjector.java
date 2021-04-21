@@ -1,6 +1,6 @@
 package com.shopify.shopifyapp.productsection.activities;
 
-import com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter;
+import com.shopify.shopifyapp.productsection.adapters.ProductRecylerGridAdapter;
 import com.shopify.shopifyapp.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
