@@ -1,24 +1,27 @@
 package com.shopify.shopifyapp.productsection.adapters
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import com.shopify.shopifyapp.databinding.MProductitemBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.R2.style.WideDialogFull
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
+import com.shopify.shopifyapp.databinding.MProductitemBinding
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.viewholders.ProductItem
@@ -26,8 +29,11 @@ import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
+import org.json.JSONArray
+import org.json.JSONObject
 import java.math.BigDecimal
 import javax.inject.Inject
+
 
 class ProductRecylerGridAdapter @Inject
 constructor() : RecyclerView.Adapter<ProductItem>() {
@@ -36,6 +42,7 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
     private var activity: Activity? = null
     private var repository: Repository? = null
     var presentmentcurrency: String? = null
+    var whilistArray = JSONArray()
     fun setData(products: List<Storefront.ProductEdge>?, activity: Activity, repository: Repository) {
         this.products = products as MutableList<Storefront.ProductEdge>
         this.activity = activity
@@ -79,7 +86,6 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     data.regularprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
                     data.specialprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
                     data.offertext = getDiscount(special, regular).toString() + "%off"
-
                 } else {
                     data.regularprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
                     data.specialprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
@@ -190,10 +196,17 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             Constant.activityTransition(view.context)
         }
 
+
         fun wishListAdd(view: View, data: ListData) {
             if ((activity as ProductList).productListModel?.setWishList(data.product?.id.toString())!!) {
                 Toast.makeText(view.context, view.context.resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
                 data.addtowish = view.context.resources.getString(R.string.alreadyinwish)
+                var wishlistData = JSONObject()
+                wishlistData.put("id", data.product?.id.toString())
+                wishlistData.put("quantity", 1)
+                whilistArray.put(wishlistData.toString())
+                Constant.logAddToWishlistEvent(whilistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                        ?: 0.0, activity ?: Activity())
             } else {
                 (activity as ProductList).productListModel?.deleteData(data.product?.id.toString())
                 data!!.addtowish = view.context.resources.getString(R.string.addtowish)

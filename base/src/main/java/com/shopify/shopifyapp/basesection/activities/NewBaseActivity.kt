@@ -207,7 +207,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             fullsearch_container.visibility = View.GONE
         }
         try {
-            MyApplication.dataBaseReference.child("additional_info").child("appthemecolor").addValueEventListener(object : ValueEventListener {
+            MyApplication?.dataBaseReference?.child("additional_info")?.child("appthemecolor")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     var value = dataSnapshot.getValue(String::class.java)!!
                     if (!value.contains("#")) {
@@ -446,6 +446,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     override fun onResume() {
         super.onResume()
         cartCount = leftMenuViewModel!!.cartCount
+        MyApplication.dataBaseReference = MyApplication.getmFirebaseSecondanyInstance().getReference(Urls(MyApplication.context).shopdomain.replace(".myshopify.com", ""))
     }
 
     fun setSearchOption(type: String, placeholder: String) {

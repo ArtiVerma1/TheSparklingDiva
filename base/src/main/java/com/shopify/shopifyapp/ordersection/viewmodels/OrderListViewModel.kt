@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.ordersection.viewmodels
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.shopify.buy3.GraphResponse
 import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
@@ -56,6 +58,31 @@ class OrderListViewModel(private val repository: Repository) : ViewModel() {
         }
         return Unit
     }
+
+    fun addToCart(variantId: String, quantity: Int) {
+        try {
+            val runnable = Runnable {
+                val data: CartItemData
+                if (repository.getSingLeItem(variantId) == null) {
+                    data = CartItemData()
+                    data.variant_id = variantId
+                    data.qty = quantity
+                    repository.addSingLeItem(data)
+                } else {
+                    data = repository.getSingLeItem(variantId)
+                    val qty = data.qty + quantity
+                    data.qty = qty
+                    repository.updateSingLeItem(data)
+                }
+                Log.i("MageNative", "CartCount : " + repository.allCartItems.size)
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
 
     private fun consumeResponse(reponse: GraphQLResponse) {
         when (reponse.status) {

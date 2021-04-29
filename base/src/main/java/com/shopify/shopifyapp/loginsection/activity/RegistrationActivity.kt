@@ -52,7 +52,7 @@ class RegistrationActivity : NewBaseActivity() {
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
         var hand = MyClickHandlers(this)
         try {
-            MyApplication.dataBaseReference.child("additional_info").child("login").addValueEventListener(object : ValueEventListener {
+            MyApplication.dataBaseReference?.child("additional_info")?.child("login")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val value = dataSnapshot.getValue(String::class.java)!!
                     hand.image = value

@@ -15,6 +15,7 @@ import com.shopify.shopifyapp.jobservicessection.JobScheduler
 import com.shopify.shopifyapp.productsection.activities.JudgeMeCreateReview
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
 import com.shopify.shopifyapp.loginsection.activity.RegistrationActivity
+import com.shopify.shopifyapp.ordersection.activities.OrderDetails
 import com.shopify.shopifyapp.ordersection.activities.OrderList
 import com.shopify.shopifyapp.productsection.activities.*
 import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
@@ -50,6 +51,7 @@ interface MageNativeAppComponent {
     fun doLeftMeuInjection(left: LeftMenu)
     fun doUserProfileInjection(profile: UserProfile)
     fun doOrderListInjection(profile: OrderList)
+    fun doOrderDetailsInjection(orderDetails: OrderDetails)
     fun doAddressListInjection(addressList: AddressList)
     fun doHomePageInjection(home: HomePage)
     fun doHomePageModelInjection(home: HomePageViewModel)

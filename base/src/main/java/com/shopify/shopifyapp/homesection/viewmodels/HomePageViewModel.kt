@@ -138,7 +138,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             setPresentmentCurrencyForModel()
             this.context = context
             (context.application as MyApplication).mageNativeAppComponent!!.doHomePageModelInjection(this)
-            MyApplication.dataBaseReference.child("homepage_component").addValueEventListener(object : ValueEventListener {
+            MyApplication.dataBaseReference?.child("homepage_component")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val downloadlink = dataSnapshot.getValue(String::class.java)!!
                     Log.i("MageNative", "DownloadLink " + downloadlink)

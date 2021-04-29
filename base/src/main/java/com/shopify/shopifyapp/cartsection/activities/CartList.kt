@@ -74,6 +74,7 @@ class CartList : NewBaseActivity() {
         model = ViewModelProvider(this, factory).get(CartListViewModel::class.java)
         model!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
+        personamodel?.activity=this
         model!!.Response().observe(this, Observer<Storefront.Checkout> { this.consumeResponse(it) })
         if (SplashViewModel.featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
@@ -184,7 +185,7 @@ class CartList : NewBaseActivity() {
                 adapter!!.data = reponse.lineItems.edges
                 adapter!!.notifyDataSetChanged()
             } else {
-                adapter!!.setData(reponse.lineItems.edges, model)
+                adapter!!.setData(reponse.lineItems.edges, model,this)
                 cartlist!!.adapter = adapter
             }
             setBottomData(reponse)

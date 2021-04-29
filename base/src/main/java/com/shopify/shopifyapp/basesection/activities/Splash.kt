@@ -92,7 +92,13 @@ class Splash : AppCompatActivity() {
     }
 
     private fun setProductData(product: MutableList<Storefront.ProductEdge>?) {
-        productData = product?.get(0)?.node
+        try {
+            productData = product?.get(0)?.node
+        } catch (e: Exception) {
+            finish()
+            startActivity(Intent(this, HomePage::class.java))
+        }
+
     }
 
     private fun showToast(it: String?) {

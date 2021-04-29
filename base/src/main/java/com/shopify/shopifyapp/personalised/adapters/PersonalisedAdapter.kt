@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.personalised.adapters
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -20,8 +21,12 @@ import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.databinding.MPersonalisedBinding
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.productsection.viewholders.ProductItem
+import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
+import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
+import org.json.JSONArray
+import org.json.JSONObject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -29,9 +34,14 @@ class PersonalisedAdapter @Inject
 constructor() : RecyclerView.Adapter<ProductItem>() {
     private var layoutInflater: LayoutInflater? = null
     lateinit var products: List<Storefront.Product>
+    private var activity: Activity? = null
+    private var repository: Repository? = null
     var presentmentcurrency: String? = null
-    fun setData(products: List<Storefront.Product>) {
+    var whilistArray = JSONArray()
+    fun setData(products: List<Storefront.Product>, activity: Activity, repository: Repository) {
         this.products = products
+        this.activity = activity
+        this.repository = repository
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItem {
@@ -122,13 +132,39 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                     Glide.with((holder?.personalbinding?.wishlistBut?.context as NewBaseActivity)!!)
                             .load(R.drawable.wishlist_selected)
                             .into(holder?.personalbinding?.wishlistBut!!)
+
+                    Glide.with((holder?.personalbinding?.wishlistBut?.context as NewBaseActivity)!!)
+                            .load(R.drawable.wishlist_selected)
+                            .into(holder?.personalbinding?.wishBut!!)
                 } else {
                     data!!.addtowish = holder?.personalbinding?.wishlistBut?.context?.resources?.getString(R.string.addtowish)
                     Glide.with((holder?.personalbinding?.wishlistBut?.context as NewBaseActivity)!!)
                             .load(R.drawable.wishlist_icon)
                             .into(holder?.personalbinding?.wishlistBut!!)
+
+                    Glide.with((holder?.personalbinding?.wishlistBut?.context as NewBaseActivity)!!)
+                            .load(R.drawable.wishlist_icon)
+                            .into(holder?.personalbinding?.wishBut!!)
                 }
             }
+            if (!SplashViewModel.featuresModel.in_app_wishlist && !SplashViewModel.featuresModel.addCartEnabled) {
+                holder.personalbinding?.wishlistBut?.visibility = View.GONE
+                holder?.personalbinding?.wishBut?.visibility = View.GONE
+                holder?.personalbinding?.cartBut?.visibility = View.GONE
+            } else if (SplashViewModel.featuresModel.in_app_wishlist && !SplashViewModel.featuresModel.addCartEnabled) {
+                holder.personalbinding?.wishlistBut?.visibility = View.VISIBLE
+                holder?.personalbinding?.wishBut?.visibility = View.GONE
+                holder?.personalbinding?.cartBut?.visibility = View.GONE
+            } else if (!SplashViewModel.featuresModel.in_app_wishlist && SplashViewModel.featuresModel.addCartEnabled) {
+                holder.personalbinding?.wishlistBut?.visibility = View.GONE
+                holder?.personalbinding?.wishBut?.visibility = View.GONE
+                holder?.personalbinding?.cartBut?.visibility = View.VISIBLE
+            } else if (SplashViewModel.featuresModel.in_app_wishlist && SplashViewModel.featuresModel.addCartEnabled) {
+                holder.personalbinding?.wishlistBut?.visibility = View.GONE
+                holder?.personalbinding?.wishBut?.visibility = View.VISIBLE
+                holder?.personalbinding?.cartBut?.visibility = View.VISIBLE
+            }
+
             holder?.personalbinding?.features = SplashViewModel.featuresModel
             holder.personalbinding!!.listdata = data
             val model = CommanModel()
@@ -165,6 +201,12 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             if ((view.context as NewBaseActivity).leftMenuViewModel?.setWishList(data.product?.id.toString())!!) {
                 Toast.makeText(view.context, view.context.resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
                 data.addtowish = view.context.resources.getString(R.string.alreadyinwish)
+                var wishlistData = JSONObject()
+                wishlistData.put("id", data.product?.id.toString())
+                wishlistData.put("quantity", 1)
+                whilistArray.put(wishlistData.toString())
+                Constant.logAddToWishlistEvent(whilistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                        ?: 0.0, activity ?: Activity())
             } else {
                 (view.context as NewBaseActivity).leftMenuViewModel?.deleteData(data.product?.id.toString())
                 data!!.addtowish = view.context.resources.getString(R.string.addtowish)
@@ -172,6 +214,14 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
             notifyDataSetChanged()
             (view.context as NewBaseActivity).invalidateOptionsMenu()
         }
-    }
 
+        fun addCart(view: View, data: ListData) {
+            var customQuickAddActivity = QuickAddActivity(context = activity!!, activity = activity, theme = R.style.WideDialogFull, product_id = data.product!!.id.toString(), repository = repository!!)
+            if (data.product?.variants?.edges?.size == 1) {
+                customQuickAddActivity.addToCart(data.product?.variants?.edges?.get(0)?.node?.id.toString(), 1)
+            } else {
+                customQuickAddActivity.initView()
+            }
+        }
+    }
 }

@@ -1,13 +1,16 @@
 package com.shopify.shopifyapp.ordersection.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.databinding.MOrderitemBinding
 import com.shopify.shopifyapp.ordersection.models.Order
 import com.shopify.shopifyapp.ordersection.viewholders.OrderItem
@@ -25,6 +28,7 @@ constructor() : RecyclerView.Adapter<OrderItem>() {
     var data: MutableList<Storefront.OrderEdge>? = null
     private var layoutInflater: LayoutInflater? = null
     private var model: OrderListViewModel? = null
+    private val TAG = "OrderListAdapter"
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderItem {
         val binding = DataBindingUtil.inflate<MOrderitemBinding>(LayoutInflater.from(parent.context), R.layout.m_orderitem, parent, false)
         binding.orderdetails.textSize = 11f
@@ -63,6 +67,36 @@ constructor() : RecyclerView.Adapter<OrderItem>() {
                 holder.binding.boughtfor.visibility = View.GONE
                 holder.binding.boughtforheading.visibility = View.GONE
             }
+            holder.binding.reorderBut.setOnClickListener {
+                for (i in 0 until data?.get(position)?.node?.lineItems?.edges?.size!!) {
+                    Log.d(TAG, "onBindViewHolder: " + data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.variant?.id)
+                    Log.d(TAG, "onBindViewHolder: " + data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.quantity)
+
+                    var alertDialog = SweetAlertDialog(holder.binding.reorderBut.context, SweetAlertDialog.NORMAL_TYPE)
+                    alertDialog.setTitleText(holder.binding.reorderBut.context?.getString(R.string.confirmation))
+                    alertDialog.setContentText(holder.binding.reorderBut.context?.getString(R.string.reorder_confirmation))
+                    alertDialog.setConfirmText(holder.binding.reorderBut.context?.getString(R.string.yes))
+                    alertDialog.setCancelText(holder.binding.reorderBut.context?.getString(R.string.no))
+                    alertDialog.setConfirmClickListener { sweetAlertDialog ->
+                        sweetAlertDialog.setTitleText(holder.binding.reorderBut.context?.getString(R.string.done))
+                                .setContentText(holder.binding.reorderBut.context?.getString(R.string.reorder_success_msg))
+                                .setConfirmText(holder.binding.reorderBut.context?.getString(R.string.done))
+                                .showCancelButton(false)
+                                .setConfirmClickListener(null)
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
+                        model?.addToCart(data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.variant?.id.toString(), data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.quantity?.toInt()
+                                ?: 0)
+                    }
+                    alertDialog.show()
+                }
+            }
+            if (SplashViewModel.featuresModel.reOrderEnabled) {
+                holder.binding.reorderBut.visibility = View.VISIBLE
+            } else {
+                holder.binding.reorderBut.visibility = View.GONE
+            }
+
+            holder?.binding?.features = SplashViewModel.featuresModel
             holder.binding.order = order
         } catch (e: Exception) {
             e.printStackTrace()

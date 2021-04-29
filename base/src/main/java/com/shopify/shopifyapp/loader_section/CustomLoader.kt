@@ -21,7 +21,7 @@ class CustomLoader(context: Context) : Dialog(context) {
         setContentView(R.layout.activity_custom_loader)
         this.setCancelable(false);
 
-        MyApplication.dataBaseReference.child("additional_info").child("appthemecolor").addValueEventListener(object : ValueEventListener {
+        MyApplication.dataBaseReference?.child("additional_info")?.child("appthemecolor")?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 /*val value = dataSnapshot.getValue(String::class.java)!!*/
                 var value = dataSnapshot.getValue(String::class.java)!!

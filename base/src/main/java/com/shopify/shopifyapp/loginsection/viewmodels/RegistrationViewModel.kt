@@ -18,6 +18,7 @@ import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLMutateGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import java.util.regex.Pattern
@@ -43,11 +44,11 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
 
     private fun registeruseer(firstname: String, lastname: String, email: String, password: String) {
         try {
-            doGraphQLMutateGraph(repository,MutationQuery.createaccount(firstname, lastname, email, password),customResponse = object :CustomResponse{
+            doGraphQLMutateGraph(repository, MutationQuery.createaccount(firstname, lastname, email, password), customResponse = object : CustomResponse {
                 override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
                     invoke(result)
                 }
-            },context = context)
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -64,6 +65,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private fun consumeResponse(reponse: GraphQLResponse) {
+        Constant.logCompleteRegistrationEvent("shopiy", context)
         when (reponse.status) {
             Status.SUCCESS -> {
                 val result = (reponse.data as GraphCallResult.Success<Storefront.Mutation>).response
@@ -106,11 +108,11 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getLoginData(email: String, password: String) {
         try {
-            doGraphQLMutateGraph(repository,MutationQuery.getLoginDetails(email, password),customResponse = object :CustomResponse{
+            doGraphQLMutateGraph(repository, MutationQuery.getLoginDetails(email, password), customResponse = object : CustomResponse {
                 override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
                     invokes(result)
                 }
-            },context = context)
+            }, context = context)
         } catch (e: Exception) {
             e.printStackTrace()
         }

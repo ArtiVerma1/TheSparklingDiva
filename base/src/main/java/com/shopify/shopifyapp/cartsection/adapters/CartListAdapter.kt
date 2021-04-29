@@ -1,5 +1,7 @@
 package com.shopify.shopifyapp.cartsection.adapters
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -9,6 +11,7 @@ import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 
 
 import com.shopify.buy3.Storefront
@@ -18,7 +21,10 @@ import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.cartsection.models.CartListItem
 import com.shopify.shopifyapp.cartsection.viewholders.CartItem
 import com.shopify.shopifyapp.cartsection.viewmodels.CartListViewModel
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
+import org.json.JSONArray
+import org.json.JSONObject
 
 import java.math.BigDecimal
 
@@ -28,6 +34,8 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
     var data: MutableList<Storefront.CheckoutLineItemEdge>? = null
     private var layoutInflater: LayoutInflater? = null
     private var model: CartListViewModel? = null
+    var cartlistArray = JSONArray()
+    private var context: Context? = null
 
     init {
         setHasStableIds(true)
@@ -87,6 +95,8 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         val model = CommanModel()
         model.imageurl = variant?.image?.originalSrc
         holder.binding.commondata = model
+        holder.binding.currencyCode = variant.presentmentPrices.edges[0].node.price.currencyCode.toString()
+        holder.binding.productPrice = variant.presentmentPrices.edges[0].node.price.amount.toDouble()
         item.image = variant?.image?.originalSrc
         item.qty = data?.get(position)!!.node.quantity!!.toString()
         holder.binding.name.textSize = 14f
@@ -137,9 +147,10 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         return data!!.size
     }
 
-    fun setData(data: MutableList<Storefront.CheckoutLineItemEdge>, model: CartListViewModel?) {
+    fun setData(data: MutableList<Storefront.CheckoutLineItemEdge>, model: CartListViewModel?, context: Context) {
         this.data = data
         this.model = model
+        this.context = context
     }
 
     fun getDiscount(regular: Double, special: Double): Int {
@@ -147,7 +158,14 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
     }
 
     inner class ClickHandlers {
-        fun moveToWishList(view: View, item: CartListItem) {
+        fun moveToWishList(view: View, item: CartListItem, currencyCode: String, price: Double) {
+            var cartlistData = JSONObject()
+            cartlistData.put("id", item.product_id)
+            cartlistData.put("quantity", item.qty)
+            cartlistArray.put(cartlistData.toString())
+            Constant.logAddToWishlistEvent(cartlistArray.toString(), item.product_id, "product", currencyCode
+                    ?: "", price
+                    ?: 0.0, context ?: Activity())
             model!!.moveToWishList(item)
             data!!.removeAt(item.position)
             notifyItemRemoved(item.position)
@@ -155,10 +173,24 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         }
 
         fun removeFromCart(view: View, item: CartListItem) {
-            model!!.removeFromCart(item)
-            data!!.removeAt(item.position)
-            notifyItemRemoved(item.position)
-            notifyItemRangeChanged(item.position, data!!.size)
+            var alertDialog = SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+            alertDialog.setTitleText(context?.getString(R.string.warning_message))
+            alertDialog.setContentText(context?.getString(R.string.delete_single_cart_warning))
+            alertDialog.setConfirmText(context?.getString(R.string.yes_delete))
+            alertDialog.setCancelText(context?.getString(R.string.no))
+            alertDialog.setConfirmClickListener { sweetAlertDialog ->
+                sweetAlertDialog.setTitleText(context?.getString(R.string.deleted))
+                        .setContentText(context?.getString(R.string.cart_single_delete_message))
+                        .setConfirmText(context?.getString(R.string.done))
+                        .showCancelButton(false)
+                        .setConfirmClickListener(null)
+                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
+                model!!.removeFromCart(item)
+                data!!.removeAt(item.position)
+                notifyItemRemoved(item.position)
+                notifyItemRangeChanged(item.position, data!!.size)
+            }
+            alertDialog.show()
         }
 
         fun increase(view: View, item: CartListItem) {

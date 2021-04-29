@@ -64,8 +64,11 @@ class ProductView : NewBaseActivity() {
     private var model: ProductViewModel? = null
     private val TAG = "ProductView"
     var productID = "noid"
+    var whishlistArray = JSONArray()
+    var cartlistArray = JSONArray()
     var variantId: ID? = null
     var sizeChartUrl: String = ""
+    private var singleVariant: Boolean = false
 
     @Inject
     lateinit var reviewAdapter: ReviewListAdapter
@@ -98,6 +101,7 @@ class ProductView : NewBaseActivity() {
         model!!.context = this
         model?.createreviewResponse?.observe(this, Observer { this.createReview(it) })
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
+        personamodel?.activity = this
         if (intent.getStringExtra("handle") != null) {
             model!!.handle = intent.getStringExtra("handle")
         }
@@ -217,7 +221,7 @@ class ProductView : NewBaseActivity() {
                         binding!!.shopifyrecommendedSection.visibility = View.VISIBLE
                         setLayout(binding!!.shopifyrecommendedList, "horizontal")
                         personalisedadapter = PersonalisedAdapter()
-                        personalisedadapter.setData(recommendedList)
+                        personalisedadapter.setData(recommendedList, this, personamodel?.repository!!)
                         binding!!.shopifyrecommendedList.adapter = personalisedadapter
                     }
                 }
@@ -309,7 +313,7 @@ class ProductView : NewBaseActivity() {
             binding!!.variantheading.visibility = View.GONE
             binding!!.variantContainer.visibility = View.GONE
             binding?.variantAvailableQty?.visibility = View.GONE
-
+            singleVariant = true
         }
         if (list.size > 0) {
             var swatches_object = JSONObject()
@@ -532,6 +536,15 @@ class ProductView : NewBaseActivity() {
                 Glide.with(this).load(R.drawable.wishlist_icon)
                         .into(binding?.addtowish!!)
             }
+            var contentViewArray = JSONArray()
+            var cartlistData = JSONObject()
+            cartlistData.put("id", productedge.id.toString())
+            cartlistData.put("quantity", 1)
+            contentViewArray.put(cartlistData.toString())
+            Constant.logViewContentEvent("product", contentViewArray.toString(), productedge.id.toString(), productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.currencyCode.toString()
+                    ?: "",
+                    productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.amount.toDouble()
+                            ?: 0.0, this)
 
             setProductPrice(variant)
             binding?.regularprice?.textSize = 15f
@@ -640,10 +653,17 @@ class ProductView : NewBaseActivity() {
         fun addtoCart(view: View, data: ListData) {
             if (inStock) {
                 if (variantValidation.names() != null) {
-                    if (variantValidation.names().length() >= totalVariant!!) {
+                    if (variantValidation.names().length() >= totalVariant!! || singleVariant) {
                         model!!.addToCart(variantId.toString(), binding?.quantity?.text.toString().toInt())
                         Toast.makeText(view.context, resources.getString(R.string.successcart), Toast.LENGTH_LONG).show()
                         invalidateOptionsMenu()
+                        var cartlistData = JSONObject()
+                        cartlistData.put("id", data.product?.id.toString())
+                        cartlistData.put("quantity", 1)
+                        cartlistArray.put(cartlistData.toString())
+                        Constant.logAddToWishlistEvent(cartlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                                ?: 0.0, this@ProductView ?: Activity())
+
                     } else {
                         Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
                     }
@@ -678,6 +698,13 @@ class ProductView : NewBaseActivity() {
                     data.addtowish = resources.getString(R.string.alreadyinwish)
                     Glide.with(this@ProductView).load(R.drawable.wishlist_selected)
                             .into(binding?.addtowish!!)
+
+                    var wishlistData = JSONObject()
+                    wishlistData.put("id", data.product?.id.toString())
+                    wishlistData.put("quantity", 1)
+                    whishlistArray.put(wishlistData.toString())
+                    Constant.logAddToWishlistEvent(whishlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                            ?: 0.0, this@ProductView ?: Activity())
                 } else {
                     model!!.deleteData(data.product?.id.toString())
                     data!!.addtowish = resources.getString(R.string.addtowish)

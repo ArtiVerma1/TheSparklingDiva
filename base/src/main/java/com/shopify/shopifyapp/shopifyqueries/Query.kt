@@ -432,6 +432,19 @@ object Query {
                                                                     .name()
                                                                     .processedAt()
                                                                     .orderNumber()
+                                                                    .totalPriceV2 { _queryBuilder -> _queryBuilder.amount().currencyCode() }
+                                                                    .shippingAddress { _queryBuilder ->
+                                                                        _queryBuilder.address1().address2().city().company().country().firstName().lastName()
+                                                                                .phone().zip().latitude().longitude()
+                                                                    }.totalShippingPriceV2 { _queryBuilder ->
+                                                                        _queryBuilder.currencyCode().amount()
+                                                                    }
+                                                                    .totalTaxV2 { _queryBuilder ->
+                                                                        _queryBuilder.amount().currencyCode()
+                                                                    }
+                                                                    .subtotalPriceV2 { _queryBuilder ->
+                                                                        _queryBuilder.amount().currencyCode()
+                                                                    }
                                                                     .lineItems({ arg -> arg.first(150) }, { item ->
                                                                         item
                                                                                 .edges({ itemedge ->

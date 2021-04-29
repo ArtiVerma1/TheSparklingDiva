@@ -14,6 +14,20 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
+    var reOrderEnabled: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.reOrderEnabled)
+        }
+
+    @Bindable
+    var addCartEnabled: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.addCartEnabled)
+        }
+
+    @Bindable
     var sizeChartVisibility: Boolean = false
         set(value) {
             field = value

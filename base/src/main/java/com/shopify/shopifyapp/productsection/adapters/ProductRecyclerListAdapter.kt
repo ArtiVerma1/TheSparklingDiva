@@ -4,7 +4,9 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapShader
 import android.graphics.Paint
+import android.graphics.Point
 import android.graphics.Typeface
 import android.util.Log
 import android.view.*
@@ -26,6 +28,8 @@ import com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
+import org.json.JSONArray
+import org.json.JSONObject
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -37,6 +41,7 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
     private var activity: Activity? = null
     private var repository: Repository? = null
     var presentmentcurrency: String? = null
+    var whilistArray = JSONArray()
     fun setData(products: List<Storefront.ProductEdge>?, activity: Activity, repository: Repository) {
         this.products = products as MutableList<Storefront.ProductEdge>
         this.activity = activity
@@ -45,6 +50,7 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
 
     class ProductRecyclerListViewHolder : RecyclerView.ViewHolder {
         var binding: ProductListItemBinding
+
         constructor(itemView: ProductListItemBinding) : super(itemView.root) {
             this.binding = itemView
         }
@@ -166,10 +172,17 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
         holder.binding!!.listdata = data
         holder?.binding?.features = SplashViewModel.featuresModel
         holder.binding!!.clickproduct = Product(position)
+
     }
 
     override fun getItemCount(): Int {
         return products.size
+    }
+
+    private fun getPointOfView(view: View): Point? {
+        val location = IntArray(2)
+        view.getLocationInWindow(location)
+        return Point(location[0], location[1])
     }
 
     fun getDiscount(regular: Double, special: Double): Int {
@@ -200,13 +213,13 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
         }
 
         fun menuClick(view: View, data: ListData) {
-            var dialog = Dialog(activity as Context, R.style.WideDialog)
+            var dialog = Dialog(activity as Context, R.style.WideDialogSmall)
             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
             dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
             val wmlp = dialog.window!!.attributes
             wmlp.gravity = Gravity.TOP or Gravity.RIGHT
             wmlp.x = 30
-            wmlp.y = 330
+            wmlp.y = getPointOfView(view)?.y!! - 50
             dialog.setCancelable(false)
             var binding = DataBindingUtil.inflate<OptionmenuDialogBinding>(LayoutInflater.from(activity), R.layout.optionmenu_dialog, null, false)
             dialog.setContentView(binding.root)
@@ -214,6 +227,12 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
                 if ((activity as ProductList).productListModel?.setWishList(data.product?.id.toString())!!) {
                     Toast.makeText(view.context, view.context.resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
                     data.addtowish = view.context.resources.getString(R.string.alreadyinwish)
+                    var wishlistData = JSONObject()
+                    wishlistData.put("id", data.product?.id.toString())
+                    wishlistData.put("quantity", 1)
+                    whilistArray.put(wishlistData.toString())
+                    Constant.logAddToWishlistEvent(whilistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                            ?: 0.0, activity ?: Activity())
                 } else {
                     (activity as ProductList).productListModel?.deleteData(data.product?.id.toString())
                     data!!.addtowish = view.context.resources.getString(R.string.addtowish)

@@ -203,7 +203,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                     }
                 }
             }
-            Status.ERROR -> message.setValue(reponse.error!!.error.message)
+            Status.ERROR -> message.postValue(reponse.error!!.error.message)
             else -> {
             }
         }
@@ -211,7 +211,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     private fun connectFirebaseForTrial(shop: String) {
         try {
-            MyApplication.dataBaseReference.child("additional_info").child("validity").addValueEventListener(object : ValueEventListener {
+            MyApplication.dataBaseReference?.child("additional_info")?.child("validity")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val value = dataSnapshot.getValue(Boolean::class.java)!!
                     val runnable = Runnable {
@@ -246,7 +246,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                     Log.i("DBConnectionError", "" + databaseError.code)
                 }
             })
-            MyApplication.dataBaseReference.child("additional_info").child("personalise").addValueEventListener(object : ValueEventListener {
+            MyApplication.dataBaseReference?.child("additional_info")?.child("personalise")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     Constant.ispersonalisedEnable = dataSnapshot.getValue(Boolean::class.java)!!
                 }
@@ -257,7 +257,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                     Log.i("DBConnectionError", "" + databaseError.code)
                 }
             })
-            MyApplication.dataBaseReference.child("additional_info").child("locale").addValueEventListener(object : ValueEventListener {
+            MyApplication.dataBaseReference?.child("additional_info")?.child("locale")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     Constant.locale = dataSnapshot.getValue(String::class.java)!!
                 }
@@ -276,7 +276,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     private fun connectFireBaseForSplashData() {
         try {
-            MyApplication.dataBaseReference.child("additional_info").child("splash").addValueEventListener(object : ValueEventListener {
+            MyApplication.dataBaseReference?.child("additional_info")?.child("splash")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     disposables.add(Single.just(dataSnapshot)
                             .subscribeOn(Schedulers.io())
@@ -294,7 +294,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                 }
             })
 
-            MyApplication.dataBaseReference.child("features").addValueEventListener(object : ValueEventListener {
+            MyApplication.dataBaseReference?.child("features")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     Log.d(TAG, "onDataChange: " + dataSnapshot.exists())
                     if (dataSnapshot.value != null) {

@@ -19,6 +19,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.basesection.activities.Splash
+import com.shopify.shopifyapp.loginsection.activity.LoginActivity
+import com.shopify.shopifyapp.loginsection.activity.RegistrationActivity
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,6 +42,8 @@ fun <String> ImageView.loadCircularImage(
     Glide.with(context)
             .asBitmap()
             .load(model)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_placeholder)
             .apply(RequestOptions.circleCropTransform())
             .into(object : BitmapImageViewTarget(this) {
                 override fun setResource(resource: Bitmap?) {
@@ -120,17 +125,28 @@ class CommanModel : BaseObservable() {
                         override fun onSubscribe(d: Disposable) {
 
                         }
-
                         override fun onNext(s: String) {
                             Log.i("Magenative ", "Developer image url " + s)
-                            Glide.with(context)
-                                    .asBitmap()
-                                    .load(s)
-                                    .dontTransform()
-                                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                                    //.thumbnail(0.5f)
-                                    // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
-                                    .into(view)
+                            if (view.context is Splash || view.context is LoginActivity || view.context is RegistrationActivity) {
+                                Glide.with(context)
+                                        .asBitmap()
+                                        .load(s)
+                                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                        //.thumbnail(0.5f)
+                                        // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
+                                        .into(view)
+                            } else {
+                                Glide.with(context)
+                                        .asBitmap()
+                                        .load(s)
+                                        .placeholder(R.drawable.image_placeholder)
+                                        .error(R.drawable.image_placeholder)
+                                        .dontTransform()
+                                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                        //.thumbnail(0.5f)
+                                        // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
+                                        .into(view)
+                            }
 
 
                             /*Don't remove this commented code i will work on it latter (Abhishek)*/

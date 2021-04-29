@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.quickadd_section.activities
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -23,11 +24,14 @@ import com.shopify.shopifyapp.quickadd_section.adapter.QuickVariantAdapter
 import com.shopify.shopifyapp.quickadd_section.adapter.QuickVariantAdapter.Companion.selectedPosition
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import com.shopify.shopifyapp.wishlistsection.viewmodels.WishListViewModel
 import kotlinx.coroutines.*
+import org.json.JSONArray
+import org.json.JSONObject
 import java.lang.Runnable
 
 class QuickAddActivity(context: Context, var activity: Context? = null, theme: Int, var product_id: String, var repository: Repository, var wishListViewModel: WishListViewModel? = null, var position: Int? = null, var wishlistData: MutableList<Storefront.Product>? = null) : BottomSheetDialog(context, theme) {
@@ -36,6 +40,8 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     lateinit var app: MyApplication
     private var inStock: Boolean = true
     var variant_id: String? = null
+    var carttArray = JSONArray()
+    var product_price: Double = 0.0
     var bottomSheetDialog: BottomSheetDialog? = null
     var presentment_currency = "nopresentmentcurrency"
     var currency_list: ArrayList<Storefront.CurrencyCode>? = null
@@ -152,12 +158,18 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     inStock = true
                 }
                 Log.d(TAG, "variantSelection: " + variantData.node.id)
+
             }
         })
+        var cartlistData = JSONObject()
+        cartlistData.put("id", productedge.id)
+        cartlistData.put("quantity", 1)
+        carttArray.put(cartlistData.toString())
+        product_price = productedge?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                ?: 0.0
         binding?.variantList?.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         selectedPosition = -1
         binding?.variantList?.adapter = quickVariantAdapter
-
     }
 
     fun addToCart(variantId: String, quantity: Int) {
@@ -180,9 +192,11 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
             Thread(runnable).start()
             GlobalScope.launch(Dispatchers.Main) {
                 if (activity is NewBaseActivity) {
+                    Toast.makeText(activity, activity?.resources?.getString(R.string.successcart), Toast.LENGTH_LONG).show()
                     (activity as NewBaseActivity).invalidateOptionsMenu()
                 }
             }
+            Constant.logAddToCartEvent(carttArray.toString(), product_id, "product", presentment_currency, product_price, activity ?: Activity())
             if (wishListViewModel != null) {
                 if (activity is WishList) {
                     wishListViewModel!!.deleteData(product_id)

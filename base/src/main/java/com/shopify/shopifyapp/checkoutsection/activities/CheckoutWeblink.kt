@@ -160,7 +160,6 @@ class CheckoutWeblink : NewBaseActivity() {
                             count++
                         }, 3000, 3000)
                     }
-
                 }
                 val javascript = "javascript: document.getElementsByClassName('section__header')[0].style.display = 'none' "
                 val javascript1 = "javascript: document.getElementsByClassName('logged-in-customer-information')[0].style.display = 'none' "

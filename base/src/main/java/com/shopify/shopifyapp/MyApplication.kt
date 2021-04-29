@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.multidex.MultiDexApplication
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -23,6 +25,10 @@ class MyApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+        FacebookSdk.setAutoInitEnabled(true)
+        FacebookSdk.fullyInitialize()
         JodaTimeAndroid.init(this)
         MagePrefs.getInstance(this)
         context = this
@@ -54,6 +60,6 @@ class MyApplication : MultiDexApplication() {
             return mFirebaseSecondanyInstance as FirebaseDatabase
         }
 
-        lateinit var dataBaseReference: DatabaseReference
+         var dataBaseReference: DatabaseReference?=null
     }
 }

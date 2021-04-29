@@ -34,10 +34,7 @@ import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
-import com.shopify.shopifyapp.utils.ApiResponse
-import com.shopify.shopifyapp.utils.Constant
-import com.shopify.shopifyapp.utils.Status
-import com.shopify.shopifyapp.utils.ViewModelFactory
+import com.shopify.shopifyapp.utils.*
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import info.androidhive.fontawesome.FontTextView
 import kotlinx.android.synthetic.main.m_homepage_modified.*
@@ -70,18 +67,15 @@ class HomePage : NewBaseActivity() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_homepage_modified, group, true)
         homepage = binding!!.homecontainer
         (application as MyApplication).mageNativeAppComponent!!.doHomePageInjection(this)
+        MyApplication.dataBaseReference = MyApplication.getmFirebaseSecondanyInstance().getReference(Urls(MyApplication.context).shopdomain.replace(".myshopify.com", ""))
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
         showHumburger()
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
+        personamodel?.activity = this
+        homemodel!!.connectFirebaseForHomePageData(this, homepage)
         homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })
         homemodel!!.getHomePageData()?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
-        if (featuresModel.ai_product_reccomendaton) {
-            if (Constant.ispersonalisedEnable) {
-                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-            }
-        }
         homemodel!!.hasBannerOnTop.observe(this, Observer { this.ConsumeBanner(it) })
         homemodel!!.hasFullSearchOnTop.observe(this, Observer { this.consumeFullSearch(it) })
         scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
@@ -335,8 +329,13 @@ class HomePage : NewBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        homemodel!!.connectFirebaseForHomePageData(this, homepage)
-        scrollview.scrollTo(0, 0)
+        if (featuresModel.ai_product_reccomendaton) {
+            if (Constant.ispersonalisedEnable) {
+
+                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            }
+        }
         nav_view.menu.findItem(R.id.home_bottom).setChecked(true)
     }
 

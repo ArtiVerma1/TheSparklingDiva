@@ -85,7 +85,7 @@ class MageNativeButton : AppCompatButton {
         val type = a.getBoolean(R.styleable.MageNativeButton_buttonastext, false)
         if (!type) {
             try {
-                MyApplication.dataBaseReference.child("additional_info").child("appthemecolor").addValueEventListener(object : ValueEventListener {
+                MyApplication.dataBaseReference?.child("additional_info")?.child("appthemecolor")?.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         /*val value = dataSnapshot.getValue(String::class.java)!!*/
                         var value = dataSnapshot.getValue(String::class.java)!!

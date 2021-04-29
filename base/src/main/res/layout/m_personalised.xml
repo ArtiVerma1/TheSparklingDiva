@@ -71,9 +71,23 @@
                 android:layout_marginEnd="8dp"
                 android:onClick="@{(view) -> clickproduct.wishListAdd(view,listdata)}"
                 android:src="@drawable/wishlist_icon"
-                android:visibility="@{features.in_app_wishlist ? View.VISIBLE : View.GONE}"
+                android:visibility="gone"
                 bind:layout_constraintEnd_toEndOf="parent"
                 bind:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/wish_but"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/wishlist_icon"
+                android:onClick="@{(view) -> clickproduct.wishListAdd(view,listdata)}"
+                android:visibility="gone"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toBottomOf="@+id/name" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/cart_but"
@@ -84,6 +98,7 @@
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/cart_icon_bottom"
                 android:tint="@color/black"
+                android:onClick="@{(view) -> clickproduct.addCart(view,listdata)}"
                 android:visibility="gone"
                 bind:layout_constraintEnd_toEndOf="parent"
                 bind:layout_constraintTop_toBottomOf="@+id/name" />

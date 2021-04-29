@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.personalised.viewmodels
 
+import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import android.util.Base64
@@ -26,7 +27,8 @@ import java.nio.charset.Charset
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
-class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
+class PersonalisedViewModel(var repository: Repository) : ViewModel() {
+    var activity: Activity? = null
 
     fun setPersonalisedData(data: JSONArray, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView) {
         try {
@@ -97,7 +99,7 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
                         errormessage.append(error.message())
                     }
                     Log.i("MageNatyive", "ERROR" + errormessage.toString())
-                   // message.setValue(errormessage.toString())
+                    // message.setValue(errormessage.toString())
                 } else {
                     try {
                         val edge = result.data!!.node as Storefront.Product
@@ -137,7 +139,7 @@ class PersonalisedViewModel(private val repository: Repository) : ViewModel() {
                             if (!adapter.hasObservers()) {
                                 adapter!!.setHasStableIds(true)
                             }
-                            adapter!!.setData(list)
+                            adapter!!.setData(list, activity ?: Activity(), repository)
                             productdata!!.adapter = adapter
                         }
 
