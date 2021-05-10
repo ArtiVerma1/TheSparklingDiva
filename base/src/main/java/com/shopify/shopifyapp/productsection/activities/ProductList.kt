@@ -21,6 +21,8 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MProductlistitemBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.activities.Splash
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.SortDialogLayoutBinding
 import com.shopify.shopifyapp.productsection.adapters.ProductRecyclerListAdapter
@@ -117,6 +119,13 @@ class ProductList : NewBaseActivity() {
             products = null
             binding?.mainview?.productListContainer?.visibility = View.GONE
             productListModel!!.cursor = "nocursor"
+        }
+        if (SplashViewModel.featuresModel.productListEnabled) {
+            binding?.mainview?.grid_but?.visibility = View.VISIBLE
+            binding?.mainview?.list_but?.visibility = View.VISIBLE
+        } else {
+            binding?.mainview?.grid_but?.visibility = View.GONE
+            binding?.mainview?.list_but?.visibility = View.GONE
         }
     }
 
