@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -41,21 +41,21 @@ public class MAddressbottomsheetBindingImpl extends MAddressbottomsheetBinding  
     }
     private MAddressbottomsheetBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 0
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[8]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[9]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[8]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[9]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[0]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[1]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[10]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[12]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[10]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[12]
             , (androidx.constraintlayout.widget.Guideline) bindings[4]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[6]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[7]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[6]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[7]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[5]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[14]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[13]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[14]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[13]
             , (androidx.constraintlayout.widget.Guideline) bindings[3]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[11]
-            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[11]
+            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[2]
             );
         this.bottomSheet.setTag(null);
         this.cancelAction.setTag(null);
@@ -87,7 +87,7 @@ public class MAddressbottomsheetBindingImpl extends MAddressbottomsheetBinding  
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler) variable);
+            setHandler((com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler) variable);
         }
         else {
             variableSet = false;
@@ -95,7 +95,7 @@ public class MAddressbottomsheetBindingImpl extends MAddressbottomsheetBinding  
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler Handler) {
+    public void setHandler(@Nullable com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x1L;
@@ -118,7 +118,7 @@ public class MAddressbottomsheetBindingImpl extends MAddressbottomsheetBinding  
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler handler = mHandler;
+        com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler handler = mHandler;
         android.view.View.OnClickListener handlerAddressAndroidViewViewOnClickListener = null;
         android.view.View.OnClickListener handlerCancelActionAndroidViewViewOnClickListener = null;
 
@@ -143,8 +143,8 @@ public class MAddressbottomsheetBindingImpl extends MAddressbottomsheetBinding  
     }
     // Listener Stub Implementations
     public static class OnClickListenerImpl implements android.view.View.OnClickListener{
-        private com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler value;
-        public OnClickListenerImpl setValue(com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler value) {
+        private com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler value;
+        public OnClickListenerImpl setValue(com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler value) {
             this.value = value;
             return value == null ? null : this;
         }
@@ -154,8 +154,8 @@ public class MAddressbottomsheetBindingImpl extends MAddressbottomsheetBinding  
         }
     }
     public static class OnClickListenerImpl1 implements android.view.View.OnClickListener{
-        private com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler value;
-        public OnClickListenerImpl1 setValue(com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler value) {
+        private com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler value;
+        public OnClickListenerImpl1 setValue(com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler value) {
             this.value = value;
             return value == null ? null : this;
         }

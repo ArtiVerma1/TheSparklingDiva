@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MProductitemBindingImpl extends MProductitemBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MProductitemBindingImpl extends MProductitemBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -32,11 +32,11 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
     private MProductitemBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 2
             , (androidx.appcompat.widget.AppCompatImageView) bindings[1]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
             );
         this.image.setTag(null);
         this.mboundView0 = (androidx.constraintlayout.widget.ConstraintLayout) bindings[0];
@@ -48,7 +48,7 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
         this.specialprice.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback58 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback58 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -74,13 +74,13 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.commondata == variableId) {
-            setCommondata((com.kumaoni.blessings.basesection.models.CommanModel) variable);
+            setCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
         }
         else if (BR.clickproduct == variableId) {
-            setClickproduct((com.kumaoni.blessings.productsection.adapters.ProductRecylerAdapter.Product) variable);
+            setClickproduct((com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter.Product) variable);
         }
         else if (BR.listdata == variableId) {
-            setListdata((com.kumaoni.blessings.basesection.models.ListData) variable);
+            setListdata((com.shopify.shopifyapp.basesection.models.ListData) variable);
         }
         else {
             variableSet = false;
@@ -88,7 +88,7 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
             return variableSet;
     }
 
-    public void setCommondata(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Commondata) {
+    public void setCommondata(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Commondata) {
         updateRegistration(0, Commondata);
         this.mCommondata = Commondata;
         synchronized(this) {
@@ -97,7 +97,7 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
         notifyPropertyChanged(BR.commondata);
         super.requestRebind();
     }
-    public void setClickproduct(@Nullable com.kumaoni.blessings.productsection.adapters.ProductRecylerAdapter.Product Clickproduct) {
+    public void setClickproduct(@Nullable com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter.Product Clickproduct) {
         this.mClickproduct = Clickproduct;
         synchronized(this) {
             mDirtyFlags |= 0x4L;
@@ -105,7 +105,7 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
         notifyPropertyChanged(BR.clickproduct);
         super.requestRebind();
     }
-    public void setListdata(@Nullable com.kumaoni.blessings.basesection.models.ListData Listdata) {
+    public void setListdata(@Nullable com.shopify.shopifyapp.basesection.models.ListData Listdata) {
         updateRegistration(1, Listdata);
         this.mListdata = Listdata;
         synchronized(this) {
@@ -119,13 +119,13 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCommondata((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
             case 1 :
-                return onChangeListdata((com.kumaoni.blessings.basesection.models.ListData) object, fieldId);
+                return onChangeListdata((com.shopify.shopifyapp.basesection.models.ListData) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCommondata(com.kumaoni.blessings.basesection.models.CommanModel Commondata, int fieldId) {
+    private boolean onChangeCommondata(com.shopify.shopifyapp.basesection.models.CommanModel Commondata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -140,7 +140,7 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
         }
         return false;
     }
-    private boolean onChangeListdata(com.kumaoni.blessings.basesection.models.ListData Listdata, int fieldId) {
+    private boolean onChangeListdata(com.shopify.shopifyapp.basesection.models.ListData Listdata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x2L;
@@ -157,15 +157,15 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.basesection.models.CommanModel commondata = mCommondata;
+        com.shopify.shopifyapp.basesection.models.CommanModel commondata = mCommondata;
         java.lang.String listdataOffertext = null;
         java.lang.String listdataRegularprice = null;
-        com.kumaoni.blessings.productsection.adapters.ProductRecylerAdapter.Product clickproduct = mClickproduct;
+        com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter.Product clickproduct = mClickproduct;
         java.lang.String commondataImageurl = null;
         java.lang.String listdataDescription = null;
         java.lang.String listdataTextdata = null;
         java.lang.String listdataSpecialprice = null;
-        com.kumaoni.blessings.basesection.models.ListData listdata = mListdata;
+        com.shopify.shopifyapp.basesection.models.ListData listdata = mListdata;
 
         if ((dirtyFlags & 0x19L) != 0) {
 
@@ -197,7 +197,7 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
         if ((dirtyFlags & 0x19L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
+            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
         }
         if ((dirtyFlags & 0x10L) != 0) {
             // api target 1
@@ -219,11 +219,11 @@ public class MProductitemBindingImpl extends MProductitemBinding implements com.
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
         // localize variables for thread safety
         // clickproduct
-        com.kumaoni.blessings.productsection.adapters.ProductRecylerAdapter.Product clickproduct = mClickproduct;
+        com.shopify.shopifyapp.productsection.adapters.ProductRecylerAdapter.Product clickproduct = mClickproduct;
         // clickproduct != null
         boolean clickproductJavaLangObjectNull = false;
         // listdata
-        com.kumaoni.blessings.basesection.models.ListData listdata = mListdata;
+        com.shopify.shopifyapp.basesection.models.ListData listdata = mListdata;
 
 
 

@@ -8,19 +8,19 @@
 
         <!--        <variable-->
         <!--            name="commondata"-->
-        <!--            type="com.kumaoni.blessings.basesection.models.CommanModel" />-->
+        <!--            type="com.shopify.shopifyapp.basesection.models.CommanModel" />-->
 
         <variable
             name="features"
-            type="com.kumaoni.blessings.basesection.models.FeaturesModel" />
+            type="com.shopify.shopifyapp.basesection.models.FeaturesModel" />
 
         <variable
             name="listdata"
-            type="com.kumaoni.blessings.basesection.models.ListData" />
+            type="com.shopify.shopifyapp.basesection.models.ListData" />
 
         <variable
             name="clickproduct"
-            type="com.kumaoni.blessings.productsection.adapters.ProductRecyclerListAdapter.Product" />
+            type="com.shopify.shopifyapp.productsection.adapters.ProductRecyclerListAdapter.Product" />
     </data>
 
     <FrameLayout
@@ -70,7 +70,7 @@
                 android:padding="10dp">
 
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                     bind:layout_constraintTop_toTopOf="parent"
                     bind:texttype="normal" />
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                     bind:layout_constraintTop_toTopOf="parent" />
 
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/specialprice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                     bind:layout_constraintTop_toBottomOf="@id/description"
                     bind:texttype="normal" />
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/offertext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                     bind:layout_constraintTop_toBottomOf="@id/description"
                     bind:texttype="normal" />
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/regularprice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
                         android:src="@drawable/minu"
                         android:visibility="gone" />
 
-                    <com.kumaoni.blessings.customviews.MageNativeTextView
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/quantity"
                         android:layout_width="45dp"
                         android:layout_height="wrap_content"

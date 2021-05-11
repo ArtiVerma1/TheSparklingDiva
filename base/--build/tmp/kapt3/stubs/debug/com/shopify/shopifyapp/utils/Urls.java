@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.utils;
+package com.shopify.shopifyapp.utils;
 
 import java.lang.System;
 
@@ -6,9 +6,9 @@ import java.lang.System;
 public final class Urls {
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.kumaoni.blessings.repositories.Repository repository;
+    public com.shopify.shopifyapp.repositories.Repository repository;
     @org.jetbrains.annotations.NotNull()
-    private com.kumaoni.blessings.MyApplication app;
+    private com.shopify.shopifyapp.MyApplication app;
     @org.jetbrains.annotations.NotNull()
     public static final java.lang.String BASE_URL = "https://shopifymobileapp.cedcommerce.com/shopifymobile/shopifyapi/";
     @org.jetbrains.annotations.NotNull()
@@ -19,24 +19,24 @@ public final class Urls {
     public static final java.lang.String SETDEVICES = "setdevices";
     @org.jetbrains.annotations.NotNull()
     public static final java.lang.String HOMEPAGE = "homepagedata";
-    public static final com.kumaoni.blessings.utils.Urls.Data Data = null;
+    public static final com.shopify.shopifyapp.utils.Urls.Data Data = null;
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.repositories.Repository getRepository() {
+    public final com.shopify.shopifyapp.repositories.Repository getRepository() {
         return null;
     }
     
     public final void setRepository(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository p0) {
+    com.shopify.shopifyapp.repositories.Repository p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.MyApplication getApp() {
+    public final com.shopify.shopifyapp.MyApplication getApp() {
         return null;
     }
     
     public final void setApp(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.MyApplication p0) {
+    com.shopify.shopifyapp.MyApplication p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
@@ -55,7 +55,7 @@ public final class Urls {
     }
     
     public Urls(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.MyApplication app) {
+    com.shopify.shopifyapp.MyApplication app) {
         super();
     }
     

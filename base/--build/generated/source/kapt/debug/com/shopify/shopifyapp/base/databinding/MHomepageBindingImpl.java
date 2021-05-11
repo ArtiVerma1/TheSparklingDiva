@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -50,11 +50,11 @@ public class MHomepageBindingImpl extends MHomepageBinding  {
             , (androidx.recyclerview.widget.RecyclerView) bindings[13]
             , (androidx.recyclerview.widget.RecyclerView) bindings[15]
             , (androidx.recyclerview.widget.RecyclerView) bindings[16]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
             );
         this.main.setTag(null);
         this.sliderfiveheading.setTag(null);
@@ -89,10 +89,10 @@ public class MHomepageBindingImpl extends MHomepageBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.heading == variableId) {
-            setHeading((com.kumaoni.blessings.homesection.models.Heading) variable);
+            setHeading((com.shopify.shopifyapp.homesection.models.Heading) variable);
         }
         else if (BR.common == variableId) {
-            setCommon((com.kumaoni.blessings.basesection.models.CommanModel) variable);
+            setCommon((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
         }
         else {
             variableSet = false;
@@ -100,7 +100,7 @@ public class MHomepageBindingImpl extends MHomepageBinding  {
             return variableSet;
     }
 
-    public void setHeading(@Nullable com.kumaoni.blessings.homesection.models.Heading Heading) {
+    public void setHeading(@Nullable com.shopify.shopifyapp.homesection.models.Heading Heading) {
         updateRegistration(0, Heading);
         this.mHeading = Heading;
         synchronized(this) {
@@ -109,7 +109,7 @@ public class MHomepageBindingImpl extends MHomepageBinding  {
         notifyPropertyChanged(BR.heading);
         super.requestRebind();
     }
-    public void setCommon(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Common) {
+    public void setCommon(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Common) {
         this.mCommon = Common;
     }
 
@@ -117,13 +117,13 @@ public class MHomepageBindingImpl extends MHomepageBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeHeading((com.kumaoni.blessings.homesection.models.Heading) object, fieldId);
+                return onChangeHeading((com.shopify.shopifyapp.homesection.models.Heading) object, fieldId);
             case 1 :
-                return onChangeCommon((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommon((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeHeading(com.kumaoni.blessings.homesection.models.Heading Heading, int fieldId) {
+    private boolean onChangeHeading(com.shopify.shopifyapp.homesection.models.Heading Heading, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -162,7 +162,7 @@ public class MHomepageBindingImpl extends MHomepageBinding  {
         }
         return false;
     }
-    private boolean onChangeCommon(com.kumaoni.blessings.basesection.models.CommanModel Common, int fieldId) {
+    private boolean onChangeCommon(com.shopify.shopifyapp.basesection.models.CommanModel Common, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x2L;
@@ -179,7 +179,7 @@ public class MHomepageBindingImpl extends MHomepageBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.homesection.models.Heading heading = mHeading;
+        com.shopify.shopifyapp.homesection.models.Heading heading = mHeading;
         java.lang.String headingHeadingThree = null;
         java.lang.String headingHeadingFour = null;
         java.lang.String headingHeadingOne = null;

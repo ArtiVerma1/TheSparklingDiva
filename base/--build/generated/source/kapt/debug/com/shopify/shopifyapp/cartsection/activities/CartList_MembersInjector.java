@@ -1,7 +1,7 @@
-package com.kumaoni.blessings.cartsection.activities;
+package com.shopify.shopifyapp.cartsection.activities;
 
-import com.kumaoni.blessings.cartsection.adapters.CartListAdapter;
-import com.kumaoni.blessings.utils.ViewModelFactory;
+import com.shopify.shopifyapp.cartsection.adapters.CartListAdapter;
+import com.shopify.shopifyapp.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

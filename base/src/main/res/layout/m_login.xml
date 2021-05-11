@@ -7,7 +7,7 @@
 
         <variable
             name="handlers"
-            type="com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers" />
+            type="com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers" />
     </data>
 
     <ScrollView
@@ -122,7 +122,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.kumaoni.blessings.customviews.MageNativeButton
+                <com.shopify.shopifyapp.customviews.MageNativeButton
                     android:id="@+id/login"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
@@ -134,7 +134,7 @@
                     bind:layout_constraintStart_toStartOf="parent"
                     bind:layout_constraintTop_toBottomOf="@id/password_lyt" />
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/forgotpassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
                     bind:layout_constraintTop_toBottomOf="@id/login"
                     bind:texttype="whitetext" />
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

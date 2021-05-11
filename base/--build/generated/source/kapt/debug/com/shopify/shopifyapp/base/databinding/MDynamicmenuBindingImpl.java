@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -33,7 +33,7 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
     private MDynamicmenuBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[0]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[2]
             , (androidx.appcompat.widget.LinearLayoutCompat) bindings[3]
             );
@@ -42,8 +42,8 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
         this.expandCollapse.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback32 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
-        mCallback33 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
+        mCallback32 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback33 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
         invalidateAll();
     }
 
@@ -69,10 +69,10 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.menudata == variableId) {
-            setMenudata((com.kumaoni.blessings.basesection.models.MenuData) variable);
+            setMenudata((com.shopify.shopifyapp.basesection.models.MenuData) variable);
         }
         else if (BR.clickdata == variableId) {
-            setClickdata((com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers) variable);
+            setClickdata((com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -80,7 +80,7 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
             return variableSet;
     }
 
-    public void setMenudata(@Nullable com.kumaoni.blessings.basesection.models.MenuData Menudata) {
+    public void setMenudata(@Nullable com.shopify.shopifyapp.basesection.models.MenuData Menudata) {
         updateRegistration(0, Menudata);
         this.mMenudata = Menudata;
         synchronized(this) {
@@ -89,7 +89,7 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
         notifyPropertyChanged(BR.menudata);
         super.requestRebind();
     }
-    public void setClickdata(@Nullable com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers Clickdata) {
+    public void setClickdata(@Nullable com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers Clickdata) {
         this.mClickdata = Clickdata;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -102,11 +102,11 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeMenudata((com.kumaoni.blessings.basesection.models.MenuData) object, fieldId);
+                return onChangeMenudata((com.shopify.shopifyapp.basesection.models.MenuData) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeMenudata(com.kumaoni.blessings.basesection.models.MenuData Menudata, int fieldId) {
+    private boolean onChangeMenudata(com.shopify.shopifyapp.basesection.models.MenuData Menudata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -123,8 +123,8 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.basesection.models.MenuData menudata = mMenudata;
-        com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+        com.shopify.shopifyapp.basesection.models.MenuData menudata = mMenudata;
+        com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
         java.lang.String menudataTitle = null;
 
         if ((dirtyFlags & 0x5L) != 0) {
@@ -156,11 +156,11 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
             case 1: {
                 // localize variables for thread safety
                 // menudata
-                com.kumaoni.blessings.basesection.models.MenuData menudata = mMenudata;
+                com.shopify.shopifyapp.basesection.models.MenuData menudata = mMenudata;
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -179,7 +179,7 @@ public class MDynamicmenuBindingImpl extends MDynamicmenuBinding implements com.
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 

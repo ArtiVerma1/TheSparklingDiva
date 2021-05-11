@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -31,9 +31,9 @@ public class MForgotbottomsheetBindingImpl extends MForgotbottomsheetBinding  {
     private MForgotbottomsheetBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[0]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[2]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
-            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[1]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[1]
             );
         this.bottomSheet.setTag(null);
         this.login.setTag(null);
@@ -64,7 +64,7 @@ public class MForgotbottomsheetBindingImpl extends MForgotbottomsheetBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handlers == variableId) {
-            setHandlers((com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers) variable);
+            setHandlers((com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -72,7 +72,7 @@ public class MForgotbottomsheetBindingImpl extends MForgotbottomsheetBinding  {
             return variableSet;
     }
 
-    public void setHandlers(@Nullable com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers Handlers) {
+    public void setHandlers(@Nullable com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers Handlers) {
         updateRegistration(0, Handlers);
         this.mHandlers = Handlers;
         synchronized(this) {
@@ -86,11 +86,11 @@ public class MForgotbottomsheetBindingImpl extends MForgotbottomsheetBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeHandlers((com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers) object, fieldId);
+                return onChangeHandlers((com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeHandlers(com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers Handlers, int fieldId) {
+    private boolean onChangeHandlers(com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers Handlers, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -107,7 +107,7 @@ public class MForgotbottomsheetBindingImpl extends MForgotbottomsheetBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers handlers = mHandlers;
+        com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers handlers = mHandlers;
         android.view.View.OnClickListener handlersForgotPasswordAndroidViewViewOnClickListener = null;
 
         if ((dirtyFlags & 0x3L) != 0) {
@@ -128,8 +128,8 @@ public class MForgotbottomsheetBindingImpl extends MForgotbottomsheetBinding  {
     }
     // Listener Stub Implementations
     public static class OnClickListenerImpl implements android.view.View.OnClickListener{
-        private com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value;
-        public OnClickListenerImpl setValue(com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value) {
+        private com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value;
+        public OnClickListenerImpl setValue(com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value) {
             this.value = value;
             return value == null ? null : this;
         }

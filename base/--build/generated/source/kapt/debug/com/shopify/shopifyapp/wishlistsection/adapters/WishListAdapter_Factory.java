@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.wishlistsection.adapters;
+package com.shopify.shopifyapp.wishlistsection.adapters;
 
 import dagger.internal.Factory;
 import javax.annotation.Generated;

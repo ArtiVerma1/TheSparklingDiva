@@ -5,7 +5,7 @@
     <data>
         <variable
             name="productslider"
-            type="com.kumaoni.blessings.homesection.models.ProductSlider" />
+            type="com.shopify.shopifyapp.homesection.models.ProductSlider" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:id="@+id/headerback"
             android:padding="8dp"
             android:visibility="@{productslider.headertextvisibility}">
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:texttype="bold"
@@ -38,7 +38,7 @@
                 android:layout_margin="5dp"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:id="@+id/actiontext"
@@ -58,7 +58,7 @@
                 android:layout_marginEnd="8dp"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:texttype="normal"
@@ -90,7 +90,7 @@
                 app:layout_constraintStart_toStartOf="@id/subheadertext"
                 app:layout_constraintTop_toBottomOf="@id/subheadertext"
                 app:solid_icon="false" />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:texttype="normal"
@@ -107,7 +107,7 @@
                 android:layout_marginStart="5dp"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:texttype="normal"

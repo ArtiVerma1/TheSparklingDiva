@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.ordersection.models;
+package com.shopify.shopifyapp.ordersection.models;
 
 import java.lang.System;
 
@@ -84,7 +84,7 @@ public final class Order {
     
     public final void orderView(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.ordersection.models.Order order) {
+    com.shopify.shopifyapp.ordersection.models.Order order) {
     }
     
     public Order() {

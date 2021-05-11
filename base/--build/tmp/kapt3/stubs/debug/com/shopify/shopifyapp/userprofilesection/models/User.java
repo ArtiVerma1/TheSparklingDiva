@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.userprofilesection.models;
+package com.shopify.shopifyapp.userprofilesection.models;
 
 import java.lang.System;
 

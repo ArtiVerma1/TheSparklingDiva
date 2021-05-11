@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.homesection.viewmodels;
+package com.shopify.shopifyapp.homesection.viewmodels;
 
 import java.lang.System;
 
@@ -12,22 +12,22 @@ public final class HomePageViewModel extends androidx.lifecycle.ViewModel {
     private final androidx.lifecycle.MutableLiveData<java.util.HashMap<java.lang.String, android.view.View>> homepagedata = null;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.kumaoni.blessings.homesection.adapters.ProductSliderAdapter homeadapter;
+    public com.shopify.shopifyapp.homesection.adapters.ProductSliderAdapter homeadapter;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.kumaoni.blessings.homesection.adapters.ProductListAdapter productListAdapter;
+    public com.shopify.shopifyapp.homesection.adapters.ProductListAdapter productListAdapter;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.kumaoni.blessings.homesection.adapters.CollectionGridAdapter adapter;
+    public com.shopify.shopifyapp.homesection.adapters.CollectionGridAdapter adapter;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.kumaoni.blessings.homesection.adapters.CollectionSliderAdapter slideradapter;
+    public com.shopify.shopifyapp.homesection.adapters.CollectionSliderAdapter slideradapter;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.kumaoni.blessings.homesection.adapters.ProductGridAdapter gridAdapter;
+    public com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter gridAdapter;
     @org.jetbrains.annotations.NotNull()
-    public com.kumaoni.blessings.homesection.activities.HomePage context;
-    private final com.kumaoni.blessings.repositories.Repository repository = null;
+    public com.shopify.shopifyapp.homesection.activities.HomePage context;
+    private final com.shopify.shopifyapp.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.Nullable()
     public final java.lang.String getPresentmentCurrency() {
@@ -49,57 +49,57 @@ public final class HomePageViewModel extends androidx.lifecycle.ViewModel {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.homesection.adapters.ProductSliderAdapter getHomeadapter() {
+    public final com.shopify.shopifyapp.homesection.adapters.ProductSliderAdapter getHomeadapter() {
         return null;
     }
     
     public final void setHomeadapter(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.adapters.ProductSliderAdapter p0) {
+    com.shopify.shopifyapp.homesection.adapters.ProductSliderAdapter p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.homesection.adapters.ProductListAdapter getProductListAdapter() {
+    public final com.shopify.shopifyapp.homesection.adapters.ProductListAdapter getProductListAdapter() {
         return null;
     }
     
     public final void setProductListAdapter(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.adapters.ProductListAdapter p0) {
+    com.shopify.shopifyapp.homesection.adapters.ProductListAdapter p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.homesection.adapters.CollectionGridAdapter getAdapter() {
+    public final com.shopify.shopifyapp.homesection.adapters.CollectionGridAdapter getAdapter() {
         return null;
     }
     
     public final void setAdapter(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.adapters.CollectionGridAdapter p0) {
+    com.shopify.shopifyapp.homesection.adapters.CollectionGridAdapter p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.homesection.adapters.CollectionSliderAdapter getSlideradapter() {
+    public final com.shopify.shopifyapp.homesection.adapters.CollectionSliderAdapter getSlideradapter() {
         return null;
     }
     
     public final void setSlideradapter(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.adapters.CollectionSliderAdapter p0) {
+    com.shopify.shopifyapp.homesection.adapters.CollectionSliderAdapter p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.homesection.adapters.ProductGridAdapter getGridAdapter() {
+    public final com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter getGridAdapter() {
         return null;
     }
     
     public final void setGridAdapter(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.adapters.ProductGridAdapter p0) {
+    com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.homesection.activities.HomePage getContext() {
+    public final com.shopify.shopifyapp.homesection.activities.HomePage getContext() {
         return null;
     }
     
     public final void setContext(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.activities.HomePage p0) {
+    com.shopify.shopifyapp.homesection.activities.HomePage p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
@@ -116,7 +116,7 @@ public final class HomePageViewModel extends androidx.lifecycle.ViewModel {
     }
     
     public final void connectFirebaseForHomePageData$base_debug(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.activities.HomePage context) {
+    com.shopify.shopifyapp.homesection.activities.HomePage context) {
     }
     
     public final void dowloadJson(@org.jetbrains.annotations.NotNull()
@@ -161,7 +161,7 @@ public final class HomePageViewModel extends androidx.lifecycle.ViewModel {
         return null;
     }
     
-    private final void consumeResponse(com.kumaoni.blessings.utils.GraphQLResponse reponse, androidx.recyclerview.widget.RecyclerView productdata, org.json.JSONArray jsonArray, org.json.JSONObject jsonObject) {
+    private final void consumeResponse(com.shopify.shopifyapp.utils.GraphQLResponse reponse, androidx.recyclerview.widget.RecyclerView productdata, org.json.JSONArray jsonArray, org.json.JSONObject jsonObject) {
     }
     
     private final void filterProduct(java.util.List<? extends com.shopify.buy3.Storefront.ProductEdge> list, androidx.recyclerview.widget.RecyclerView productdata, org.json.JSONArray jsonArray, org.json.JSONObject jsonObject) {
@@ -178,24 +178,24 @@ public final class HomePageViewModel extends androidx.lifecycle.ViewModel {
     }
     
     public HomePageViewModel(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository repository) {
+    com.shopify.shopifyapp.repositories.Repository repository) {
         super();
     }
     
     @kotlin.Metadata(mv = {1, 1, 16}, bv = {1, 0, 3}, k = 1, d1 = {"\u0000(\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\t\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\n\n\u0002\u0010\u0002\n\u0002\b\u0003\u0018\u00002\u00020\u0001B\'\b\u0016\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0003\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u00a2\u0006\u0002\u0010\tJ\b\u0010\u0012\u001a\u00020\u0013H\u0016J\u0010\u0010\u0014\u001a\u00020\u00132\u0006\u0010\u0015\u001a\u00020\u0003H\u0016R\u001a\u0010\u0007\u001a\u00020\bX\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\u000b\"\u0004\b\f\u0010\rR\u001a\u0010\u0005\u001a\u00020\u0006X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u000e\u0010\u000f\"\u0004\b\u0010\u0010\u0011\u00a8\u0006\u0016"}, d2 = {"Lcom/shopify/shopifyapp/homesection/viewmodels/HomePageViewModel$MyCount;", "Landroid/os/CountDownTimer;", "millisInFuture", "", "countDownInterval", "productSlider", "Lcom/shopify/shopifyapp/homesection/models/ProductSlider;", "format", "", "(JJLcom/shopify/shopifyapp/homesection/models/ProductSlider;Ljava/lang/String;)V", "getFormat", "()Ljava/lang/String;", "setFormat", "(Ljava/lang/String;)V", "getProductSlider", "()Lcom/shopify/shopifyapp/homesection/models/ProductSlider;", "setProductSlider", "(Lcom/shopify/shopifyapp/homesection/models/ProductSlider;)V", "onFinish", "", "onTick", "millisUntilFinished", "base_debug"})
     public static final class MyCount extends android.os.CountDownTimer {
         @org.jetbrains.annotations.NotNull()
-        private com.kumaoni.blessings.homesection.models.ProductSlider productSlider;
+        private com.shopify.shopifyapp.homesection.models.ProductSlider productSlider;
         @org.jetbrains.annotations.NotNull()
         private java.lang.String format;
         
         @org.jetbrains.annotations.NotNull()
-        public final com.kumaoni.blessings.homesection.models.ProductSlider getProductSlider() {
+        public final com.shopify.shopifyapp.homesection.models.ProductSlider getProductSlider() {
             return null;
         }
         
         public final void setProductSlider(@org.jetbrains.annotations.NotNull()
-        com.kumaoni.blessings.homesection.models.ProductSlider p0) {
+        com.shopify.shopifyapp.homesection.models.ProductSlider p0) {
         }
         
         @org.jetbrains.annotations.NotNull()
@@ -216,7 +216,7 @@ public final class HomePageViewModel extends androidx.lifecycle.ViewModel {
         }
         
         public MyCount(long millisInFuture, long countDownInterval, @org.jetbrains.annotations.NotNull()
-        com.kumaoni.blessings.homesection.models.ProductSlider productSlider, @org.jetbrains.annotations.NotNull()
+        com.shopify.shopifyapp.homesection.models.ProductSlider productSlider, @org.jetbrains.annotations.NotNull()
         java.lang.String format) {
             super(0L, 0L);
         }

@@ -3,12 +3,12 @@
     <data>
         <variable
             name="listdata"
-            type="com.kumaoni.blessings.basesection.models.ListData" />
+            type="com.shopify.shopifyapp.basesection.models.ListData" />
         <variable
             name="handler"
-            type="com.kumaoni.blessings.basesection.adapters.RecylerAdapter.ClickHandler" />
+            type="com.shopify.shopifyapp.basesection.adapters.RecylerAdapter.ClickHandler" />
     </data>
-    <com.kumaoni.blessings.customviews.MageNativeTextView
+    <com.shopify.shopifyapp.customviews.MageNativeTextView
         android:id="@+id/data"
         android:layout_width="match_parent"
         android:layout_height="50dp"

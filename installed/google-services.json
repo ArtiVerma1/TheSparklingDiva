@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:546766386305:android:051ef9a52733d22d",
         "android_client_info": {
-          "package_name": "com.kumaoni.blessings"
+          "package_name": "com.shopify.shopifyapp"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "546766386305-6bs6ovtjt6hulivscbdr81sk747ei4h0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.kumaoni.blessings",
+            "package_name": "com.shopify.shopifyapp",
             "certificate_hash": "9664d180072e5a797932709303d3d492820c1ca4"
           }
         },

@@ -6,11 +6,11 @@
 
         <variable
             name="commondata"
-            type="com.kumaoni.blessings.basesection.models.CommanModel" />
+            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
 
         <variable
             name="categorydata"
-            type="com.kumaoni.blessings.collectionsection.models.Collection" />
+            type="com.shopify.shopifyapp.collectionsection.models.Collection" />
 
     </data>
 
@@ -45,7 +45,7 @@
                 android:alpha="0.5"
                 android:background="@drawable/shadow" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"

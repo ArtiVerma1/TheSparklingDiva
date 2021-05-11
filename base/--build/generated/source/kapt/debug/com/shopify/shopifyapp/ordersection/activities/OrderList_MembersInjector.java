@@ -1,7 +1,7 @@
-package com.kumaoni.blessings.ordersection.activities;
+package com.shopify.shopifyapp.ordersection.activities;
 
-import com.kumaoni.blessings.ordersection.adapters.OrderListAdapter;
-import com.kumaoni.blessings.utils.ViewModelFactory;
+import com.shopify.shopifyapp.ordersection.adapters.OrderListAdapter;
+import com.shopify.shopifyapp.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

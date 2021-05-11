@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.ordersection.viewmodels;
+package com.shopify.shopifyapp.ordersection.viewmodels;
 
 import java.lang.System;
 
@@ -9,7 +9,7 @@ public final class OrderListViewModel extends androidx.lifecycle.ViewModel {
     private final androidx.lifecycle.MutableLiveData<com.shopify.buy3.Storefront.OrderConnection> response = null;
     @org.jetbrains.annotations.NotNull()
     private final androidx.lifecycle.MutableLiveData<java.lang.String> errorResponse = null;
-    private final com.kumaoni.blessings.repositories.Repository repository = null;
+    private final com.shopify.shopifyapp.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.NotNull()
     public final java.lang.String getCursor() {
@@ -33,11 +33,11 @@ public final class OrderListViewModel extends androidx.lifecycle.ViewModel {
     private final void fetchOrderData() {
     }
     
-    private final void consumeResponse(com.kumaoni.blessings.utils.GraphQLResponse reponse) {
+    private final void consumeResponse(com.shopify.shopifyapp.utils.GraphQLResponse reponse) {
     }
     
     public OrderListViewModel(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository repository) {
+    com.shopify.shopifyapp.repositories.Repository repository) {
         super();
     }
 }

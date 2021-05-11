@@ -5,10 +5,10 @@
     <data>
         <variable
             name="common"
-            type="com.kumaoni.blessings.basesection.models.CommanModel" />
+            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
         <variable
             name="heading"
-            type="com.kumaoni.blessings.homesection.models.Heading" />
+            type="com.shopify.shopifyapp.homesection.models.Heading" />
     </data>
     <ScrollView
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                     android:background="@color/gray_color"
                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="center_vertical"
@@ -83,7 +83,7 @@
                 android:visibility="gone"
                 android:background="@color/gray_color"
                 />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="center_vertical"
@@ -100,7 +100,7 @@
                 android:layout_marginTop="5dp"
                 app:layout_constraintTop_toBottomOf="@id/slidertwoheading"
                 />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="center_vertical"
@@ -130,7 +130,7 @@
                 android:visibility="gone"
                 android:background="@color/gray_color"
                 />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="center_vertical"
@@ -149,7 +149,7 @@
                 app:layout_constraintTop_toBottomOf="@id/sliderfourheading"
                 android:visibility="gone"
                 />
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="center_vertical"

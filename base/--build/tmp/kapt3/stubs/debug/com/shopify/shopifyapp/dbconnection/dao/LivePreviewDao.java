@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.dbconnection.dao;
+package com.shopify.shopifyapp.dbconnection.dao;
 
 import java.lang.System;
 
@@ -8,17 +8,17 @@ public abstract interface LivePreviewDao {
     
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM LivePreviewData")
-    public abstract java.util.List<com.kumaoni.blessings.dbconnection.entities.LivePreviewData> getGetPreviewDetails();
+    public abstract java.util.List<com.shopify.shopifyapp.dbconnection.entities.LivePreviewData> getGetPreviewDetails();
     
     @androidx.room.Insert()
     public abstract void insert(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.dbconnection.entities.LivePreviewData data);
+    com.shopify.shopifyapp.dbconnection.entities.LivePreviewData data);
     
     @androidx.room.Delete()
     public abstract void delete(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.dbconnection.entities.LivePreviewData data);
+    com.shopify.shopifyapp.dbconnection.entities.LivePreviewData data);
     
     @androidx.room.Update()
     public abstract void update(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.dbconnection.entities.LivePreviewData data);
+    com.shopify.shopifyapp.dbconnection.entities.LivePreviewData data);
 }

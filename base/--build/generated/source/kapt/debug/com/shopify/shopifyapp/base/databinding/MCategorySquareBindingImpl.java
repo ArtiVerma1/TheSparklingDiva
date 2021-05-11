@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MCategorySquareBindingImpl extends MCategorySquareBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MCategorySquareBindingImpl extends MCategorySquareBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -42,11 +42,11 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
             , (android.widget.RelativeLayout) bindings[13]
             , (android.widget.RelativeLayout) bindings[10]
             , (android.widget.RelativeLayout) bindings[1]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[15]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[12]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[9]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[15]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[12]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[9]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
             , (android.widget.RelativeLayout) bindings[7]
             , (android.widget.RelativeLayout) bindings[4]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[14]
@@ -74,11 +74,11 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
         this.mboundView0.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback27 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 5);
-        mCallback25 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 3);
-        mCallback23 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
-        mCallback26 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 4);
-        mCallback24 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
+        mCallback27 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 5);
+        mCallback25 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 3);
+        mCallback23 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback26 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 4);
+        mCallback24 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
         invalidateAll();
     }
 
@@ -104,7 +104,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.category == variableId) {
-            setCategory((com.kumaoni.blessings.homesection.models.CategoryCircle) variable);
+            setCategory((com.shopify.shopifyapp.homesection.models.CategoryCircle) variable);
         }
         else {
             variableSet = false;
@@ -112,7 +112,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
             return variableSet;
     }
 
-    public void setCategory(@Nullable com.kumaoni.blessings.homesection.models.CategoryCircle Category) {
+    public void setCategory(@Nullable com.shopify.shopifyapp.homesection.models.CategoryCircle Category) {
         updateRegistration(0, Category);
         this.mCategory = Category;
         synchronized(this) {
@@ -126,11 +126,11 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCategory((com.kumaoni.blessings.homesection.models.CategoryCircle) object, fieldId);
+                return onChangeCategory((com.shopify.shopifyapp.homesection.models.CategoryCircle) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCategory(com.kumaoni.blessings.homesection.models.CategoryCircle Category, int fieldId) {
+    private boolean onChangeCategory(com.shopify.shopifyapp.homesection.models.CategoryCircle Category, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -217,7 +217,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
         java.lang.String categoryCatImageFive = null;
         java.lang.String categoryCatTextFive = null;
         java.lang.String categoryCatImageThree = null;
-        com.kumaoni.blessings.homesection.models.CategoryCircle category = mCategory;
+        com.shopify.shopifyapp.homesection.models.CategoryCircle category = mCategory;
         java.lang.String categoryCatTextTwo = null;
         java.lang.String categoryCatImageOne = null;
         java.lang.String categoryCatTextFour = null;
@@ -354,27 +354,27 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
         if ((dirtyFlags & 0x1403L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.Image(this.imageFive, categoryRadius, categoryCatImageFive);
+            com.shopify.shopifyapp.basesection.models.CommanModel.Image(this.imageFive, categoryRadius, categoryCatImageFive);
         }
         if ((dirtyFlags & 0x1103L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.Image(this.imageFour, categoryRadius, categoryCatImageFour);
+            com.shopify.shopifyapp.basesection.models.CommanModel.Image(this.imageFour, categoryRadius, categoryCatImageFour);
         }
         if ((dirtyFlags & 0x1007L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.Image(this.imageOne, categoryRadius, categoryCatImageOne);
+            com.shopify.shopifyapp.basesection.models.CommanModel.Image(this.imageOne, categoryRadius, categoryCatImageOne);
         }
         if ((dirtyFlags & 0x1043L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.Image(this.imageThree, categoryRadius, categoryCatImageThree);
+            com.shopify.shopifyapp.basesection.models.CommanModel.Image(this.imageThree, categoryRadius, categoryCatImageThree);
         }
         if ((dirtyFlags & 0x1013L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.Image(this.imageTwo, categoryRadius, categoryCatImageTwo);
+            com.shopify.shopifyapp.basesection.models.CommanModel.Image(this.imageTwo, categoryRadius, categoryCatImageTwo);
         }
     }
     // Listener Stub Implementations
@@ -384,7 +384,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
             case 5: {
                 // localize variables for thread safety
                 // category
-                com.kumaoni.blessings.homesection.models.CategoryCircle category = mCategory;
+                com.shopify.shopifyapp.homesection.models.CategoryCircle category = mCategory;
                 // category != null
                 boolean categoryJavaLangObjectNull = false;
 
@@ -403,7 +403,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
             case 3: {
                 // localize variables for thread safety
                 // category
-                com.kumaoni.blessings.homesection.models.CategoryCircle category = mCategory;
+                com.shopify.shopifyapp.homesection.models.CategoryCircle category = mCategory;
                 // category != null
                 boolean categoryJavaLangObjectNull = false;
 
@@ -422,7 +422,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
             case 1: {
                 // localize variables for thread safety
                 // category
-                com.kumaoni.blessings.homesection.models.CategoryCircle category = mCategory;
+                com.shopify.shopifyapp.homesection.models.CategoryCircle category = mCategory;
                 // category != null
                 boolean categoryJavaLangObjectNull = false;
 
@@ -441,7 +441,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
             case 4: {
                 // localize variables for thread safety
                 // category
-                com.kumaoni.blessings.homesection.models.CategoryCircle category = mCategory;
+                com.shopify.shopifyapp.homesection.models.CategoryCircle category = mCategory;
                 // category != null
                 boolean categoryJavaLangObjectNull = false;
 
@@ -460,7 +460,7 @@ public class MCategorySquareBindingImpl extends MCategorySquareBinding implement
             case 2: {
                 // localize variables for thread safety
                 // category
-                com.kumaoni.blessings.homesection.models.CategoryCircle category = mCategory;
+                com.shopify.shopifyapp.homesection.models.CategoryCircle category = mCategory;
                 // category != null
                 boolean categoryJavaLangObjectNull = false;
 

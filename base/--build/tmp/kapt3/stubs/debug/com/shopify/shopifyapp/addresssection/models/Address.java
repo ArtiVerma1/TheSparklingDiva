@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.addresssection.models;
+package com.shopify.shopifyapp.addresssection.models;
 
 import java.lang.System;
 

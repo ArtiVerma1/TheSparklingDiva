@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.productsection.viewmodels;
+package com.shopify.shopifyapp.productsection.viewmodels;
 
 import java.lang.System;
 
@@ -11,10 +11,10 @@ public final class ProductViewModel extends androidx.lifecycle.ViewModel {
     @org.jetbrains.annotations.Nullable()
     private java.lang.String presentmentCurrency;
     private final io.reactivex.disposables.CompositeDisposable disposables = null;
-    private final androidx.lifecycle.MutableLiveData<com.kumaoni.blessings.utils.GraphQLResponse> responseLiveData = null;
+    private final androidx.lifecycle.MutableLiveData<com.shopify.shopifyapp.utils.GraphQLResponse> responseLiveData = null;
     @org.jetbrains.annotations.NotNull()
     private final androidx.lifecycle.MutableLiveData<java.util.List<com.shopify.buy3.Storefront.ProductVariantEdge>> filteredlist = null;
-    private final com.kumaoni.blessings.repositories.Repository repository = null;
+    private final com.shopify.shopifyapp.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.NotNull()
     public final java.lang.String getHandle() {
@@ -53,7 +53,7 @@ public final class ProductViewModel extends androidx.lifecycle.ViewModel {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final androidx.lifecycle.MutableLiveData<com.kumaoni.blessings.utils.GraphQLResponse> Response() {
+    public final androidx.lifecycle.MutableLiveData<com.shopify.shopifyapp.utils.GraphQLResponse> Response() {
         return null;
     }
     
@@ -71,7 +71,7 @@ public final class ProductViewModel extends androidx.lifecycle.ViewModel {
     }
     
     public final boolean setWishList(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.productsection.models.VariantData variant) {
+    com.shopify.shopifyapp.productsection.models.VariantData variant) {
         return false;
     }
     
@@ -93,7 +93,7 @@ public final class ProductViewModel extends androidx.lifecycle.ViewModel {
     }
     
     public ProductViewModel(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository repository) {
+    com.shopify.shopifyapp.repositories.Repository repository) {
         super();
     }
 }

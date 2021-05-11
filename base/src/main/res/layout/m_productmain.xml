@@ -9,7 +9,7 @@
         android:background="@color/white"
         android:visibility="gone">
 
-        <com.kumaoni.blessings.customviews.MageNativeTextView
+        <com.shopify.shopifyapp.customviews.MageNativeTextView
             android:id="@+id/sort_but"
             android:layout_width="0dp"
             android:layout_height="45dp"

@@ -1,7 +1,7 @@
-package com.kumaoni.blessings.dependecyinjection;
+package com.shopify.shopifyapp.dependecyinjection;
 
 import android.content.Context;
-import com.kumaoni.blessings.dbconnection.database.AppDatabase;
+import com.shopify.shopifyapp.dbconnection.database.AppDatabase;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.annotation.Generated;

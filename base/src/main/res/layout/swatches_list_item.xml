@@ -11,7 +11,7 @@
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true">
 
-        <com.kumaoni.blessings.customviews.MageNativeTextView
+        <com.shopify.shopifyapp.customviews.MageNativeTextView
             android:id="@+id/variant_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

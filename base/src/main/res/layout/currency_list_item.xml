@@ -5,11 +5,11 @@
 
         <variable
             name="listdata"
-            type="com.kumaoni.blessings.basesection.models.ListData" />
+            type="com.shopify.shopifyapp.basesection.models.ListData" />
 
         <variable
             name="handler"
-            type="com.kumaoni.blessings.basesection.adapters.RecylerAdapter.ClickHandler" />
+            type="com.shopify.shopifyapp.basesection.adapters.RecylerAdapter.ClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MProductviewBindingImpl extends MProductviewBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MProductviewBindingImpl extends MProductviewBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -40,19 +40,19 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
     }
     private MProductviewBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[7]
-            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[8]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[11]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[7]
+            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[8]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[11]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
             , (androidx.viewpager.widget.ViewPager) bindings[9]
-            , (com.kumaoni.blessings.utils.CirclePageIndicator) bindings[10]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
+            , (com.shopify.shopifyapp.utils.CirclePageIndicator) bindings[10]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
             , (androidx.recyclerview.widget.RecyclerView) bindings[13]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[1]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[12]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[12]
             );
         this.addtocart.setTag(null);
         this.addtowish.setTag(null);
@@ -66,9 +66,9 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
         this.specialprice.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback15 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
-        mCallback16 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 3);
-        mCallback14 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback15 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
+        mCallback16 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 3);
+        mCallback14 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -94,10 +94,10 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.productdata == variableId) {
-            setProductdata((com.kumaoni.blessings.basesection.models.ListData) variable);
+            setProductdata((com.shopify.shopifyapp.basesection.models.ListData) variable);
         }
         else if (BR.clickhandlers == variableId) {
-            setClickhandlers((com.kumaoni.blessings.productsection.activities.ProductView.ClickHandlers) variable);
+            setClickhandlers((com.shopify.shopifyapp.productsection.activities.ProductView.ClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -105,7 +105,7 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
             return variableSet;
     }
 
-    public void setProductdata(@Nullable com.kumaoni.blessings.basesection.models.ListData Productdata) {
+    public void setProductdata(@Nullable com.shopify.shopifyapp.basesection.models.ListData Productdata) {
         updateRegistration(0, Productdata);
         this.mProductdata = Productdata;
         synchronized(this) {
@@ -114,7 +114,7 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
         notifyPropertyChanged(BR.productdata);
         super.requestRebind();
     }
-    public void setClickhandlers(@Nullable com.kumaoni.blessings.productsection.activities.ProductView.ClickHandlers Clickhandlers) {
+    public void setClickhandlers(@Nullable com.shopify.shopifyapp.productsection.activities.ProductView.ClickHandlers Clickhandlers) {
         this.mClickhandlers = Clickhandlers;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -127,11 +127,11 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeProductdata((com.kumaoni.blessings.basesection.models.ListData) object, fieldId);
+                return onChangeProductdata((com.shopify.shopifyapp.basesection.models.ListData) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeProductdata(com.kumaoni.blessings.basesection.models.ListData Productdata, int fieldId) {
+    private boolean onChangeProductdata(com.shopify.shopifyapp.basesection.models.ListData Productdata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -156,9 +156,9 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
         }
         java.lang.String productdataTextdata = null;
         java.lang.String productdataAddtowish = null;
-        com.kumaoni.blessings.basesection.models.ListData productdata = mProductdata;
+        com.shopify.shopifyapp.basesection.models.ListData productdata = mProductdata;
         java.lang.String productdataRegularprice = null;
-        com.kumaoni.blessings.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
+        com.shopify.shopifyapp.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
         java.lang.String productdataOffertext = null;
         java.lang.String productdataSpecialprice = null;
         android.text.Spanned productdataDescriptionhmtl = null;
@@ -217,11 +217,11 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
             case 2: {
                 // localize variables for thread safety
                 // productdata
-                com.kumaoni.blessings.basesection.models.ListData productdata = mProductdata;
+                com.shopify.shopifyapp.basesection.models.ListData productdata = mProductdata;
                 // clickhandlers != null
                 boolean clickhandlersJavaLangObjectNull = false;
                 // clickhandlers
-                com.kumaoni.blessings.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
+                com.shopify.shopifyapp.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
 
 
 
@@ -238,11 +238,11 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
             case 3: {
                 // localize variables for thread safety
                 // productdata
-                com.kumaoni.blessings.basesection.models.ListData productdata = mProductdata;
+                com.shopify.shopifyapp.basesection.models.ListData productdata = mProductdata;
                 // clickhandlers != null
                 boolean clickhandlersJavaLangObjectNull = false;
                 // clickhandlers
-                com.kumaoni.blessings.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
+                com.shopify.shopifyapp.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
 
 
 
@@ -259,11 +259,11 @@ public class MProductviewBindingImpl extends MProductviewBinding implements com.
             case 1: {
                 // localize variables for thread safety
                 // productdata
-                com.kumaoni.blessings.basesection.models.ListData productdata = mProductdata;
+                com.shopify.shopifyapp.basesection.models.ListData productdata = mProductdata;
                 // clickhandlers != null
                 boolean clickhandlersJavaLangObjectNull = false;
                 // clickhandlers
-                com.kumaoni.blessings.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
+                com.shopify.shopifyapp.productsection.activities.ProductView.ClickHandlers clickhandlers = mClickhandlers;
 
 
 

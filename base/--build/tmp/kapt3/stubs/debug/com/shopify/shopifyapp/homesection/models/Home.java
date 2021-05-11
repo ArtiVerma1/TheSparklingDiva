@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.homesection.models;
+package com.shopify.shopifyapp.homesection.models;
 
 import java.lang.System;
 
@@ -29,7 +29,7 @@ public final class Home {
     
     public final void Click(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.homesection.models.Home home) {
+    com.shopify.shopifyapp.homesection.models.Home home) {
     }
     
     @org.jetbrains.annotations.NotNull()

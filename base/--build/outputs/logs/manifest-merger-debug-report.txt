@@ -342,7 +342,7 @@ MERGED from [org.tensorflow:tensorflow-lite:1.13.1] /home/cedcoss/.gradle/caches
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:19:9-44
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:13:9-60
-service#com.kumaoni.blessings.notificationsection.FirebaseInstanceIDService
+service#com.shopify.shopifyapp.notificationsection.FirebaseInstanceIDService
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:20:9-24:19
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:20:18-101
@@ -352,7 +352,7 @@ action#com.google.firebase.INSTANCE_ID_EVENT
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:22:17-80
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:22:25-77
-service#com.kumaoni.blessings.notificationsection.FirebaseMessagingService
+service#com.shopify.shopifyapp.notificationsection.FirebaseMessagingService
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:25:9-29:19
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:25:18-100
@@ -362,7 +362,7 @@ action#com.google.firebase.MESSAGING_EVENT
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:27:17-78
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:27:25-75
-service#com.kumaoni.blessings.jobservicessection.JobScheduler
+service#com.shopify.shopifyapp.jobservicessection.JobScheduler
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:30:9-34:39
 	android:enabled
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:33:13-35
@@ -372,7 +372,7 @@ ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.x
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:32:13-69
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:31:13-82
-activity#com.kumaoni.blessings.basesection.activities.Splash
+activity#com.shopify.shopifyapp.basesection.activities.Splash
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:36:9-52:20
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:36:19-86
@@ -410,81 +410,81 @@ ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.x
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:48:21-54
 	android:scheme
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:49:21-43
-activity#com.kumaoni.blessings.addresssection.activities.AddressList
+activity#com.shopify.shopifyapp.addresssection.activities.AddressList
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:53:9-55:76
 	android:windowSoftInputMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:55:13-73
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:54:13-88
-activity#com.kumaoni.blessings.basesection.activities.BaseActivity
+activity#com.shopify.shopifyapp.basesection.activities.BaseActivity
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:56:9-95
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:56:19-92
-activity#com.kumaoni.blessings.basesection.activities.Weblink
+activity#com.shopify.shopifyapp.basesection.activities.Weblink
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:57:9-90
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:57:19-87
-activity#com.kumaoni.blessings.basesection.activities.NewBaseActivity
+activity#com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:58:9-98
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:58:19-95
-activity#com.kumaoni.blessings.productsection.activities.ProductList
+activity#com.shopify.shopifyapp.productsection.activities.ProductList
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:59:9-61:46
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:61:13-43
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:60:13-88
-activity#com.kumaoni.blessings.productsection.activities.ProductView
+activity#com.shopify.shopifyapp.productsection.activities.ProductView
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:62:9-64:46
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:64:13-43
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:63:13-88
-activity#com.kumaoni.blessings.collectionsection.activities.CollectionList
+activity#com.shopify.shopifyapp.collectionsection.activities.CollectionList
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:65:9-67:46
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:67:13-43
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:66:13-94
-activity#com.kumaoni.blessings.wishlistsection.activities.WishList
+activity#com.shopify.shopifyapp.wishlistsection.activities.WishList
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:68:9-70:46
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:70:13-43
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:69:13-86
-activity#com.kumaoni.blessings.cartsection.activities.CartList
+activity#com.shopify.shopifyapp.cartsection.activities.CartList
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:71:9-73:46
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:73:13-43
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:72:13-82
-activity#com.kumaoni.blessings.ordersection.activities.OrderList
+activity#com.shopify.shopifyapp.ordersection.activities.OrderList
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:74:9-76:46
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:76:13-43
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:75:13-84
-activity#com.kumaoni.blessings.searchsection.activities.AutoSearch
+activity#com.shopify.shopifyapp.searchsection.activities.AutoSearch
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:77:9-79:46
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:79:13-43
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:78:13-86
-activity#com.kumaoni.blessings.checkoutsection.activities.CheckoutWeblink
+activity#com.shopify.shopifyapp.checkoutsection.activities.CheckoutWeblink
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:80:9-102
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:80:19-99
-activity#com.kumaoni.blessings.trialsection.activities.TrialExpired
+activity#com.shopify.shopifyapp.trialsection.activities.TrialExpired
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:81:9-83:47
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:83:13-44
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:82:13-87
-activity#com.kumaoni.blessings.homesection.activities.HomePage
+activity#com.shopify.shopifyapp.homesection.activities.HomePage
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:84:9-91
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:84:19-88
-activity#com.kumaoni.blessings.loginsection.activity.LoginActivity
+activity#com.shopify.shopifyapp.loginsection.activity.LoginActivity
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:85:9-88:76
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:87:13-43
@@ -492,7 +492,7 @@ ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.x
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:88:13-73
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:86:13-86
-activity#com.kumaoni.blessings.userprofilesection.activities.UserProfile
+activity#com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:89:9-92:76
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:91:13-43
@@ -500,7 +500,7 @@ ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.x
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:92:13-73
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:90:13-92
-activity#com.kumaoni.blessings.loginsection.activity.RegistrationActivity
+activity#com.shopify.shopifyapp.loginsection.activity.RegistrationActivity
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:93:9-96:76
 	android:launchMode
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:95:13-43
@@ -508,7 +508,7 @@ ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.x
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:96:13-73
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:94:13-93
-activity#com.kumaoni.blessings.searchsection.activities.SearchByScanner
+activity#com.shopify.shopifyapp.searchsection.activities.SearchByScanner
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:97:9-104:15
 	android:screenOrientation
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:100:13-49
@@ -522,7 +522,7 @@ ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.x
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:102:13-54
 	android:name
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:98:13-91
-activity#com.kumaoni.blessings.livepreviewsection.LivePreview
+activity#com.shopify.shopifyapp.livepreviewsection.LivePreview
 ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:105:9-112:15
 	android:screenOrientation
 		ADDED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:108:13-49
@@ -1101,4 +1101,4 @@ ADDED from [com.squareup.picasso:picasso:2.71828] /home/cedcoss/.gradle/caches/t
 	android:name
 		ADDED from [com.squareup.picasso:picasso:2.71828] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/20385f78c3f8f8216c24e14228c31eaf/jetified-picasso-2.71828/AndroidManifest.xml:9:13-64
 uses-permission#android.permission.READ_PHONE_STATE
-IMPLIED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:2:1-114:12 reason: com.kumaoni.blessings has a targetSdkVersion < 4
+IMPLIED from /home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:2:1-114:12 reason: com.shopify.shopifyapp has a targetSdkVersion < 4

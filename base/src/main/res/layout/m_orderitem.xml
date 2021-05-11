@@ -6,11 +6,11 @@
 
         <variable
             name="order"
-            type="com.kumaoni.blessings.ordersection.models.Order" />
+            type="com.shopify.shopifyapp.ordersection.models.Order" />
 
         <variable
             name="features"
-            type="com.kumaoni.blessings.basesection.models.FeaturesModel" />
+            type="com.shopify.shopifyapp.basesection.models.FeaturesModel" />
 
         <import type="android.view.View" />
     </data>
@@ -28,7 +28,7 @@
             android:background="@color/white"
             android:paddingBottom="10dp">
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/ordernoheading"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -44,7 +44,7 @@
                 bind:layout_constraintTop_toTopOf="parent"
                 bind:texttype="normal" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/orderno"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -59,7 +59,7 @@
                 bind:layout_constraintTop_toTopOf="parent"
                 bind:texttype="bold" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/orderdetails"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -76,7 +76,7 @@
                 bind:layout_constraintTop_toTopOf="parent"
                 bind:texttype="normal" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/ordernoheading"
                 bind:texttype="bold" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/placedontext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/name"
                 bind:texttype="normal" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/name"
                 bind:texttype="normal" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/totalspendingtext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/placedontext"
                 bind:texttype="normal" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/totalspending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 bind:layout_constraintTop_toBottomOf="@id/totalspending" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/boughtforheading"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -165,7 +165,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/line"
                 bind:texttype="normal" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/boughtfor"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"

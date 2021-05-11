@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.basesection.activities;
+package com.shopify.shopifyapp.basesection.activities;
 
 import java.lang.System;
 
@@ -6,19 +6,19 @@ import java.lang.System;
 public final class Splash extends androidx.appcompat.app.AppCompatActivity {
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.kumaoni.blessings.utils.ViewModelFactory viewModelFactory;
-    private com.kumaoni.blessings.basesection.viewmodels.SplashViewModel splashmodel;
-    private com.kumaoni.blessings.databinding.MSplashBinding binding;
+    public com.shopify.shopifyapp.utils.ViewModelFactory viewModelFactory;
+    private com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel splashmodel;
+    private com.shopify.shopifyapp.databinding.MSplashBinding binding;
     private java.lang.String product_id;
     private java.util.HashMap _$_findViewCache;
     
     @org.jetbrains.annotations.NotNull()
-    public final com.kumaoni.blessings.utils.ViewModelFactory getViewModelFactory() {
+    public final com.shopify.shopifyapp.utils.ViewModelFactory getViewModelFactory() {
         return null;
     }
     
     public final void setViewModelFactory(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.utils.ViewModelFactory p0) {
+    com.shopify.shopifyapp.utils.ViewModelFactory p0) {
     }
     
     @java.lang.Override()
@@ -29,13 +29,13 @@ public final class Splash extends androidx.appcompat.app.AppCompatActivity {
     private final void consumeErrorResponse(java.lang.String error) {
     }
     
-    private final void consumeResponse(com.kumaoni.blessings.utils.LocalDbResponse reponse) {
+    private final void consumeResponse(com.shopify.shopifyapp.utils.LocalDbResponse reponse) {
     }
     
-    private final void consumeResponse(com.kumaoni.blessings.utils.FireBaseResponse reponse) {
+    private final void consumeResponse(com.shopify.shopifyapp.utils.FireBaseResponse reponse) {
     }
     
-    private final void renderSuccessResponse(com.kumaoni.blessings.dbconnection.entities.AppLocalData data) {
+    private final void renderSuccessResponse(com.shopify.shopifyapp.dbconnection.entities.AppLocalData data) {
     }
     
     private final void renderSuccessResponse(com.google.firebase.database.DataSnapshot data) {

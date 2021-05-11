@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.dependecyinjection;
+package com.shopify.shopifyapp.dependecyinjection;
 
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;

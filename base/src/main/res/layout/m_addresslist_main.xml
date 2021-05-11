@@ -4,7 +4,7 @@
     <data>
         <variable
             name="handler"
-            type="com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler" />
+            type="com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

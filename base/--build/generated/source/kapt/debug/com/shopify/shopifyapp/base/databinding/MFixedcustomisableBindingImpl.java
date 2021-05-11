@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -31,14 +31,14 @@ public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding imp
     }
     private MFixedcustomisableBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[7]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[0]
             , (androidx.recyclerview.widget.RecyclerView) bindings[8]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
             , (info.androidhive.fontawesome.FontTextView) bindings[4]
             );
         this.actiontext.setTag(null);
@@ -50,7 +50,7 @@ public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding imp
         this.timericon.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback29 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback29 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -76,7 +76,7 @@ public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding imp
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.productslider == variableId) {
-            setProductslider((com.kumaoni.blessings.homesection.models.ProductSlider) variable);
+            setProductslider((com.shopify.shopifyapp.homesection.models.ProductSlider) variable);
         }
         else {
             variableSet = false;
@@ -84,7 +84,7 @@ public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding imp
             return variableSet;
     }
 
-    public void setProductslider(@Nullable com.kumaoni.blessings.homesection.models.ProductSlider Productslider) {
+    public void setProductslider(@Nullable com.shopify.shopifyapp.homesection.models.ProductSlider Productslider) {
         updateRegistration(0, Productslider);
         this.mProductslider = Productslider;
         synchronized(this) {
@@ -98,11 +98,11 @@ public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding imp
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeProductslider((com.kumaoni.blessings.homesection.models.ProductSlider) object, fieldId);
+                return onChangeProductslider((com.shopify.shopifyapp.homesection.models.ProductSlider) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeProductslider(com.kumaoni.blessings.homesection.models.ProductSlider Productslider, int fieldId) {
+    private boolean onChangeProductslider(com.shopify.shopifyapp.homesection.models.ProductSlider Productslider, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -174,7 +174,7 @@ public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding imp
             mDirtyFlags = 0;
         }
         int androidxDatabindingViewDataBindingSafeUnboxProductsliderTimericon = 0;
-        com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
+        com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
         java.lang.Integer productsliderHeadertextvisibility = null;
         java.lang.String productsliderTimertext = null;
         java.lang.String productsliderSubheadertext = null;
@@ -332,7 +332,7 @@ public class MFixedcustomisableBindingImpl extends MFixedcustomisableBinding imp
         // productslider != null
         boolean productsliderJavaLangObjectNull = false;
         // productslider
-        com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
+        com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
 
 
 

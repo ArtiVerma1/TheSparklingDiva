@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -17,7 +17,7 @@ public class MRegistrationpageBindingImpl extends MRegistrationpageBinding  {
         sIncludes.setIncludes(0, 
             new String[] {"m_registration"},
             new int[] {1},
-            new int[] {com.kumaoni.blessings.R.layout.m_registration});
+            new int[] {com.shopify.shopifyapp.R.layout.m_registration});
         sViewsWithIds = null;
     }
     // views
@@ -33,7 +33,7 @@ public class MRegistrationpageBindingImpl extends MRegistrationpageBinding  {
     }
     private MRegistrationpageBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.kumaoni.blessings.databinding.MRegistrationBinding) bindings[1]
+            , (com.shopify.shopifyapp.databinding.MRegistrationBinding) bindings[1]
             );
         this.mboundView0 = (androidx.coordinatorlayout.widget.CoordinatorLayout) bindings[0];
         this.mboundView0.setTag(null);
@@ -68,7 +68,7 @@ public class MRegistrationpageBindingImpl extends MRegistrationpageBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handlers == variableId) {
-            setHandlers((com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers) variable);
+            setHandlers((com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -76,7 +76,7 @@ public class MRegistrationpageBindingImpl extends MRegistrationpageBinding  {
             return variableSet;
     }
 
-    public void setHandlers(@Nullable com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers Handlers) {
+    public void setHandlers(@Nullable com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers Handlers) {
         this.mHandlers = Handlers;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -95,11 +95,11 @@ public class MRegistrationpageBindingImpl extends MRegistrationpageBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeIncludedlregistartion((com.kumaoni.blessings.databinding.MRegistrationBinding) object, fieldId);
+                return onChangeIncludedlregistartion((com.shopify.shopifyapp.databinding.MRegistrationBinding) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeIncludedlregistartion(com.kumaoni.blessings.databinding.MRegistrationBinding Includedlregistartion, int fieldId) {
+    private boolean onChangeIncludedlregistartion(com.shopify.shopifyapp.databinding.MRegistrationBinding Includedlregistartion, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -116,7 +116,7 @@ public class MRegistrationpageBindingImpl extends MRegistrationpageBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers handlers = mHandlers;
+        com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers handlers = mHandlers;
 
         if ((dirtyFlags & 0x6L) != 0) {
         }

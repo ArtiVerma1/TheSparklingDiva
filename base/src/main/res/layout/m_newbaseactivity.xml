@@ -58,7 +58,7 @@
                 android:src="@drawable/logo"
                 android:visibility="gone" />
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/tooltext"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
@@ -77,7 +77,7 @@
 
                 >
 
-                <com.kumaoni.blessings.customviews.MageNativeTextView
+                <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -100,7 +100,7 @@
             app:layout_constraintBottom_toTopOf="@id/container"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/fullsearch"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -145,7 +145,7 @@
 
     <fragment
         android:id="@+id/leftmenu"
-        android:name="com.kumaoni.blessings.basesection.fragments.LeftMenu"
+        android:name="com.shopify.shopifyapp.basesection.fragments.LeftMenu"
         android:layout_width="290dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

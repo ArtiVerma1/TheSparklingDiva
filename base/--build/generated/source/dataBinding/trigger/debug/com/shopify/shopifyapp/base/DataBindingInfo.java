@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.base;
+package com.shopify.shopifyapp.base;
 
 import androidx.databinding.BindingBuildInfo;
 

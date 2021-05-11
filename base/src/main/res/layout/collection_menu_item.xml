@@ -5,11 +5,11 @@
 
         <variable
             name="menudata"
-            type="com.kumaoni.blessings.basesection.models.MenuData" />
+            type="com.shopify.shopifyapp.basesection.models.MenuData" />
 
         <variable
             name="clickdata"
-            type="com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers" />
+            type="com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

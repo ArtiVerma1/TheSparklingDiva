@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.loginsection.viewmodels;
+package com.shopify.shopifyapp.loginsection.viewmodels;
 
 import java.lang.System;
 
@@ -10,7 +10,7 @@ public final class LoginViewModel extends androidx.lifecycle.ViewModel {
     private final androidx.lifecycle.MutableLiveData<java.lang.String> errormessage = null;
     private java.lang.String username;
     private java.lang.String password;
-    private final com.kumaoni.blessings.repositories.Repository repository = null;
+    private final com.shopify.shopifyapp.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.NotNull()
     public final androidx.lifecycle.MutableLiveData<java.lang.String> getErrormessage() {
@@ -38,7 +38,7 @@ public final class LoginViewModel extends androidx.lifecycle.ViewModel {
     private final void invoke(com.shopify.buy3.GraphCallResult<? extends com.shopify.buy3.Storefront.Mutation> graphCallResult) {
     }
     
-    private final void consumeResponseLogin(com.kumaoni.blessings.utils.GraphQLResponse reponse) {
+    private final void consumeResponseLogin(com.shopify.shopifyapp.utils.GraphQLResponse reponse) {
     }
     
     public final void savetoken(@org.jetbrains.annotations.NotNull()
@@ -48,7 +48,7 @@ public final class LoginViewModel extends androidx.lifecycle.ViewModel {
     private final void invokes(com.shopify.buy3.GraphCallResult<? extends com.shopify.buy3.Storefront.QueryRoot> graphCallResult) {
     }
     
-    private final void MapLoginDetails(com.kumaoni.blessings.utils.GraphQLResponse graphQLResponse) {
+    private final void MapLoginDetails(com.shopify.shopifyapp.utils.GraphQLResponse graphQLResponse) {
     }
     
     public final void saveUser(@org.jetbrains.annotations.NotNull()
@@ -63,7 +63,7 @@ public final class LoginViewModel extends androidx.lifecycle.ViewModel {
     private final void recoverCustomerinvoke(com.shopify.buy3.GraphCallResult<? extends com.shopify.buy3.Storefront.Mutation> graphCallResult) {
     }
     
-    private final void consumeResponse(com.kumaoni.blessings.utils.GraphQLResponse reponse) {
+    private final void consumeResponse(com.shopify.shopifyapp.utils.GraphQLResponse reponse) {
     }
     
     public final boolean isValidEmail(@org.jetbrains.annotations.NotNull()
@@ -72,7 +72,7 @@ public final class LoginViewModel extends androidx.lifecycle.ViewModel {
     }
     
     public LoginViewModel(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository repository) {
+    com.shopify.shopifyapp.repositories.Repository repository) {
         super();
     }
 }

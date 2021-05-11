@@ -1,4 +1,4 @@
-package com.kumaoni.blessings;
+package com.shopify.shopifyapp;
 
 import android.util.SparseArray;
 import android.util.SparseIntArray;

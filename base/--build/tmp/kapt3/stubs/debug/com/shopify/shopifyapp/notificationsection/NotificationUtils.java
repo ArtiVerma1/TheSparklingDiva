@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.notificationsection;
+package com.shopify.shopifyapp.notificationsection;
 
 import java.lang.System;
 
@@ -6,7 +6,7 @@ import java.lang.System;
 public final class NotificationUtils {
     private final android.content.Context mContext = null;
     private static final java.lang.String TAG = null;
-    public static final com.kumaoni.blessings.notificationsection.NotificationUtils.Companion Companion = null;
+    public static final com.shopify.shopifyapp.notificationsection.NotificationUtils.Companion Companion = null;
     
     public final void showNotificationMessage(@org.jetbrains.annotations.NotNull()
     java.lang.String title, @org.jetbrains.annotations.NotNull()

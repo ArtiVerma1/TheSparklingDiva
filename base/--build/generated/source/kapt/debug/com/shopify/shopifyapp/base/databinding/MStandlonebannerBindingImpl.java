@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MStandlonebannerBindingImpl extends MStandlonebannerBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MStandlonebannerBindingImpl extends MStandlonebannerBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -41,8 +41,8 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
         super(bindingComponent, root, 1
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[5]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[7]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[1]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[4]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[6]
@@ -54,9 +54,9 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
         this.mboundView0.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback21 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
-        mCallback22 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 3);
-        mCallback20 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback21 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
+        mCallback22 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 3);
+        mCallback20 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -82,7 +82,7 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.stand == variableId) {
-            setStand((com.kumaoni.blessings.homesection.models.StandAloneBanner) variable);
+            setStand((com.shopify.shopifyapp.homesection.models.StandAloneBanner) variable);
         }
         else {
             variableSet = false;
@@ -90,7 +90,7 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
             return variableSet;
     }
 
-    public void setStand(@Nullable com.kumaoni.blessings.homesection.models.StandAloneBanner Stand) {
+    public void setStand(@Nullable com.shopify.shopifyapp.homesection.models.StandAloneBanner Stand) {
         updateRegistration(0, Stand);
         this.mStand = Stand;
         synchronized(this) {
@@ -104,11 +104,11 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeStand((com.kumaoni.blessings.homesection.models.StandAloneBanner) object, fieldId);
+                return onChangeStand((com.shopify.shopifyapp.homesection.models.StandAloneBanner) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeStand(com.kumaoni.blessings.homesection.models.StandAloneBanner Stand, int fieldId) {
+    private boolean onChangeStand(com.shopify.shopifyapp.homesection.models.StandAloneBanner Stand, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -145,7 +145,7 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
         }
         java.lang.String standImage = null;
         java.lang.String standTextTwo = null;
-        com.kumaoni.blessings.homesection.models.StandAloneBanner stand = mStand;
+        com.shopify.shopifyapp.homesection.models.StandAloneBanner stand = mStand;
         java.lang.String standTextOne = null;
 
         if ((dirtyFlags & 0x1fL) != 0) {
@@ -194,7 +194,7 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
         if ((dirtyFlags & 0x13L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.image, standImage);
+            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.image, standImage);
         }
     }
     // Listener Stub Implementations
@@ -204,7 +204,7 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
             case 2: {
                 // localize variables for thread safety
                 // stand
-                com.kumaoni.blessings.homesection.models.StandAloneBanner stand = mStand;
+                com.shopify.shopifyapp.homesection.models.StandAloneBanner stand = mStand;
                 // stand.buttononelink
                 java.lang.String standButtononelink = null;
                 // stand.buttononetype
@@ -234,7 +234,7 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
             case 3: {
                 // localize variables for thread safety
                 // stand
-                com.kumaoni.blessings.homesection.models.StandAloneBanner stand = mStand;
+                com.shopify.shopifyapp.homesection.models.StandAloneBanner stand = mStand;
                 // stand.buttontwotype
                 java.lang.String standButtontwotype = null;
                 // stand != null
@@ -266,7 +266,7 @@ public class MStandlonebannerBindingImpl extends MStandlonebannerBinding impleme
                 // stand.bannertype
                 java.lang.String standBannertype = null;
                 // stand
-                com.kumaoni.blessings.homesection.models.StandAloneBanner stand = mStand;
+                com.shopify.shopifyapp.homesection.models.StandAloneBanner stand = mStand;
                 // stand.bannerlink
                 java.lang.String standBannerlink = null;
                 // stand != null

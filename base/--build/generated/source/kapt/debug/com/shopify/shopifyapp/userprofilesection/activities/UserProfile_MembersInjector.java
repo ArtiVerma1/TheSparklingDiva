@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.userprofilesection.activities;
+package com.shopify.shopifyapp.userprofilesection.activities;
 
-import com.kumaoni.blessings.utils.ViewModelFactory;
+import com.shopify.shopifyapp.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

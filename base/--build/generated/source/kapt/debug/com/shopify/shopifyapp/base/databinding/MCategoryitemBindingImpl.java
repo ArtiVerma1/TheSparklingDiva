@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MCategoryitemBindingImpl extends MCategoryitemBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MCategoryitemBindingImpl extends MCategoryitemBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -33,7 +33,7 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
         super(bindingComponent, root, 1
             , (androidx.cardview.widget.CardView) bindings[1]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[2]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
             );
         this.card.setTag(null);
         this.image.setTag(null);
@@ -42,7 +42,7 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
         this.name.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback60 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback60 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -68,10 +68,10 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.commondata == variableId) {
-            setCommondata((com.kumaoni.blessings.basesection.models.CommanModel) variable);
+            setCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
         }
         else if (BR.categorydata == variableId) {
-            setCategorydata((com.kumaoni.blessings.collectionsection.models.Collection) variable);
+            setCategorydata((com.shopify.shopifyapp.collectionsection.models.Collection) variable);
         }
         else {
             variableSet = false;
@@ -79,7 +79,7 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
             return variableSet;
     }
 
-    public void setCommondata(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Commondata) {
+    public void setCommondata(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Commondata) {
         updateRegistration(0, Commondata);
         this.mCommondata = Commondata;
         synchronized(this) {
@@ -88,7 +88,7 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
         notifyPropertyChanged(BR.commondata);
         super.requestRebind();
     }
-    public void setCategorydata(@Nullable com.kumaoni.blessings.collectionsection.models.Collection Categorydata) {
+    public void setCategorydata(@Nullable com.shopify.shopifyapp.collectionsection.models.Collection Categorydata) {
         this.mCategorydata = Categorydata;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -101,11 +101,11 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCommondata((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCommondata(com.kumaoni.blessings.basesection.models.CommanModel Commondata, int fieldId) {
+    private boolean onChangeCommondata(com.shopify.shopifyapp.basesection.models.CommanModel Commondata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -128,10 +128,10 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.basesection.models.CommanModel commondata = mCommondata;
+        com.shopify.shopifyapp.basesection.models.CommanModel commondata = mCommondata;
         java.lang.String categorydataCategoryName = null;
         java.lang.String commondataImageurl = null;
-        com.kumaoni.blessings.collectionsection.models.Collection categorydata = mCategorydata;
+        com.shopify.shopifyapp.collectionsection.models.Collection categorydata = mCategorydata;
 
         if ((dirtyFlags & 0xdL) != 0) {
 
@@ -160,7 +160,7 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
         if ((dirtyFlags & 0xdL) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
+            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
         }
         if ((dirtyFlags & 0xaL) != 0) {
             // api target 1
@@ -173,7 +173,7 @@ public class MCategoryitemBindingImpl extends MCategoryitemBinding implements co
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
         // localize variables for thread safety
         // categorydata
-        com.kumaoni.blessings.collectionsection.models.Collection categorydata = mCategorydata;
+        com.shopify.shopifyapp.collectionsection.models.Collection categorydata = mCategorydata;
         // categorydata != null
         boolean categorydataJavaLangObjectNull = false;
 

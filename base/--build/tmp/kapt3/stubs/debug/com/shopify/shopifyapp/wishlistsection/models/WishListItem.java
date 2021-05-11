@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.wishlistsection.models;
+package com.shopify.shopifyapp.wishlistsection.models;
 
 import java.lang.System;
 

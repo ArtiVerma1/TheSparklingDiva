@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.searchsection.activities;
+package com.shopify.shopifyapp.searchsection.activities;
 
 import java.lang.System;
 

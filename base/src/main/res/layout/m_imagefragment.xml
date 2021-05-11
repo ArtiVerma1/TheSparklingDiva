@@ -6,7 +6,7 @@
 
         <variable
             name="commondata"
-            type="com.kumaoni.blessings.basesection.models.CommanModel" />
+            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

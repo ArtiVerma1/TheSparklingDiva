@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.livepreviewsection;
+package com.shopify.shopifyapp.livepreviewsection;
 
 import java.lang.System;
 

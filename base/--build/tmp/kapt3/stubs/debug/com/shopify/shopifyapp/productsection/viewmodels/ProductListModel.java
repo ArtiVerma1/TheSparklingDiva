@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.productsection.viewmodels;
+package com.shopify.shopifyapp.productsection.viewmodels;
 
 import java.lang.System;
 
@@ -23,7 +23,7 @@ public final class ProductListModel extends androidx.lifecycle.ViewModel {
     private final androidx.lifecycle.MutableLiveData<java.lang.String> message = null;
     @org.jetbrains.annotations.NotNull()
     private final androidx.lifecycle.MutableLiveData<java.util.List<com.shopify.buy3.Storefront.ProductEdge>> filteredproducts = null;
-    private final com.kumaoni.blessings.repositories.Repository repository = null;
+    private final com.shopify.shopifyapp.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.NotNull()
     public final java.lang.String getShopID() {
@@ -130,7 +130,7 @@ public final class ProductListModel extends androidx.lifecycle.ViewModel {
     private final void invoke(com.shopify.buy3.GraphCallResult<? extends com.shopify.buy3.Storefront.QueryRoot> result) {
     }
     
-    private final void consumeResponse(com.kumaoni.blessings.utils.GraphQLResponse reponse) {
+    private final void consumeResponse(com.shopify.shopifyapp.utils.GraphQLResponse reponse) {
     }
     
     public final void filterProduct(@org.jetbrains.annotations.Nullable()
@@ -142,7 +142,7 @@ public final class ProductListModel extends androidx.lifecycle.ViewModel {
     }
     
     public ProductListModel(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository repository) {
+    com.shopify.shopifyapp.repositories.Repository repository) {
         super();
     }
 }

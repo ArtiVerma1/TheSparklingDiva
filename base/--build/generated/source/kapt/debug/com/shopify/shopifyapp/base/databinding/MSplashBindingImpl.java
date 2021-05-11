@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -61,7 +61,7 @@ public class MSplashBindingImpl extends MSplashBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.commonmodel == variableId) {
-            setCommonmodel((com.kumaoni.blessings.basesection.models.CommanModel) variable);
+            setCommonmodel((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
         }
         else {
             variableSet = false;
@@ -69,7 +69,7 @@ public class MSplashBindingImpl extends MSplashBinding  {
             return variableSet;
     }
 
-    public void setCommonmodel(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Commonmodel) {
+    public void setCommonmodel(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Commonmodel) {
         updateRegistration(0, Commonmodel);
         this.mCommonmodel = Commonmodel;
         synchronized(this) {
@@ -83,11 +83,11 @@ public class MSplashBindingImpl extends MSplashBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCommonmodel((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommonmodel((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCommonmodel(com.kumaoni.blessings.basesection.models.CommanModel Commonmodel, int fieldId) {
+    private boolean onChangeCommonmodel(com.shopify.shopifyapp.basesection.models.CommanModel Commonmodel, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -111,7 +111,7 @@ public class MSplashBindingImpl extends MSplashBinding  {
             mDirtyFlags = 0;
         }
         java.lang.String commonmodelImageurl = null;
-        com.kumaoni.blessings.basesection.models.CommanModel commonmodel = mCommonmodel;
+        com.shopify.shopifyapp.basesection.models.CommanModel commonmodel = mCommonmodel;
 
         if ((dirtyFlags & 0x7L) != 0) {
 
@@ -126,7 +126,7 @@ public class MSplashBindingImpl extends MSplashBinding  {
         if ((dirtyFlags & 0x7L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.splashimage, commonmodelImageurl);
+            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.splashimage, commonmodelImageurl);
         }
     }
     // Listener Stub Implementations

@@ -5,7 +5,7 @@
 
         <variable
             name="commonmodel"
-            type="com.kumaoni.blessings.basesection.models.CommanModel" />
+            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
 
         <import type="android.view.View" />
     </data>

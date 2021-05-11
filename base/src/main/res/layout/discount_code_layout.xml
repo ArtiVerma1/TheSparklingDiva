@@ -49,7 +49,7 @@
                 android:textSize="12sp"
                 app:layout_constraintTop_toBottomOf="@+id/title_2" />
 
-            <com.kumaoni.blessings.customviews.MageNativeButton
+            <com.shopify.shopifyapp.customviews.MageNativeButton
                 android:id="@+id/yes_but"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 app:layout_constraintStart_toEndOf="@+id/no_but"
                 app:layout_constraintTop_toBottomOf="@+id/discount_code_edt" />
 
-            <com.kumaoni.blessings.customviews.MageNativeButton
+            <com.shopify.shopifyapp.customviews.MageNativeButton
                 android:id="@+id/no_but"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

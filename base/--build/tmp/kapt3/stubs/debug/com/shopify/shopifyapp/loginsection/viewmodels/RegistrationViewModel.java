@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.loginsection.viewmodels;
+package com.shopify.shopifyapp.loginsection.viewmodels;
 
 import java.lang.System;
 
@@ -9,7 +9,7 @@ public final class RegistrationViewModel extends androidx.lifecycle.ViewModel {
     private final androidx.lifecycle.MutableLiveData<com.shopify.buy3.Storefront.Customer> responsedata = null;
     private final androidx.lifecycle.MutableLiveData<com.shopify.buy3.Storefront.CustomerAccessToken> loginresponsedata = null;
     private java.lang.String password;
-    private final com.kumaoni.blessings.repositories.Repository repository = null;
+    private final com.shopify.shopifyapp.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.NotNull()
     public final androidx.lifecycle.MutableLiveData<java.lang.String> getMessage() {
@@ -39,7 +39,7 @@ public final class RegistrationViewModel extends androidx.lifecycle.ViewModel {
     private final void invoke(com.shopify.buy3.GraphCallResult<? extends com.shopify.buy3.Storefront.Mutation> graphCallResult) {
     }
     
-    private final void consumeResponse(com.kumaoni.blessings.utils.GraphQLResponse reponse) {
+    private final void consumeResponse(com.shopify.shopifyapp.utils.GraphQLResponse reponse) {
     }
     
     public final void insertUserData(@org.jetbrains.annotations.NotNull()
@@ -52,7 +52,7 @@ public final class RegistrationViewModel extends androidx.lifecycle.ViewModel {
     private final void invokes(com.shopify.buy3.GraphCallResult<? extends com.shopify.buy3.Storefront.Mutation> graphCallResult) {
     }
     
-    private final void consumeLoginResponse(com.kumaoni.blessings.utils.GraphQLResponse graphQLResponse) {
+    private final void consumeLoginResponse(com.shopify.shopifyapp.utils.GraphQLResponse graphQLResponse) {
     }
     
     public final void savetoken(@org.jetbrains.annotations.NotNull()
@@ -65,7 +65,7 @@ public final class RegistrationViewModel extends androidx.lifecycle.ViewModel {
     }
     
     public RegistrationViewModel(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository repository) {
+    com.shopify.shopifyapp.repositories.Repository repository) {
         super();
     }
 }

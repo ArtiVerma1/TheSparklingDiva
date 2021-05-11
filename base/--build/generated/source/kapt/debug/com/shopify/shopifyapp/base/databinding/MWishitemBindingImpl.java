@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MWishitemBindingImpl extends MWishitemBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -36,15 +36,15 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
         super(bindingComponent, root, 2
             , (androidx.appcompat.widget.AppCompatImageView) bindings[10]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[1]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[11]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[9]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[8]
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[7]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[11]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[9]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[8]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[7]
             );
         this.cancelAction.setTag(null);
         this.image.setTag(null);
@@ -60,8 +60,8 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
         this.variantTwo.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback35 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
-        mCallback36 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
+        mCallback35 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback36 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
         invalidateAll();
     }
 
@@ -87,13 +87,13 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.commondata == variableId) {
-            setCommondata((com.kumaoni.blessings.basesection.models.CommanModel) variable);
+            setCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
         }
         else if (BR.handler == variableId) {
-            setHandler((com.kumaoni.blessings.wishlistsection.adapters.WishListAdapter.ClickHandlers) variable);
+            setHandler((com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter.ClickHandlers) variable);
         }
         else if (BR.variantdata == variableId) {
-            setVariantdata((com.kumaoni.blessings.wishlistsection.models.WishListItem) variable);
+            setVariantdata((com.shopify.shopifyapp.wishlistsection.models.WishListItem) variable);
         }
         else {
             variableSet = false;
@@ -101,7 +101,7 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
             return variableSet;
     }
 
-    public void setCommondata(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Commondata) {
+    public void setCommondata(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Commondata) {
         updateRegistration(0, Commondata);
         this.mCommondata = Commondata;
         synchronized(this) {
@@ -110,7 +110,7 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
         notifyPropertyChanged(BR.commondata);
         super.requestRebind();
     }
-    public void setHandler(@Nullable com.kumaoni.blessings.wishlistsection.adapters.WishListAdapter.ClickHandlers Handler) {
+    public void setHandler(@Nullable com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter.ClickHandlers Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x4L;
@@ -118,7 +118,7 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
         notifyPropertyChanged(BR.handler);
         super.requestRebind();
     }
-    public void setVariantdata(@Nullable com.kumaoni.blessings.wishlistsection.models.WishListItem Variantdata) {
+    public void setVariantdata(@Nullable com.shopify.shopifyapp.wishlistsection.models.WishListItem Variantdata) {
         updateRegistration(1, Variantdata);
         this.mVariantdata = Variantdata;
         synchronized(this) {
@@ -132,13 +132,13 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCommondata((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
             case 1 :
-                return onChangeVariantdata((com.kumaoni.blessings.wishlistsection.models.WishListItem) object, fieldId);
+                return onChangeVariantdata((com.shopify.shopifyapp.wishlistsection.models.WishListItem) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCommondata(com.kumaoni.blessings.basesection.models.CommanModel Commondata, int fieldId) {
+    private boolean onChangeCommondata(com.shopify.shopifyapp.basesection.models.CommanModel Commondata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -153,7 +153,7 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
         }
         return false;
     }
-    private boolean onChangeVariantdata(com.kumaoni.blessings.wishlistsection.models.WishListItem Variantdata, int fieldId) {
+    private boolean onChangeVariantdata(com.shopify.shopifyapp.wishlistsection.models.WishListItem Variantdata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x2L;
@@ -170,13 +170,13 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.basesection.models.CommanModel commondata = mCommondata;
+        com.shopify.shopifyapp.basesection.models.CommanModel commondata = mCommondata;
         java.lang.String variantdataSpecialprice = null;
         java.lang.String variantdataVariantTwo = null;
         java.lang.String variantdataProductname = null;
         java.lang.String variantdataOffertext = null;
-        com.kumaoni.blessings.wishlistsection.adapters.WishListAdapter.ClickHandlers handler = mHandler;
-        com.kumaoni.blessings.wishlistsection.models.WishListItem variantdata = mVariantdata;
+        com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter.ClickHandlers handler = mHandler;
+        com.shopify.shopifyapp.wishlistsection.models.WishListItem variantdata = mVariantdata;
         java.lang.String variantdataVariantOne = null;
         java.lang.String variantdataNormalprice = null;
         java.lang.String variantdataVariantThree = null;
@@ -222,7 +222,7 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
         if ((dirtyFlags & 0x19L) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
+            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
         }
         if ((dirtyFlags & 0x12L) != 0) {
             // api target 1
@@ -243,9 +243,9 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
             case 1: {
                 // localize variables for thread safety
                 // handler
-                com.kumaoni.blessings.wishlistsection.adapters.WishListAdapter.ClickHandlers handler = mHandler;
+                com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter.ClickHandlers handler = mHandler;
                 // variantdata
-                com.kumaoni.blessings.wishlistsection.models.WishListItem variantdata = mVariantdata;
+                com.shopify.shopifyapp.wishlistsection.models.WishListItem variantdata = mVariantdata;
                 // handler != null
                 boolean handlerJavaLangObjectNull = false;
 
@@ -264,9 +264,9 @@ public class MWishitemBindingImpl extends MWishitemBinding implements com.kumaon
             case 2: {
                 // localize variables for thread safety
                 // handler
-                com.kumaoni.blessings.wishlistsection.adapters.WishListAdapter.ClickHandlers handler = mHandler;
+                com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter.ClickHandlers handler = mHandler;
                 // variantdata
-                com.kumaoni.blessings.wishlistsection.models.WishListItem variantdata = mVariantdata;
+                com.shopify.shopifyapp.wishlistsection.models.WishListItem variantdata = mVariantdata;
                 // handler != null
                 boolean handlerJavaLangObjectNull = false;
 

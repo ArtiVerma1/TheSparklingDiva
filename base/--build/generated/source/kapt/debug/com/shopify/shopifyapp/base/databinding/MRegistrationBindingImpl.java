@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -37,15 +37,15 @@ public class MRegistrationBindingImpl extends MRegistrationBinding  {
     }
     private MRegistrationBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 0
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[10]
-            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[1]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[10]
+            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[1]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[2]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[8]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[8]
             , (androidx.constraintlayout.widget.Guideline) bindings[4]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[6]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[7]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[6]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[7]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[5]
-            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[9]
+            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[9]
             , (android.widget.ScrollView) bindings[0]
             , (androidx.constraintlayout.widget.Guideline) bindings[3]
             );
@@ -78,7 +78,7 @@ public class MRegistrationBindingImpl extends MRegistrationBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handlers == variableId) {
-            setHandlers((com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers) variable);
+            setHandlers((com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -86,7 +86,7 @@ public class MRegistrationBindingImpl extends MRegistrationBinding  {
             return variableSet;
     }
 
-    public void setHandlers(@Nullable com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers Handlers) {
+    public void setHandlers(@Nullable com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers Handlers) {
         this.mHandlers = Handlers;
         synchronized(this) {
             mDirtyFlags |= 0x1L;
@@ -110,7 +110,7 @@ public class MRegistrationBindingImpl extends MRegistrationBinding  {
             mDirtyFlags = 0;
         }
         android.view.View.OnClickListener handlersRegistrationRequestAndroidViewViewOnClickListener = null;
-        com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers handlers = mHandlers;
+        com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers handlers = mHandlers;
 
         if ((dirtyFlags & 0x3L) != 0) {
 
@@ -130,8 +130,8 @@ public class MRegistrationBindingImpl extends MRegistrationBinding  {
     }
     // Listener Stub Implementations
     public static class OnClickListenerImpl implements android.view.View.OnClickListener{
-        private com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers value;
-        public OnClickListenerImpl setValue(com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers value) {
+        private com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers value;
+        public OnClickListenerImpl setValue(com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers value) {
             this.value = value;
             return value == null ? null : this;
         }

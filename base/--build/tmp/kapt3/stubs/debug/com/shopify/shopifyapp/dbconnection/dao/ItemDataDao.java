@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.dbconnection.dao;
+package com.shopify.shopifyapp.dbconnection.dao;
 
 import java.lang.System;
 
@@ -8,24 +8,24 @@ public abstract interface ItemDataDao {
     
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM itemdata")
-    public abstract java.util.List<com.kumaoni.blessings.dbconnection.entities.ItemData> getAll();
+    public abstract java.util.List<com.shopify.shopifyapp.dbconnection.entities.ItemData> getAll();
     
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM itemdata WHERE variant_id = :id")
-    public abstract com.kumaoni.blessings.dbconnection.entities.ItemData getSingleData(@org.jetbrains.annotations.NotNull()
+    public abstract com.shopify.shopifyapp.dbconnection.entities.ItemData getSingleData(@org.jetbrains.annotations.NotNull()
     java.lang.String id);
     
     @androidx.room.Insert()
     public abstract void insert(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.dbconnection.entities.ItemData data);
+    com.shopify.shopifyapp.dbconnection.entities.ItemData data);
     
     @androidx.room.Delete()
     public abstract void delete(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.dbconnection.entities.ItemData data);
+    com.shopify.shopifyapp.dbconnection.entities.ItemData data);
     
     @androidx.room.Update()
     public abstract void update(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.dbconnection.entities.ItemData data);
+    com.shopify.shopifyapp.dbconnection.entities.ItemData data);
     
     @androidx.room.Query(value = "DELETE  FROM itemdata")
     public abstract void deleteall();

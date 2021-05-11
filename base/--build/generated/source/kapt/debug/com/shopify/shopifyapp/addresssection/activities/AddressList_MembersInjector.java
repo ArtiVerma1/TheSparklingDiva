@@ -1,7 +1,7 @@
-package com.kumaoni.blessings.addresssection.activities;
+package com.shopify.shopifyapp.addresssection.activities;
 
-import com.kumaoni.blessings.addresssection.adapters.AddressListAdapter;
-import com.kumaoni.blessings.utils.ViewModelFactory;
+import com.shopify.shopifyapp.addresssection.adapters.AddressListAdapter;
+import com.shopify.shopifyapp.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

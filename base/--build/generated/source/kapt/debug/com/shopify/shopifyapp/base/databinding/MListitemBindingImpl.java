@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MListitemBindingImpl extends MListitemBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MListitemBindingImpl extends MListitemBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -29,12 +29,12 @@ public class MListitemBindingImpl extends MListitemBinding implements com.kumaon
     }
     private MListitemBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[0]
+            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[0]
             );
         this.data.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback28 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback28 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -60,10 +60,10 @@ public class MListitemBindingImpl extends MListitemBinding implements com.kumaon
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.kumaoni.blessings.basesection.adapters.RecylerAdapter.ClickHandler) variable);
+            setHandler((com.shopify.shopifyapp.basesection.adapters.RecylerAdapter.ClickHandler) variable);
         }
         else if (BR.listdata == variableId) {
-            setListdata((com.kumaoni.blessings.basesection.models.ListData) variable);
+            setListdata((com.shopify.shopifyapp.basesection.models.ListData) variable);
         }
         else {
             variableSet = false;
@@ -71,7 +71,7 @@ public class MListitemBindingImpl extends MListitemBinding implements com.kumaon
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.kumaoni.blessings.basesection.adapters.RecylerAdapter.ClickHandler Handler) {
+    public void setHandler(@Nullable com.shopify.shopifyapp.basesection.adapters.RecylerAdapter.ClickHandler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -79,7 +79,7 @@ public class MListitemBindingImpl extends MListitemBinding implements com.kumaon
         notifyPropertyChanged(BR.handler);
         super.requestRebind();
     }
-    public void setListdata(@Nullable com.kumaoni.blessings.basesection.models.ListData Listdata) {
+    public void setListdata(@Nullable com.shopify.shopifyapp.basesection.models.ListData Listdata) {
         updateRegistration(0, Listdata);
         this.mListdata = Listdata;
         synchronized(this) {
@@ -93,11 +93,11 @@ public class MListitemBindingImpl extends MListitemBinding implements com.kumaon
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeListdata((com.kumaoni.blessings.basesection.models.ListData) object, fieldId);
+                return onChangeListdata((com.shopify.shopifyapp.basesection.models.ListData) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeListdata(com.kumaoni.blessings.basesection.models.ListData Listdata, int fieldId) {
+    private boolean onChangeListdata(com.shopify.shopifyapp.basesection.models.ListData Listdata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -114,9 +114,9 @@ public class MListitemBindingImpl extends MListitemBinding implements com.kumaon
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.basesection.adapters.RecylerAdapter.ClickHandler handler = mHandler;
+        com.shopify.shopifyapp.basesection.adapters.RecylerAdapter.ClickHandler handler = mHandler;
         java.lang.String listdataTextdata = null;
-        com.kumaoni.blessings.basesection.models.ListData listdata = mListdata;
+        com.shopify.shopifyapp.basesection.models.ListData listdata = mListdata;
 
         if ((dirtyFlags & 0x5L) != 0) {
 
@@ -144,11 +144,11 @@ public class MListitemBindingImpl extends MListitemBinding implements com.kumaon
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
         // localize variables for thread safety
         // handler
-        com.kumaoni.blessings.basesection.adapters.RecylerAdapter.ClickHandler handler = mHandler;
+        com.shopify.shopifyapp.basesection.adapters.RecylerAdapter.ClickHandler handler = mHandler;
         // handler != null
         boolean handlerJavaLangObjectNull = false;
         // listdata
-        com.kumaoni.blessings.basesection.models.ListData listdata = mListdata;
+        com.shopify.shopifyapp.basesection.models.ListData listdata = mListdata;
 
 
 

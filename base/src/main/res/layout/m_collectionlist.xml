@@ -7,7 +7,7 @@
 
         <variable
             name="clickHandler"
-            type="com.kumaoni.blessings.collectionsection.activities.CollectionList" />
+            type="com.shopify.shopifyapp.collectionsection.activities.CollectionList" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

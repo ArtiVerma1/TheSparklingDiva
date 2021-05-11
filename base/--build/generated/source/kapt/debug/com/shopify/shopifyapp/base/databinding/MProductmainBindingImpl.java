@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -61,7 +61,7 @@ public class MProductmainBindingImpl extends MProductmainBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.kumaoni.blessings.productsection.activities.ProductList.Handler) variable);
+            setHandler((com.shopify.shopifyapp.productsection.activities.ProductList.Handler) variable);
         }
         else {
             variableSet = false;
@@ -69,7 +69,7 @@ public class MProductmainBindingImpl extends MProductmainBinding  {
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.kumaoni.blessings.productsection.activities.ProductList.Handler Handler) {
+    public void setHandler(@Nullable com.shopify.shopifyapp.productsection.activities.ProductList.Handler Handler) {
         this.mHandler = Handler;
     }
 

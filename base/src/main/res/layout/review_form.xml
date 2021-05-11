@@ -15,7 +15,7 @@
             android:paddingRight="10dp"
             android:paddingBottom="25dp">
 
-            <com.kumaoni.blessings.customviews.MageNativeTextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Write A Review"
@@ -144,7 +144,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.kumaoni.blessings.customviews.MageNativeButton
+            <com.shopify.shopifyapp.customviews.MageNativeButton
                 android:id="@+id/submit_review"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

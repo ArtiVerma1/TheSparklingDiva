@@ -1,6 +1,6 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -17,8 +17,8 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
         sIncludes.setIncludes(0, 
             new String[] {"m_login", "m_forgotbottomsheet"},
             new int[] {1, 2},
-            new int[] {com.kumaoni.blessings.R.layout.m_login,
-                com.kumaoni.blessings.R.layout.m_forgotbottomsheet});
+            new int[] {com.shopify.shopifyapp.R.layout.m_login,
+                com.shopify.shopifyapp.R.layout.m_forgotbottomsheet});
         sViewsWithIds = null;
     }
     // views
@@ -34,8 +34,8 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
     }
     private MLoginPageBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 3
-            , (com.kumaoni.blessings.databinding.MForgotbottomsheetBinding) bindings[2]
-            , (com.kumaoni.blessings.databinding.MLoginBinding) bindings[1]
+            , (com.shopify.shopifyapp.databinding.MForgotbottomsheetBinding) bindings[2]
+            , (com.shopify.shopifyapp.databinding.MLoginBinding) bindings[1]
             );
         this.mboundView0 = (androidx.coordinatorlayout.widget.CoordinatorLayout) bindings[0];
         this.mboundView0.setTag(null);
@@ -74,7 +74,7 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handlers == variableId) {
-            setHandlers((com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers) variable);
+            setHandlers((com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -82,7 +82,7 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
             return variableSet;
     }
 
-    public void setHandlers(@Nullable com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers Handlers) {
+    public void setHandlers(@Nullable com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers Handlers) {
         updateRegistration(2, Handlers);
         this.mHandlers = Handlers;
         synchronized(this) {
@@ -103,15 +103,15 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeIncludedlogin((com.kumaoni.blessings.databinding.MLoginBinding) object, fieldId);
+                return onChangeIncludedlogin((com.shopify.shopifyapp.databinding.MLoginBinding) object, fieldId);
             case 1 :
-                return onChangeIncludedforgot((com.kumaoni.blessings.databinding.MForgotbottomsheetBinding) object, fieldId);
+                return onChangeIncludedforgot((com.shopify.shopifyapp.databinding.MForgotbottomsheetBinding) object, fieldId);
             case 2 :
-                return onChangeHandlers((com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers) object, fieldId);
+                return onChangeHandlers((com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeIncludedlogin(com.kumaoni.blessings.databinding.MLoginBinding Includedlogin, int fieldId) {
+    private boolean onChangeIncludedlogin(com.shopify.shopifyapp.databinding.MLoginBinding Includedlogin, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -120,7 +120,7 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
         }
         return false;
     }
-    private boolean onChangeIncludedforgot(com.kumaoni.blessings.databinding.MForgotbottomsheetBinding Includedforgot, int fieldId) {
+    private boolean onChangeIncludedforgot(com.shopify.shopifyapp.databinding.MForgotbottomsheetBinding Includedforgot, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x2L;
@@ -129,7 +129,7 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
         }
         return false;
     }
-    private boolean onChangeHandlers(com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers Handlers, int fieldId) {
+    private boolean onChangeHandlers(com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers Handlers, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x4L;
@@ -146,7 +146,7 @@ public class MLoginPageBindingImpl extends MLoginPageBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers handlers = mHandlers;
+        com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers handlers = mHandlers;
 
         if ((dirtyFlags & 0xcL) != 0) {
         }

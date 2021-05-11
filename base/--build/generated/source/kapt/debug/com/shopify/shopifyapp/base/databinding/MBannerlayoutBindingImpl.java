@@ -1,12 +1,12 @@
-package com.kumaoni.blessings.databinding;
-import com.kumaoni.blessings.R;
-import com.kumaoni.blessings.BR;
+package com.shopify.shopifyapp.databinding;
+import com.shopify.shopifyapp.R;
+import com.shopify.shopifyapp.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
+public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -34,7 +34,7 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
         this.bannerimage.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback59 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback59 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -60,10 +60,10 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.home == variableId) {
-            setHome((com.kumaoni.blessings.homesection.models.Home) variable);
+            setHome((com.shopify.shopifyapp.homesection.models.Home) variable);
         }
         else if (BR.common == variableId) {
-            setCommon((com.kumaoni.blessings.basesection.models.CommanModel) variable);
+            setCommon((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
         }
         else {
             variableSet = false;
@@ -71,7 +71,7 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
             return variableSet;
     }
 
-    public void setHome(@Nullable com.kumaoni.blessings.homesection.models.Home Home) {
+    public void setHome(@Nullable com.shopify.shopifyapp.homesection.models.Home Home) {
         this.mHome = Home;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -79,7 +79,7 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
         notifyPropertyChanged(BR.home);
         super.requestRebind();
     }
-    public void setCommon(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Common) {
+    public void setCommon(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Common) {
         updateRegistration(0, Common);
         this.mCommon = Common;
         synchronized(this) {
@@ -93,11 +93,11 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCommon((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommon((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCommon(com.kumaoni.blessings.basesection.models.CommanModel Common, int fieldId) {
+    private boolean onChangeCommon(com.shopify.shopifyapp.basesection.models.CommanModel Common, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -121,8 +121,8 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
             mDirtyFlags = 0;
         }
         java.lang.String commonImageurl = null;
-        com.kumaoni.blessings.homesection.models.Home home = mHome;
-        com.kumaoni.blessings.basesection.models.CommanModel common = mCommon;
+        com.shopify.shopifyapp.homesection.models.Home home = mHome;
+        com.shopify.shopifyapp.basesection.models.CommanModel common = mCommon;
 
         if ((dirtyFlags & 0xdL) != 0) {
 
@@ -137,7 +137,7 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
         if ((dirtyFlags & 0xdL) != 0) {
             // api target 1
 
-            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.bannerimage, commonImageurl);
+            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.bannerimage, commonImageurl);
         }
         if ((dirtyFlags & 0x8L) != 0) {
             // api target 1
@@ -152,7 +152,7 @@ public class MBannerlayoutBindingImpl extends MBannerlayoutBinding implements co
         // home != null
         boolean homeJavaLangObjectNull = false;
         // home
-        com.kumaoni.blessings.homesection.models.Home home = mHome;
+        com.shopify.shopifyapp.homesection.models.Home home = mHome;
 
 
 

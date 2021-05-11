@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">karkr</string>
+    <string name="app_name">Shopify Mobile App</string>
     <string name="login">Login</string>
     <string name="enter_mobile_number">Enter mobile number</string>
     <string name="enter_password">Enter password</string>
@@ -17,7 +17,7 @@
     <string name="shop_in">Shop by categories</string>
     <string name="copy"><![CDATA[CopyRight \u00a9]]></string>
     <string name="apikey">e121ff541d39b93f45cd37d18e7e5b0f</string>
-    <string name="shopdomain">kumaoni-blessings.myshopify.com</string>
+    <string name="shopdomain">magenative.myshopify.com</string>
     <string name="currency">Choose Currency</string>
     <string name="noproducts">No More Products Found in Collections!</string>
     <string name="atoz">A To Z</string>
@@ -189,5 +189,4 @@
     <string name="order_id">Order #</string>
     <string name="title_activity_maps">Map</string>
     <string name="order_delivery_location">Order will be deliver here</string>
-    <string name="instagram">Instagram</string>
 </resources>

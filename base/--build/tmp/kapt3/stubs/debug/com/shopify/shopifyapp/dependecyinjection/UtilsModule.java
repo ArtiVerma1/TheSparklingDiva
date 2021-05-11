@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.dependecyinjection;
+package com.shopify.shopifyapp.dependecyinjection;
 
 import java.lang.System;
 
@@ -33,7 +33,7 @@ public final class UtilsModule {
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Singleton()
     @dagger.Provides()
-    public final com.kumaoni.blessings.utils.ApiCallInterface getApiCallInterface$base_debug(@org.jetbrains.annotations.NotNull()
+    public final com.shopify.shopifyapp.utils.ApiCallInterface getApiCallInterface$base_debug(@org.jetbrains.annotations.NotNull()
     retrofit2.Retrofit retrofit) {
         return null;
     }
@@ -41,9 +41,9 @@ public final class UtilsModule {
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Singleton()
     @dagger.Provides()
-    public final com.kumaoni.blessings.repositories.Repository getRepository$base_debug(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.utils.ApiCallInterface apiCallInterface, @org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.dbconnection.database.AppDatabase appDatabase, @org.jetbrains.annotations.NotNull()
+    public final com.shopify.shopifyapp.repositories.Repository getRepository$base_debug(@org.jetbrains.annotations.NotNull()
+    com.shopify.shopifyapp.utils.ApiCallInterface apiCallInterface, @org.jetbrains.annotations.NotNull()
+    com.shopify.shopifyapp.dbconnection.database.AppDatabase appDatabase, @org.jetbrains.annotations.NotNull()
     com.shopify.buy3.GraphClient client) {
         return null;
     }
@@ -52,7 +52,7 @@ public final class UtilsModule {
     @javax.inject.Singleton()
     @dagger.Provides()
     public final androidx.lifecycle.ViewModelProvider.Factory getViewModelFactory$base_debug(@org.jetbrains.annotations.NotNull()
-    com.kumaoni.blessings.repositories.Repository myRepository) {
+    com.shopify.shopifyapp.repositories.Repository myRepository) {
         return null;
     }
     
@@ -66,7 +66,7 @@ public final class UtilsModule {
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Singleton()
     @dagger.Provides()
-    public final com.kumaoni.blessings.dbconnection.database.AppDatabase getAppDatabase$base_debug(@org.jetbrains.annotations.NotNull()
+    public final com.shopify.shopifyapp.dbconnection.database.AppDatabase getAppDatabase$base_debug(@org.jetbrains.annotations.NotNull()
     android.content.Context context) {
         return null;
     }

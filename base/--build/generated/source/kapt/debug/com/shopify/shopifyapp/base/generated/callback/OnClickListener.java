@@ -1,4 +1,4 @@
-package com.kumaoni.blessings.generated.callback;
+package com.shopify.shopifyapp.generated.callback;
 public final class OnClickListener implements android.view.View.OnClickListener {
     final Listener mListener;
     final int mSourceId;

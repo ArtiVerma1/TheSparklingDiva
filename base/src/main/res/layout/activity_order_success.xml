@@ -42,7 +42,7 @@
             app:fontFamily="@font/roboto_medium"
             app:layout_constraintTop_toBottomOf="@+id/order_placed" />
 
-        <com.kumaoni.blessings.customviews.MageNativeButton
+        <com.shopify.shopifyapp.customviews.MageNativeButton
             android:id="@+id/continue_shopping"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
