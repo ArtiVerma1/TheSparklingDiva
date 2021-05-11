@@ -1,12 +1,12 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MOrderitemBindingImpl extends MOrderitemBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
+public class MOrderitemBindingImpl extends MOrderitemBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -36,17 +36,17 @@ public class MOrderitemBindingImpl extends MOrderitemBinding implements com.shop
     }
     private MOrderitemBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 0
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[11]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[11]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
             , (android.widget.TextView) bindings[10]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[7]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[8]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[9]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[7]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[8]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[9]
             );
         this.boughtfor.setTag(null);
         this.date.setTag(null);
@@ -58,7 +58,7 @@ public class MOrderitemBindingImpl extends MOrderitemBinding implements com.shop
         this.totalspending.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback19 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback19 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -84,7 +84,7 @@ public class MOrderitemBindingImpl extends MOrderitemBinding implements com.shop
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.order == variableId) {
-            setOrder((com.shopify.shopifyapp.ordersection.models.Order) variable);
+            setOrder((com.kumaoni.blessings.ordersection.models.Order) variable);
         }
         else {
             variableSet = false;
@@ -92,7 +92,7 @@ public class MOrderitemBindingImpl extends MOrderitemBinding implements com.shop
             return variableSet;
     }
 
-    public void setOrder(@Nullable com.shopify.shopifyapp.ordersection.models.Order Order) {
+    public void setOrder(@Nullable com.kumaoni.blessings.ordersection.models.Order Order) {
         this.mOrder = Order;
         synchronized(this) {
             mDirtyFlags |= 0x1L;
@@ -119,7 +119,7 @@ public class MOrderitemBindingImpl extends MOrderitemBinding implements com.shop
         java.lang.String orderOrdernumber = null;
         java.lang.String orderBoughtfor = null;
         java.lang.String orderDate = null;
-        com.shopify.shopifyapp.ordersection.models.Order order = mOrder;
+        com.kumaoni.blessings.ordersection.models.Order order = mOrder;
         java.lang.String orderName = null;
 
         if ((dirtyFlags & 0x3L) != 0) {
@@ -162,7 +162,7 @@ public class MOrderitemBindingImpl extends MOrderitemBinding implements com.shop
         // order != null
         boolean orderJavaLangObjectNull = false;
         // order
-        com.shopify.shopifyapp.ordersection.models.Order order = mOrder;
+        com.kumaoni.blessings.ordersection.models.Order order = mOrder;
 
 
 

@@ -1,7 +1,7 @@
-package com.shopify.shopifyapp.dependecyinjection;
+package com.kumaoni.blessings.dependecyinjection;
 
 import androidx.lifecycle.ViewModelProvider;
-import com.shopify.shopifyapp.repositories.Repository;
+import com.kumaoni.blessings.repositories.Repository;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.annotation.Generated;

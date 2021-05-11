@@ -1,12 +1,12 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MUserprofileBindingImpl extends MUserprofileBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
+public class MUserprofileBindingImpl extends MUserprofileBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -32,16 +32,16 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
     }
     private MUserprofileBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[3]
             , (androidx.constraintlayout.widget.Guideline) bindings[8]
-            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[1]
-            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[1]
+            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[2]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[9]
-            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[4]
+            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[4]
             , (android.widget.ScrollView) bindings[0]
             , (androidx.constraintlayout.widget.Guideline) bindings[7]
-            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[6]
+            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[6]
             );
         this.ConfirmPassword.setTag(null);
         this.email.setTag(null);
@@ -52,7 +52,7 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
         this.update.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback57 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback57 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -78,10 +78,10 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.shopify.shopifyapp.userprofilesection.activities.UserProfile.ClickHandler) variable);
+            setHandler((com.kumaoni.blessings.userprofilesection.activities.UserProfile.ClickHandler) variable);
         }
         else if (BR.user == variableId) {
-            setUser((com.shopify.shopifyapp.userprofilesection.models.User) variable);
+            setUser((com.kumaoni.blessings.userprofilesection.models.User) variable);
         }
         else {
             variableSet = false;
@@ -89,7 +89,7 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.shopify.shopifyapp.userprofilesection.activities.UserProfile.ClickHandler Handler) {
+    public void setHandler(@Nullable com.kumaoni.blessings.userprofilesection.activities.UserProfile.ClickHandler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -97,7 +97,7 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
         notifyPropertyChanged(BR.handler);
         super.requestRebind();
     }
-    public void setUser(@Nullable com.shopify.shopifyapp.userprofilesection.models.User User) {
+    public void setUser(@Nullable com.kumaoni.blessings.userprofilesection.models.User User) {
         updateRegistration(0, User);
         this.mUser = User;
         synchronized(this) {
@@ -111,11 +111,11 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeUser((com.shopify.shopifyapp.userprofilesection.models.User) object, fieldId);
+                return onChangeUser((com.kumaoni.blessings.userprofilesection.models.User) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeUser(com.shopify.shopifyapp.userprofilesection.models.User User, int fieldId) {
+    private boolean onChangeUser(com.kumaoni.blessings.userprofilesection.models.User User, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -156,9 +156,9 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.userprofilesection.activities.UserProfile.ClickHandler handler = mHandler;
+        com.kumaoni.blessings.userprofilesection.activities.UserProfile.ClickHandler handler = mHandler;
         java.lang.String userLastname = null;
-        com.shopify.shopifyapp.userprofilesection.models.User user = mUser;
+        com.kumaoni.blessings.userprofilesection.models.User user = mUser;
         java.lang.String userPassword = null;
         java.lang.String userEmail = null;
         java.lang.String userFirstname = null;
@@ -228,9 +228,9 @@ public class MUserprofileBindingImpl extends MUserprofileBinding implements com.
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
         // localize variables for thread safety
         // handler
-        com.shopify.shopifyapp.userprofilesection.activities.UserProfile.ClickHandler handler = mHandler;
+        com.kumaoni.blessings.userprofilesection.activities.UserProfile.ClickHandler handler = mHandler;
         // user
-        com.shopify.shopifyapp.userprofilesection.models.User user = mUser;
+        com.kumaoni.blessings.userprofilesection.models.User user = mUser;
         // handler != null
         boolean handlerJavaLangObjectNull = false;
 

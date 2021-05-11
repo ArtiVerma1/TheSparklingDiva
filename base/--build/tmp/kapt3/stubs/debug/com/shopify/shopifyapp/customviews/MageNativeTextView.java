@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.customviews;
+package com.kumaoni.blessings.customviews;
 
 import java.lang.System;
 

@@ -1,12 +1,12 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
+public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -38,24 +38,24 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
     }
     private MProductHvLayoutBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
             , (androidx.cardview.widget.CardView) bindings[7]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[16]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[8]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[14]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[11]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[9]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[15]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[12]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[9]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[15]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[12]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[0]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[17]
             , (androidx.cardview.widget.CardView) bindings[10]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[18]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
             , (androidx.cardview.widget.CardView) bindings[13]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
             , (info.androidhive.fontawesome.FontTextView) bindings[4]
             );
         this.actiontext.setTag(null);
@@ -76,10 +76,10 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
         this.timericon.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback13 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 4);
-        mCallback11 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
-        mCallback12 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 3);
-        mCallback10 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback13 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 4);
+        mCallback11 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
+        mCallback12 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 3);
+        mCallback10 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -105,7 +105,7 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.productslider == variableId) {
-            setProductslider((com.shopify.shopifyapp.homesection.models.ProductSlider) variable);
+            setProductslider((com.kumaoni.blessings.homesection.models.ProductSlider) variable);
         }
         else {
             variableSet = false;
@@ -113,7 +113,7 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
             return variableSet;
     }
 
-    public void setProductslider(@Nullable com.shopify.shopifyapp.homesection.models.ProductSlider Productslider) {
+    public void setProductslider(@Nullable com.kumaoni.blessings.homesection.models.ProductSlider Productslider) {
         updateRegistration(0, Productslider);
         this.mProductslider = Productslider;
         synchronized(this) {
@@ -127,11 +127,11 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeProductslider((com.shopify.shopifyapp.homesection.models.ProductSlider) object, fieldId);
+                return onChangeProductslider((com.kumaoni.blessings.homesection.models.ProductSlider) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeProductslider(com.shopify.shopifyapp.homesection.models.ProductSlider Productslider, int fieldId) {
+    private boolean onChangeProductslider(com.kumaoni.blessings.homesection.models.ProductSlider Productslider, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -245,7 +245,7 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
             mDirtyFlags = 0;
         }
         int androidxDatabindingViewDataBindingSafeUnboxProductsliderTimericon = 0;
-        com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
+        com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
         int productsliderTextaligment = 0;
         java.lang.String productsliderHvnameone = null;
         java.lang.Integer productsliderHeadertextvisibility = null;
@@ -430,17 +430,17 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
         if ((dirtyFlags & 0x20401L) != 0) {
             // api target 1
 
-            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.hvimagOne, productsliderHvimageone);
+            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.hvimagOne, productsliderHvimageone);
         }
         if ((dirtyFlags & 0x28001L) != 0) {
             // api target 1
 
-            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.hvimagthree, productsliderHvimagethree);
+            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.hvimagthree, productsliderHvimagethree);
         }
         if ((dirtyFlags & 0x22001L) != 0) {
             // api target 1
 
-            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.hvimagtwo, productsliderHvimagetwo);
+            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.hvimagtwo, productsliderHvimagetwo);
         }
         if ((dirtyFlags & 0x20801L) != 0) {
             // api target 1
@@ -503,7 +503,7 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
                 // productslider.hvtypethree
                 java.lang.String productsliderHvtypethree = null;
                 // productslider
-                com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
+                com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
                 // productslider.hvvaluethree
                 java.lang.String productsliderHvvaluethree = null;
 
@@ -533,7 +533,7 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
                 // productslider.hvtypeone
                 java.lang.String productsliderHvtypeone = null;
                 // productslider
-                com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
+                com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
                 // productslider.hvvalueone
                 java.lang.String productsliderHvvalueone = null;
 
@@ -563,7 +563,7 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
                 // productslider.hvvaluetwo
                 java.lang.String productsliderHvvaluetwo = null;
                 // productslider
-                com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
+                com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
                 // productslider.hvtypetwo
                 java.lang.String productsliderHvtypetwo = null;
 
@@ -591,7 +591,7 @@ public class MProductHvLayoutBindingImpl extends MProductHvLayoutBinding impleme
                 // productslider != null
                 boolean productsliderJavaLangObjectNull = false;
                 // productslider
-                com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
+                com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
 
 
 

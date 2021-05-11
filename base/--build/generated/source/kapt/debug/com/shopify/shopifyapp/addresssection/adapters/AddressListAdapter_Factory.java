@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.addresssection.adapters;
+package com.kumaoni.blessings.addresssection.adapters;
 
 import dagger.internal.Factory;
 import javax.annotation.Generated;

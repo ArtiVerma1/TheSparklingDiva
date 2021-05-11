@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -34,14 +34,14 @@ public class MBottomsheetBindingImpl extends MBottomsheetBinding  {
     }
     private MBottomsheetBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 0
-            , (com.shopify.shopifyapp.customviews.MageNativeRadioButton) bindings[4]
+            , (com.kumaoni.blessings.customviews.MageNativeRadioButton) bindings[4]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[0]
-            , (com.shopify.shopifyapp.customviews.MageNativeRadioButton) bindings[6]
+            , (com.kumaoni.blessings.customviews.MageNativeRadioButton) bindings[6]
             , (android.widget.TextView) bindings[2]
-            , (com.shopify.shopifyapp.customviews.MageNativeRadioButton) bindings[7]
+            , (com.kumaoni.blessings.customviews.MageNativeRadioButton) bindings[7]
             , (com.google.android.material.floatingactionbutton.FloatingActionButton) bindings[1]
             , (android.widget.RadioGroup) bindings[3]
-            , (com.shopify.shopifyapp.customviews.MageNativeRadioButton) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeRadioButton) bindings[5]
             );
         this.bottomSheet.setTag(null);
         this.sort.setTag(null);
@@ -72,7 +72,7 @@ public class MBottomsheetBindingImpl extends MBottomsheetBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.shopify.shopifyapp.productsection.activities.ProductList.Handler) variable);
+            setHandler((com.kumaoni.blessings.productsection.activities.ProductList.Handler) variable);
         }
         else {
             variableSet = false;
@@ -80,7 +80,7 @@ public class MBottomsheetBindingImpl extends MBottomsheetBinding  {
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.shopify.shopifyapp.productsection.activities.ProductList.Handler Handler) {
+    public void setHandler(@Nullable com.kumaoni.blessings.productsection.activities.ProductList.Handler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x1L;
@@ -103,7 +103,7 @@ public class MBottomsheetBindingImpl extends MBottomsheetBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.productsection.activities.ProductList.Handler handler = mHandler;
+        com.kumaoni.blessings.productsection.activities.ProductList.Handler handler = mHandler;
         android.view.View.OnClickListener handlerOpenSortAndroidViewViewOnClickListener = null;
 
         if ((dirtyFlags & 0x3L) != 0) {
@@ -124,8 +124,8 @@ public class MBottomsheetBindingImpl extends MBottomsheetBinding  {
     }
     // Listener Stub Implementations
     public static class OnClickListenerImpl implements android.view.View.OnClickListener{
-        private com.shopify.shopifyapp.productsection.activities.ProductList.Handler value;
-        public OnClickListenerImpl setValue(com.shopify.shopifyapp.productsection.activities.ProductList.Handler value) {
+        private com.kumaoni.blessings.productsection.activities.ProductList.Handler value;
+        public OnClickListenerImpl setValue(com.kumaoni.blessings.productsection.activities.ProductList.Handler value) {
             this.value = value;
             return value == null ? null : this;
         }

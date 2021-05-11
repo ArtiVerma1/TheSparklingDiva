@@ -1,9 +1,9 @@
-package com.shopify.shopifyapp.dependecyinjection;
+package com.kumaoni.blessings.dependecyinjection;
 
 import com.shopify.buy3.GraphClient;
-import com.shopify.shopifyapp.dbconnection.database.AppDatabase;
-import com.shopify.shopifyapp.repositories.Repository;
-import com.shopify.shopifyapp.utils.ApiCallInterface;
+import com.kumaoni.blessings.dbconnection.database.AppDatabase;
+import com.kumaoni.blessings.repositories.Repository;
+import com.kumaoni.blessings.utils.ApiCallInterface;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.annotation.Generated;

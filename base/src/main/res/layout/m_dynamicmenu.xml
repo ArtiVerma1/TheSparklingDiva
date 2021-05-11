@@ -3,10 +3,10 @@
     <data>
         <variable
             name="menudata"
-            type="com.shopify.shopifyapp.basesection.models.MenuData" />
+            type="com.kumaoni.blessings.basesection.models.MenuData" />
         <variable
             name="clickdata"
-            type="com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers" />
+            type="com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/MageNative_maincat">
-        <com.shopify.shopifyapp.customviews.MageNativeTextView
+        <com.kumaoni.blessings.customviews.MageNativeTextView
             android:id="@+id/catname"
             android:layout_width="wrap_content"
             android:layout_height="35dp"

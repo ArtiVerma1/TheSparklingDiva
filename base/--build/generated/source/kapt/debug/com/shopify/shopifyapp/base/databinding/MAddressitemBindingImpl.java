@@ -1,12 +1,12 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MAddressitemBindingImpl extends MAddressitemBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
+public class MAddressitemBindingImpl extends MAddressitemBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -36,20 +36,20 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
     }
     private MAddressitemBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[14]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[7]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[10]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[11]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[13]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[9]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[12]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[8]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[14]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[7]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[10]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[11]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[13]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[9]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[12]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[8]
             );
         this.address1.setTag(null);
         this.address2.setTag(null);
@@ -66,8 +66,8 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
         this.zip.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback2 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
-        mCallback1 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback2 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
+        mCallback1 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -93,10 +93,10 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.address == variableId) {
-            setAddress((com.shopify.shopifyapp.addresssection.models.Address) variable);
+            setAddress((com.kumaoni.blessings.addresssection.models.Address) variable);
         }
         else if (BR.handler == variableId) {
-            setHandler((com.shopify.shopifyapp.addresssection.adapters.AddressListAdapter.ClickHandler) variable);
+            setHandler((com.kumaoni.blessings.addresssection.adapters.AddressListAdapter.ClickHandler) variable);
         }
         else {
             variableSet = false;
@@ -104,7 +104,7 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
             return variableSet;
     }
 
-    public void setAddress(@Nullable com.shopify.shopifyapp.addresssection.models.Address Address) {
+    public void setAddress(@Nullable com.kumaoni.blessings.addresssection.models.Address Address) {
         updateRegistration(0, Address);
         this.mAddress = Address;
         synchronized(this) {
@@ -113,7 +113,7 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
         notifyPropertyChanged(BR.address);
         super.requestRebind();
     }
-    public void setHandler(@Nullable com.shopify.shopifyapp.addresssection.adapters.AddressListAdapter.ClickHandler Handler) {
+    public void setHandler(@Nullable com.kumaoni.blessings.addresssection.adapters.AddressListAdapter.ClickHandler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -126,11 +126,11 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeAddress((com.shopify.shopifyapp.addresssection.models.Address) object, fieldId);
+                return onChangeAddress((com.kumaoni.blessings.addresssection.models.Address) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeAddress(com.shopify.shopifyapp.addresssection.models.Address Address, int fieldId) {
+    private boolean onChangeAddress(com.kumaoni.blessings.addresssection.models.Address Address, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -202,8 +202,8 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
             mDirtyFlags = 0;
         }
         java.lang.String addressProvince = null;
-        com.shopify.shopifyapp.addresssection.models.Address address = mAddress;
-        com.shopify.shopifyapp.addresssection.adapters.AddressListAdapter.ClickHandler handler = mHandler;
+        com.kumaoni.blessings.addresssection.models.Address address = mAddress;
+        com.kumaoni.blessings.addresssection.adapters.AddressListAdapter.ClickHandler handler = mHandler;
         java.lang.String addressAddress2 = null;
         java.lang.String addressAddress1 = null;
         java.lang.String addressPhone = null;
@@ -340,11 +340,11 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
             case 2: {
                 // localize variables for thread safety
                 // handler
-                com.shopify.shopifyapp.addresssection.adapters.AddressListAdapter.ClickHandler handler = mHandler;
+                com.kumaoni.blessings.addresssection.adapters.AddressListAdapter.ClickHandler handler = mHandler;
                 // handler != null
                 boolean handlerJavaLangObjectNull = false;
                 // address
-                com.shopify.shopifyapp.addresssection.models.Address address = mAddress;
+                com.kumaoni.blessings.addresssection.models.Address address = mAddress;
 
 
 
@@ -361,11 +361,11 @@ public class MAddressitemBindingImpl extends MAddressitemBinding implements com.
             case 1: {
                 // localize variables for thread safety
                 // handler
-                com.shopify.shopifyapp.addresssection.adapters.AddressListAdapter.ClickHandler handler = mHandler;
+                com.kumaoni.blessings.addresssection.adapters.AddressListAdapter.ClickHandler handler = mHandler;
                 // handler != null
                 boolean handlerJavaLangObjectNull = false;
                 // address
-                com.shopify.shopifyapp.addresssection.models.Address address = mAddress;
+                com.kumaoni.blessings.addresssection.models.Address address = mAddress;
 
 
 

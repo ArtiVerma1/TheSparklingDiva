@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.basesection.models;
+package com.kumaoni.blessings.basesection.models;
 
 import java.lang.System;
 
@@ -6,7 +6,7 @@ import java.lang.System;
 public final class CommanModel extends androidx.databinding.BaseObservable {
     @org.jetbrains.annotations.Nullable()
     private java.lang.String imageurl;
-    public static final com.shopify.shopifyapp.basesection.models.CommanModel.Companion Companion = null;
+    public static final com.kumaoni.blessings.basesection.models.CommanModel.Companion Companion = null;
     
     @org.jetbrains.annotations.Nullable()
     @androidx.databinding.Bindable()

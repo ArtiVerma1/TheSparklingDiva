@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.dbconnection.database;
+package com.kumaoni.blessings.dbconnection.database;
 
 import androidx.room.DatabaseConfiguration;
 import androidx.room.InvalidationTracker;
@@ -12,14 +12,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.sqlite.db.SupportSQLiteOpenHelper.Callback;
 import androidx.sqlite.db.SupportSQLiteOpenHelper.Configuration;
-import com.shopify.shopifyapp.dbconnection.dao.AppLocalDataDao;
-import com.shopify.shopifyapp.dbconnection.dao.AppLocalDataDao_Impl;
-import com.shopify.shopifyapp.dbconnection.dao.CartItemDataDao;
-import com.shopify.shopifyapp.dbconnection.dao.CartItemDataDao_Impl;
-import com.shopify.shopifyapp.dbconnection.dao.ItemDataDao;
-import com.shopify.shopifyapp.dbconnection.dao.ItemDataDao_Impl;
-import com.shopify.shopifyapp.dbconnection.dao.LivePreviewDao;
-import com.shopify.shopifyapp.dbconnection.dao.LivePreviewDao_Impl;
+import com.kumaoni.blessings.dbconnection.dao.AppLocalDataDao;
+import com.kumaoni.blessings.dbconnection.dao.AppLocalDataDao_Impl;
+import com.kumaoni.blessings.dbconnection.dao.CartItemDataDao;
+import com.kumaoni.blessings.dbconnection.dao.CartItemDataDao_Impl;
+import com.kumaoni.blessings.dbconnection.dao.ItemDataDao;
+import com.kumaoni.blessings.dbconnection.dao.ItemDataDao_Impl;
+import com.kumaoni.blessings.dbconnection.dao.LivePreviewDao;
+import com.kumaoni.blessings.dbconnection.dao.LivePreviewDao_Impl;
 import java.lang.IllegalStateException;
 import java.lang.Override;
 import java.lang.String;
@@ -96,7 +96,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         final TableInfo _infoAppLocalData = new TableInfo("AppLocalData", _columnsAppLocalData, _foreignKeysAppLocalData, _indicesAppLocalData);
         final TableInfo _existingAppLocalData = TableInfo.read(_db, "AppLocalData");
         if (! _infoAppLocalData.equals(_existingAppLocalData)) {
-          throw new IllegalStateException("Migration didn't properly handle AppLocalData(com.shopify.shopifyapp.dbconnection.entities.AppLocalData).\n"
+          throw new IllegalStateException("Migration didn't properly handle AppLocalData(com.kumaoni.blessings.dbconnection.entities.AppLocalData).\n"
                   + " Expected:\n" + _infoAppLocalData + "\n"
                   + " Found:\n" + _existingAppLocalData);
         }
@@ -111,7 +111,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         final TableInfo _infoUserLocalData = new TableInfo("UserLocalData", _columnsUserLocalData, _foreignKeysUserLocalData, _indicesUserLocalData);
         final TableInfo _existingUserLocalData = TableInfo.read(_db, "UserLocalData");
         if (! _infoUserLocalData.equals(_existingUserLocalData)) {
-          throw new IllegalStateException("Migration didn't properly handle UserLocalData(com.shopify.shopifyapp.dbconnection.entities.UserLocalData).\n"
+          throw new IllegalStateException("Migration didn't properly handle UserLocalData(com.kumaoni.blessings.dbconnection.entities.UserLocalData).\n"
                   + " Expected:\n" + _infoUserLocalData + "\n"
                   + " Found:\n" + _existingUserLocalData);
         }
@@ -125,7 +125,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         final TableInfo _infoCustomerTokenData = new TableInfo("CustomerTokenData", _columnsCustomerTokenData, _foreignKeysCustomerTokenData, _indicesCustomerTokenData);
         final TableInfo _existingCustomerTokenData = TableInfo.read(_db, "CustomerTokenData");
         if (! _infoCustomerTokenData.equals(_existingCustomerTokenData)) {
-          throw new IllegalStateException("Migration didn't properly handle CustomerTokenData(com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData).\n"
+          throw new IllegalStateException("Migration didn't properly handle CustomerTokenData(com.kumaoni.blessings.dbconnection.entities.CustomerTokenData).\n"
                   + " Expected:\n" + _infoCustomerTokenData + "\n"
                   + " Found:\n" + _existingCustomerTokenData);
         }
@@ -145,7 +145,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         final TableInfo _infoItemData = new TableInfo("ItemData", _columnsItemData, _foreignKeysItemData, _indicesItemData);
         final TableInfo _existingItemData = TableInfo.read(_db, "ItemData");
         if (! _infoItemData.equals(_existingItemData)) {
-          throw new IllegalStateException("Migration didn't properly handle ItemData(com.shopify.shopifyapp.dbconnection.entities.ItemData).\n"
+          throw new IllegalStateException("Migration didn't properly handle ItemData(com.kumaoni.blessings.dbconnection.entities.ItemData).\n"
                   + " Expected:\n" + _infoItemData + "\n"
                   + " Found:\n" + _existingItemData);
         }
@@ -157,7 +157,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         final TableInfo _infoCartItemData = new TableInfo("CartItemData", _columnsCartItemData, _foreignKeysCartItemData, _indicesCartItemData);
         final TableInfo _existingCartItemData = TableInfo.read(_db, "CartItemData");
         if (! _infoCartItemData.equals(_existingCartItemData)) {
-          throw new IllegalStateException("Migration didn't properly handle CartItemData(com.shopify.shopifyapp.dbconnection.entities.CartItemData).\n"
+          throw new IllegalStateException("Migration didn't properly handle CartItemData(com.kumaoni.blessings.dbconnection.entities.CartItemData).\n"
                   + " Expected:\n" + _infoCartItemData + "\n"
                   + " Found:\n" + _existingCartItemData);
         }
@@ -171,7 +171,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         final TableInfo _infoLivePreviewData = new TableInfo("LivePreviewData", _columnsLivePreviewData, _foreignKeysLivePreviewData, _indicesLivePreviewData);
         final TableInfo _existingLivePreviewData = TableInfo.read(_db, "LivePreviewData");
         if (! _infoLivePreviewData.equals(_existingLivePreviewData)) {
-          throw new IllegalStateException("Migration didn't properly handle LivePreviewData(com.shopify.shopifyapp.dbconnection.entities.LivePreviewData).\n"
+          throw new IllegalStateException("Migration didn't properly handle LivePreviewData(com.kumaoni.blessings.dbconnection.entities.LivePreviewData).\n"
                   + " Expected:\n" + _infoLivePreviewData + "\n"
                   + " Found:\n" + _existingLivePreviewData);
         }

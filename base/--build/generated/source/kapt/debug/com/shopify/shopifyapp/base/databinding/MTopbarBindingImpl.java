@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -39,7 +39,7 @@ public class MTopbarBindingImpl extends MTopbarBinding  {
             , (android.widget.RelativeLayout) bindings[4]
             , (androidx.viewpager.widget.ViewPager) bindings[6]
             , (androidx.cardview.widget.CardView) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
             , (com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator) bindings[7]
             , (android.view.View) bindings[2]
             );
@@ -73,7 +73,7 @@ public class MTopbarBindingImpl extends MTopbarBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.commondata == variableId) {
-            setCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
+            setCommondata((com.kumaoni.blessings.basesection.models.CommanModel) variable);
         }
         else {
             variableSet = false;
@@ -81,7 +81,7 @@ public class MTopbarBindingImpl extends MTopbarBinding  {
             return variableSet;
     }
 
-    public void setCommondata(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Commondata) {
+    public void setCommondata(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Commondata) {
         updateRegistration(0, Commondata);
         this.mCommondata = Commondata;
         synchronized(this) {
@@ -95,11 +95,11 @@ public class MTopbarBindingImpl extends MTopbarBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommondata((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCommondata(com.shopify.shopifyapp.basesection.models.CommanModel Commondata, int fieldId) {
+    private boolean onChangeCommondata(com.kumaoni.blessings.basesection.models.CommanModel Commondata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -122,7 +122,7 @@ public class MTopbarBindingImpl extends MTopbarBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.basesection.models.CommanModel commondata = mCommondata;
+        com.kumaoni.blessings.basesection.models.CommanModel commondata = mCommondata;
         java.lang.String commondataImageurl = null;
 
         if ((dirtyFlags & 0x7L) != 0) {
@@ -138,7 +138,7 @@ public class MTopbarBindingImpl extends MTopbarBinding  {
         if ((dirtyFlags & 0x7L) != 0) {
             // api target 1
 
-            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.backImage, commondataImageurl);
+            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.backImage, commondataImageurl);
         }
     }
     // Listener Stub Implementations

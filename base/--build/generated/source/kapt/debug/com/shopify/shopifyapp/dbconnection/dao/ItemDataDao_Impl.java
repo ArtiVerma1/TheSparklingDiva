@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.dbconnection.dao;
+package com.kumaoni.blessings.dbconnection.dao;
 
 import android.database.Cursor;
 import androidx.room.EntityDeletionOrUpdateAdapter;
@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.RoomSQLiteQuery;
 import androidx.room.SharedSQLiteStatement;
 import androidx.sqlite.db.SupportSQLiteStatement;
-import com.shopify.shopifyapp.dbconnection.entities.ItemData;
+import com.kumaoni.blessings.dbconnection.entities.ItemData;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.SuppressWarnings;

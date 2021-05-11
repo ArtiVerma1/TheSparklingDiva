@@ -5,7 +5,7 @@
 
         <variable
             name="handler"
-            type="com.shopify.shopifyapp.quickadd_section.activities.QuickAddActivity.VariantClickHandler" />
+            type="com.kumaoni.blessings.quickadd_section.activities.QuickAddActivity.VariantClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +17,7 @@
         android:padding="20dp"
         tools:context=".quickadd_section.activities.QuickAddActivity">
 
-        <com.shopify.shopifyapp.customviews.MageNativeTextView
+        <com.kumaoni.blessings.customviews.MageNativeTextView
             android:id="@+id/variantheading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:layout_marginTop="15dp"
             app:layout_constraintTop_toBottomOf="@+id/variantheading" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeTextView
+        <com.kumaoni.blessings.customviews.MageNativeTextView
             android:id="@+id/available_qty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:onClick="@{view->handler.decrease(view)}"
                 android:src="@drawable/minu" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

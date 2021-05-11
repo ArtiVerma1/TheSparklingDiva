@@ -1,12 +1,12 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
+public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -62,28 +62,28 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
     }
     private MLeftmenufragmentBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[15]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[11]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[23]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[16]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[12]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[19]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[15]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[11]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[23]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[16]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[12]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[19]
             , (androidx.constraintlayout.widget.Guideline) bindings[17]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[13]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[20]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[22]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[14]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[13]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[20]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[22]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[14]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
             , (androidx.appcompat.widget.LinearLayoutCompat) bindings[21]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[7]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[9]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[10]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[6]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[8]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[7]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[9]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[10]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[6]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[8]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
             , (androidx.constraintlayout.widget.Guideline) bindings[18]
             );
         this.appversion.setTag(null);
@@ -106,19 +106,19 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
         this.signin.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback49 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 13);
-        mCallback39 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 3);
-        mCallback47 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 11);
-        mCallback37 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
-        mCallback45 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 9);
-        mCallback43 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 7);
-        mCallback42 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 6);
-        mCallback40 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 4);
-        mCallback38 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 2);
-        mCallback48 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 12);
-        mCallback46 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 10);
-        mCallback44 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 8);
-        mCallback41 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 5);
+        mCallback49 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 13);
+        mCallback39 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 3);
+        mCallback47 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 11);
+        mCallback37 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
+        mCallback45 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 9);
+        mCallback43 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 7);
+        mCallback42 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 6);
+        mCallback40 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 4);
+        mCallback38 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 2);
+        mCallback48 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 12);
+        mCallback46 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 10);
+        mCallback44 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 8);
+        mCallback41 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 5);
         invalidateAll();
     }
 
@@ -144,10 +144,10 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.menudata == variableId) {
-            setMenudata((com.shopify.shopifyapp.basesection.models.MenuData) variable);
+            setMenudata((com.kumaoni.blessings.basesection.models.MenuData) variable);
         }
         else if (BR.clickdata == variableId) {
-            setClickdata((com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers) variable);
+            setClickdata((com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -155,7 +155,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
             return variableSet;
     }
 
-    public void setMenudata(@Nullable com.shopify.shopifyapp.basesection.models.MenuData Menudata) {
+    public void setMenudata(@Nullable com.kumaoni.blessings.basesection.models.MenuData Menudata) {
         updateRegistration(0, Menudata);
         this.mMenudata = Menudata;
         synchronized(this) {
@@ -164,7 +164,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
         notifyPropertyChanged(BR.menudata);
         super.requestRebind();
     }
-    public void setClickdata(@Nullable com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers Clickdata) {
+    public void setClickdata(@Nullable com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers Clickdata) {
         this.mClickdata = Clickdata;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -177,11 +177,11 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeMenudata((com.shopify.shopifyapp.basesection.models.MenuData) object, fieldId);
+                return onChangeMenudata((com.kumaoni.blessings.basesection.models.MenuData) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeMenudata(com.shopify.shopifyapp.basesection.models.MenuData Menudata, int fieldId) {
+    private boolean onChangeMenudata(com.kumaoni.blessings.basesection.models.MenuData Menudata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -225,9 +225,9 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
         java.lang.String menudataAppversion = null;
         int menudataVisible = 0;
         int menudataPreviewvislible = 0;
-        com.shopify.shopifyapp.basesection.models.MenuData menudata = mMenudata;
+        com.kumaoni.blessings.basesection.models.MenuData menudata = mMenudata;
         java.lang.String menudataUsername = null;
-        com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+        com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
         java.lang.String menudataTag = null;
         java.lang.String menudataCopyright = null;
 
@@ -327,7 +327,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -345,7 +345,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -363,7 +363,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -381,7 +381,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -399,7 +399,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -417,7 +417,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -435,7 +435,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -453,7 +453,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -471,7 +471,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -489,7 +489,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -507,7 +507,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -525,7 +525,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 
@@ -543,7 +543,7 @@ public class MLeftmenufragmentBindingImpl extends MLeftmenufragmentBinding imple
                 // clickdata != null
                 boolean clickdataJavaLangObjectNull = false;
                 // clickdata
-                com.shopify.shopifyapp.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
+                com.kumaoni.blessings.basesection.fragments.LeftMenu.ClickHandlers clickdata = mClickdata;
 
 
 

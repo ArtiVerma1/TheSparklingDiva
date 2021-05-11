@@ -6,22 +6,22 @@
 
         <variable
             name="commondata"
-            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
+            type="com.kumaoni.blessings.basesection.models.CommanModel" />
 
         <import type="android.view.View" />
 
         <variable
             name="features"
-            type="com.shopify.shopifyapp.basesection.models.FeaturesModel" />
+            type="com.kumaoni.blessings.basesection.models.FeaturesModel" />
 
 
         <variable
             name="listdata"
-            type="com.shopify.shopifyapp.basesection.models.ListData" />
+            type="com.kumaoni.blessings.basesection.models.ListData" />
 
         <variable
             name="clickproduct"
-            type="com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter.PersonalisedProduct" />
+            type="com.kumaoni.blessings.personalised.adapters.PersonalisedAdapter.PersonalisedProduct" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -46,7 +46,7 @@
                 bind:layout_constraintDimensionRatio="H,0.7:0.7"
                 bind:layout_constraintTop_toTopOf="parent" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 bind:layout_constraintEnd_toEndOf="parent"
                 bind:layout_constraintTop_toBottomOf="@+id/name" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/shortdescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/name"
                 bind:texttype="normal" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/specialprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/shortdescription"
                 bind:texttype="bold" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/regularprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

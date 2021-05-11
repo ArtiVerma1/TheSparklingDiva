@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.collectionsection.viewmodels;
+package com.kumaoni.blessings.collectionsection.viewmodels;
 
 import java.lang.System;
 
@@ -9,7 +9,7 @@ public final class CollectionViewModel extends androidx.lifecycle.ViewModel {
     private final androidx.lifecycle.MutableLiveData<java.util.List<com.shopify.buy3.Storefront.CollectionEdge>> responsedata = null;
     @org.jetbrains.annotations.NotNull()
     private final androidx.lifecycle.MutableLiveData<java.lang.String> message = null;
-    private final com.shopify.shopifyapp.repositories.Repository repository = null;
+    private final com.kumaoni.blessings.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.NotNull()
     public final java.lang.String getCursor() {
@@ -36,11 +36,11 @@ public final class CollectionViewModel extends androidx.lifecycle.ViewModel {
     private final void invoke(com.shopify.buy3.GraphCallResult<? extends com.shopify.buy3.Storefront.QueryRoot> result) {
     }
     
-    private final void consumeResponse(com.shopify.shopifyapp.utils.GraphQLResponse reponse) {
+    private final void consumeResponse(com.kumaoni.blessings.utils.GraphQLResponse reponse) {
     }
     
     public CollectionViewModel(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.repositories.Repository repository) {
+    com.kumaoni.blessings.repositories.Repository repository) {
         super();
     }
 }

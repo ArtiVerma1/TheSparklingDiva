@@ -1,9 +1,9 @@
-package com.shopify.shopifyapp.utils;
+package com.kumaoni.blessings.utils;
 
 import java.lang.System;
 
 @kotlin.Metadata(mv = {1, 1, 16}, bv = {1, 0, 3}, k = 1, d1 = {"\u0000h\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\u0007\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\n\u0018\u0000 ?2\u00020\u00012\u00020\u0002:\u0002?@B%\b\u0007\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\n\b\u0002\u0010\u0005\u001a\u0004\u0018\u00010\u0006\u0012\b\b\u0002\u0010\u0007\u001a\u00020\b\u00a2\u0006\u0002\u0010\tJ\u0010\u0010 \u001a\u00020\b2\u0006\u0010!\u001a\u00020\bH\u0002J\u0010\u0010\"\u001a\u00020\b2\u0006\u0010!\u001a\u00020\bH\u0002J\b\u0010#\u001a\u00020$H\u0016J\u0010\u0010%\u001a\u00020$2\u0006\u0010&\u001a\u00020\'H\u0014J\u0018\u0010(\u001a\u00020$2\u0006\u0010)\u001a\u00020\b2\u0006\u0010*\u001a\u00020\bH\u0014J\u0010\u0010+\u001a\u00020$2\u0006\u0010,\u001a\u00020\bH\u0016J \u0010-\u001a\u00020$2\u0006\u0010.\u001a\u00020\b2\u0006\u0010/\u001a\u00020\u00102\u0006\u00100\u001a\u00020\bH\u0016J\u0010\u00101\u001a\u00020$2\u0006\u0010.\u001a\u00020\bH\u0016J\u0010\u00102\u001a\u00020$2\u0006\u0010,\u001a\u000203H\u0016J\n\u00104\u001a\u0004\u0018\u000103H\u0016J\u0010\u00105\u001a\u00020\f2\u0006\u00106\u001a\u000207H\u0017J\u0010\u00108\u001a\u00020$2\u0006\u00109\u001a\u00020\bH\u0016J\u0010\u0010:\u001a\u00020$2\u0006\u0010;\u001a\u00020\u0012H\u0016J\u0010\u0010<\u001a\u00020$2\u0006\u0010=\u001a\u00020\u001fH\u0016J\u0018\u0010<\u001a\u00020$2\u0006\u0010=\u001a\u00020\u001f2\u0006\u0010>\u001a\u00020\bH\u0016R\u000e\u0010\n\u001a\u00020\bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\fX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0010X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0010X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0016X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0016X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u0010X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u001b\u001a\u00020\fX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u001c\u001a\u00020\bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u001e\u001a\u0004\u0018\u00010\u001fX\u0082\u000e\u00a2\u0006\u0002\n\u0000\u00a8\u0006A"}, d2 = {"Lcom/shopify/shopifyapp/utils/CirclePageIndicator;", "Landroid/view/View;", "Lcom/shopify/shopifyapp/utils/PageIndicator;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "defStyle", "", "(Landroid/content/Context;Landroid/util/AttributeSet;I)V", "mActivePointerId", "mCentered", "", "mCurrentPage", "mIsDragging", "mLastMotionX", "", "mListener", "Landroidx/viewpager/widget/ViewPager$OnPageChangeListener;", "mOrientation", "mPageOffset", "mPaintFill", "Landroid/graphics/Paint;", "mPaintPageFill", "mPaintStroke", "mRadius", "mScrollState", "mSnap", "mSnapPage", "mTouchSlop", "mViewPager", "Landroidx/viewpager/widget/ViewPager;", "measureLong", "measureSpec", "measureShort", "notifyDataSetChanged", "", "onDraw", "canvas", "Landroid/graphics/Canvas;", "onMeasure", "widthMeasureSpec", "heightMeasureSpec", "onPageScrollStateChanged", "state", "onPageScrolled", "position", "positionOffset", "positionOffsetPixels", "onPageSelected", "onRestoreInstanceState", "Landroid/os/Parcelable;", "onSaveInstanceState", "onTouchEvent", "ev", "Landroid/view/MotionEvent;", "setCurrentItem", "item", "setOnPageChangeListener", "listener", "setViewPager", "view", "initialPosition", "Companion", "SavedState", "base_debug"})
-public final class CirclePageIndicator extends android.view.View implements com.shopify.shopifyapp.utils.PageIndicator {
+public final class CirclePageIndicator extends android.view.View implements com.kumaoni.blessings.utils.PageIndicator {
     private final android.graphics.Paint mPaintPageFill = null;
     private final android.graphics.Paint mPaintStroke = null;
     private final android.graphics.Paint mPaintFill = null;
@@ -22,7 +22,7 @@ public final class CirclePageIndicator extends android.view.View implements com.
     private int mActivePointerId;
     private boolean mIsDragging;
     private static final int INVALID_POINTER = -1;
-    public static final com.shopify.shopifyapp.utils.CirclePageIndicator.Companion Companion = null;
+    public static final com.kumaoni.blessings.utils.CirclePageIndicator.Companion Companion = null;
     private java.util.HashMap _$_findViewCache;
     
     @java.lang.Override()
@@ -128,8 +128,8 @@ public final class CirclePageIndicator extends android.view.View implements com.
     public static final class SavedState extends android.view.View.BaseSavedState {
         private int currentPage;
         @org.jetbrains.annotations.NotNull()
-        private static final android.os.Parcelable.Creator<com.shopify.shopifyapp.utils.CirclePageIndicator.SavedState> CREATOR = null;
-        public static final com.shopify.shopifyapp.utils.CirclePageIndicator.SavedState.Companion Companion = null;
+        private static final android.os.Parcelable.Creator<com.kumaoni.blessings.utils.CirclePageIndicator.SavedState> CREATOR = null;
+        public static final com.kumaoni.blessings.utils.CirclePageIndicator.SavedState.Companion Companion = null;
         
         public final int getCurrentPage() {
             return 0;
@@ -158,19 +158,19 @@ public final class CirclePageIndicator extends android.view.View implements com.
         }
         
         @kotlin.Metadata(mv = {1, 1, 16}, bv = {1, 0, 3}, k = 1, d1 = {"\u0000$\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\b\u00c6\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0003J\u0010\u0010\u0004\u001a\u00020\u00022\u0006\u0010\u0005\u001a\u00020\u0006H\u0016J\u001d\u0010\u0007\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0016\u00a2\u0006\u0002\u0010\u000b\u00a8\u0006\f"}, d2 = {"Lcom/shopify/shopifyapp/utils/CirclePageIndicator$SavedState$CREATOR;", "Landroid/os/Parcelable$Creator;", "Lcom/shopify/shopifyapp/utils/CirclePageIndicator$SavedState;", "()V", "createFromParcel", "parcel", "Landroid/os/Parcel;", "newArray", "", "size", "", "(I)[Lcom/shopify/shopifyapp/utils/CirclePageIndicator$SavedState;", "base_debug"})
-        public static final class CREATOR implements android.os.Parcelable.Creator<com.shopify.shopifyapp.utils.CirclePageIndicator.SavedState> {
-            public static final com.shopify.shopifyapp.utils.CirclePageIndicator.SavedState.CREATOR INSTANCE = null;
+        public static final class CREATOR implements android.os.Parcelable.Creator<com.kumaoni.blessings.utils.CirclePageIndicator.SavedState> {
+            public static final com.kumaoni.blessings.utils.CirclePageIndicator.SavedState.CREATOR INSTANCE = null;
             
             @org.jetbrains.annotations.NotNull()
             @java.lang.Override()
-            public com.shopify.shopifyapp.utils.CirclePageIndicator.SavedState createFromParcel(@org.jetbrains.annotations.NotNull()
+            public com.kumaoni.blessings.utils.CirclePageIndicator.SavedState createFromParcel(@org.jetbrains.annotations.NotNull()
             android.os.Parcel parcel) {
                 return null;
             }
             
             @org.jetbrains.annotations.NotNull()
             @java.lang.Override()
-            public com.shopify.shopifyapp.utils.CirclePageIndicator.SavedState[] newArray(int size) {
+            public com.kumaoni.blessings.utils.CirclePageIndicator.SavedState[] newArray(int size) {
                 return null;
             }
             
@@ -183,7 +183,7 @@ public final class CirclePageIndicator extends android.view.View implements com.
         public static final class Companion {
             
             @org.jetbrains.annotations.NotNull()
-            public final android.os.Parcelable.Creator<com.shopify.shopifyapp.utils.CirclePageIndicator.SavedState> getCREATOR() {
+            public final android.os.Parcelable.Creator<com.kumaoni.blessings.utils.CirclePageIndicator.SavedState> getCREATOR() {
                 return null;
             }
             

@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -30,10 +30,10 @@ public class MCollectionsliderBindingImpl extends MCollectionsliderBinding  {
     private MCollectionsliderBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 1
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[3]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[0]
             , (androidx.recyclerview.widget.RecyclerView) bindings[4]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
             );
         this.headertext.setTag(null);
         this.panelbackgroundcolor.setTag(null);
@@ -65,7 +65,7 @@ public class MCollectionsliderBindingImpl extends MCollectionsliderBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.productslider == variableId) {
-            setProductslider((com.shopify.shopifyapp.homesection.models.ProductSlider) variable);
+            setProductslider((com.kumaoni.blessings.homesection.models.ProductSlider) variable);
         }
         else {
             variableSet = false;
@@ -73,7 +73,7 @@ public class MCollectionsliderBindingImpl extends MCollectionsliderBinding  {
             return variableSet;
     }
 
-    public void setProductslider(@Nullable com.shopify.shopifyapp.homesection.models.ProductSlider Productslider) {
+    public void setProductslider(@Nullable com.kumaoni.blessings.homesection.models.ProductSlider Productslider) {
         updateRegistration(0, Productslider);
         this.mProductslider = Productslider;
         synchronized(this) {
@@ -87,11 +87,11 @@ public class MCollectionsliderBindingImpl extends MCollectionsliderBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeProductslider((com.shopify.shopifyapp.homesection.models.ProductSlider) object, fieldId);
+                return onChangeProductslider((com.kumaoni.blessings.homesection.models.ProductSlider) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeProductslider(com.shopify.shopifyapp.homesection.models.ProductSlider Productslider, int fieldId) {
+    private boolean onChangeProductslider(com.kumaoni.blessings.homesection.models.ProductSlider Productslider, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -133,7 +133,7 @@ public class MCollectionsliderBindingImpl extends MCollectionsliderBinding  {
             mDirtyFlags = 0;
         }
         java.lang.Integer productsliderSubheadertextvisibity = null;
-        com.shopify.shopifyapp.homesection.models.ProductSlider productslider = mProductslider;
+        com.kumaoni.blessings.homesection.models.ProductSlider productslider = mProductslider;
         int androidxDatabindingViewDataBindingSafeUnboxProductsliderSubheadertextvisibity = 0;
         int androidxDatabindingViewDataBindingSafeUnboxProductsliderHeadertextvisibility = 0;
         java.lang.Integer productsliderHeadertextvisibility = null;

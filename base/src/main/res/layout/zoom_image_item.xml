@@ -5,14 +5,14 @@
 
         <variable
             name="commondata"
-            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
+            type="com.kumaoni.blessings.basesection.models.CommanModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.shopify.shopifyapp.customviews.ZoomImageView
+        <com.kumaoni.blessings.customviews.ZoomImageView
             android:id="@+id/product_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

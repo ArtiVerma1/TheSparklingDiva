@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.homesection.models;
+package com.kumaoni.blessings.homesection.models;
 
 import java.lang.System;
 
@@ -259,7 +259,7 @@ public final class CategoryCircle extends androidx.databinding.BaseObservable {
     
     public final void catClick(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.homesection.models.CategoryCircle category) {
+    com.kumaoni.blessings.homesection.models.CategoryCircle category) {
     }
     
     private final void navigateToPage(android.content.Context context, java.lang.String type, java.lang.String id) {

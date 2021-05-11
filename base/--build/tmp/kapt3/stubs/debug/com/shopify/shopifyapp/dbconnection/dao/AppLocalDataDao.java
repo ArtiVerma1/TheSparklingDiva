@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.dbconnection.dao;
+package com.kumaoni.blessings.dbconnection.dao;
 
 import java.lang.System;
 
@@ -8,7 +8,7 @@ public abstract interface AppLocalDataDao {
     
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM applocaldata")
-    public abstract java.util.List<com.shopify.shopifyapp.dbconnection.entities.AppLocalData> getAll();
+    public abstract java.util.List<com.kumaoni.blessings.dbconnection.entities.AppLocalData> getAll();
     
     /**
      * *
@@ -17,35 +17,35 @@ public abstract interface AppLocalDataDao {
      */
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM UserLocalData")
-    public abstract java.util.List<com.shopify.shopifyapp.dbconnection.entities.UserLocalData> getAllUserData();
+    public abstract java.util.List<com.kumaoni.blessings.dbconnection.entities.UserLocalData> getAllUserData();
     
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM CustomerTokenData")
-    public abstract java.util.List<com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData> getCustomerToken();
+    public abstract java.util.List<com.kumaoni.blessings.dbconnection.entities.CustomerTokenData> getCustomerToken();
     
     @androidx.room.Insert()
     public abstract void insert(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.AppLocalData appLocalData);
+    com.kumaoni.blessings.dbconnection.entities.AppLocalData appLocalData);
     
     @androidx.room.Delete()
     public abstract void delete(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.AppLocalData appLocalData);
+    com.kumaoni.blessings.dbconnection.entities.AppLocalData appLocalData);
     
     @androidx.room.Update()
     public abstract void update(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.AppLocalData appLocalData);
+    com.kumaoni.blessings.dbconnection.entities.AppLocalData appLocalData);
     
     @androidx.room.Insert()
     public abstract void insertUserData(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.UserLocalData UserLocalData);
+    com.kumaoni.blessings.dbconnection.entities.UserLocalData UserLocalData);
     
     @androidx.room.Delete()
     public abstract void deleteUserData(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.UserLocalData UserLocalData);
+    com.kumaoni.blessings.dbconnection.entities.UserLocalData UserLocalData);
     
     @androidx.room.Update()
     public abstract void updateUserData(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.UserLocalData UserLocalData);
+    com.kumaoni.blessings.dbconnection.entities.UserLocalData UserLocalData);
     
     @androidx.room.Query(value = "DELETE  FROM UserLocalData")
     public abstract void deletealldata();
@@ -57,15 +57,15 @@ public abstract interface AppLocalDataDao {
      */
     @androidx.room.Insert()
     public abstract void InsertCustomerToken(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData customerTokenData);
+    com.kumaoni.blessings.dbconnection.entities.CustomerTokenData customerTokenData);
     
     @androidx.room.Update()
     public abstract void UpdateCustomerToken(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData customerTokenData);
+    com.kumaoni.blessings.dbconnection.entities.CustomerTokenData customerTokenData);
     
     @androidx.room.Delete()
     public abstract void deleteCustomerToken(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData CustomerTokenData);
+    com.kumaoni.blessings.dbconnection.entities.CustomerTokenData CustomerTokenData);
     
     @androidx.room.Query(value = "DELETE  FROM CustomerTokenData")
     public abstract void deleteall();

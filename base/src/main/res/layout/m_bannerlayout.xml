@@ -4,10 +4,10 @@
     <data>
         <variable
             name="common"
-            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
+            type="com.kumaoni.blessings.basesection.models.CommanModel" />
         <variable
             name="home"
-            type="com.shopify.shopifyapp.homesection.models.Home" />
+            type="com.kumaoni.blessings.homesection.models.Home" />
     </data>
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/bannerimage"

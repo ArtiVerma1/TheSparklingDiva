@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -64,7 +64,7 @@ public class MAddresslistMainBindingImpl extends MAddresslistMainBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler) variable);
+            setHandler((com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler) variable);
         }
         else {
             variableSet = false;
@@ -72,7 +72,7 @@ public class MAddresslistMainBindingImpl extends MAddresslistMainBinding  {
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler Handler) {
+    public void setHandler(@Nullable com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x1L;
@@ -95,7 +95,7 @@ public class MAddresslistMainBindingImpl extends MAddresslistMainBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler handler = mHandler;
+        com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler handler = mHandler;
         android.view.View.OnClickListener handlerAddAddressAndroidViewViewOnClickListener = null;
 
         if ((dirtyFlags & 0x3L) != 0) {
@@ -116,8 +116,8 @@ public class MAddresslistMainBindingImpl extends MAddresslistMainBinding  {
     }
     // Listener Stub Implementations
     public static class OnClickListenerImpl implements android.view.View.OnClickListener{
-        private com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler value;
-        public OnClickListenerImpl setValue(com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler value) {
+        private com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler value;
+        public OnClickListenerImpl setValue(com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler value) {
             this.value = value;
             return value == null ? null : this;
         }

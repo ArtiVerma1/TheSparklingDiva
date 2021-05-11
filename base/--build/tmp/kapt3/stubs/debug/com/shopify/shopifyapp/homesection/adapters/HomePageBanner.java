@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.homesection.adapters;
+package com.kumaoni.blessings.homesection.adapters;
 
 import java.lang.System;
 

@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.dbconnection.dao;
+package com.kumaoni.blessings.dbconnection.dao;
 
 import java.lang.System;
 
@@ -8,24 +8,24 @@ public abstract interface CartItemDataDao {
     
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM cartitemdata")
-    public abstract java.util.List<com.shopify.shopifyapp.dbconnection.entities.CartItemData> getAll();
+    public abstract java.util.List<com.kumaoni.blessings.dbconnection.entities.CartItemData> getAll();
     
     @org.jetbrains.annotations.NotNull()
     @androidx.room.Query(value = "SELECT * FROM cartitemdata WHERE variant_id = :id")
-    public abstract com.shopify.shopifyapp.dbconnection.entities.CartItemData getSingleData(@org.jetbrains.annotations.NotNull()
+    public abstract com.kumaoni.blessings.dbconnection.entities.CartItemData getSingleData(@org.jetbrains.annotations.NotNull()
     java.lang.String id);
     
     @androidx.room.Insert()
     public abstract void insert(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.CartItemData data);
+    com.kumaoni.blessings.dbconnection.entities.CartItemData data);
     
     @androidx.room.Delete()
     public abstract void delete(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.CartItemData data);
+    com.kumaoni.blessings.dbconnection.entities.CartItemData data);
     
     @androidx.room.Update()
     public abstract void update(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.dbconnection.entities.CartItemData data);
+    com.kumaoni.blessings.dbconnection.entities.CartItemData data);
     
     @androidx.room.Query(value = "DELETE  FROM cartitemdata")
     public abstract void deleteCart();

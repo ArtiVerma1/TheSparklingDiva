@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.jobservicessection;
+package com.kumaoni.blessings.jobservicessection;
 
 import java.lang.System;
 
@@ -6,16 +6,16 @@ import java.lang.System;
 public final class JobScheduler extends android.app.job.JobService {
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.shopify.shopifyapp.repositories.Repository repository;
-    public static final com.shopify.shopifyapp.jobservicessection.JobScheduler.Companion Companion = null;
+    public com.kumaoni.blessings.repositories.Repository repository;
+    public static final com.kumaoni.blessings.jobservicessection.JobScheduler.Companion Companion = null;
     
     @org.jetbrains.annotations.NotNull()
-    public final com.shopify.shopifyapp.repositories.Repository getRepository() {
+    public final com.kumaoni.blessings.repositories.Repository getRepository() {
         return null;
     }
     
     public final void setRepository(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.repositories.Repository p0) {
+    com.kumaoni.blessings.repositories.Repository p0) {
     }
     
     @java.lang.Override()

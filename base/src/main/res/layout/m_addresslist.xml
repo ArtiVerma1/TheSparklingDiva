@@ -4,7 +4,7 @@ xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="handler"
-            type="com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler" />
+            type="com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

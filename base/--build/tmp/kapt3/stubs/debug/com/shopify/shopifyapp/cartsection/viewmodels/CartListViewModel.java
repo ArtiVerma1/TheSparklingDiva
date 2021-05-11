@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.cartsection.viewmodels;
+package com.kumaoni.blessings.cartsection.viewmodels;
 
 import java.lang.System;
 
@@ -9,7 +9,7 @@ public final class CartListViewModel extends androidx.lifecycle.ViewModel {
     private final androidx.lifecycle.MutableLiveData<java.util.HashMap<java.lang.String, java.lang.String>> customerCheckoutResponse = null;
     @org.jetbrains.annotations.NotNull()
     private final androidx.lifecycle.MutableLiveData<java.lang.String> message = null;
-    private final com.shopify.shopifyapp.repositories.Repository repository = null;
+    private final com.kumaoni.blessings.repositories.Repository repository = null;
     
     @org.jetbrains.annotations.NotNull()
     public final androidx.lifecycle.MutableLiveData<java.util.HashMap<java.lang.String, java.lang.String>> getCustomerCheckoutResponse() {
@@ -51,22 +51,22 @@ public final class CartListViewModel extends androidx.lifecycle.ViewModel {
     }
     
     public final void moveToWishList(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.cartsection.models.CartListItem item) {
+    com.kumaoni.blessings.cartsection.models.CartListItem item) {
     }
     
     public final void removeFromCart(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.cartsection.models.CartListItem item) {
+    com.kumaoni.blessings.cartsection.models.CartListItem item) {
     }
     
     public final void updateCart(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.cartsection.models.CartListItem item) {
+    com.kumaoni.blessings.cartsection.models.CartListItem item) {
     }
     
-    private final void consumeResponse(com.shopify.shopifyapp.utils.GraphQLResponse reponse) {
+    private final void consumeResponse(com.kumaoni.blessings.utils.GraphQLResponse reponse) {
     }
     
     public CartListViewModel(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.repositories.Repository repository) {
+    com.kumaoni.blessings.repositories.Repository repository) {
         super();
     }
 }

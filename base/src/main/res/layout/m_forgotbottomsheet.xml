@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/close_icon" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeEditText
+        <com.kumaoni.blessings.customviews.MageNativeEditText
             android:id="@+id/email"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -34,7 +34,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeTextView
+        <com.kumaoni.blessings.customviews.MageNativeTextView
             android:id="@+id/forgotpassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:texttype="bold" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeButton
+        <com.kumaoni.blessings.customviews.MageNativeButton
             android:id="@+id/login"
             android:layout_width="150dp"
             android:layout_height="40dp"

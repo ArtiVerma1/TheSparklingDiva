@@ -9,15 +9,15 @@
 
         <variable
             name="commondata"
-            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
+            type="com.kumaoni.blessings.basesection.models.CommanModel" />
 
         <variable
             name="listdata"
-            type="com.shopify.shopifyapp.basesection.models.ListData" />
+            type="com.kumaoni.blessings.basesection.models.ListData" />
 
         <variable
             name="clickproduct"
-            type="com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter.Product" />
+            type="com.kumaoni.blessings.homesection.adapters.ProductGridAdapter.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,7 +80,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/image">
 
-                    <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    <com.kumaoni.blessings.customviews.MageNativeTextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:texttype="bold" />
 
-                    <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    <com.kumaoni.blessings.customviews.MageNativeTextView
                         android:id="@+id/specialprice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                         app:layout_constraintTop_toBottomOf="@id/regularprice"
                         app:texttype="normal" />
 
-                    <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    <com.kumaoni.blessings.customviews.MageNativeTextView
                         android:id="@+id/regularprice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

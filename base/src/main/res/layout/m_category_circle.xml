@@ -7,7 +7,7 @@
 
         <variable
             name="category"
-            type="com.shopify.shopifyapp.homesection.models.CategoryCircle" />
+            type="com.kumaoni.blessings.homesection.models.CategoryCircle" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +35,7 @@
                 android:layout_centerInParent="true"
                 bind:circleImageUrl="@{category.cat_image_one}" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 android:layout_centerInParent="true"
                 bind:circleImageUrl="@{category.cat_image_two}" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_two"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                 android:layout_centerInParent="true"
                 bind:circleImageUrl="@{category.cat_image_three}" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_three"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                 android:layout_centerInParent="true"
                 bind:circleImageUrl="@{category.cat_image_four}" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_four"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
                 android:layout_centerInParent="true"
                 bind:circleImageUrl="@{category.cat_image_five}" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_five"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

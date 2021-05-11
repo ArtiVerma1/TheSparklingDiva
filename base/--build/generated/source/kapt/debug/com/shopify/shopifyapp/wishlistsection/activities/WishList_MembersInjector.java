@@ -1,7 +1,7 @@
-package com.shopify.shopifyapp.wishlistsection.activities;
+package com.kumaoni.blessings.wishlistsection.activities;
 
-import com.shopify.shopifyapp.utils.ViewModelFactory;
-import com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter;
+import com.kumaoni.blessings.utils.ViewModelFactory;
+import com.kumaoni.blessings.wishlistsection.adapters.WishListAdapter;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

@@ -1,8 +1,8 @@
-package com.shopify.shopifyapp.homesection.activities;
+package com.kumaoni.blessings.homesection.activities;
 
-import com.shopify.shopifyapp.basesection.activities.NewBaseActivity_MembersInjector;
-import com.shopify.shopifyapp.basesection.adapters.RecylerAdapter;
-import com.shopify.shopifyapp.utils.ViewModelFactory;
+import com.kumaoni.blessings.basesection.activities.NewBaseActivity_MembersInjector;
+import com.kumaoni.blessings.basesection.adapters.RecylerAdapter;
+import com.kumaoni.blessings.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

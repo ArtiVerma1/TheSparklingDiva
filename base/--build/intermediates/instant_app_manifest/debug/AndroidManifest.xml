@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.shopify.shopifyapp"
+    package="com.kumaoni.blessings"
     android:targetSandboxVersion="2"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -45,7 +45,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name="com.shopify.shopifyapp.MyApplication"
+        android:name="com.kumaoni.blessings.MyApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
@@ -56,23 +56,23 @@
         android:testOnly="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true" >
-        <service android:name="com.shopify.shopifyapp.notificationsection.FirebaseInstanceIDService" >
+        <service android:name="com.kumaoni.blessings.notificationsection.FirebaseInstanceIDService" >
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.shopify.shopifyapp.notificationsection.FirebaseMessagingService" >
+        <service android:name="com.kumaoni.blessings.notificationsection.FirebaseMessagingService" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name="com.shopify.shopifyapp.jobservicessection.JobScheduler"
+            android:name="com.kumaoni.blessings.jobservicessection.JobScheduler"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name="com.shopify.shopifyapp.basesection.activities.Splash" >
+        <activity android:name="com.kumaoni.blessings.basesection.activities.Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -90,58 +90,58 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.shopify.shopifyapp.addresssection.activities.AddressList"
+            android:name="com.kumaoni.blessings.addresssection.activities.AddressList"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name="com.shopify.shopifyapp.basesection.activities.BaseActivity" />
-        <activity android:name="com.shopify.shopifyapp.basesection.activities.Weblink" />
-        <activity android:name="com.shopify.shopifyapp.basesection.activities.NewBaseActivity" />
+        <activity android:name="com.kumaoni.blessings.basesection.activities.BaseActivity" />
+        <activity android:name="com.kumaoni.blessings.basesection.activities.Weblink" />
+        <activity android:name="com.kumaoni.blessings.basesection.activities.NewBaseActivity" />
         <activity
-            android:name="com.shopify.shopifyapp.productsection.activities.ProductList"
+            android:name="com.kumaoni.blessings.productsection.activities.ProductList"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.shopify.shopifyapp.productsection.activities.ProductView"
+            android:name="com.kumaoni.blessings.productsection.activities.ProductView"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.shopify.shopifyapp.collectionsection.activities.CollectionList"
+            android:name="com.kumaoni.blessings.collectionsection.activities.CollectionList"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.shopify.shopifyapp.wishlistsection.activities.WishList"
+            android:name="com.kumaoni.blessings.wishlistsection.activities.WishList"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.shopify.shopifyapp.cartsection.activities.CartList"
+            android:name="com.kumaoni.blessings.cartsection.activities.CartList"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.shopify.shopifyapp.ordersection.activities.OrderList"
+            android:name="com.kumaoni.blessings.ordersection.activities.OrderList"
             android:launchMode="singleTop" />
         <activity
-            android:name="com.shopify.shopifyapp.searchsection.activities.AutoSearch"
+            android:name="com.kumaoni.blessings.searchsection.activities.AutoSearch"
             android:launchMode="singleTop" />
-        <activity android:name="com.shopify.shopifyapp.checkoutsection.activities.CheckoutWeblink" />
+        <activity android:name="com.kumaoni.blessings.checkoutsection.activities.CheckoutWeblink" />
         <activity
-            android:name="com.shopify.shopifyapp.trialsection.activities.TrialExpired"
+            android:name="com.kumaoni.blessings.trialsection.activities.TrialExpired"
             android:launchMode="singleTask" />
-        <activity android:name="com.shopify.shopifyapp.homesection.activities.HomePage" />
+        <activity android:name="com.kumaoni.blessings.homesection.activities.HomePage" />
         <activity
-            android:name="com.shopify.shopifyapp.loginsection.activity.LoginActivity"
+            android:name="com.kumaoni.blessings.loginsection.activity.LoginActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
-            android:name="com.shopify.shopifyapp.userprofilesection.activities.UserProfile"
+            android:name="com.kumaoni.blessings.userprofilesection.activities.UserProfile"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
-            android:name="com.shopify.shopifyapp.loginsection.activity.RegistrationActivity"
+            android:name="com.kumaoni.blessings.loginsection.activity.RegistrationActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
-            android:name="com.shopify.shopifyapp.searchsection.activities.SearchByScanner"
+            android:name="com.kumaoni.blessings.searchsection.activities.SearchByScanner"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.shopify.shopifyapp.livepreviewsection.LivePreview"
+            android:name="com.kumaoni.blessings.livepreviewsection.LivePreview"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
@@ -259,7 +259,7 @@
 
         <provider
             android:name="com.google.firebase.provider.FirebaseInitProvider"
-            android:authorities="com.shopify.shopifyapp.firebaseinitprovider"
+            android:authorities="com.kumaoni.blessings.firebaseinitprovider"
             android:exported="false"
             android:initOrder="100" />
 
@@ -269,17 +269,17 @@
 
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-            android:authorities="com.shopify.shopifyapp.lifecycle-process"
+            android:authorities="com.kumaoni.blessings.lifecycle-process"
             android:exported="false"
             android:multiprocess="true" />
         <provider
             android:name="com.crashlytics.android.CrashlyticsInitProvider"
-            android:authorities="com.shopify.shopifyapp.crashlyticsinitprovider"
+            android:authorities="com.kumaoni.blessings.crashlyticsinitprovider"
             android:exported="false"
             android:initOrder="90" />
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.shopify.shopifyapp.imageprovider"
+            android:authorities="com.kumaoni.blessings.imageprovider"
             android:exported="false"
             android:grantUriPermissions="true" >
             <meta-data
@@ -288,7 +288,7 @@
         </provider>
         <provider
             android:name="com.squareup.picasso.PicassoProvider"
-            android:authorities="com.shopify.shopifyapp.com.squareup.picasso"
+            android:authorities="com.kumaoni.blessings.com.squareup.picasso"
             android:exported="false" />
     </application>
 

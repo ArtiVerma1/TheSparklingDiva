@@ -1,5 +1,5 @@
 // Generated code from Butter Knife. Do not modify!
-package com.shopify.shopifyapp.basesection.activities;
+package com.kumaoni.blessings.basesection.activities;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -11,8 +11,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import butterknife.Unbinder;
 import butterknife.internal.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.customviews.MageNativeTextView;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.customviews.MageNativeTextView;
 import java.lang.IllegalStateException;
 import java.lang.Override;
 

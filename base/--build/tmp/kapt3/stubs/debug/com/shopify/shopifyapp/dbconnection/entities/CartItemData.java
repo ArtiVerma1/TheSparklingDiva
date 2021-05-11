@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.dbconnection.entities;
+package com.kumaoni.blessings.dbconnection.entities;
 
 import java.lang.System;
 

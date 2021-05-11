@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.utils;
+package com.kumaoni.blessings.utils;
 
 import java.lang.System;
 

@@ -1,7 +1,7 @@
-package com.shopify.shopifyapp.searchsection.activities;
+package com.kumaoni.blessings.searchsection.activities;
 
-import com.shopify.shopifyapp.searchsection.adapters.SearchRecylerAdapter;
-import com.shopify.shopifyapp.utils.ViewModelFactory;
+import com.kumaoni.blessings.searchsection.adapters.SearchRecylerAdapter;
+import com.kumaoni.blessings.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

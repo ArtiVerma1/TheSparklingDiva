@@ -4,7 +4,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.shopify.shopifyapp.customviews.MageNativeEditText
+        <com.kumaoni.blessings.customviews.MageNativeEditText
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:id="@+id/searchtext"

@@ -5,10 +5,10 @@
     <data>
         <variable
             name="address"
-            type="com.shopify.shopifyapp.addresssection.models.Address" />
+            type="com.kumaoni.blessings.addresssection.models.Address" />
         <variable
             name="handler"
-            type="com.shopify.shopifyapp.addresssection.adapters.AddressListAdapter.ClickHandler" />
+            type="com.kumaoni.blessings.addresssection.adapters.AddressListAdapter.ClickHandler" />
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             >
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/firstname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:text="@{address.firstName}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/lastname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 android:text="@{address.lastName}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/address1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/address2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                 android:visibility="gone"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                 android:text="@{address.city}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                 android:text="@{address.province}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/country"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
                 android:text="@{address.country}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/zip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
                 android:text="@{address.zip}"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/phonetext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                 android:layout_marginBottom="5dp"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
                 android:layout_marginBottom="5dp"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:alpha="0.5"
@@ -177,7 +177,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/phone"
                 android:layout_margin="5dp"
                 bind:texttype="normal"/>
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/delete"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
@@ -194,7 +194,7 @@
                 bind:layout_constraintTop_toBottomOf="@id/line"
                 bind:layout_constraintBottom_toBottomOf="parent"
                 />
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:layout_width="1dp"
                 android:layout_height="35dp"
                 android:alpha="0.5"
@@ -207,7 +207,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 bind:texttype="normal"/>
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/editaddress"
                 android:layout_width="0dp"
                 android:layout_height="35dp"

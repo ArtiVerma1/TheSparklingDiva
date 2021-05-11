@@ -5,7 +5,7 @@
     <data>
         <variable
             name="handlers"
-            type="com.shopify.shopifyapp.loginsection.activity.RegistrationActivity.MyClickHandlers" />
+            type="com.kumaoni.blessings.loginsection.activity.RegistrationActivity.MyClickHandlers" />
     </data>
         <ScrollView android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -63,7 +63,7 @@
                     bind:layout_constraintBottom_toBottomOf="parent"
                     android:layout_margin="10dp"
                     android:id="@+id/maincontent">
-                    <com.shopify.shopifyapp.customviews.MageNativeEditText
+                    <com.kumaoni.blessings.customviews.MageNativeEditText
                         android:id="@+id/firstname"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
@@ -77,7 +77,7 @@
                         bind:layout_constraintStart_toStartOf="parent"
                         bind:layout_constraintEnd_toEndOf="parent"
                         bind:layout_constraintTop_toTopOf="parent"/>
-                    <com.shopify.shopifyapp.customviews.MageNativeEditText
+                    <com.kumaoni.blessings.customviews.MageNativeEditText
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:backgroundTint="@color/white"
@@ -92,7 +92,7 @@
                         bind:layout_constraintTop_toBottomOf="@id/firstname"
                         android:layout_marginTop="20dp"
                         tools:targetApi="lollipop" />
-                    <com.shopify.shopifyapp.customviews.MageNativeEditText
+                    <com.kumaoni.blessings.customviews.MageNativeEditText
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:id="@+id/email"
@@ -107,7 +107,7 @@
                         bind:layout_constraintTop_toBottomOf="@id/lastname"
                         android:layout_marginTop="20dp"
                         tools:targetApi="lollipop" />
-                    <com.shopify.shopifyapp.customviews.MageNativeEditText
+                    <com.kumaoni.blessings.customviews.MageNativeEditText
                         android:id="@+id/password"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
@@ -123,7 +123,7 @@
                         bind:layout_constraintTop_toBottomOf="@id/email"
                         android:layout_marginTop="20dp"
                         />
-                    <com.shopify.shopifyapp.customviews.MageNativeEditText
+                    <com.kumaoni.blessings.customviews.MageNativeEditText
                         android:id="@+id/Confirm_password"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
@@ -139,7 +139,7 @@
                         android:layout_marginTop="20dp"
                         bind:layout_constraintTop_toBottomOf="@id/password"
                         />
-                    <com.shopify.shopifyapp.customviews.MageNativeButton
+                    <com.kumaoni.blessings.customviews.MageNativeButton
                         android:layout_width="0dp"
                         android:id="@+id/MageNative_register"
                         android:layout_height="40dp"

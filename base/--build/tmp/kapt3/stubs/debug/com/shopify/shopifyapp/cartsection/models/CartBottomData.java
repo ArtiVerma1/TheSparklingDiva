@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.cartsection.models;
+package com.kumaoni.blessings.cartsection.models;
 
 import java.lang.System;
 

@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.productsection.adapters;
+package com.kumaoni.blessings.productsection.adapters;
 
 import java.lang.System;
 

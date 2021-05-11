@@ -7,7 +7,7 @@
 
         <variable
             name="productslider"
-            type="com.shopify.shopifyapp.homesection.models.ProductSlider" />
+            type="com.kumaoni.blessings.homesection.models.ProductSlider" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/headertext"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:texttype="bold" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/actiontext"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
@@ -63,7 +63,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:texttype="bold" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/subheadertext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                 app:layout_constraintTop_toBottomOf="@id/subheadertext"
                 app:solid_icon="false" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                 app:layout_constraintTop_toBottomOf="@id/subheadertext"
                 app:texttype="normal" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/timer_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
                         android:background="@drawable/angryimg">
 
 
-                        <com.shopify.shopifyapp.customviews.MageNativeTextView
+                        <com.kumaoni.blessings.customviews.MageNativeTextView
                             android:id="@+id/hvnameone"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
@@ -224,7 +224,7 @@
                             android:background="@drawable/angryimg">
 
 
-                            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                            <com.kumaoni.blessings.customviews.MageNativeTextView
                                 android:id="@+id/hvnametwo"
                                 android:layout_width="match_parent"
                                 android:layout_height="35dp"
@@ -274,7 +274,7 @@
                             android:background="@drawable/angryimg">
 
 
-                            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                            <com.kumaoni.blessings.customviews.MageNativeTextView
                                 android:id="@+id/hvnamethree"
                                 android:layout_width="match_parent"
                                 android:layout_height="35dp"

@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.checkoutsection.activities;
+package com.kumaoni.blessings.checkoutsection.activities;
 
-import com.shopify.shopifyapp.utils.ViewModelFactory;
+import com.kumaoni.blessings.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

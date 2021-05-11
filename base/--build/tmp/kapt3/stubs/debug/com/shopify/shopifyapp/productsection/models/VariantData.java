@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.productsection.models;
+package com.kumaoni.blessings.productsection.models;
 
 import java.lang.System;
 
@@ -17,9 +17,9 @@ public final class VariantData extends androidx.databinding.BaseObservable {
     private int position;
     private int istick;
     @org.jetbrains.annotations.Nullable()
-    private com.shopify.shopifyapp.basesection.models.ListData data;
+    private com.kumaoni.blessings.basesection.models.ListData data;
     @org.jetbrains.annotations.Nullable()
-    private com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel model;
+    private com.kumaoni.blessings.productsection.viewmodels.ProductViewModel model;
     
     @org.jetbrains.annotations.Nullable()
     public final java.lang.String getVariant_id() {
@@ -82,26 +82,26 @@ public final class VariantData extends androidx.databinding.BaseObservable {
     }
     
     @org.jetbrains.annotations.Nullable()
-    public final com.shopify.shopifyapp.basesection.models.ListData getData() {
+    public final com.kumaoni.blessings.basesection.models.ListData getData() {
         return null;
     }
     
     public final void setData(@org.jetbrains.annotations.Nullable()
-    com.shopify.shopifyapp.basesection.models.ListData p0) {
+    com.kumaoni.blessings.basesection.models.ListData p0) {
     }
     
     @org.jetbrains.annotations.Nullable()
-    public final com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel getModel() {
+    public final com.kumaoni.blessings.productsection.viewmodels.ProductViewModel getModel() {
         return null;
     }
     
     public final void setModel(@org.jetbrains.annotations.Nullable()
-    com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel p0) {
+    com.kumaoni.blessings.productsection.viewmodels.ProductViewModel p0) {
     }
     
     public final void blockClick(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.productsection.models.VariantData data) {
+    com.kumaoni.blessings.productsection.models.VariantData data) {
     }
     
     public VariantData() {

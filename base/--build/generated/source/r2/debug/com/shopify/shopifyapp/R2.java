@@ -1,5 +1,5 @@
 // Generated code from Butter Knife gradle plugin. Do not modify!
-package com.shopify.shopifyapp;
+package com.kumaoni.blessings;
 
 import androidx.annotation.AnimRes;
 import androidx.annotation.AttrRes;

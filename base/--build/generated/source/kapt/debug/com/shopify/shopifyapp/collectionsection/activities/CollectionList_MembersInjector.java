@@ -1,7 +1,7 @@
-package com.shopify.shopifyapp.collectionsection.activities;
+package com.kumaoni.blessings.collectionsection.activities;
 
-import com.shopify.shopifyapp.collectionsection.adapters.CollectionRecylerAdapter;
-import com.shopify.shopifyapp.utils.ViewModelFactory;
+import com.kumaoni.blessings.collectionsection.adapters.CollectionRecylerAdapter;
+import com.kumaoni.blessings.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

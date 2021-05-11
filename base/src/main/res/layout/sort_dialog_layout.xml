@@ -10,7 +10,7 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <com.shopify.shopifyapp.customviews.MageNativeRadioButton
+        <com.kumaoni.blessings.customviews.MageNativeRadioButton
             android:id="@+id/atoz"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
@@ -19,7 +19,7 @@
             android:text="@string/atoz"
             app:radiotype="bold" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeRadioButton
+        <com.kumaoni.blessings.customviews.MageNativeRadioButton
             android:id="@+id/ztoa"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
@@ -28,7 +28,7 @@
             android:text="@string/ztoa"
             app:radiotype="bold" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeRadioButton
+        <com.kumaoni.blessings.customviews.MageNativeRadioButton
             android:id="@+id/htol"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
@@ -37,7 +37,7 @@
             android:text="@string/htol"
             app:radiotype="bold" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeRadioButton
+        <com.kumaoni.blessings.customviews.MageNativeRadioButton
             android:id="@+id/ltoh"
             android:layout_width="wrap_content"
             android:layout_height="35dp"

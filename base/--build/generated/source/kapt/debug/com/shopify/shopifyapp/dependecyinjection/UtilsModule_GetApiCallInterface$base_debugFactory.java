@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.dependecyinjection;
+package com.kumaoni.blessings.dependecyinjection;
 
-import com.shopify.shopifyapp.utils.ApiCallInterface;
+import com.kumaoni.blessings.utils.ApiCallInterface;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.annotation.Generated;

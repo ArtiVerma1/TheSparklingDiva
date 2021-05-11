@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.homesection.models;
+package com.kumaoni.blessings.homesection.models;
 
 import java.lang.System;
 
@@ -7,7 +7,7 @@ public final class Product {
     
     public final void productClick(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.basesection.models.ListData data) {
+    com.kumaoni.blessings.basesection.models.ListData data) {
     }
     
     public Product() {

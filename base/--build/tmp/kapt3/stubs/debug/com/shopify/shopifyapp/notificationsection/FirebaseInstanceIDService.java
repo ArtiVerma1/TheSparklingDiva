@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.notificationsection;
+package com.kumaoni.blessings.notificationsection;
 
 import java.lang.System;
 

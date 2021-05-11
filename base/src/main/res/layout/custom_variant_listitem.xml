@@ -7,7 +7,7 @@
 
         <variable
             name="varaint_data"
-            type="com.shopify.shopifyapp.productsection.models.VariantData" />
+            type="com.kumaoni.blessings.productsection.models.VariantData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

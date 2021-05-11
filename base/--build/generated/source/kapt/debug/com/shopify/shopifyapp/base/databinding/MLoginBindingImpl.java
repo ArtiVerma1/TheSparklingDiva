@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -23,7 +23,7 @@ public class MLoginBindingImpl extends MLoginBinding  {
     }
     // views
     @NonNull
-    private final com.shopify.shopifyapp.customviews.MageNativeTextView mboundView4;
+    private final com.kumaoni.blessings.customviews.MageNativeTextView mboundView4;
     // variables
     // values
     // listeners
@@ -39,18 +39,18 @@ public class MLoginBindingImpl extends MLoginBinding  {
         super(bindingComponent, root, 1
             , (androidx.appcompat.widget.AppCompatImageView) bindings[1]
             , (androidx.constraintlayout.widget.Guideline) bindings[6]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
-            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[2]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[7]
-            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[9]
+            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[9]
             , (android.widget.ScrollView) bindings[0]
             , (androidx.constraintlayout.widget.Guideline) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeEditText) bindings[8]
+            , (com.kumaoni.blessings.customviews.MageNativeEditText) bindings[8]
             );
         this.backImage.setTag(null);
         this.forgotpassword.setTag(null);
         this.login.setTag(null);
-        this.mboundView4 = (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4];
+        this.mboundView4 = (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4];
         this.mboundView4.setTag(null);
         this.scroll.setTag(null);
         setRootTag(root);
@@ -80,7 +80,7 @@ public class MLoginBindingImpl extends MLoginBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handlers == variableId) {
-            setHandlers((com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers) variable);
+            setHandlers((com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers) variable);
         }
         else {
             variableSet = false;
@@ -88,7 +88,7 @@ public class MLoginBindingImpl extends MLoginBinding  {
             return variableSet;
     }
 
-    public void setHandlers(@Nullable com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers Handlers) {
+    public void setHandlers(@Nullable com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers Handlers) {
         updateRegistration(0, Handlers);
         this.mHandlers = Handlers;
         synchronized(this) {
@@ -102,11 +102,11 @@ public class MLoginBindingImpl extends MLoginBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeHandlers((com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers) object, fieldId);
+                return onChangeHandlers((com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeHandlers(com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers Handlers, int fieldId) {
+    private boolean onChangeHandlers(com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers Handlers, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -132,7 +132,7 @@ public class MLoginBindingImpl extends MLoginBinding  {
         android.view.View.OnClickListener handlersOnSignUpClickedAndroidViewViewOnClickListener = null;
         android.view.View.OnClickListener handlersNewsignupAndroidViewViewOnClickListener = null;
         java.lang.String handlersImage = null;
-        com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers handlers = mHandlers;
+        com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers handlers = mHandlers;
         android.view.View.OnClickListener handlersForgotPassAndroidViewViewOnClickListener = null;
 
         if ((dirtyFlags & 0x7L) != 0) {
@@ -159,7 +159,7 @@ public class MLoginBindingImpl extends MLoginBinding  {
         if ((dirtyFlags & 0x7L) != 0) {
             // api target 1
 
-            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.backImage, handlersImage);
+            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.backImage, handlersImage);
         }
         if ((dirtyFlags & 0x5L) != 0) {
             // api target 1
@@ -171,8 +171,8 @@ public class MLoginBindingImpl extends MLoginBinding  {
     }
     // Listener Stub Implementations
     public static class OnClickListenerImpl implements android.view.View.OnClickListener{
-        private com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value;
-        public OnClickListenerImpl setValue(com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value) {
+        private com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value;
+        public OnClickListenerImpl setValue(com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value) {
             this.value = value;
             return value == null ? null : this;
         }
@@ -182,8 +182,8 @@ public class MLoginBindingImpl extends MLoginBinding  {
         }
     }
     public static class OnClickListenerImpl1 implements android.view.View.OnClickListener{
-        private com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value;
-        public OnClickListenerImpl1 setValue(com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value) {
+        private com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value;
+        public OnClickListenerImpl1 setValue(com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value) {
             this.value = value;
             return value == null ? null : this;
         }
@@ -193,8 +193,8 @@ public class MLoginBindingImpl extends MLoginBinding  {
         }
     }
     public static class OnClickListenerImpl2 implements android.view.View.OnClickListener{
-        private com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value;
-        public OnClickListenerImpl2 setValue(com.shopify.shopifyapp.loginsection.activity.LoginActivity.MyClickHandlers value) {
+        private com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value;
+        public OnClickListenerImpl2 setValue(com.kumaoni.blessings.loginsection.activity.LoginActivity.MyClickHandlers value) {
             this.value = value;
             return value == null ? null : this;
         }

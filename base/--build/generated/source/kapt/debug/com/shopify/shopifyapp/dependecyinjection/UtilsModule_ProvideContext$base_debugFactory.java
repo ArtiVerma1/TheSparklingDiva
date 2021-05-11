@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.dependecyinjection;
+package com.kumaoni.blessings.dependecyinjection;
 
 import android.content.Context;
 import dagger.internal.Factory;

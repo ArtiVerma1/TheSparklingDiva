@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -17,8 +17,8 @@ public class MAddresslistBindingImpl extends MAddresslistBinding  {
         sIncludes.setIncludes(0, 
             new String[] {"m_addresslist_main", "m_addressbottomsheet"},
             new int[] {1, 2},
-            new int[] {com.shopify.shopifyapp.R.layout.m_addresslist_main,
-                com.shopify.shopifyapp.R.layout.m_addressbottomsheet});
+            new int[] {com.kumaoni.blessings.R.layout.m_addresslist_main,
+                com.kumaoni.blessings.R.layout.m_addressbottomsheet});
         sViewsWithIds = null;
     }
     // views
@@ -34,8 +34,8 @@ public class MAddresslistBindingImpl extends MAddresslistBinding  {
     }
     private MAddresslistBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 2
-            , (com.shopify.shopifyapp.databinding.MAddressbottomsheetBinding) bindings[2]
-            , (com.shopify.shopifyapp.databinding.MAddresslistMainBinding) bindings[1]
+            , (com.kumaoni.blessings.databinding.MAddressbottomsheetBinding) bindings[2]
+            , (com.kumaoni.blessings.databinding.MAddresslistMainBinding) bindings[1]
             );
         this.mboundView0 = (androidx.coordinatorlayout.widget.CoordinatorLayout) bindings[0];
         this.mboundView0.setTag(null);
@@ -74,7 +74,7 @@ public class MAddresslistBindingImpl extends MAddresslistBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler) variable);
+            setHandler((com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler) variable);
         }
         else {
             variableSet = false;
@@ -82,7 +82,7 @@ public class MAddresslistBindingImpl extends MAddresslistBinding  {
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler Handler) {
+    public void setHandler(@Nullable com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x4L;
@@ -102,13 +102,13 @@ public class MAddresslistBindingImpl extends MAddresslistBinding  {
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeMainlist((com.shopify.shopifyapp.databinding.MAddresslistMainBinding) object, fieldId);
+                return onChangeMainlist((com.kumaoni.blessings.databinding.MAddresslistMainBinding) object, fieldId);
             case 1 :
-                return onChangeMainbottomsheet((com.shopify.shopifyapp.databinding.MAddressbottomsheetBinding) object, fieldId);
+                return onChangeMainbottomsheet((com.kumaoni.blessings.databinding.MAddressbottomsheetBinding) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeMainlist(com.shopify.shopifyapp.databinding.MAddresslistMainBinding Mainlist, int fieldId) {
+    private boolean onChangeMainlist(com.kumaoni.blessings.databinding.MAddresslistMainBinding Mainlist, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -117,7 +117,7 @@ public class MAddresslistBindingImpl extends MAddresslistBinding  {
         }
         return false;
     }
-    private boolean onChangeMainbottomsheet(com.shopify.shopifyapp.databinding.MAddressbottomsheetBinding Mainbottomsheet, int fieldId) {
+    private boolean onChangeMainbottomsheet(com.kumaoni.blessings.databinding.MAddressbottomsheetBinding Mainbottomsheet, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x2L;
@@ -134,7 +134,7 @@ public class MAddresslistBindingImpl extends MAddresslistBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.addresssection.activities.AddressList.ClickHandler handler = mHandler;
+        com.kumaoni.blessings.addresssection.activities.AddressList.ClickHandler handler = mHandler;
 
         if ((dirtyFlags & 0xcL) != 0) {
         }

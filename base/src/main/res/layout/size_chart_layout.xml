@@ -9,7 +9,7 @@
         android:background="@drawable/alert_dialog_shape"
         android:padding="10dp">
 
-        <com.shopify.shopifyapp.customviews.MageNativeTextView
+        <com.kumaoni.blessings.customviews.MageNativeTextView
             android:id="@+id/sizeChartTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

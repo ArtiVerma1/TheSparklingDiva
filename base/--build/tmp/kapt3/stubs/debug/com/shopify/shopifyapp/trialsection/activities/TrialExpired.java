@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.trialsection.activities;
+package com.kumaoni.blessings.trialsection.activities;
 
 import java.lang.System;
 

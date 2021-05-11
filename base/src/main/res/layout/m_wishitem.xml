@@ -6,7 +6,7 @@
 
         <variable
             name="commondata"
-            type="com.shopify.shopifyapp.basesection.models.CommanModel" />
+            type="com.kumaoni.blessings.basesection.models.CommanModel" />
         <variable
             name="product_id"
             type="String" />
@@ -21,7 +21,7 @@
 
         <variable
             name="handler"
-            type="com.shopify.shopifyapp.wishlistsection.adapters.WishListAdapter.ClickHandlers" />
+            type="com.kumaoni.blessings.wishlistsection.adapters.WishListAdapter.ClickHandlers" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -45,7 +45,7 @@
                 bind:layout_constraintDimensionRatio="H,1:1.2"
                 bind:layout_constraintTop_toTopOf="parent" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:background="@color/gray_color"
                 bind:layout_constraintTop_toBottomOf="@id/name" />
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/movetocart"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"

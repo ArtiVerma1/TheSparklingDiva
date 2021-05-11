@@ -1,10 +1,10 @@
-package com.shopify.shopifyapp.homesection.viewmodels;
+package com.kumaoni.blessings.homesection.viewmodels;
 
-import com.shopify.shopifyapp.homesection.adapters.CollectionGridAdapter;
-import com.shopify.shopifyapp.homesection.adapters.CollectionSliderAdapter;
-import com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter;
-import com.shopify.shopifyapp.homesection.adapters.ProductListAdapter;
-import com.shopify.shopifyapp.homesection.adapters.ProductSliderAdapter;
+import com.kumaoni.blessings.homesection.adapters.CollectionGridAdapter;
+import com.kumaoni.blessings.homesection.adapters.CollectionSliderAdapter;
+import com.kumaoni.blessings.homesection.adapters.ProductGridAdapter;
+import com.kumaoni.blessings.homesection.adapters.ProductListAdapter;
+import com.kumaoni.blessings.homesection.adapters.ProductSliderAdapter;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

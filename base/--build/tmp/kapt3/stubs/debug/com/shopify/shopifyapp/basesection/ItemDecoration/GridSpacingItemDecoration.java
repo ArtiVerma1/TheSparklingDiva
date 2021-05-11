@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.basesection.ItemDecoration;
+package com.kumaoni.blessings.basesection.ItemDecoration;
 
 import java.lang.System;
 

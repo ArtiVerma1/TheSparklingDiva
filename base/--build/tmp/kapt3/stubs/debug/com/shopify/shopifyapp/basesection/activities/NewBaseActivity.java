@@ -1,39 +1,39 @@
-package com.shopify.shopifyapp.basesection.activities;
+package com.kumaoni.blessings.basesection.activities;
 
 import java.lang.System;
 
 @kotlin.Metadata(mv = {1, 1, 16}, bv = {1, 0, 3}, k = 1, d1 = {"\u0000\u00c4\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0018\b\u0016\u0018\u00002\u00020\u00012\u00020\u0002B\u0005\u00a2\u0006\u0002\u0010\u0003J\u0006\u0010P\u001a\u00020QJ\u0010\u0010R\u001a\u00020Q2\u0006\u0010S\u001a\u00020TH\u0002J\u0010\u0010U\u001a\u00020\u000b2\u0006\u0010V\u001a\u00020\u000bH\u0002J\u0006\u0010W\u001a\u00020QJ\"\u0010X\u001a\u00020Q2\u0006\u0010Y\u001a\u00020\u000b2\u0006\u0010Z\u001a\u00020\u000b2\b\u0010[\u001a\u0004\u0018\u00010\\H\u0014J\u0012\u0010]\u001a\u00020Q2\b\u0010^\u001a\u0004\u0018\u00010_H\u0014J\u0010\u0010`\u001a\u00020a2\u0006\u0010b\u001a\u00020cH\u0016J\u0010\u0010d\u001a\u00020Q2\u0006\u0010e\u001a\u00020fH\u0016J\b\u0010g\u001a\u00020QH\u0014J\u0016\u0010h\u001a\u00020Q2\f\u0010i\u001a\b\u0012\u0004\u0012\u00020k0jH\u0002J\u001e\u0010l\u001a\u00020Q2\u0006\u0010m\u001a\u00020n2\u0006\u0010o\u001a\u00020n2\u0006\u0010p\u001a\u00020nJ\u0016\u0010q\u001a\u00020r2\u0006\u0010e\u001a\u00020r2\u0006\u0010s\u001a\u00020nJ\u000e\u0010t\u001a\u00020Q2\u0006\u0010u\u001a\u00020nJ\u000e\u0010v\u001a\u00020Q2\u0006\u0010w\u001a\u00020nJ\u0016\u0010x\u001a\u00020Q2\u0006\u0010y\u001a\u00020n2\u0006\u0010z\u001a\u00020nJ\u001e\u0010{\u001a\u00020Q2\u0006\u0010|\u001a\u00020n2\u0006\u0010}\u001a\u00020n2\u0006\u0010~\u001a\u00020nJ\b\u0010\u007f\u001a\u00020QH\u0002J\u0010\u0010\u0080\u0001\u001a\u00020Q2\u0007\u0010\u0081\u0001\u001a\u00020nJ\t\u0010\u0082\u0001\u001a\u00020QH\u0004J\u0007\u0010\u0083\u0001\u001a\u00020QJ\u0018\u0010\u0084\u0001\u001a\u00020Q2\r\u0010\u0085\u0001\u001a\b\u0012\u0004\u0012\u00020k0jH\u0002J\u0012\u0010\u0086\u0001\u001a\u00020Q2\u0007\u0010\u0087\u0001\u001a\u00020nH\u0004J\u0012\u0010\u0088\u0001\u001a\u00020Q2\u0007\u0010\u0089\u0001\u001a\u00020nH\u0002R\u001e\u0010\u0004\u001a\u00020\u00058\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0006\u0010\u0007\"\u0004\b\b\u0010\tR\u0014\u0010\n\u001a\u00020\u000b8BX\u0082\u0004\u00a2\u0006\u0006\u001a\u0004\b\f\u0010\rR\u001a\u0010\u000e\u001a\u00020\u000fX\u0086.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0010\u0010\u0011\"\u0004\b\u0012\u0010\u0013R\u001e\u0010\u0014\u001a\u00020\u00158\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0017\"\u0004\b\u0018\u0010\u0019R\u001e\u0010\u001a\u001a\u00020\u001b8\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u001d\"\u0004\b\u001e\u0010\u001fR\u001a\u0010 \u001a\u00020\u000fX\u0086.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b!\u0010\u0011\"\u0004\b\"\u0010\u0013R\u0010\u0010#\u001a\u0004\u0018\u00010$X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0010\u0010%\u001a\u0004\u0018\u00010&X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\"\u0010)\u001a\u0004\u0018\u00010(2\b\u0010\'\u001a\u0004\u0018\u00010(@BX\u0086\u000e\u00a2\u0006\b\n\u0000\u001a\u0004\b*\u0010+R\u001e\u0010,\u001a\u00020-8\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b.\u0010/\"\u0004\b0\u00101R\u001e\u00102\u001a\u0002038\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b4\u00105\"\u0004\b6\u00107R\u001e\u00108\u001a\u0002098\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b:\u0010;\"\u0004\b<\u0010=R\u001e\u0010>\u001a\u00020?8\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b@\u0010A\"\u0004\bB\u0010CR\u001e\u0010D\u001a\u00020-8\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\bE\u0010/\"\u0004\bF\u00101R\u001e\u0010G\u001a\u00020H8\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\bI\u0010J\"\u0004\bK\u0010LR\u001a\u0010M\u001a\u00020\u000fX\u0086.\u00a2\u0006\u000e\n\u0000\u001a\u0004\bN\u0010\u0011\"\u0004\bO\u0010\u0013\u00a8\u0006\u008a\u0001"}, d2 = {"Lcom/shopify/shopifyapp/basesection/activities/NewBaseActivity;", "Landroidx/appcompat/app/AppCompatActivity;", "Lcom/shopify/shopifyapp/basesection/fragments/BaseFragment$OnFragmentInteractionListener;", "()V", "adapter", "Lcom/shopify/shopifyapp/basesection/adapters/RecylerAdapter;", "getAdapter", "()Lcom/shopify/shopifyapp/basesection/adapters/RecylerAdapter;", "setAdapter", "(Lcom/shopify/shopifyapp/basesection/adapters/RecylerAdapter;)V", "cartCount", "", "getCartCount", "()I", "cartitem", "Landroid/view/MenuItem;", "getCartitem", "()Landroid/view/MenuItem;", "setCartitem", "(Landroid/view/MenuItem;)V", "drawer_layout", "Landroidx/drawerlayout/widget/DrawerLayout;", "getDrawer_layout", "()Landroidx/drawerlayout/widget/DrawerLayout;", "setDrawer_layout", "(Landroidx/drawerlayout/widget/DrawerLayout;)V", "fab", "Lcom/google/android/material/floatingactionbutton/FloatingActionButton;", "getFab", "()Lcom/google/android/material/floatingactionbutton/FloatingActionButton;", "setFab", "(Lcom/google/android/material/floatingactionbutton/FloatingActionButton;)V", "item", "getItem", "setItem", "listDialog", "Landroid/app/Dialog;", "mDrawerToggle", "Landroidx/appcompat/app/ActionBarDrawerToggle;", "<set-?>", "Lcom/shopify/shopifyapp/basesection/viewmodels/LeftMenuViewModel;", "model", "getModel", "()Lcom/shopify/shopifyapp/basesection/viewmodels/LeftMenuViewModel;", "search", "Lcom/shopify/shopifyapp/customviews/MageNativeTextView;", "getSearch", "()Lcom/shopify/shopifyapp/customviews/MageNativeTextView;", "setSearch", "(Lcom/shopify/shopifyapp/customviews/MageNativeTextView;)V", "searchsection", "Landroid/widget/RelativeLayout;", "getSearchsection", "()Landroid/widget/RelativeLayout;", "setSearchsection", "(Landroid/widget/RelativeLayout;)V", "toolbar", "Landroidx/appcompat/widget/Toolbar;", "getToolbar", "()Landroidx/appcompat/widget/Toolbar;", "setToolbar", "(Landroidx/appcompat/widget/Toolbar;)V", "toolimage", "Landroid/widget/ImageView;", "getToolimage", "()Landroid/widget/ImageView;", "setToolimage", "(Landroid/widget/ImageView;)V", "tooltext", "getTooltext", "setTooltext", "viewModelFactory", "Lcom/shopify/shopifyapp/utils/ViewModelFactory;", "getViewModelFactory", "()Lcom/shopify/shopifyapp/utils/ViewModelFactory;", "setViewModelFactory", "(Lcom/shopify/shopifyapp/utils/ViewModelFactory;)V", "wishitem", "getWishitem", "setWishitem", "closePopUp", "", "consumeResponse", "reponse", "Lcom/shopify/shopifyapp/utils/ApiResponse;", "dpToPx", "dp", "getCurrency", "onActivityResult", "requestCode", "resultCode", "data", "Landroid/content/Intent;", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onCreateOptionsMenu", "", "menu", "Landroid/view/Menu;", "onFragmentInteraction", "view", "Landroid/view/View;", "onResume", "preparePopUp", "currencyCodes", "", "Lcom/shopify/buy3/Storefront$CurrencyCode;", "setIconColors", "countback", "", "counttext", "iconcolor", "setLayout", "Landroidx/recyclerview/widget/RecyclerView;", "orientation", "setLogoImage", "url", "setPanelBackgroundColor", "color", "setSearchOption", "type", "placeholder", "setSearchOptions", "searchback", "searchtext", "searhcborder", "setToggle", "setWishList", "visiblity", "showBackButton", "showHumburger", "showPopUp", "enabledPresentmentCurrencies", "showTittle", "tittle", "showToast", "msg", "base_debug"})
-public class NewBaseActivity extends androidx.appcompat.app.AppCompatActivity implements com.shopify.shopifyapp.basesection.fragments.BaseFragment.OnFragmentInteractionListener {
+public class NewBaseActivity extends androidx.appcompat.app.AppCompatActivity implements com.kumaoni.blessings.basesection.fragments.BaseFragment.OnFragmentInteractionListener {
     @org.jetbrains.annotations.NotNull()
-    @butterknife.BindView(value = com.shopify.shopifyapp.R2.id.toolbar)
+    @butterknife.BindView(value = com.kumaoni.blessings.R2.id.toolbar)
     public androidx.appcompat.widget.Toolbar toolbar;
     @org.jetbrains.annotations.NotNull()
-    @butterknife.BindView(value = com.shopify.shopifyapp.R2.id.fab)
+    @butterknife.BindView(value = com.kumaoni.blessings.R2.id.fab)
     public com.google.android.material.floatingactionbutton.FloatingActionButton fab;
     @org.jetbrains.annotations.NotNull()
-    @butterknife.BindView(value = com.shopify.shopifyapp.R2.id.toolimage)
+    @butterknife.BindView(value = com.kumaoni.blessings.R2.id.toolimage)
     public android.widget.ImageView toolimage;
     @org.jetbrains.annotations.NotNull()
-    @butterknife.BindView(value = com.shopify.shopifyapp.R2.id.tooltext)
-    public com.shopify.shopifyapp.customviews.MageNativeTextView tooltext;
+    @butterknife.BindView(value = com.kumaoni.blessings.R2.id.tooltext)
+    public com.kumaoni.blessings.customviews.MageNativeTextView tooltext;
     @org.jetbrains.annotations.NotNull()
-    @butterknife.BindView(value = com.shopify.shopifyapp.R2.id.searchsection)
+    @butterknife.BindView(value = com.kumaoni.blessings.R2.id.searchsection)
     public android.widget.RelativeLayout searchsection;
     @org.jetbrains.annotations.NotNull()
-    @butterknife.BindView(value = com.shopify.shopifyapp.R2.id.drawer_layout)
+    @butterknife.BindView(value = com.kumaoni.blessings.R2.id.drawer_layout)
     public androidx.drawerlayout.widget.DrawerLayout drawer_layout;
     @org.jetbrains.annotations.NotNull()
-    @butterknife.BindView(value = com.shopify.shopifyapp.R2.id.search)
-    public com.shopify.shopifyapp.customviews.MageNativeTextView search;
+    @butterknife.BindView(value = com.kumaoni.blessings.R2.id.search)
+    public com.kumaoni.blessings.customviews.MageNativeTextView search;
     private androidx.appcompat.app.ActionBarDrawerToggle mDrawerToggle;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.shopify.shopifyapp.utils.ViewModelFactory viewModelFactory;
+    public com.kumaoni.blessings.utils.ViewModelFactory viewModelFactory;
     @org.jetbrains.annotations.Nullable()
-    private com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel model;
+    private com.kumaoni.blessings.basesection.viewmodels.LeftMenuViewModel model;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.shopify.shopifyapp.basesection.adapters.RecylerAdapter adapter;
+    public com.kumaoni.blessings.basesection.adapters.RecylerAdapter adapter;
     private android.app.Dialog listDialog;
     @org.jetbrains.annotations.NotNull()
     public android.view.MenuItem item;
@@ -71,12 +71,12 @@ public class NewBaseActivity extends androidx.appcompat.app.AppCompatActivity im
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.shopify.shopifyapp.customviews.MageNativeTextView getTooltext() {
+    public final com.kumaoni.blessings.customviews.MageNativeTextView getTooltext() {
         return null;
     }
     
     public final void setTooltext(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.customviews.MageNativeTextView p0) {
+    com.kumaoni.blessings.customviews.MageNativeTextView p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
@@ -98,35 +98,35 @@ public class NewBaseActivity extends androidx.appcompat.app.AppCompatActivity im
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.shopify.shopifyapp.customviews.MageNativeTextView getSearch() {
+    public final com.kumaoni.blessings.customviews.MageNativeTextView getSearch() {
         return null;
     }
     
     public final void setSearch(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.customviews.MageNativeTextView p0) {
+    com.kumaoni.blessings.customviews.MageNativeTextView p0) {
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.shopify.shopifyapp.utils.ViewModelFactory getViewModelFactory() {
+    public final com.kumaoni.blessings.utils.ViewModelFactory getViewModelFactory() {
         return null;
     }
     
     public final void setViewModelFactory(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.utils.ViewModelFactory p0) {
+    com.kumaoni.blessings.utils.ViewModelFactory p0) {
     }
     
     @org.jetbrains.annotations.Nullable()
-    public final com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel getModel() {
+    public final com.kumaoni.blessings.basesection.viewmodels.LeftMenuViewModel getModel() {
         return null;
     }
     
     @org.jetbrains.annotations.NotNull()
-    public final com.shopify.shopifyapp.basesection.adapters.RecylerAdapter getAdapter() {
+    public final com.kumaoni.blessings.basesection.adapters.RecylerAdapter getAdapter() {
         return null;
     }
     
     public final void setAdapter(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.basesection.adapters.RecylerAdapter p0) {
+    com.kumaoni.blessings.basesection.adapters.RecylerAdapter p0) {
     }
     
     private final int getCartCount() {
@@ -183,7 +183,7 @@ public class NewBaseActivity extends androidx.appcompat.app.AppCompatActivity im
     android.view.View view) {
     }
     
-    private final void consumeResponse(com.shopify.shopifyapp.utils.ApiResponse reponse) {
+    private final void consumeResponse(com.kumaoni.blessings.utils.ApiResponse reponse) {
     }
     
     private final void showToast(java.lang.String msg) {

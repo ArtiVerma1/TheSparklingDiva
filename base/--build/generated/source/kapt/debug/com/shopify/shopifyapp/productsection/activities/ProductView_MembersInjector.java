@@ -1,7 +1,7 @@
-package com.shopify.shopifyapp.productsection.activities;
+package com.kumaoni.blessings.productsection.activities;
 
-import com.shopify.shopifyapp.productsection.adapters.VariantAdapter;
-import com.shopify.shopifyapp.utils.ViewModelFactory;
+import com.kumaoni.blessings.productsection.adapters.VariantAdapter;
+import com.kumaoni.blessings.utils.ViewModelFactory;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.basesection.models;
+package com.kumaoni.blessings.basesection.models;
 
 import java.lang.System;
 

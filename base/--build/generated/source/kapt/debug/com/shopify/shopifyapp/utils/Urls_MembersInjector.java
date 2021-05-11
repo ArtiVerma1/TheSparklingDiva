@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.utils;
+package com.kumaoni.blessings.utils;
 
-import com.shopify.shopifyapp.repositories.Repository;
+import com.kumaoni.blessings.repositories.Repository;
 import dagger.MembersInjector;
 import javax.annotation.Generated;
 import javax.inject.Provider;

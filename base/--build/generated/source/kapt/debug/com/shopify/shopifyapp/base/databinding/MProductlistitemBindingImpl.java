@@ -1,6 +1,6 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -17,17 +17,17 @@ public class MProductlistitemBindingImpl extends MProductlistitemBinding  {
         sIncludes.setIncludes(0, 
             new String[] {"m_productmain", "m_bottomsheet"},
             new int[] {1, 2},
-            new int[] {com.shopify.shopifyapp.R.layout.m_productmain,
-                com.shopify.shopifyapp.R.layout.m_bottomsheet});
+            new int[] {com.kumaoni.blessings.R.layout.m_productmain,
+                com.kumaoni.blessings.R.layout.m_bottomsheet});
         sViewsWithIds = null;
     }
     // views
     @Nullable
-    private final com.shopify.shopifyapp.databinding.MProductmainBinding mboundView0;
+    private final com.kumaoni.blessings.databinding.MProductmainBinding mboundView0;
     @NonNull
     private final androidx.coordinatorlayout.widget.CoordinatorLayout mboundView01;
     @Nullable
-    private final com.shopify.shopifyapp.databinding.MBottomsheetBinding mboundView02;
+    private final com.kumaoni.blessings.databinding.MBottomsheetBinding mboundView02;
     // variables
     // values
     // listeners
@@ -39,11 +39,11 @@ public class MProductlistitemBindingImpl extends MProductlistitemBinding  {
     private MProductlistitemBindingImpl(androidx.databinding.DataBindingComponent bindingComponent, View root, Object[] bindings) {
         super(bindingComponent, root, 0
             );
-        this.mboundView0 = (com.shopify.shopifyapp.databinding.MProductmainBinding) bindings[1];
+        this.mboundView0 = (com.kumaoni.blessings.databinding.MProductmainBinding) bindings[1];
         setContainedBinding(this.mboundView0);
         this.mboundView01 = (androidx.coordinatorlayout.widget.CoordinatorLayout) bindings[0];
         this.mboundView01.setTag(null);
-        this.mboundView02 = (com.shopify.shopifyapp.databinding.MBottomsheetBinding) bindings[2];
+        this.mboundView02 = (com.kumaoni.blessings.databinding.MBottomsheetBinding) bindings[2];
         setContainedBinding(this.mboundView02);
         setRootTag(root);
         // listeners
@@ -80,7 +80,7 @@ public class MProductlistitemBindingImpl extends MProductlistitemBinding  {
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.shopify.shopifyapp.productsection.activities.ProductList.Handler) variable);
+            setHandler((com.kumaoni.blessings.productsection.activities.ProductList.Handler) variable);
         }
         else {
             variableSet = false;
@@ -88,7 +88,7 @@ public class MProductlistitemBindingImpl extends MProductlistitemBinding  {
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.shopify.shopifyapp.productsection.activities.ProductList.Handler Handler) {
+    public void setHandler(@Nullable com.kumaoni.blessings.productsection.activities.ProductList.Handler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x1L;
@@ -118,7 +118,7 @@ public class MProductlistitemBindingImpl extends MProductlistitemBinding  {
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.productsection.activities.ProductList.Handler handler = mHandler;
+        com.kumaoni.blessings.productsection.activities.ProductList.Handler handler = mHandler;
 
         if ((dirtyFlags & 0x3L) != 0) {
         }

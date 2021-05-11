@@ -1,12 +1,12 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MCartlistBindingImpl extends MCartlistBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
+public class MCartlistBindingImpl extends MCartlistBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -42,14 +42,14 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
             , (androidx.recyclerview.widget.RecyclerView) bindings[7]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[10]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[12]
-            , (com.shopify.shopifyapp.customviews.MageNativeButton) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeButton) bindings[5]
             , (androidx.core.widget.NestedScrollView) bindings[6]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[2]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[1]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[8]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[11]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[2]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[1]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[8]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[11]
             );
         this.mboundView0 = (androidx.constraintlayout.widget.ConstraintLayout) bindings[0];
         this.mboundView0.setTag(null);
@@ -60,7 +60,7 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
         this.total.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback31 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback31 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -86,10 +86,10 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.handler == variableId) {
-            setHandler((com.shopify.shopifyapp.cartsection.activities.CartList.ClickHandler) variable);
+            setHandler((com.kumaoni.blessings.cartsection.activities.CartList.ClickHandler) variable);
         }
         else if (BR.bottomdata == variableId) {
-            setBottomdata((com.shopify.shopifyapp.cartsection.models.CartBottomData) variable);
+            setBottomdata((com.kumaoni.blessings.cartsection.models.CartBottomData) variable);
         }
         else {
             variableSet = false;
@@ -97,7 +97,7 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
             return variableSet;
     }
 
-    public void setHandler(@Nullable com.shopify.shopifyapp.cartsection.activities.CartList.ClickHandler Handler) {
+    public void setHandler(@Nullable com.kumaoni.blessings.cartsection.activities.CartList.ClickHandler Handler) {
         this.mHandler = Handler;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -105,7 +105,7 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
         notifyPropertyChanged(BR.handler);
         super.requestRebind();
     }
-    public void setBottomdata(@Nullable com.shopify.shopifyapp.cartsection.models.CartBottomData Bottomdata) {
+    public void setBottomdata(@Nullable com.kumaoni.blessings.cartsection.models.CartBottomData Bottomdata) {
         updateRegistration(0, Bottomdata);
         this.mBottomdata = Bottomdata;
         synchronized(this) {
@@ -119,11 +119,11 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeBottomdata((com.shopify.shopifyapp.cartsection.models.CartBottomData) object, fieldId);
+                return onChangeBottomdata((com.kumaoni.blessings.cartsection.models.CartBottomData) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeBottomdata(com.shopify.shopifyapp.cartsection.models.CartBottomData Bottomdata, int fieldId) {
+    private boolean onChangeBottomdata(com.kumaoni.blessings.cartsection.models.CartBottomData Bottomdata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -146,10 +146,10 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.cartsection.activities.CartList.ClickHandler handler = mHandler;
+        com.kumaoni.blessings.cartsection.activities.CartList.ClickHandler handler = mHandler;
         java.lang.String bottomdataGrandtotal = null;
         java.lang.String bottomdataTax = null;
-        com.shopify.shopifyapp.cartsection.models.CartBottomData bottomdata = mBottomdata;
+        com.kumaoni.blessings.cartsection.models.CartBottomData bottomdata = mBottomdata;
         java.lang.String bottomdataSubtotal = null;
         java.lang.String bottomdataSubtotaltext = null;
 
@@ -197,9 +197,9 @@ public class MCartlistBindingImpl extends MCartlistBinding implements com.shopif
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
         // localize variables for thread safety
         // handler
-        com.shopify.shopifyapp.cartsection.activities.CartList.ClickHandler handler = mHandler;
+        com.kumaoni.blessings.cartsection.activities.CartList.ClickHandler handler = mHandler;
         // bottomdata
-        com.shopify.shopifyapp.cartsection.models.CartBottomData bottomdata = mBottomdata;
+        com.kumaoni.blessings.cartsection.models.CartBottomData bottomdata = mBottomdata;
         // handler != null
         boolean handlerJavaLangObjectNull = false;
 

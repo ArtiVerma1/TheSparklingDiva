@@ -7,7 +7,7 @@
 
         <variable
             name="category"
-            type="com.shopify.shopifyapp.homesection.models.CategoryCircle" />
+            type="com.kumaoni.blessings.homesection.models.CategoryCircle" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,7 +45,7 @@
                     bind:imageUrl="@{category.cat_image_one}" />
             </androidx.cardview.widget.CardView>
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_one"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -89,7 +89,7 @@
                     bind:imageUrl="@{category.cat_image_two}" />
             </androidx.cardview.widget.CardView>
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_two"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -132,7 +132,7 @@
                     bind:imageUrl="@{category.cat_image_three}" />
             </androidx.cardview.widget.CardView>
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_three"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -175,7 +175,7 @@
                     bind:imageUrl="@{category.cat_image_four}" />
             </androidx.cardview.widget.CardView>
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_four"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -218,7 +218,7 @@
                     bind:imageUrl="@{category.cat_image_five}" />
             </androidx.cardview.widget.CardView>
 
-            <com.shopify.shopifyapp.customviews.MageNativeTextView
+            <com.kumaoni.blessings.customviews.MageNativeTextView
                 android:id="@+id/cat_text_five"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"

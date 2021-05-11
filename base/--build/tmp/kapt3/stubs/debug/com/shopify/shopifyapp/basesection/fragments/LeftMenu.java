@@ -1,30 +1,30 @@
-package com.shopify.shopifyapp.basesection.fragments;
+package com.kumaoni.blessings.basesection.fragments;
 
 import java.lang.System;
 
 @kotlin.Metadata(mv = {1, 1, 16}, bv = {1, 0, 3}, k = 1, d1 = {"\u0000R\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\u0018\u0000 !2\u00020\u0001:\u0002 !B\u0005\u00a2\u0006\u0002\u0010\u0002J\u001c\u0010\r\u001a\u00020\u000e2\u0012\u0010\u000f\u001a\u000e\u0012\u0004\u0012\u00020\u0011\u0012\u0004\u0012\u00020\u00110\u0010H\u0002J\u0010\u0010\u0012\u001a\u00020\u000e2\u0006\u0010\u0013\u001a\u00020\u0014H\u0016J&\u0010\u0015\u001a\u0004\u0018\u00010\u00162\u0006\u0010\u0017\u001a\u00020\u00182\b\u0010\u0019\u001a\u0004\u0018\u00010\u001a2\b\u0010\u001b\u001a\u0004\u0018\u00010\u001cH\u0016J\b\u0010\u001d\u001a\u00020\u000eH\u0016J\b\u0010\u001e\u001a\u00020\u000eH\u0016J\b\u0010\u001f\u001a\u00020\u000eH\u0016R\u0010\u0010\u0003\u001a\u0004\u0018\u00010\u0004X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u0005\u001a\u0004\u0018\u00010\u0006X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u001e\u0010\u0007\u001a\u00020\b8\u0006@\u0006X\u0087.\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\t\u0010\n\"\u0004\b\u000b\u0010\f\u00a8\u0006\""}, d2 = {"Lcom/shopify/shopifyapp/basesection/fragments/LeftMenu;", "Lcom/shopify/shopifyapp/basesection/fragments/BaseFragment;", "()V", "binding", "Lcom/shopify/shopifyapp/base/databinding/MLeftmenufragmentBinding;", "currentactivity", "Landroid/app/Activity;", "viewModelFactory", "Lcom/shopify/shopifyapp/utils/ViewModelFactory;", "getViewModelFactory", "()Lcom/shopify/shopifyapp/utils/ViewModelFactory;", "setViewModelFactory", "(Lcom/shopify/shopifyapp/utils/ViewModelFactory;)V", "consumeResponse", "", "hash", "Ljava/util/HashMap;", "", "onAttach", "context", "Landroid/content/Context;", "onCreateView", "Landroid/view/View;", "inflater", "Landroid/view/LayoutInflater;", "container", "Landroid/view/ViewGroup;", "savedInstanceState", "Landroid/os/Bundle;", "onDestroyView", "onDetach", "onResume", "ClickHandlers", "Companion", "base_debug"})
-public final class LeftMenu extends com.shopify.shopifyapp.basesection.fragments.BaseFragment {
-    private com.shopify.shopifyapp.databinding.MLeftmenufragmentBinding binding;
+public final class LeftMenu extends com.kumaoni.blessings.basesection.fragments.BaseFragment {
+    private com.kumaoni.blessings.databinding.MLeftmenufragmentBinding binding;
     @org.jetbrains.annotations.NotNull()
     @javax.inject.Inject()
-    public com.shopify.shopifyapp.utils.ViewModelFactory viewModelFactory;
+    public com.kumaoni.blessings.utils.ViewModelFactory viewModelFactory;
     private android.app.Activity currentactivity;
     @org.jetbrains.annotations.NotNull()
     public static androidx.appcompat.widget.LinearLayoutCompat menulist;
     private static android.content.Context currentcontext;
     @org.jetbrains.annotations.NotNull()
-    protected static com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel leftmenu;
-    private static com.shopify.shopifyapp.basesection.models.MenuData menuData;
-    public static final com.shopify.shopifyapp.basesection.fragments.LeftMenu.Companion Companion = null;
+    protected static com.kumaoni.blessings.basesection.viewmodels.LeftMenuViewModel leftmenu;
+    private static com.kumaoni.blessings.basesection.models.MenuData menuData;
+    public static final com.kumaoni.blessings.basesection.fragments.LeftMenu.Companion Companion = null;
     private java.util.HashMap _$_findViewCache;
     
     @org.jetbrains.annotations.NotNull()
-    public final com.shopify.shopifyapp.utils.ViewModelFactory getViewModelFactory() {
+    public final com.kumaoni.blessings.utils.ViewModelFactory getViewModelFactory() {
         return null;
     }
     
     public final void setViewModelFactory(@org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.utils.ViewModelFactory p0) {
+    com.kumaoni.blessings.utils.ViewModelFactory p0) {
     }
     
     @org.jetbrains.annotations.Nullable()
@@ -68,7 +68,7 @@ public final class LeftMenu extends com.shopify.shopifyapp.basesection.fragments
         
         public final void getMenu(@org.jetbrains.annotations.NotNull()
         android.view.View view, @org.jetbrains.annotations.NotNull()
-        com.shopify.shopifyapp.basesection.models.MenuData menudata) {
+        com.kumaoni.blessings.basesection.models.MenuData menudata) {
         }
         
         public final void expandMenu(@org.jetbrains.annotations.NotNull()
@@ -107,12 +107,12 @@ public final class LeftMenu extends com.shopify.shopifyapp.basesection.fragments
         }
         
         @org.jetbrains.annotations.NotNull()
-        protected final com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel getLeftmenu() {
+        protected final com.kumaoni.blessings.basesection.viewmodels.LeftMenuViewModel getLeftmenu() {
             return null;
         }
         
         protected final void setLeftmenu(@org.jetbrains.annotations.NotNull()
-        com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel p0) {
+        com.kumaoni.blessings.basesection.viewmodels.LeftMenuViewModel p0) {
         }
         
         public final void renderSuccessResponse(@org.jetbrains.annotations.NotNull()

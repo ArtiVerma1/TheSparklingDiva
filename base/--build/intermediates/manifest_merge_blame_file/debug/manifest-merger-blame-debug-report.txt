@@ -1,7 +1,7 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    xmlns:dist="http://schemas.android.com/apk/distribution"
-4    package="com.shopify.shopifyapp"
+4    package="com.kumaoni.blessings"
 5    android:versionCode="1"
 6    android:versionName="1.0" >
 7
@@ -83,7 +83,7 @@
 45
 46    <application
 46-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:12:5-113:19
-47        android:name="com.shopify.shopifyapp.MyApplication"
+47        android:name="com.kumaoni.blessings.MyApplication"
 47-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:13:9-60
 48        android:allowBackup="true"
 48-->[com.github.smarteist:autoimageslider:1.3.2] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/f5391f4d2a33926d7fdba25b50a58144/jetified-autoimageslider-1.3.2/AndroidManifest.xml:12:9-35
@@ -103,7 +103,7 @@
 56-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:18:9-40
 57        android:usesCleartextTraffic="true" >
 57-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:19:9-44
-58        <service android:name="com.shopify.shopifyapp.notificationsection.FirebaseInstanceIDService" >
+58        <service android:name="com.kumaoni.blessings.notificationsection.FirebaseInstanceIDService" >
 58-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:20:9-24:19
 58-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:20:18-101
 59            <intent-filter>
@@ -113,7 +113,7 @@
 60-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:22:25-77
 61            </intent-filter>
 62        </service>
-63        <service android:name="com.shopify.shopifyapp.notificationsection.FirebaseMessagingService" >
+63        <service android:name="com.kumaoni.blessings.notificationsection.FirebaseMessagingService" >
 63-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:25:9-29:19
 63-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:25:18-100
 64            <intent-filter>
@@ -125,7 +125,7 @@
 67        </service>
 68        <service
 68-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:30:9-34:39
-69            android:name="com.shopify.shopifyapp.jobservicessection.JobScheduler"
+69            android:name="com.kumaoni.blessings.jobservicessection.JobScheduler"
 69-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:31:13-82
 70            android:enabled="true"
 70-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:33:13-35
@@ -134,7 +134,7 @@
 72            android:permission="android.permission.BIND_JOB_SERVICE" />
 72-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:32:13-69
 73
-74        <activity android:name="com.shopify.shopifyapp.basesection.activities.Splash" >
+74        <activity android:name="com.kumaoni.blessings.basesection.activities.Splash" >
 74-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:36:9-52:20
 74-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:36:19-86
 75            <intent-filter>
@@ -171,76 +171,76 @@
 90        </activity>
 91        <activity
 91-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:53:9-55:76
-92            android:name="com.shopify.shopifyapp.addresssection.activities.AddressList"
+92            android:name="com.kumaoni.blessings.addresssection.activities.AddressList"
 92-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:54:13-88
 93            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 93-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:55:13-73
-94        <activity android:name="com.shopify.shopifyapp.basesection.activities.BaseActivity" />
+94        <activity android:name="com.kumaoni.blessings.basesection.activities.BaseActivity" />
 94-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:56:9-95
 94-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:56:19-92
-95        <activity android:name="com.shopify.shopifyapp.basesection.activities.Weblink" />
+95        <activity android:name="com.kumaoni.blessings.basesection.activities.Weblink" />
 95-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:57:9-90
 95-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:57:19-87
-96        <activity android:name="com.shopify.shopifyapp.basesection.activities.NewBaseActivity" />
+96        <activity android:name="com.kumaoni.blessings.basesection.activities.NewBaseActivity" />
 96-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:58:9-98
 96-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:58:19-95
 97        <activity
 97-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:59:9-61:46
-98            android:name="com.shopify.shopifyapp.productsection.activities.ProductList"
+98            android:name="com.kumaoni.blessings.productsection.activities.ProductList"
 98-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:60:13-88
 99            android:launchMode="singleTop" />
 99-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:61:13-43
 100        <activity
 100-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:62:9-64:46
-101            android:name="com.shopify.shopifyapp.productsection.activities.ProductView"
+101            android:name="com.kumaoni.blessings.productsection.activities.ProductView"
 101-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:63:13-88
 102            android:launchMode="singleTop" />
 102-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:64:13-43
 103        <activity
 103-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:65:9-67:46
-104            android:name="com.shopify.shopifyapp.collectionsection.activities.CollectionList"
+104            android:name="com.kumaoni.blessings.collectionsection.activities.CollectionList"
 104-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:66:13-94
 105            android:launchMode="singleTop" />
 105-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:67:13-43
 106        <activity
 106-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:68:9-70:46
-107            android:name="com.shopify.shopifyapp.wishlistsection.activities.WishList"
+107            android:name="com.kumaoni.blessings.wishlistsection.activities.WishList"
 107-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:69:13-86
 108            android:launchMode="singleTop" />
 108-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:70:13-43
 109        <activity
 109-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:71:9-73:46
-110            android:name="com.shopify.shopifyapp.cartsection.activities.CartList"
+110            android:name="com.kumaoni.blessings.cartsection.activities.CartList"
 110-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:72:13-82
 111            android:launchMode="singleTop" />
 111-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:73:13-43
 112        <activity
 112-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:74:9-76:46
-113            android:name="com.shopify.shopifyapp.ordersection.activities.OrderList"
+113            android:name="com.kumaoni.blessings.ordersection.activities.OrderList"
 113-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:75:13-84
 114            android:launchMode="singleTop" />
 114-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:76:13-43
 115        <activity
 115-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:77:9-79:46
-116            android:name="com.shopify.shopifyapp.searchsection.activities.AutoSearch"
+116            android:name="com.kumaoni.blessings.searchsection.activities.AutoSearch"
 116-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:78:13-86
 117            android:launchMode="singleTop" />
 117-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:79:13-43
-118        <activity android:name="com.shopify.shopifyapp.checkoutsection.activities.CheckoutWeblink" />
+118        <activity android:name="com.kumaoni.blessings.checkoutsection.activities.CheckoutWeblink" />
 118-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:80:9-102
 118-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:80:19-99
 119        <activity
 119-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:81:9-83:47
-120            android:name="com.shopify.shopifyapp.trialsection.activities.TrialExpired"
+120            android:name="com.kumaoni.blessings.trialsection.activities.TrialExpired"
 120-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:82:13-87
 121            android:launchMode="singleTask" />
 121-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:83:13-44
-122        <activity android:name="com.shopify.shopifyapp.homesection.activities.HomePage" />
+122        <activity android:name="com.kumaoni.blessings.homesection.activities.HomePage" />
 122-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:84:9-91
 122-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:84:19-88
 123        <activity
 123-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:85:9-88:76
-124            android:name="com.shopify.shopifyapp.loginsection.activity.LoginActivity"
+124            android:name="com.kumaoni.blessings.loginsection.activity.LoginActivity"
 124-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:86:13-86
 125            android:launchMode="singleTop"
 125-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:87:13-43
@@ -248,7 +248,7 @@
 126-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:88:13-73
 127        <activity
 127-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:89:9-92:76
-128            android:name="com.shopify.shopifyapp.userprofilesection.activities.UserProfile"
+128            android:name="com.kumaoni.blessings.userprofilesection.activities.UserProfile"
 128-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:90:13-92
 129            android:launchMode="singleTop"
 129-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:91:13-43
@@ -256,7 +256,7 @@
 130-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:92:13-73
 131        <activity
 131-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:93:9-96:76
-132            android:name="com.shopify.shopifyapp.loginsection.activity.RegistrationActivity"
+132            android:name="com.kumaoni.blessings.loginsection.activity.RegistrationActivity"
 132-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:94:13-93
 133            android:launchMode="singleTop"
 133-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:95:13-43
@@ -264,7 +264,7 @@
 134-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:96:13-73
 135        <activity
 135-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:97:9-104:15
-136            android:name="com.shopify.shopifyapp.searchsection.activities.SearchByScanner"
+136            android:name="com.kumaoni.blessings.searchsection.activities.SearchByScanner"
 136-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:98:13-91
 137            android:label="@string/app_name"
 137-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:99:13-45
@@ -278,7 +278,7 @@
 141-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:103:13-60
 142        <activity
 142-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:105:9-112:15
-143            android:name="com.shopify.shopifyapp.livepreviewsection.LivePreview"
+143            android:name="com.kumaoni.blessings.livepreviewsection.LivePreview"
 143-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:106:13-81
 144            android:label="@string/app_name"
 144-->/home/cedcoss/Documents/NewShopifyApp/base/src/main/AndroidManifest.xml:107:13-45
@@ -496,7 +496,7 @@
 259-->[com.google.firebase:firebase-common:19.3.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/ab41160b4b656972f14f20b1a8af0014/jetified-firebase-common-19.3.0/AndroidManifest.xml:26:9-30:39
 260            android:name="com.google.firebase.provider.FirebaseInitProvider"
 260-->[com.google.firebase:firebase-common:19.3.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/ab41160b4b656972f14f20b1a8af0014/jetified-firebase-common-19.3.0/AndroidManifest.xml:27:13-77
-261            android:authorities="com.shopify.shopifyapp.firebaseinitprovider"
+261            android:authorities="com.kumaoni.blessings.firebaseinitprovider"
 261-->[com.google.firebase:firebase-common:19.3.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/ab41160b4b656972f14f20b1a8af0014/jetified-firebase-common-19.3.0/AndroidManifest.xml:28:13-72
 262            android:exported="false"
 262-->[com.google.firebase:firebase-common:19.3.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/ab41160b4b656972f14f20b1a8af0014/jetified-firebase-common-19.3.0/AndroidManifest.xml:29:13-37
@@ -514,7 +514,7 @@
 269-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/5003586acfbaf1c55fabce24c3c1cfbb/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
 270            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
 270-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/5003586acfbaf1c55fabce24c3c1cfbb/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
-271            android:authorities="com.shopify.shopifyapp.lifecycle-process"
+271            android:authorities="com.kumaoni.blessings.lifecycle-process"
 271-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/5003586acfbaf1c55fabce24c3c1cfbb/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
 272            android:exported="false"
 272-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/5003586acfbaf1c55fabce24c3c1cfbb/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
@@ -524,7 +524,7 @@
 274-->[com.crashlytics.sdk.android:crashlytics:2.10.1] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/4e0370f07cfb003b0f623eeae3644126/jetified-crashlytics-2.10.1/AndroidManifest.xml:19:9-23:38
 275            android:name="com.crashlytics.android.CrashlyticsInitProvider"
 275-->[com.crashlytics.sdk.android:crashlytics:2.10.1] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/4e0370f07cfb003b0f623eeae3644126/jetified-crashlytics-2.10.1/AndroidManifest.xml:20:13-75
-276            android:authorities="com.shopify.shopifyapp.crashlyticsinitprovider"
+276            android:authorities="com.kumaoni.blessings.crashlyticsinitprovider"
 276-->[com.crashlytics.sdk.android:crashlytics:2.10.1] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/4e0370f07cfb003b0f623eeae3644126/jetified-crashlytics-2.10.1/AndroidManifest.xml:21:13-75
 277            android:exported="false"
 277-->[com.crashlytics.sdk.android:crashlytics:2.10.1] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/4e0370f07cfb003b0f623eeae3644126/jetified-crashlytics-2.10.1/AndroidManifest.xml:22:13-37
@@ -534,7 +534,7 @@
 279-->[com.mindorks:paracamera:0.2.2] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/48fb65214540c53fbf29fadce671ed36/jetified-paracamera-0.2.2/AndroidManifest.xml:16:9-24:20
 280            android:name="androidx.core.content.FileProvider"
 280-->[com.mindorks:paracamera:0.2.2] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/48fb65214540c53fbf29fadce671ed36/jetified-paracamera-0.2.2/AndroidManifest.xml:17:13-62
-281            android:authorities="com.shopify.shopifyapp.imageprovider"
+281            android:authorities="com.kumaoni.blessings.imageprovider"
 281-->[com.mindorks:paracamera:0.2.2] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/48fb65214540c53fbf29fadce671ed36/jetified-paracamera-0.2.2/AndroidManifest.xml:18:13-65
 282            android:exported="false"
 282-->[com.mindorks:paracamera:0.2.2] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/48fb65214540c53fbf29fadce671ed36/jetified-paracamera-0.2.2/AndroidManifest.xml:19:13-37
@@ -551,7 +551,7 @@
 288-->[com.squareup.picasso:picasso:2.71828] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/20385f78c3f8f8216c24e14228c31eaf/jetified-picasso-2.71828/AndroidManifest.xml:8:9-11:40
 289            android:name="com.squareup.picasso.PicassoProvider"
 289-->[com.squareup.picasso:picasso:2.71828] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/20385f78c3f8f8216c24e14228c31eaf/jetified-picasso-2.71828/AndroidManifest.xml:9:13-64
-290            android:authorities="com.shopify.shopifyapp.com.squareup.picasso"
+290            android:authorities="com.kumaoni.blessings.com.squareup.picasso"
 290-->[com.squareup.picasso:picasso:2.71828] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/20385f78c3f8f8216c24e14228c31eaf/jetified-picasso-2.71828/AndroidManifest.xml:10:13-72
 291            android:exported="false" />
 291-->[com.squareup.picasso:picasso:2.71828] /home/cedcoss/.gradle/caches/transforms-2/files-2.1/20385f78c3f8f8216c24e14228c31eaf/jetified-picasso-2.71828/AndroidManifest.xml:11:13-37

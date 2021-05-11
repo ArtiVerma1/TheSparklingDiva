@@ -5,7 +5,7 @@
 
         <variable
             name="review_list"
-            type="com.shopify.shopifyapp.productsection.models.Review" />
+            type="com.kumaoni.blessings.productsection.models.Review" />
     </data>
 
     <!--    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->

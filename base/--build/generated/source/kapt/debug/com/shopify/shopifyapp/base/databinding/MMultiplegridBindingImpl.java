@@ -1,12 +1,12 @@
-package com.shopify.shopifyapp.databinding;
-import com.shopify.shopifyapp.R;
-import com.shopify.shopifyapp.BR;
+package com.kumaoni.blessings.databinding;
+import com.kumaoni.blessings.R;
+import com.kumaoni.blessings.BR;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
 @javax.annotation.Generated("Android Data Binding")
-public class MMultiplegridBindingImpl extends MMultiplegridBinding implements com.shopify.shopifyapp.generated.callback.OnClickListener.Listener {
+public class MMultiplegridBindingImpl extends MMultiplegridBinding implements com.kumaoni.blessings.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -33,10 +33,10 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
             , (androidx.cardview.widget.CardView) bindings[0]
             , (androidx.appcompat.widget.AppCompatImageView) bindings[2]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[1]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[3]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[3]
             , (androidx.constraintlayout.widget.ConstraintLayout) bindings[6]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[5]
-            , (com.shopify.shopifyapp.customviews.MageNativeTextView) bindings[4]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[5]
+            , (com.kumaoni.blessings.customviews.MageNativeTextView) bindings[4]
             );
         this.card.setTag(null);
         this.image.setTag(null);
@@ -46,7 +46,7 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
         this.specialprice.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback18 = new com.shopify.shopifyapp.generated.callback.OnClickListener(this, 1);
+        mCallback18 = new com.kumaoni.blessings.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -72,13 +72,13 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.commondata == variableId) {
-            setCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) variable);
+            setCommondata((com.kumaoni.blessings.basesection.models.CommanModel) variable);
         }
         else if (BR.clickproduct == variableId) {
-            setClickproduct((com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter.Product) variable);
+            setClickproduct((com.kumaoni.blessings.homesection.adapters.ProductGridAdapter.Product) variable);
         }
         else if (BR.listdata == variableId) {
-            setListdata((com.shopify.shopifyapp.basesection.models.ListData) variable);
+            setListdata((com.kumaoni.blessings.basesection.models.ListData) variable);
         }
         else {
             variableSet = false;
@@ -86,7 +86,7 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
             return variableSet;
     }
 
-    public void setCommondata(@Nullable com.shopify.shopifyapp.basesection.models.CommanModel Commondata) {
+    public void setCommondata(@Nullable com.kumaoni.blessings.basesection.models.CommanModel Commondata) {
         updateRegistration(0, Commondata);
         this.mCommondata = Commondata;
         synchronized(this) {
@@ -95,7 +95,7 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
         notifyPropertyChanged(BR.commondata);
         super.requestRebind();
     }
-    public void setClickproduct(@Nullable com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter.Product Clickproduct) {
+    public void setClickproduct(@Nullable com.kumaoni.blessings.homesection.adapters.ProductGridAdapter.Product Clickproduct) {
         this.mClickproduct = Clickproduct;
         synchronized(this) {
             mDirtyFlags |= 0x4L;
@@ -103,7 +103,7 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
         notifyPropertyChanged(BR.clickproduct);
         super.requestRebind();
     }
-    public void setListdata(@Nullable com.shopify.shopifyapp.basesection.models.ListData Listdata) {
+    public void setListdata(@Nullable com.kumaoni.blessings.basesection.models.ListData Listdata) {
         updateRegistration(1, Listdata);
         this.mListdata = Listdata;
         synchronized(this) {
@@ -117,13 +117,13 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
     protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
         switch (localFieldId) {
             case 0 :
-                return onChangeCommondata((com.shopify.shopifyapp.basesection.models.CommanModel) object, fieldId);
+                return onChangeCommondata((com.kumaoni.blessings.basesection.models.CommanModel) object, fieldId);
             case 1 :
-                return onChangeListdata((com.shopify.shopifyapp.basesection.models.ListData) object, fieldId);
+                return onChangeListdata((com.kumaoni.blessings.basesection.models.ListData) object, fieldId);
         }
         return false;
     }
-    private boolean onChangeCommondata(com.shopify.shopifyapp.basesection.models.CommanModel Commondata, int fieldId) {
+    private boolean onChangeCommondata(com.kumaoni.blessings.basesection.models.CommanModel Commondata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x1L;
@@ -138,7 +138,7 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
         }
         return false;
     }
-    private boolean onChangeListdata(com.shopify.shopifyapp.basesection.models.ListData Listdata, int fieldId) {
+    private boolean onChangeListdata(com.kumaoni.blessings.basesection.models.ListData Listdata, int fieldId) {
         if (fieldId == BR._all) {
             synchronized(this) {
                     mDirtyFlags |= 0x2L;
@@ -155,13 +155,13 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
             dirtyFlags = mDirtyFlags;
             mDirtyFlags = 0;
         }
-        com.shopify.shopifyapp.basesection.models.CommanModel commondata = mCommondata;
+        com.kumaoni.blessings.basesection.models.CommanModel commondata = mCommondata;
         java.lang.String listdataRegularprice = null;
-        com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter.Product clickproduct = mClickproduct;
+        com.kumaoni.blessings.homesection.adapters.ProductGridAdapter.Product clickproduct = mClickproduct;
         java.lang.String commondataImageurl = null;
         java.lang.String listdataTextdata = null;
         java.lang.String listdataSpecialprice = null;
-        com.shopify.shopifyapp.basesection.models.ListData listdata = mListdata;
+        com.kumaoni.blessings.basesection.models.ListData listdata = mListdata;
 
         if ((dirtyFlags & 0x19L) != 0) {
 
@@ -189,7 +189,7 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
         if ((dirtyFlags & 0x19L) != 0) {
             // api target 1
 
-            com.shopify.shopifyapp.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
+            com.kumaoni.blessings.basesection.models.CommanModel.loadImage(this.image, commondataImageurl);
         }
         if ((dirtyFlags & 0x10L) != 0) {
             // api target 1
@@ -209,11 +209,11 @@ public class MMultiplegridBindingImpl extends MMultiplegridBinding implements co
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
         // localize variables for thread safety
         // clickproduct
-        com.shopify.shopifyapp.homesection.adapters.ProductGridAdapter.Product clickproduct = mClickproduct;
+        com.kumaoni.blessings.homesection.adapters.ProductGridAdapter.Product clickproduct = mClickproduct;
         // clickproduct != null
         boolean clickproductJavaLangObjectNull = false;
         // listdata
-        com.shopify.shopifyapp.basesection.models.ListData listdata = mListdata;
+        com.kumaoni.blessings.basesection.models.ListData listdata = mListdata;
 
 
 

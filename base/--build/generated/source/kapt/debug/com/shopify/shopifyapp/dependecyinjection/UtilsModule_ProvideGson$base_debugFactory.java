@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.dependecyinjection;
+package com.kumaoni.blessings.dependecyinjection;
 
 import com.google.gson.Gson;
 import dagger.internal.Factory;

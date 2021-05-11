@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.collectionsection.models;
+package com.kumaoni.blessings.collectionsection.models;
 
 import java.lang.System;
 
@@ -33,12 +33,12 @@ public final class Collection {
     
     public final void blockClick(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.collectionsection.models.Collection collection) {
+    com.kumaoni.blessings.collectionsection.models.Collection collection) {
     }
     
     public final void gridClick(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.collectionsection.models.Collection collection) {
+    com.kumaoni.blessings.collectionsection.models.Collection collection) {
     }
     
     @org.jetbrains.annotations.Nullable()

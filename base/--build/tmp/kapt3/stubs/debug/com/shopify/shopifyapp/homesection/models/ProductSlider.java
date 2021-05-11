@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp.homesection.models;
+package com.kumaoni.blessings.homesection.models;
 
 import java.lang.System;
 
@@ -151,7 +151,7 @@ public final class ProductSlider extends androidx.databinding.BaseObservable {
     
     public final void moreAction(@org.jetbrains.annotations.NotNull()
     android.view.View view, @org.jetbrains.annotations.NotNull()
-    com.shopify.shopifyapp.homesection.models.ProductSlider category) {
+    com.kumaoni.blessings.homesection.models.ProductSlider category) {
     }
     
     @org.jetbrains.annotations.Nullable()

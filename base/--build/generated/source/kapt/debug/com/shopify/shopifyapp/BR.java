@@ -1,4 +1,4 @@
-package com.shopify.shopifyapp;
+package com.kumaoni.blessings;
 
 import javax.annotation.Generated;
 
