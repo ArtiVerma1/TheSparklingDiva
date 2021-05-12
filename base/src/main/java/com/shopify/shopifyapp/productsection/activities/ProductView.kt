@@ -526,7 +526,7 @@ class ProductView : NewBaseActivity() {
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
             binding?.description?.loadData(productedge.descriptionHtml, "text/html", "utf-8")
-
+            binding?.description?.getSettings()?.setJavaScriptEnabled(true)
             if (model?.isInwishList(model?.id!!)!!) {
                 data!!.addtowish = resources.getString(R.string.alreadyinwish)
                 Glide.with(this).load(R.drawable.wishlist_selected)
