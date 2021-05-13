@@ -14,7 +14,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var reOrderEnabled: Boolean = false
+    var reOrderEnabled: Boolean = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.reOrderEnabled)
