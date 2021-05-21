@@ -35,6 +35,7 @@ import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.homesection.activities.HomePage
+import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.trialsection.activities.TrialExpired
 import com.shopify.shopifyapp.utils.*
@@ -166,27 +167,49 @@ class Splash : AppCompatActivity() {
     }
 
     private fun renderSuccessResponse(data: AppLocalData) {
-        val intent: Array<Intent?>
+        var intent = arrayOf<Intent?>()
         if (!data.isIstrialexpire) {
             intent = arrayOfNulls(1)
             intent[0] = Intent(this@Splash, TrialExpired::class.java)
         } else {
-            if (product_id != null) {
-                intent = arrayOfNulls(2)
-                val product = Intent(this@Splash, ProductView::class.java)
-                product.putExtra("ID", product_id)
-                intent[1] = product
-            } else if (productData != null) {
-                intent = arrayOfNulls(2)
-                val product = Intent(this@Splash, ProductView::class.java)
-                product.putExtra("product", productData)
-                product.putExtra("tittle", productTitle)
-                intent[1] = product
+            if (getIntent().hasExtra("type")) {
+                if (getIntent().getStringExtra("type").equals("product")) {
+                    intent = arrayOfNulls(2)
+                    val product = Intent(this@Splash, ProductView::class.java)
+                    product.putExtra("ID", getIntent().getStringExtra("ID"))
+                    intent[1] = product
+                } else if (getIntent().getStringExtra("type").equals("collection")) {
+                    intent = arrayOfNulls(2)
+                    val product = Intent(this@Splash, ProductList::class.java)
+                    product.putExtra("ID", getIntent().getStringExtra("ID"))
+                    product.putExtra("tittle", getIntent().getStringExtra("tittle"))
+                    intent[1] = product
+                } else if (getIntent().getStringExtra("type").equals("weblink")) {
+                    intent = arrayOfNulls(2)
+                    val product = Intent(this@Splash, Weblink::class.java)
+                    product.putExtra("link", getIntent().getStringExtra("link"))
+                    product.putExtra("name", getIntent().getStringExtra("name"))
+                    intent[1] = product
+                }
             } else {
-                intent = arrayOfNulls(1)
+                if (product_id != null) {
+                    intent = arrayOfNulls(2)
+                    val product = Intent(this@Splash, ProductView::class.java)
+                    product.putExtra("ID", product_id)
+                    intent[1] = product
+                } else if (productData != null) {
+                    intent = arrayOfNulls(2)
+                    val product = Intent(this@Splash, ProductView::class.java)
+                    product.putExtra("product", productData)
+                    product.putExtra("tittle", productTitle)
+                    intent[1] = product
+                } else {
+                    intent = arrayOfNulls(1)
+                }
             }
             val homepage = Intent(this@Splash, HomePage::class.java)
             intent[0] = homepage
+
         }
         Handler().postDelayed(Runnable {
             startActivities(intent)
