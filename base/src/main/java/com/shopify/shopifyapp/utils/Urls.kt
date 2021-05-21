@@ -39,7 +39,6 @@ class Urls {
         const val JUDGEME_APITOKEN: String = "R8kqByFI_qHiHHQj6ZV1yWCYveQ"
 
     }
-
     val shopdomain: String
         get() {
             var domain = "magenative.myshopify.com" //magenative-store.myshopify.com
@@ -82,7 +81,7 @@ class Urls {
         }
     val apikey: String
         get() {
-            var key = "e121ff541d39b93f45cd37d18e7e5b0f" //63893d2330e639632e2eab540e9d2d75
+            var key = "c572b018c17d62853985e19b2b11a9a4" //63893d2330e639632e2eab540e9d2d75
             try {
                 val executor = Executors.newSingleThreadExecutor()
                 val callable = Callable {

@@ -7,6 +7,7 @@ import android.util.Base64
 import android.util.Log
 import com.google.firebase.messaging.RemoteMessage
 import com.shopify.shopifyapp.MyApplication
+import com.shopify.shopifyapp.basesection.activities.Splash
 import com.shopify.shopifyapp.basesection.activities.Weblink
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
@@ -34,23 +35,25 @@ class FirebaseMessagingService : com.google.firebase.messaging.FirebaseMessaging
             when (link_type) {
                 "product" -> {
                     val product_id = "gid://shopify/Product/$link_id"
-                    resultIntent = Intent(applicationContext, ProductView::class.java)
+                    resultIntent = Intent(applicationContext, Splash::class.java)
                     resultIntent.putExtra("ID", getBase64Encode(product_id))
+                    resultIntent.putExtra("type", "product")
                 }
                 "collection" -> {
                     val s1 = "gid://shopify/Collection/$link_id"
-                    resultIntent = Intent(applicationContext, ProductList::class.java)
+                    resultIntent = Intent(applicationContext, Splash::class.java)
                     resultIntent.putExtra("ID", getBase64Encode(s1))
                     resultIntent.putExtra("tittle", title)
+                    resultIntent.putExtra("type", "collection")
                 }
                 "web_address" -> {
-                    resultIntent = Intent(applicationContext, Weblink::class.java)
+                    resultIntent = Intent(applicationContext, Splash::class.java)
                     resultIntent.putExtra("link", link_id)
                     resultIntent.putExtra("name", " ")
+                    resultIntent.putExtra("type", "weblink")
                 }
             }
-            if(merchant_id.equals(Urls((application as MyApplication))!!.mid))
-            {
+            if (merchant_id.equals(Urls((application as MyApplication))!!.mid)) {
                 if (TextUtils.isEmpty(imageUri)) {
                     showNotificationMessage(applicationContext, title, mesg, Objects.requireNonNull<Intent>(resultIntent))
                 } else {
