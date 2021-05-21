@@ -21,6 +21,8 @@ import android.util.Log
 import android.util.Patterns
 import androidx.core.app.NotificationCompat
 import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.basesection.activities.Splash
+import com.shopify.shopifyapp.homesection.activities.HomePage
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -42,6 +44,7 @@ class NotificationUtils {
             if (TextUtils.isEmpty(message))
                 return
             val icon = R.mipmap.ic_launcher
+            //val intents = arrayOf<Intent>(Intent(mContext, Splash::class.java), Intent(mContext, HomePage::class.java), intent)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             val resultPendingIntent = PendingIntent.getActivity(
                     mContext,
