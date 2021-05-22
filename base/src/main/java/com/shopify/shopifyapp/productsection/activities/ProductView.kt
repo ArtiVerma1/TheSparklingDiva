@@ -84,7 +84,6 @@ class ProductView : NewBaseActivity() {
     private var judgeme_productid: String? = null
     private var reviewList: ArrayList<Review>? = null
 
-
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
 

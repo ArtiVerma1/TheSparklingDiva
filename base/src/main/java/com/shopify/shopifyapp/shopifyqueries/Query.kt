@@ -481,9 +481,9 @@ object Query {
     private fun order_list(arg: Storefront.CustomerQuery.OrdersArguments, cursor: String): Storefront.CustomerQuery.OrdersArguments {
         val definition: Storefront.CustomerQuery.OrdersArguments
         if (cursor == "nocursor") {
-            definition = arg!!.first(10)
+            definition = arg!!.first(10).reverse(true)
         } else {
-            definition = arg!!.first(10).after(cursor)
+            definition = arg!!.first(10).after(cursor).reverse(true)
         }
         return definition
     }

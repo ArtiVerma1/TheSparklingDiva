@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -56,6 +57,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         item.product_id = data?.get(position)!!.node.variant.product.id.toString()
         item.variant_id = data?.get(position)!!.node.variant.id.toString()
         item.productname = data?.get(position)!!.node.title
+        item.quantity_available=data?.get(position)!!.node.variant.quantityAvailable
         val variant = data?.get(position)!!.node.variant
         item.normalprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.price.amount, variant.presentmentPrices.edges[0].node.price.currencyCode.toString())
         if (variant.compareAtPriceV2 != null) {
@@ -194,8 +196,12 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         }
 
         fun increase(view: View, item: CartListItem) {
-            item.qty = (Integer.parseInt(item.qty!!) + 1).toString()
-            model!!.updateCart(item)
+            if (item.qty?.toInt() == item.quantity_available) {
+                Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+            } else {
+                item.qty = (Integer.parseInt(item.qty!!) + 1).toString()
+                model!!.updateCart(item)
+            }
         }
 
         fun decrease(view: View, item: CartListItem) {

@@ -15,6 +15,7 @@ class CartListItem : BaseObservable() {
     var variant_three: String? = null
     var image: String? = null
     var offertext: String? = null
+    var quantity_available: Int? = null
 
     @get:Bindable
     var qty: String? = null
