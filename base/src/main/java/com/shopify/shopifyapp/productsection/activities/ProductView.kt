@@ -660,7 +660,7 @@ class ProductView : NewBaseActivity() {
                         cartlistData.put("id", data.product?.id.toString())
                         cartlistData.put("quantity", 1)
                         cartlistArray.put(cartlistData.toString())
-                        Constant.logAddToWishlistEvent(cartlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                        Constant.logAddToCartEvent(cartlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                                 ?: 0.0, this@ProductView ?: Activity())
 
                     } else {

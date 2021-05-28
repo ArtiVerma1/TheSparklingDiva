@@ -118,20 +118,21 @@ class CommanModel : BaseObservable() {
         @BindingAdapter("imageUrl")
         @JvmStatic
         fun loadImage(view: ImageView, imageUrl: String?) {
-
             val observable = Observable.fromCallable { imageUrl }
             observable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<String?> {
                         override fun onSubscribe(d: Disposable) {
 
                         }
+
                         override fun onNext(s: String) {
                             Log.i("Magenative ", "Developer image url " + s)
                             if (view.context is Splash || view.context is LoginActivity || view.context is RegistrationActivity) {
                                 Glide.with(context)
                                         .asBitmap()
                                         .load(s)
-                                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                        .dontTransform()
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         //.thumbnail(0.5f)
                                         // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
                                         .into(view)
@@ -142,7 +143,7 @@ class CommanModel : BaseObservable() {
                                         .placeholder(R.drawable.image_placeholder)
                                         .error(R.drawable.image_placeholder)
                                         .dontTransform()
-                                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         //.thumbnail(0.5f)
                                         // .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
                                         .into(view)

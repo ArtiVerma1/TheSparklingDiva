@@ -121,7 +121,9 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         (application as MyApplication).mageNativeAppComponent!!.doBaseActivityInjection(this)
         leftMenuViewModel = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
         leftMenuViewModel!!.context = this
-        leftMenuViewModel!!.Response().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+        if (this@NewBaseActivity is HomePage) {
+            leftMenuViewModel!!.Response().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+        }
         leftMenuViewModel!!.repository.allCartItemsCount.observe(this, Observer { this.consumeCartCount(it) })
         leftMenuViewModel!!.repository.wishListDataCount.observe(this, Observer { this.consumeWishCount(it) })
         setSupportActionBar(toolbar)
