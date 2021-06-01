@@ -432,6 +432,14 @@ object Query {
                                                                     .name()
                                                                     .processedAt()
                                                                     .orderNumber()
+                                                                    .fulfillmentStatus()
+                                                                    .canceledAt()
+                                                                    .cancelReason()
+                                                                    .financialStatus()
+                                                                    .totalRefundedV2 { _queryBuilder ->
+                                                                        _queryBuilder.amount().currencyCode()
+                                                                    }.email()
+                                                                    .phone()
                                                                     .totalPriceV2 { _queryBuilder -> _queryBuilder.amount().currencyCode() }
                                                                     .shippingAddress { _queryBuilder ->
                                                                         _queryBuilder.address1().address2().city().company().country().firstName().lastName()
@@ -451,6 +459,8 @@ object Query {
                                                                                     itemedge
                                                                                             .node({ n ->
                                                                                                 n.title().quantity().variant({ v ->
+                                                                                                    v.product {
+                                                                                                    }
                                                                                                     v.priceV2({ p -> p.amount().currencyCode() })
                                                                                                             .selectedOptions({ select -> select.name().value() })
                                                                                                             .compareAtPriceV2({ c -> c.amount().currencyCode() })

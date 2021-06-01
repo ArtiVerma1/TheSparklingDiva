@@ -73,7 +73,7 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
 
             return count[0]
         }
-    val wishListcount: Int
+    var wishListcount: Int=0
         get() {
             val count = intArrayOf(0)
             try {

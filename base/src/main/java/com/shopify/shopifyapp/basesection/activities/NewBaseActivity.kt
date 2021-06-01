@@ -233,11 +233,13 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         }
     }
 
-    private fun consumeWishCount(it: List<ItemData>?) {
+     fun consumeWishCount(it: List<ItemData>?) {
         wishcount_bottom?.text = "" + it?.size
+        leftMenuViewModel!!.wishListcount = it?.size!!
+        invalidateOptionsMenu()
     }
 
-    private fun consumeCartCount(it: List<CartItemData>?) {
+     fun consumeCartCount(it: List<CartItemData>?) {
         cartcount_bottom?.text = "" + it?.size
         cartCount = it?.size!!
         invalidateOptionsMenu()

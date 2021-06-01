@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:background="@color/white"
         android:padding="10dp">
@@ -18,8 +18,9 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_image"
             imageUrl="@{commondata.imageurl}"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="230dp"
+            android:layout_height="230dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/image_placeholder" />
@@ -32,21 +33,23 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:gravity="center"
+            android:maxLines="1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/item_image"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_image"
             app:texttype="bold" />
 
         <com.shopify.shopifyapp.customviews.MageNativeTextView
-            android:id="@+id/productquantity_title"
+            android:id="@+id/productquantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/quantity"
-            app:layout_constraintStart_toEndOf="@+id/item_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/product_name"
             app:texttype="bold" />
 
@@ -55,32 +58,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="11dp"
-            app:layout_constraintStart_toEndOf="@+id/productquantity_title"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toEndOf="@+id/productquantity"
             app:layout_constraintTop_toBottomOf="@+id/product_name"
             app:texttype="normal" />
 
         <com.shopify.shopifyapp.customviews.MageNativeTextView
-            android:id="@+id/productprice_title"
+            android:id="@+id/productvariant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="10dp"
-            android:text="@string/price"
-            app:layout_constraintStart_toEndOf="@+id/item_image"
-            app:layout_constraintTop_toBottomOf="@+id/productquantity_txt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/productquantity"
             app:texttype="bold" />
 
-        <com.shopify.shopifyapp.customviews.MageNativeTextView
-            android:id="@+id/productprice_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="11dp"
-            app:layout_constraintStart_toEndOf="@+id/productprice_title"
-            app:layout_constraintTop_toBottomOf="@+id/productquantity_txt"
-            app:texttype="normal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

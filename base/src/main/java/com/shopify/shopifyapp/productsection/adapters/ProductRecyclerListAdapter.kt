@@ -223,7 +223,17 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
             dialog.setCancelable(false)
             var binding = DataBindingUtil.inflate<OptionmenuDialogBinding>(LayoutInflater.from(activity), R.layout.optionmenu_dialog, null, false)
             dialog.setContentView(binding.root)
-            binding.wishlistBut.setOnClickListener {
+            if ((activity as ProductList).productListModel?.isInwishList(data.product?.id.toString())!!) {
+                Glide.with(activity!!)
+                        .load(R.drawable.wishlist_selected)
+                        .into(binding?.wishlistIcon!!)
+            } else {
+                Glide.with(activity!!)
+                        .load(R.drawable.wishlist_icon)
+                        .into(binding?.wishlistIcon!!)
+            }
+
+            binding.wishlistsection.setOnClickListener {
                 if ((activity as ProductList).productListModel?.setWishList(data.product?.id.toString())!!) {
                     Toast.makeText(view.context, view.context.resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
                     data.addtowish = view.context.resources.getString(R.string.alreadyinwish)
@@ -241,7 +251,7 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
                 (activity as ProductList).invalidateOptionsMenu()
                 dialog.dismiss()
             }
-            binding.shareBut.setOnClickListener {
+            binding.sharesection.setOnClickListener {
                 val shareString = activity?.resources?.getString(R.string.hey) + "  " + data.product!!.title + "  " + activity?.resources?.getString(R.string.on) + "  " + activity?.resources?.getString(R.string.app_name) + "\n" + data.product!!.onlineStoreUrl + "?pid=" + data.product!!.id.toString()
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = "text/plain"
@@ -251,7 +261,7 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
                 Constant.activityTransition(view.context)
                 dialog.dismiss()
             }
-            binding.closeBut.setOnClickListener {
+            binding.notintrestedsection.setOnClickListener {
                 dialog.dismiss()
             }
             dialog.show()

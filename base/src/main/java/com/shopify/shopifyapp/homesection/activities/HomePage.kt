@@ -331,11 +331,11 @@ class HomePage : NewBaseActivity() {
         super.onResume()
         if (featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
-
                 homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
                 homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
             }
         }
+        scrollview.verticalScrollbarPosition = 1
         nav_view.menu.findItem(R.id.home_bottom).setChecked(true)
     }
 
