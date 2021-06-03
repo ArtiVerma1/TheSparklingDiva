@@ -88,6 +88,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         var count_textcolor: String? = null
         var icon_color: String? = null
         var panel_bg_color: String? = null
+        var search_position: String? = null
+        var search_placeholder: String? = null
     }
 
     @Inject
@@ -267,6 +269,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
                     context.setToggle(context.toolbar)
                     delay(1000)
+                    search_position = jsonObject.getString("search_position")
+                    search_placeholder = jsonObject.getString("search_placeholder")
                     context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
                     context.setWishList(jsonObject.getString("wishlist"))
                     if (jsonObject.has("logo_image_url")) {
