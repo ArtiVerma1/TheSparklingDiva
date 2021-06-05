@@ -53,7 +53,7 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
         return responseLiveData
     }
 
-    val cartCount: Int
+    var cartCount: Int=0
         get() {
             val count = intArrayOf(0)
             try {

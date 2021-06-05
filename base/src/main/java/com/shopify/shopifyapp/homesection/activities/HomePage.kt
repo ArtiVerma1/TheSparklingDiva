@@ -62,6 +62,7 @@ class HomePage : NewBaseActivity() {
     private var hasBanner: Boolean? = null
     private var hasFullSearch: Boolean = false
     lateinit var searchItem: MenuItem
+    private var scrollYPosition: Int = -1
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -112,6 +113,8 @@ class HomePage : NewBaseActivity() {
                 Log.i(TAG, "Scroll UP")
             }
             if (scrollY == 0) {
+                scrollYPosition = 0
+                invalidateOptionsMenu()
                 Log.i(TAG, "TOP SCROLL")
                 if (hasBanner!! && hasFullSearch) {
                     toolbar.visibility = View.GONE
@@ -128,19 +131,8 @@ class HomePage : NewBaseActivity() {
                 }
             }
             if (scrollY <= 200) {
-                setToggle(toolbar)
+                scrollYPosition = scrollY
                 invalidateOptionsMenu()
-                GlobalScope.launch(Dispatchers.Main) {
-                  //  delay(100)
-                    setHomeIconColors(
-                            count_color ?: "#000000",
-                            count_textcolor ?: "#000000",
-                            icon_color ?: "#000000"
-                    )
-                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
-                    setHomeSearchOption(search_position ?: "", search_placeholder
-                            ?: "", binding!!)
-                }
                 if (hasBanner!! && hasFullSearch) {
                     toolbar.visibility = View.GONE
                     fullsearch.visibility = View.GONE
@@ -236,6 +228,34 @@ class HomePage : NewBaseActivity() {
             val wishlist = Intent(this, WishList::class.java)
             startActivity(wishlist)
             Constant.activityTransition(this)
+        }
+        if (scrollYPosition > 0) {
+            setToggle(toolbar)
+            setHomeIconColors(
+                    count_color ?: "#000000",
+                    count_textcolor ?: "#000000",
+                    icon_color ?: "#000000"
+            )
+            var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+            setHomeSearchOption(search_position ?: "", search_placeholder
+                    ?: "", binding!!)
+
+        } else {
+            if (homepage.childCount > 0) {
+                if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
+                    var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
+                    setToggle(home_toolbar)
+                    setHomeIconColors(
+                            count_color ?: "#000000",
+                            count_textcolor ?: "#000000",
+                            icon_color ?: "#000000"
+                    )
+                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+                    setHomeSearchOption(search_position ?: "", search_placeholder
+                            ?: "", binding!!)
+
+                }
+            }
         }
         return true
     }
@@ -369,7 +389,6 @@ class HomePage : NewBaseActivity() {
             }
         }
         if (homepage.childCount > 0) {
-            Log.d(TAG, "onResume: " + homepage.childCount)
             if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
                 var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
                 setToggle(home_toolbar)

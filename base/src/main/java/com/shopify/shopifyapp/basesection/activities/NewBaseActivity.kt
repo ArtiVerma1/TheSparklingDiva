@@ -107,10 +107,11 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     lateinit var recylerAdapter: RecylerAdapter
     private var listDialog: BottomSheetDialog? = null
     var cartCount: Int = 0
-        get() {
-            Log.i("MageNative", "Cart Count : " + leftMenuViewModel!!.cartCount)
-            return leftMenuViewModel!!.cartCount
-        }
+
+    //        get() {
+//            Log.i("MageNative", "Cart Count : " + leftMenuViewModel!!.cartCount)
+//            return leftMenuViewModel!!.cartCount
+//        }
     lateinit var item: MenuItem
     lateinit var wishitem: MenuItem
     lateinit var cartitem: MenuItem
@@ -233,13 +234,13 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         }
     }
 
-     fun consumeWishCount(it: List<ItemData>?) {
+    fun consumeWishCount(it: List<ItemData>?) {
         wishcount_bottom?.text = "" + it?.size
         leftMenuViewModel!!.wishListcount = it?.size!!
         invalidateOptionsMenu()
     }
 
-     fun consumeCartCount(it: List<CartItemData>?) {
+    fun consumeCartCount(it: List<CartItemData>?) {
         cartcount_bottom?.text = "" + it?.size
         cartCount = it?.size!!
         invalidateOptionsMenu()

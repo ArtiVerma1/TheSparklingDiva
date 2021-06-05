@@ -92,6 +92,7 @@ object Query {
                                                                                 .selectedOptions({ select -> select.name().value() })
                                                                                 .compareAtPriceV2({ compare -> compare.amount().currencyCode() })
                                                                                 .compareAtPrice()
+                                                                                .currentlyNotInStock()
                                                                                 .image({ image -> image.transformedSrc({ tr -> tr.maxHeight(600).maxWidth(600) }).originalSrc() })
                                                                                 .availableForSale()
                                                                     }
@@ -177,6 +178,7 @@ object Query {
                                                         .title()
                                                         .priceV2({ p -> p.amount().currencyCode() })
                                                         .quantityAvailable()
+                                                        .currentlyNotInStock()
                                                         .presentmentPrices({ a -> a.first(50).presentmentCurrencies(list_currency) }, { pre -> pre.edges({ ed -> ed.node({ n -> n.price({ p -> p.currencyCode().amount() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }).cursor() }) })
                                                         .selectedOptions({ select -> select.name().value() })
                                                         .compareAtPriceV2({ c -> c.amount().currencyCode() })
@@ -275,6 +277,7 @@ object Query {
                                     .availableForSale()
                                     .descriptionHtml()
                                     .description()
+                                    .onlineStoreUrl()
                                     .handle()
                                     .media({ m -> m.first(10) }, { me ->
                                         me.edges({ e ->
