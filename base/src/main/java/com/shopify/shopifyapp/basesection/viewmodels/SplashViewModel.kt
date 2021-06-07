@@ -55,19 +55,13 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private val TAG = "SplashViewModel"
-//    val isLogin: Boolean
-//        get() = repository.isLogin
 
     val isLogin: Boolean
         get() {
-            runBlocking(Dispatchers.IO) {
-                if (repository.isLogin) {
-                    return@runBlocking true
-                }else{
-                    return@runBlocking false
-                }
+            var loggedin = runBlocking(Dispatchers.IO) {
+                return@runBlocking repository.isLogin
             }
-            return false
+            return loggedin
         }
 
     fun Response(shop: String): MutableLiveData<LocalDbResponse> {
