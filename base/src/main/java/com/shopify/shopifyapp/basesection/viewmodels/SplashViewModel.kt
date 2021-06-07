@@ -31,6 +31,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,9 +55,20 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private val TAG = "SplashViewModel"
-    val isLogin: Boolean
-        get() = repository.isLogin
+//    val isLogin: Boolean
+//        get() = repository.isLogin
 
+    val isLogin: Boolean
+        get() {
+            runBlocking(Dispatchers.IO) {
+                if (repository.isLogin) {
+                    return@runBlocking true
+                }else{
+                    return@runBlocking false
+                }
+            }
+            return false
+        }
 
     fun Response(shop: String): MutableLiveData<LocalDbResponse> {
         val handler = Handler()
@@ -70,7 +82,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     fun setPresentmentCurrencyForModel() {
         try {
             val runnable = Runnable {
-                if(!repository.localData.isEmpty()) {
+                if (!repository.localData.isEmpty()) {
                     if (repository.localData[0].currencycode == null) {
                         presentmentcurrency = "nopresentmentcurrency"
                     } else {

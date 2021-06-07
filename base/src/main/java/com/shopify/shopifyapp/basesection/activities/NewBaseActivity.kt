@@ -94,7 +94,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     var leftMenuViewModel: LeftMenuViewModel? = null
     var wishtextView: TextView? = null
     var textView: TextView? = null
-
     var wishcount_bottom: TextView? = null
     var cartcount_bottom: TextView? = null
     private val TAG = "NewBaseActivity"
@@ -107,11 +106,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     lateinit var recylerAdapter: RecylerAdapter
     private var listDialog: BottomSheetDialog? = null
     var cartCount: Int = 0
-
-    //        get() {
-//            Log.i("MageNative", "Cart Count : " + leftMenuViewModel!!.cartCount)
-//            return leftMenuViewModel!!.cartCount
-//        }
     lateinit var item: MenuItem
     lateinit var wishitem: MenuItem
     lateinit var cartitem: MenuItem

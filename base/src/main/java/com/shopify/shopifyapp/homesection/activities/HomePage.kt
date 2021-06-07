@@ -62,6 +62,8 @@ class HomePage : NewBaseActivity() {
     private var hasBanner: Boolean? = null
     private var hasFullSearch: Boolean = false
     lateinit var searchItem: MenuItem
+    lateinit var wishitemHome: MenuItem
+    lateinit var cartitemHome: MenuItem
     private var scrollYPosition: Int = -1
 
     @Inject
@@ -114,7 +116,6 @@ class HomePage : NewBaseActivity() {
             }
             if (scrollY == 0) {
                 scrollYPosition = 0
-                invalidateOptionsMenu()
                 Log.i(TAG, "TOP SCROLL")
                 if (hasBanner!! && hasFullSearch) {
                     toolbar.visibility = View.GONE
@@ -132,7 +133,6 @@ class HomePage : NewBaseActivity() {
             }
             if (scrollY <= 200) {
                 scrollYPosition = scrollY
-                invalidateOptionsMenu()
                 if (hasBanner!! && hasFullSearch) {
                     toolbar.visibility = View.GONE
                     fullsearch.visibility = View.GONE
@@ -196,11 +196,15 @@ class HomePage : NewBaseActivity() {
         item = menu.findItem(R.id.search_item)
         searchItem = menu.findItem(R.id.search_item)
         wishitem = menu.findItem(R.id.wish_item)
+        wishitemHome = menu.findItem(R.id.wish_item)
         cartitem = menu.findItem(R.id.cart_item)
+        cartitemHome = menu.findItem(R.id.cart_item)
         item?.setActionView(R.layout.m_search)
         searchItem?.setActionView(R.layout.m_search)
         wishitem?.setActionView(R.layout.m_wishcount)
+        wishitemHome?.setActionView(R.layout.m_wishcount)
         cartitem?.setActionView(R.layout.m_count)
+        cartitemHome?.setActionView(R.layout.m_count)
         val search = item?.actionView
         val searchHome = searchItem?.actionView
         search?.setOnClickListener {
@@ -214,6 +218,7 @@ class HomePage : NewBaseActivity() {
             Constant.activityTransition(this)
         }
         val notifCount = cartitem?.actionView
+        val notifCountHomePage = cartitemHome?.actionView
         textView = notifCount?.findViewById<TextView>(R.id.count)
         textView!!.text = "" + cartCount
         notifCount?.setOnClickListener {
@@ -221,7 +226,13 @@ class HomePage : NewBaseActivity() {
             startActivity(mycartlist)
             Constant.activityTransition(this)
         }
+        notifCountHomePage?.setOnClickListener {
+            val mycartlist = Intent(this, CartList::class.java)
+            startActivity(mycartlist)
+            Constant.activityTransition(this)
+        }
         val wishcount = wishitem?.actionView
+        val wishcountHomePage = wishitemHome?.actionView
         wishtextView = wishcount?.findViewById<TextView>(R.id.count)
         wishtextView!!.text = "" + leftMenuViewModel!!.wishListcount
         wishcount?.setOnClickListener {
@@ -229,22 +240,32 @@ class HomePage : NewBaseActivity() {
             startActivity(wishlist)
             Constant.activityTransition(this)
         }
+        wishcountHomePage?.setOnClickListener {
+            val wishlist = Intent(this, WishList::class.java)
+            startActivity(wishlist)
+            Constant.activityTransition(this)
+        }
         if (scrollYPosition > 0) {
-            setToggle(toolbar)
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(1000)
+                setToggle(toolbar)
+            }
             setHomeIconColors(
                     count_color ?: "#000000",
                     count_textcolor ?: "#000000",
                     icon_color ?: "#000000"
             )
-            var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+            var binding: MTopbarBinding? = DataBindingUtil.inflate(getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
             setHomeSearchOption(search_position ?: "", search_placeholder
                     ?: "", binding!!)
-
-        } else {
+        } else if (scrollYPosition == 0) {
             if (homepage.childCount > 0) {
                 if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
                     var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
-                    setToggle(home_toolbar)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        delay(1000)
+                        setToggle(home_toolbar)
+                    }
                     setHomeIconColors(
                             count_color ?: "#000000",
                             count_textcolor ?: "#000000",
@@ -253,7 +274,6 @@ class HomePage : NewBaseActivity() {
                     var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
                     setHomeSearchOption(search_position ?: "", search_placeholder
                             ?: "", binding!!)
-
                 }
             }
         }
@@ -391,19 +411,16 @@ class HomePage : NewBaseActivity() {
         if (homepage.childCount > 0) {
             if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
                 var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
-                setToggle(home_toolbar)
                 invalidateOptionsMenu()
-                GlobalScope.launch(Dispatchers.Main) {
-                    delay(100)
-                    setHomeIconColors(
-                            count_color ?: "#000000",
-                            count_textcolor ?: "#000000",
-                            icon_color ?: "#000000"
-                    )
-                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
-                    setHomeSearchOption(search_position ?: "", search_placeholder
-                            ?: "", binding!!)
-                }
+                setToggle(home_toolbar)
+                setHomeIconColors(
+                        count_color ?: "#000000",
+                        count_textcolor ?: "#000000",
+                        icon_color ?: "#000000"
+                )
+                var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+                setHomeSearchOption(search_position ?: "", search_placeholder
+                        ?: "", binding!!)
             }
         }
         nav_view.menu.findItem(R.id.home_bottom).setChecked(true)

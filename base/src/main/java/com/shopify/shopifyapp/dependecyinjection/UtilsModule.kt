@@ -100,13 +100,12 @@ class UtilsModule(private val context: Context) {
     @Provides
     @Singleton
     internal fun getAppDatabase(context: Context): AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, "MageNative").fallbackToDestructiveMigration().allowMainThreadQueries().build()
+        return Room.databaseBuilder(context, AppDatabase::class.java, "MageNative").fallbackToDestructiveMigration().build()
     }
 
     @Provides
     @Singleton
     internal fun getGraphClient(context: Context, client: OkHttpClient): GraphClient {
-
         return GraphClient.build(context, context.resources.getString(R.string.shopdomain), context.resources.getString(R.string.apikey)
         ) {
             httpClient = client
