@@ -33,6 +33,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -46,14 +47,19 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
     private val handler = Handler()
     var context: Context? = null
     val isLoggedIn: Boolean
-        get() = repository.isLogin
+        get() {
+            var loggedin = runBlocking(Dispatchers.IO) {
+                return@runBlocking repository.isLogin
+            }
+            return loggedin
+        }
 
     fun Response(): MutableLiveData<ApiResponse> {
         getMenus()
         return responseLiveData
     }
 
-    var cartCount: Int=0
+    var cartCount: Int = 0
         get() {
             val count = intArrayOf(0)
             try {
@@ -73,7 +79,7 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
 
             return count[0]
         }
-    var wishListcount: Int=0
+    var wishListcount: Int = 0
         get() {
             val count = intArrayOf(0)
             try {

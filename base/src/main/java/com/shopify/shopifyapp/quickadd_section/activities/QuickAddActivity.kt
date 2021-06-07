@@ -71,9 +71,11 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
 
     fun initView() {
         currency_list = ArrayList<Storefront.CurrencyCode>()
-        if (repository.localData[0].currencycode != null) {
-            presentment_currency = repository.localData[0].currencycode!!
-            currency_list?.add(Storefront.CurrencyCode.valueOf(presentment_currency))
+        GlobalScope.launch(Dispatchers.IO) {
+            if (repository.localData[0].currencycode != null) {
+                presentment_currency = repository.localData[0].currencycode!!
+                currency_list?.add(Storefront.CurrencyCode.valueOf(presentment_currency))
+            }
         }
         binding?.availableQty?.textSize = 14f
         quickVariantAdapter = QuickVariantAdapter()

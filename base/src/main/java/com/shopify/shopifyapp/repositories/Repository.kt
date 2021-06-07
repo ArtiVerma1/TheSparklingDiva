@@ -29,18 +29,18 @@ class Repository {
     private val TAG = "Repository"
     private val apiCallInterface: ApiCallInterface
     private val appdatabase: AppDatabase
-    var graphClient: GraphClient
-        get() {
-            return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey, {
-                httpClient = requestHeader
-                httpCache(context.cacheDir, {
-                    cacheMaxSizeBytes = 1024 * 1024 * 10
-                    defaultCachePolicy = Constant.policy
-                    Unit
-                })
-                Unit
-            }, Constant.locale)
-        }
+    val graphClient: GraphClient
+//        get() {
+//            return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey, {
+//                httpClient = requestHeader
+//                httpCache(context.cacheDir, {
+//                    cacheMaxSizeBytes = 1024 * 1024 * 10
+//                    defaultCachePolicy = Constant.policy
+//                    Unit
+//                })
+//                Unit
+//            }, Constant.locale)
+//        }
     internal val requestHeader: OkHttpClient
         get() {
             val httpClient = OkHttpClient.Builder()

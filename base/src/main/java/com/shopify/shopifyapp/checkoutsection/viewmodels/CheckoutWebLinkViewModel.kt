@@ -18,6 +18,8 @@ import java.util.concurrent.Future
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
@@ -25,11 +27,19 @@ class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel()
     lateinit var context: Context
     var customeraccessToken: CustomerTokenData
         get() {
-            return repository.accessToken[0]
+            var customerToken = runBlocking(Dispatchers.IO) {
+                return@runBlocking repository.accessToken[0]
+            }
+            return customerToken
         }
         set(value) {}
     val isLoggedIn: Boolean
-        get() = repository.isLogin
+        get() {
+            var loggedin = runBlocking(Dispatchers.IO) {
+                return@runBlocking repository.isLogin
+            }
+            return loggedin
+        }
     val data: UserLocalData?
         get() {
             val user = arrayOf<UserLocalData>()

@@ -26,6 +26,8 @@ import com.shopify.shopifyapp.utils.Urls
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -43,7 +45,10 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val responsedata = MutableLiveData<Storefront.Checkout>()
     var customeraccessToken: CustomerTokenData
         get() {
-            return repository.accessToken[0]
+            var customerToken = runBlocking(Dispatchers.IO) {
+                return@runBlocking repository.accessToken[0]
+            }
+            return customerToken
         }
         set(value) {}
     val message = MutableLiveData<String>()
@@ -125,7 +130,12 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             return count[0]
         }
     val isLoggedIn: Boolean
-        get() = repository.isLogin
+        get() {
+            var loggedin = runBlocking(Dispatchers.IO) {
+                return@runBlocking repository.isLogin
+            }
+            return loggedin
+        }
 
     fun Response(): MutableLiveData<Storefront.Checkout> {
         return data

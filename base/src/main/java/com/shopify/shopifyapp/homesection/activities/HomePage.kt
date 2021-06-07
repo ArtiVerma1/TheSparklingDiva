@@ -413,14 +413,18 @@ class HomePage : NewBaseActivity() {
                 var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
                 invalidateOptionsMenu()
                 setToggle(home_toolbar)
-                setHomeIconColors(
-                        count_color ?: "#000000",
-                        count_textcolor ?: "#000000",
-                        icon_color ?: "#000000"
-                )
-                var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
-                setHomeSearchOption(search_position ?: "", search_placeholder
-                        ?: "", binding!!)
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(100)
+                    setHomeIconColors(
+                            count_color ?: "#000000",
+                            count_textcolor ?: "#000000",
+                            icon_color ?: "#000000"
+                    )
+                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+                    setHomeSearchOption(search_position ?: "", search_placeholder
+                            ?: "", binding!!)
+                }
+
             }
         }
         nav_view.menu.findItem(R.id.home_bottom).setChecked(true)

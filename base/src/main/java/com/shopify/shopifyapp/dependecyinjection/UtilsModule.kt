@@ -106,15 +106,14 @@ class UtilsModule(private val context: Context) {
     @Provides
     @Singleton
     internal fun getGraphClient(context: Context, client: OkHttpClient): GraphClient {
-        return GraphClient.build(context, context.resources.getString(R.string.shopdomain), context.resources.getString(R.string.apikey)
-        ) {
-            httpClient = client
-            httpCache(context.cacheDir, {
+        return GraphClient.build(context, context.resources.getString(R.string.shopdomain), context.resources.getString(R.string.apikey), {
+            httpClient = requestHeader
+            httpCache(MyApplication.context.cacheDir, {
                 cacheMaxSizeBytes = 1024 * 1024 * 10
                 defaultCachePolicy = Constant.policy
                 Unit
             })
             Unit
-        }
+        }, Constant.locale)
     }
 }
