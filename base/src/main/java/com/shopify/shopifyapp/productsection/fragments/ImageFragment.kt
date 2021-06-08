@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.google.gson.GsonBuilder
 import com.shopify.buy3.Storefront
 
 import com.shopify.shopifyapp.R
@@ -16,23 +17,25 @@ import com.shopify.shopifyapp.basesection.fragments.BaseFragment
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.productsection.activities.VideoPlayerActivity
 import com.shopify.shopifyapp.productsection.activities.ZoomActivity
+import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.utils.Constant
 
 import java.util.Objects
 
-class ImageFragment(var images: List<Storefront.ImageEdge>) : BaseFragment(), View.OnClickListener {
-    private val TAG = "ImageFragment"
-    private var image_list: ArrayList<String>? = null
+class ImageFragment : BaseFragment(), View.OnClickListener {
     private var linkType: String? = null
     private var videoLink: String? = null
+    private var mediaList: String? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<MImagefragmentBinding>(layoutInflater, R.layout.m_imagefragment, null, false)
-        val url = Objects.requireNonNull<Bundle>(arguments).getString("url")
-        linkType = Objects.requireNonNull<Bundle>(arguments).getString("type")
-        videoLink = Objects.requireNonNull<Bundle>(arguments).getString("video_link")
-        if (linkType.equals("video")) {
+        val mediaModel = Objects.requireNonNull<Bundle>(arguments).getSerializable("mediaModel") as MediaModel
+        mediaList = Objects.requireNonNull<Bundle>(arguments).getString("mediaList")
+        val url = mediaModel.previewUrl
+        linkType = mediaModel.typeName
+        videoLink = mediaModel.mediaUrl
+        if (linkType.equals("Video") || linkType.equals("ExternalVideo")) {
             binding.playButton.visibility = View.VISIBLE
-        }else{
+        } else {
             binding.playButton.visibility = View.GONE
         }
         val model = CommanModel()
@@ -47,7 +50,7 @@ class ImageFragment(var images: List<Storefront.ImageEdge>) : BaseFragment(), Vi
     }
 
     override fun onClick(v: View?) {
-        if (linkType.equals("video")) {
+        if (linkType.equals("Video") || linkType.equals("ExternalVideo")) {
             if (videoLink?.contains("youtu")!!) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(videoLink)))
                 Constant.activityTransition(v?.context!!)
@@ -58,12 +61,8 @@ class ImageFragment(var images: List<Storefront.ImageEdge>) : BaseFragment(), Vi
                 Constant.activityTransition(v?.context!!)
             }
         } else {
-            image_list = ArrayList<String>()
-            images.forEach {
-                image_list?.add(it.node.originalSrc)
-            }
             var intent = Intent(context, ZoomActivity::class.java)
-            intent.putStringArrayListExtra("images", image_list)
+            intent.putExtra("images", mediaList)
             context?.startActivity(intent)
             Constant.activityTransition(v?.context!!)
         }

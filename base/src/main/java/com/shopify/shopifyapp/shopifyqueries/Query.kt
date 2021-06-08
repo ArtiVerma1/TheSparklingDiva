@@ -49,18 +49,24 @@ object Query {
                                             .media({ m -> m.first(10) }, { me ->
                                                 me.edges({ e ->
                                                     e.node({ n ->
-                                                        n
+                                                        n.onMediaImage { media ->
+                                                            media.previewImage { p ->
+                                                                p.originalSrc()
+                                                            }
+                                                        }
                                                                 .onExternalVideo { _queryBuilder ->
                                                                     _queryBuilder.embeddedUrl()
                                                                             .previewImage {
                                                                                 it.originalSrc()
                                                                             }
                                                                 }
-//                                                                .onVideo(VideoQueryDefinition {
-//                                                                    it.previewImage {
-//                                                                        it.originalSrc()
-//                                                                    }
-//                                                                })
+                                                                .onVideo(VideoQueryDefinition {
+                                                                    it.previewImage {
+                                                                        it.originalSrc()
+                                                                    }.sources { it ->
+                                                                        it.url()
+                                                                    }
+                                                                })
                                                                 .onModel3d({ md ->
                                                                     md
                                                                             .sources({ s -> s.url() })
@@ -145,18 +151,24 @@ object Query {
                     .media({ m -> m.first(10) }, { me ->
                         me.edges({ e ->
                             e.node({ n ->
-                                n
+                                n.onMediaImage { media ->
+                                    media.previewImage { p ->
+                                        p.originalSrc()
+                                    }
+                                }
                                         .onExternalVideo { _queryBuilder ->
                                             _queryBuilder.embeddedUrl()
                                                     .previewImage {
                                                         it.originalSrc()
                                                     }
                                         }
-//                                                                .onVideo(VideoQueryDefinition {
-//                                                                    it.previewImage {
-//                                                                        it.originalSrc()
-//                                                                    }
-//                                                                })
+                                        .onVideo(VideoQueryDefinition {
+                                            it.previewImage {
+                                                it.originalSrc()
+                                            }.sources { it ->
+                                                it.url()
+                                            }
+                                        })
                                         .onModel3d({ md ->
                                             md
                                                     .sources({ s -> s.url() })
@@ -190,17 +202,6 @@ object Query {
                                 )
                     }
                     )
-                    .media({ m -> m.first(10) }, { me ->
-                        me.edges({ e ->
-                            e.node({ n ->
-                                n.onModel3d({ md ->
-                                    md
-                                            .sources({ s -> s.url().format() })
-                                            .previewImage({ p -> p.originalSrc() })
-                                })
-                            })
-                        })
-                    })
                     .onlineStoreUrl()
                     .options({ op ->
                         op.name()
@@ -282,18 +283,24 @@ object Query {
                                     .media({ m -> m.first(10) }, { me ->
                                         me.edges({ e ->
                                             e.node({ n ->
-                                                n
+                                                n.onMediaImage { media ->
+                                                    media.previewImage { p ->
+                                                        p.originalSrc()
+                                                    }
+                                                }
                                                         .onExternalVideo { _queryBuilder ->
                                                             _queryBuilder.embeddedUrl()
                                                                     .previewImage {
                                                                         it.originalSrc()
                                                                     }
                                                         }
-//                                                                .onVideo(VideoQueryDefinition {
-//                                                                    it.previewImage {
-//                                                                        it.originalSrc()
-//                                                                    }
-//                                                                })
+                                                        .onVideo(VideoQueryDefinition {
+                                                            it.previewImage {
+                                                                it.originalSrc()
+                                                            }.sources { it ->
+                                                                it.url()
+                                                            }
+                                                        })
                                                         .onModel3d({ md ->
                                                             md
                                                                     .sources({ s -> s.url() })

@@ -111,7 +111,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-ml-vision:24.0.1'
     implementation 'com.google.firebase:firebase-ml-vision-automl:18.0.3'
     implementation 'com.google.firebase:firebase-core:17.2.2'
-    implementation "com.google.android.gms:play-services-instantapps:17.0.0"
+   // implementation "com.google.android.gms:play-services-instantapps:17.0.0"
     implementation 'me.jessyan:retrofit-url-manager:1.4.0'
     //implementation "androidx.browser:browser:1.2.0"
     implementation 'com.google.firebase:firebase-auth-ktx:19.3.1'

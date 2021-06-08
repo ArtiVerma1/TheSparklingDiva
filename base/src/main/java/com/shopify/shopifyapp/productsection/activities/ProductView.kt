@@ -40,6 +40,7 @@ import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.productsection.adapters.ImagSlider
 import com.shopify.shopifyapp.productsection.adapters.ReviewListAdapter
 import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
+import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.productsection.models.Review
 import com.shopify.shopifyapp.productsection.models.ReviewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
@@ -433,9 +434,9 @@ class ProductView : NewBaseActivity() {
     }
 
     private fun setProductData(productedge: Storefront.Product?) {
-        var video_thumbnail: String? = null
-        var video_link: String? = null
         try {
+            var mediaList = mutableListOf<MediaModel>()
+            var mediaModel: MediaModel? = null
             loop@ for (i in 0..productedge!!.media.edges.size - 1) {
                 var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
                 if (a.equals("Model3d")) {
@@ -451,17 +452,21 @@ class ProductView : NewBaseActivity() {
                             break@loop
                         }
                     }
+                } else if (a.equals("Video")) {
+                    val video = productedge!!.media.edges.get(i).node as Storefront.Video
+                    mediaModel = MediaModel(video.graphQlTypeName, video.previewImage.originalSrc, video.sources.get(0).url)
+                    mediaList.add(mediaModel)
+                } else if (a.equals("ExternalVideo")) {
+                    val externalVideo = productedge!!.media.edges.get(i).node as Storefront.ExternalVideo
+                    mediaModel = MediaModel(externalVideo.graphQlTypeName, externalVideo.previewImage.originalSrc, externalVideo.embeddedUrl)
+                    mediaList.add(mediaModel)
+                } else if (a.equals("MediaImage")) {
+                    var mediaImage = productedge!!.media.edges.get(i).node as Storefront.MediaImage
+                    mediaModel = MediaModel(mediaImage.graphQlTypeName, mediaImage.previewImage.originalSrc, "")
+                    mediaList.add(mediaModel)
                 }
             }
-            for (i in 0 until productedge!!.media.edges.size) {
-                var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
-                if (a.equals("ExternalVideo")) {
-                    var externalVideo = productedge!!.media.edges.get(i).node as Storefront.ExternalVideo
-                    Log.d(TAG, "externalVideo: " + externalVideo.previewImage.originalSrc)
-                    video_thumbnail = externalVideo.previewImage.originalSrc
-                    video_link = externalVideo.embeddedUrl
-                }
-            }
+            Log.d(TAG, "setProductData: " + mediaList)
             Log.d(TAG, "setProductData: " + productedge.handle)
             product_handle = productedge.handle
             if (featuresModel.judgemeProductReview!!) {
@@ -512,10 +517,8 @@ class ProductView : NewBaseActivity() {
             binding?.availableQty?.text = getString(R.string.avaibale_qty) + " " + productedge.totalInventory
             val variant = productedge!!.variants.edges[0].node
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-            if (video_thumbnail == null) {
-                slider.setData(productedge.images.edges)
-            } else {
-                slider.setData(productedge.images.edges, video_thumbnail!!, video_link!!)
+            if (mediaList.size > 0) {
+                slider.setData(mediaList)
             }
             data!!.product = productedge
             binding!!.images.adapter = slider
@@ -816,8 +819,7 @@ class ProductView : NewBaseActivity() {
                     reviewFormBinding.emailEdt.requestFocus()
                 } else {
                     model?.getcreateReview(Urls(application as MyApplication).mid, reviewFormBinding.ratingBar.rating.toString(), getBase64Decode(productID)!!,
-                            reviewFormBinding.nameEdt.text.toString().trim(), reviewFormBinding.emailEdt.text.toString().trim(), reviewFormBinding.titleEdt.text.toString().trim()
-                            , reviewFormBinding.bodyEdt.text.toString().trim())
+                            reviewFormBinding.nameEdt.text.toString().trim(), reviewFormBinding.emailEdt.text.toString().trim(), reviewFormBinding.titleEdt.text.toString().trim(), reviewFormBinding.bodyEdt.text.toString().trim())
                     bottomsheet.dismiss()
                 }
             }
