@@ -23,24 +23,27 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import javax.inject.Singleton
 
 class Repository {
     private val TAG = "Repository"
     private val apiCallInterface: ApiCallInterface
     private val appdatabase: AppDatabase
+
+
     val graphClient: GraphClient
-//        get() {
-//            return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey, {
-//                httpClient = requestHeader
-//                httpCache(context.cacheDir, {
-//                    cacheMaxSizeBytes = 1024 * 1024 * 10
-//                    defaultCachePolicy = Constant.policy
-//                    Unit
-//                })
-//                Unit
-//            }, Constant.locale)
-//        }
+        get() {
+            return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey, {
+                httpClient = requestHeader
+                httpCache(context.cacheDir, {
+                    cacheMaxSizeBytes = 1024 * 1024 * 10
+                    defaultCachePolicy = Constant.policy
+                    Unit
+                })
+                Unit
+            }, Constant.locale)
+        }
     internal val requestHeader: OkHttpClient
         get() {
             val httpClient = OkHttpClient.Builder()
@@ -55,10 +58,9 @@ class Repository {
             return httpClient.build()
         }
 
-    constructor(apiCallInterface: ApiCallInterface, appdatabase: AppDatabase, graphClient: GraphClient) {
+    constructor(apiCallInterface: ApiCallInterface, appdatabase: AppDatabase) {
         this.apiCallInterface = apiCallInterface
         this.appdatabase = appdatabase
-        this.graphClient = graphClient
     }
 
     val localData: List<AppLocalData>

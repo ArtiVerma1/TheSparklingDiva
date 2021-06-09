@@ -437,7 +437,7 @@ class ProductView : NewBaseActivity() {
         try {
             var mediaList = mutableListOf<MediaModel>()
             var mediaModel: MediaModel? = null
-            loop@ for (i in 0..productedge!!.media.edges.size - 1) {
+             for (i in 0..productedge!!.media.edges.size - 1) {
                 var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
                 if (a.equals("Model3d")) {
                     var d = productedge!!.media.edges.get(i).node as Storefront.Model3d
@@ -449,7 +449,7 @@ class ProductView : NewBaseActivity() {
                             } else {
                                 binding!!.aricon.visibility = View.GONE
                             }
-                            break@loop
+                           // break@loop
                         }
                     }
                 } else if (a.equals("Video")) {
