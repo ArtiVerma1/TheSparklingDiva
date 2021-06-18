@@ -31,12 +31,10 @@ import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
-import com.shopify.shopifyapp.databinding.MProductviewBinding
-import com.shopify.shopifyapp.databinding.ReviewFormBinding
-import com.shopify.shopifyapp.databinding.SizeChartLayoutBinding
-import com.shopify.shopifyapp.databinding.SwatchesListBinding
+import com.shopify.shopifyapp.databinding.*
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
+import com.shopify.shopifyapp.productsection.adapters.ArImagesAdapter
 import com.shopify.shopifyapp.productsection.adapters.ImagSlider
 import com.shopify.shopifyapp.productsection.adapters.ReviewListAdapter
 import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
@@ -70,6 +68,8 @@ class ProductView : NewBaseActivity() {
     var variantId: ID? = null
     var sizeChartUrl: String = ""
     private var singleVariant: Boolean = false
+    private var arImagesGlb: ArrayList<String> = ArrayList()
+    private var arImages: ArrayList<String> = ArrayList()
 
     @Inject
     lateinit var reviewAdapter: ReviewListAdapter
@@ -84,6 +84,10 @@ class ProductView : NewBaseActivity() {
     private var external_id: String? = null
     private var judgeme_productid: String? = null
     private var reviewList: ArrayList<Review>? = null
+    private var mediaList = mutableListOf<MediaModel>()
+
+    @Inject
+    lateinit var arImagesAdapter: ArImagesAdapter
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -435,21 +439,19 @@ class ProductView : NewBaseActivity() {
 
     private fun setProductData(productedge: Storefront.Product?) {
         try {
-            var mediaList = mutableListOf<MediaModel>()
             var mediaModel: MediaModel? = null
-             for (i in 0..productedge!!.media.edges.size - 1) {
+            for (i in 0..productedge!!.media.edges.size - 1) {
                 var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
                 if (a.equals("Model3d")) {
                     var d = productedge!!.media.edges.get(i).node as Storefront.Model3d
-                    for (j in 0..d.sources.size - 1) {
-                        if (d.sources.get(j).url.contains(".glb")) {
-                            data!!.arimage = d.sources.get(j).url
-                            if (featuresModel.ardumented_reality) {
-                                binding!!.aricon.visibility = View.VISIBLE
-                            } else {
-                                binding!!.aricon.visibility = View.GONE
-                            }
-                           // break@loop
+                    if (d.sources.get(0).url.contains(".glb")) {
+                        data!!.arimage = d.sources.get(0).url
+                        mediaModel = MediaModel(d.graphQlTypeName, d.previewImage.originalSrc, d.sources.get(0).url)
+                        mediaList.add(mediaModel)
+                        if (featuresModel.ardumented_reality) {
+                            binding!!.aricon.visibility = View.VISIBLE
+                        } else {
+                            binding!!.aricon.visibility = View.GONE
                         }
                     }
                 } else if (a.equals("Video")) {
@@ -776,18 +778,41 @@ class ProductView : NewBaseActivity() {
 
         fun showAR(view: View, data: ListData) {
             try {
-                var sceneViewerIntent = Intent(Intent.ACTION_VIEW)
-                var intentUri: Uri =
-                        Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
-                                .appendQueryParameter("file", data.arimage)
-                                .build()
-                sceneViewerIntent.setData(intentUri)
-                sceneViewerIntent.setPackage("com.google.ar.core")
-                startActivity(sceneViewerIntent)
-                Constant.activityTransition(view.context)
+                Log.d(TAG, "showAR: " + mediaList)
+                var dialog = Dialog(this@ProductView, R.style.WideDialog)
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+                var dialogBinding = DataBindingUtil.inflate<ArimagesDialogBinding>(layoutInflater, R.layout.arimages_dialog, null, false)
+                dialog.setContentView(dialogBinding.root)
+                dialogBinding.closeBut.setOnClickListener {
+                    dialog.dismiss()
+                }
+                model?.filterArModel(mediaList)?.observe(this@ProductView, Observer {
+                    arImagesAdapter.setData(it)
+                    dialogBinding.arList.adapter = arImagesAdapter
+                    if (it.size == 1) {
+                        try {
+                            val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
+                            val intentUri: Uri =
+                                    Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+                                            .appendQueryParameter("file", data.arimage)
+                                            .build()
+                            sceneViewerIntent.setData(intentUri)
+                            sceneViewerIntent.setPackage("com.google.ar.core")
+                            startActivity(sceneViewerIntent)
+                            Constant.activityTransition(view.context)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(this@ProductView, getString(R.string.ar_error_text), Toast.LENGTH_SHORT).show()
+                        }
+
+                    } else {
+                        dialog.show()
+                    }
+                })
+
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@ProductView, getString(R.string.ar_error_text), Toast.LENGTH_SHORT).show()
             }
         }
 

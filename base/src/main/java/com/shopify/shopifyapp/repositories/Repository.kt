@@ -12,6 +12,7 @@ import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.dbconnection.database.AppDatabase
 import com.shopify.shopifyapp.dbconnection.entities.*
 import com.shopify.shopifyapp.dependecyinjection.Body
+import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.utils.ApiCallInterface
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Urls
@@ -118,6 +119,10 @@ class Repository {
     }
 
     fun getProductListSlider(list: List<Storefront.Product>): Observable<Storefront.Product> {
+        return Observable.fromIterable(list)
+    }
+
+    fun getArModels(list: MutableList<MediaModel>):Observable<MediaModel>{
         return Observable.fromIterable(list)
     }
 

@@ -6,7 +6,6 @@
     <data>
 
         <import type="android.view.View" />
-
         <variable
             name="features"
             type="com.shopify.shopifyapp.basesection.models.FeaturesModel" />
@@ -18,6 +17,9 @@
         <variable
             name="clickhandlers"
             type="com.shopify.shopifyapp.productsection.activities.ProductView.ClickHandlers" />
+        <variable
+            name="arImagesList"
+            type="java.util.ArrayList" />
     </data>
 
     <ScrollView

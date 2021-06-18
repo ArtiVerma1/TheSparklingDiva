@@ -186,4 +186,5 @@
     <string name="total_order_price">Total Order Price</string>
     <string name="updates_sent_to">Updates Sent To</string>
     <string name="you_ll_want_these_too">You Will Want These Too!</string>
+    <string name="please_select_the_ar_model">Please select the AR Model</string>
 </resources>
