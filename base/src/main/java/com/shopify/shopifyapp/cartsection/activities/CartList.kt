@@ -52,6 +52,7 @@ class CartList : NewBaseActivity() {
     private var count: Int = 1
     private val TAG = "CartList"
     private var grandTotal: String? = null
+    private var cartWarning: Boolean? = false
 
     @Inject
     lateinit var adapter: CartListAdapter
@@ -74,7 +75,7 @@ class CartList : NewBaseActivity() {
         model = ViewModelProvider(this, factory).get(CartListViewModel::class.java)
         model!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
-        personamodel?.activity=this
+        personamodel?.activity = this
         model!!.Response().observe(this, Observer<Storefront.Checkout> { this.consumeResponse(it) })
         if (SplashViewModel.featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
@@ -185,7 +186,11 @@ class CartList : NewBaseActivity() {
                 adapter!!.data = reponse.lineItems.edges
                 adapter!!.notifyDataSetChanged()
             } else {
-                adapter!!.setData(reponse.lineItems.edges, model,this)
+                adapter!!.setData(reponse.lineItems.edges, model, this, object : CartListAdapter.StockCallback {
+                    override fun cartWarning(warning: Boolean) {
+                        cartWarning = warning
+                    }
+                })
                 cartlist!!.adapter = adapter
             }
             setBottomData(reponse)
@@ -288,7 +293,18 @@ class CartList : NewBaseActivity() {
 
     inner class ClickHandler {
         fun loadCheckout(view: View, data: CartBottomData) {
-            showApplyCouponDialog(data)
+            if (cartWarning ?: false) {
+                var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
+                alertDialog.setTitleText(view.context?.getString(R.string.warning_message))
+                alertDialog.setContentText(view?.context?.getString(R.string.cart_warning))
+                alertDialog.setConfirmText(view?.context?.getString(R.string.dialog_ok))
+                alertDialog.setConfirmClickListener { sweetAlertDialog ->
+                    sweetAlertDialog.dismissWithAnimation()
+                }
+                alertDialog.show()
+            } else {
+                showApplyCouponDialog(data)
+            }
         }
 
         fun applyGiftCard(view: View, bottomData: CartBottomData) {

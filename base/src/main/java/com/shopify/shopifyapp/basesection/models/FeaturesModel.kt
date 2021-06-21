@@ -50,7 +50,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var showBottomNavigation: Boolean = false
+    var showBottomNavigation: Boolean = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.showBottomNavigation)

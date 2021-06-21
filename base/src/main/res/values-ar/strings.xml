@@ -187,4 +187,6 @@
     <string name="updates_sent_to">Updates Sent To</string>
     <string name="you_ll_want_these_too">You Will Want These Too!</string>
     <string name="please_select_the_ar_model">Please select the AR Model</string>
+    <string name="the_product_is_currently_not_in_stock">The product is currently not in stock</string>
+    <string name="cart_warning">Some of the products in your cart are either Out of Stock or not available in the requested quantity. Please Update your cart in order to Proceed to Checkout.</string>
 </resources>

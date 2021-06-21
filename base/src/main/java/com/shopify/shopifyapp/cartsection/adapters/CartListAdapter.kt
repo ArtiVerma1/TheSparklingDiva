@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,9 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
     private var layoutInflater: LayoutInflater? = null
     private var model: CartListViewModel? = null
     var cartlistArray = JSONArray()
+    private val TAG = "CartListAdapter"
     private var context: Context? = null
+    private var stockCallback: StockCallback? = null
 
     init {
         setHasStableIds(true)
@@ -51,13 +54,17 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         return position.toLong()
     }
 
+    interface StockCallback {
+        fun cartWarning(warning: Boolean)
+    }
+
     override fun onBindViewHolder(holder: CartItem, position: Int) {
         val item = CartListItem()
         item.position = position
         item.product_id = data?.get(position)!!.node.variant.product.id.toString()
         item.variant_id = data?.get(position)!!.node.variant.id.toString()
         item.productname = data?.get(position)!!.node.title
-        item.quantity_available=data?.get(position)!!.node.variant.quantityAvailable
+        item.quantity_available = data?.get(position)!!.node.variant.quantityAvailable
         val variant = data?.get(position)!!.node.variant
         item.normalprice = CurrencyFormatter.setsymbol(variant.presentmentPrices.edges[0].node.price.amount, variant.presentmentPrices.edges[0].node.price.currencyCode.toString())
         if (variant.compareAtPriceV2 != null) {
@@ -111,6 +118,27 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         holder.binding.remove.textSize = 11f
         holder.binding.movetowish.textSize = 11f
         holder.binding.quantity.textSize = 11f
+        Log.d(TAG, "onBindViewHolder: " + data?.get(position)?.node?.variant?.currentlyNotInStock)
+        if (data?.get(position)?.node?.variant?.currentlyNotInStock ?: false == false) {
+            if (data?.get(position)?.node?.variant?.quantityAvailable!! < data?.get(position)?.node?.quantity!! && data?.get(position)?.node?.variant?.availableForSale ?: false) {
+                holder.binding.notinstock.visibility = View.VISIBLE
+                holder.binding.notinstock.text = holder.binding.notinstock.context.getString(R.string.avaibale_qty) + " " + data?.get(position)?.node?.variant?.quantityAvailable!!
+                holder.binding.increase.visibility = View.GONE
+                holder.binding.decrese.visibility = View.VISIBLE
+                stockCallback?.cartWarning(true)
+            } else if (data?.get(position)?.node?.variant?.quantityAvailable == 0) {
+                holder.binding.notinstock.visibility = View.VISIBLE
+                holder.binding.increase.visibility = View.GONE
+                holder.binding.decrese.visibility = View.GONE
+                stockCallback?.cartWarning(true)
+            } else {
+                holder.binding.notinstock.visibility = View.GONE
+                holder.binding.increase.visibility = View.VISIBLE
+                holder.binding.decrese.visibility = View.VISIBLE
+                stockCallback?.cartWarning(false)
+            }
+        }
+        item?.currentlyNotInStock = data?.get(position)?.node?.variant?.currentlyNotInStock ?: false
         holder.binding.handlers = ClickHandlers()
         setVariants(item, holder, variant.selectedOptions)
     }
@@ -149,10 +177,11 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         return data!!.size
     }
 
-    fun setData(data: MutableList<Storefront.CheckoutLineItemEdge>, model: CartListViewModel?, context: Context) {
+    fun setData(data: MutableList<Storefront.CheckoutLineItemEdge>, model: CartListViewModel?, context: Context, stockCallback: StockCallback?) {
         this.data = data
         this.model = model
         this.context = context
+        this.stockCallback = stockCallback
     }
 
     fun getDiscount(regular: Double, special: Double): Int {
@@ -196,11 +225,16 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         }
 
         fun increase(view: View, item: CartListItem) {
-            if (item.qty?.toInt() == item.quantity_available) {
-                Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
-            } else {
+            if (item?.currentlyNotInStock) {
                 item.qty = (Integer.parseInt(item.qty!!) + 1).toString()
                 model!!.updateCart(item)
+            } else {
+                if (item.qty?.toInt() == item.quantity_available) {
+                    Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                } else {
+                    item.qty = (Integer.parseInt(item.qty!!) + 1).toString()
+                    model!!.updateCart(item)
+                }
             }
         }
 

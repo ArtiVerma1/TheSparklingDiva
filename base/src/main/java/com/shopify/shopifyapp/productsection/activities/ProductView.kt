@@ -68,8 +68,7 @@ class ProductView : NewBaseActivity() {
     var variantId: ID? = null
     var sizeChartUrl: String = ""
     private var singleVariant: Boolean = false
-    private var arImagesGlb: ArrayList<String> = ArrayList()
-    private var arImages: ArrayList<String> = ArrayList()
+    private var variantEdge: Storefront.ProductVariant? = null
 
     @Inject
     lateinit var reviewAdapter: ReviewListAdapter
@@ -349,6 +348,7 @@ class ProductView : NewBaseActivity() {
                 adapter = VariantAdapter()
                 if (variant_data.toList().size == 1) {
                     variantId = list.get(0).node.id
+                    variantEdge = list.get(0).node
                     variantValidation.accumulate("title", variantId)
                     binding?.variantAvailableQty?.text = list.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
                     setProductPrice(list.get(0).node)
@@ -356,18 +356,23 @@ class ProductView : NewBaseActivity() {
                     adapter!!.setData(list, variant_data.toList(), variant_keys.getString(i), model, data, this, variantCallback_ = object : VariantAdapter.VariantCallback {
                         override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
                             variantId = variant.node.id
+                            variantEdge = variant.node
                             variantValidation.accumulate(variant_title, variantId)
                             binding?.variantAvailableQty?.visibility = View.VISIBLE
                             binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
                             setProductPrice(variant.node)
-
-                            if (variant.node.quantityAvailable == 0) {
-                                binding?.addtocart?.text = getString(R.string.out_of_stock)
-                                inStock = false
-                                adapter.notifyDataSetChanged()
+                            if (variant.node.currentlyNotInStock == false) {
+                                if (variant.node.quantityAvailable == 0) {
+                                    binding?.addtocart?.text = getString(R.string.out_of_stock)
+                                    inStock = false
+                                    adapter.notifyDataSetChanged()
+                                } else {
+                                    binding?.addtocart?.text = getString(R.string.addtocart)
+                                    inStock = true
+                                }
                             } else {
-                                binding?.addtocart?.text = getString(R.string.addtocart)
                                 inStock = true
+                                binding?.addtocart?.text = getString(R.string.addtocart)
                             }
                         }
                     })
@@ -400,8 +405,6 @@ class ProductView : NewBaseActivity() {
                     if (!model!!.id.isEmpty()) {
                         productedge = result.data!!.node as Storefront.Product
                     }
-
-
                     // a.previewImage
 
                     Log.i("MageNative", "Product_id" + productedge!!.id.toString())
@@ -549,7 +552,6 @@ class ProductView : NewBaseActivity() {
                     ?: "",
                     productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.amount.toDouble()
                             ?: 0.0, this)
-
             setProductPrice(variant)
             binding?.regularprice?.textSize = 15f
             model!!.filterList(productedge.variants.edges)
@@ -751,13 +753,20 @@ class ProductView : NewBaseActivity() {
                 if (variantValidation.names().length() >= totalVariant!!) {
                     Log.d(TAG, "increase: " + model?.getQtyInCart(variantId.toString()))
                     var total = binding!!.quantity.text.toString().toInt() + model?.getQtyInCart(variantId.toString())!!
-                    if (total == binding?.variantAvailableQty?.text.toString().split(" ").get(0).toInt()) {
-                        Toast.makeText(this@ProductView, getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                    if (variantEdge?.currentlyNotInStock == false) {
+                        if (total >= binding?.variantAvailableQty?.text.toString().split(" ").get(0).toInt()) {
+                            Toast.makeText(this@ProductView, getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                        } else {
+                            var quantity: Int = binding!!.quantity.text.toString().toInt()
+                            quantity++
+                            binding!!.quantity.text = quantity.toString()
+                        }
                     } else {
                         var quantity: Int = binding!!.quantity.text.toString().toInt()
                         quantity++
                         binding!!.quantity.text = quantity.toString()
                     }
+
                 } else {
                     Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
                 }

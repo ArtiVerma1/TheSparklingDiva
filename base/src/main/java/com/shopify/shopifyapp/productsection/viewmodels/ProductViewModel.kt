@@ -391,7 +391,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun getQtyInCart(variantId: String): Int {
-        var variant_qty = runBlocking {
+        var variant_qty = runBlocking(Dispatchers.IO) {
             if (repository.getSingLeItem(variantId) == null) {
                 return@runBlocking 0
             } else {

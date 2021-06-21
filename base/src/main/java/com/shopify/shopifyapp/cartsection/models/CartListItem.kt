@@ -17,6 +17,13 @@ class CartListItem : BaseObservable() {
     var offertext: String? = null
     var quantity_available: Int? = null
 
+    @Bindable
+    var currentlyNotInStock: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.currentlyNotInStock)
+        }
+
     @get:Bindable
     var qty: String? = null
         set(qty) {

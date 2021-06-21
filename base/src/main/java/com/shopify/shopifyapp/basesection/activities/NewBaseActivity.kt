@@ -17,7 +17,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -47,7 +46,6 @@ import com.shopify.shopifyapp.basesection.adapters.RecylerAdapter
 import com.shopify.shopifyapp.basesection.fragments.BaseFragment
 import com.shopify.shopifyapp.basesection.fragments.LeftMenu
 import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
-import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.customviews.MageNativeTextView
@@ -56,9 +54,7 @@ import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
-import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
-import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 import com.shopify.shopifyapp.utils.*
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
@@ -136,6 +132,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         } else {
             nav_view.visibility = View.GONE
         }
+
         nav_view.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_bottom -> {
@@ -214,6 +211,14 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                         toolbar.setBackgroundColor(Color.parseColor(value))
                     }
                     themeColor = value
+                    val iconColorStates = ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked)), intArrayOf(
+                            Color.parseColor("#000000"),
+                            Color.parseColor(value)
+                    ))
+
+                    nav_view.setItemIconTintList(iconColorStates)
+                    nav_view.setItemTextColor(iconColorStates)
+
                     //   nav_view.menu.findItem(R.id.home_bottom).iconTintList = ColorStateList.valueOf(Color.parseColor(value))
                 }
 
