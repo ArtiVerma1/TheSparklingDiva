@@ -209,7 +209,6 @@ class LeftMenu : BaseFragment() {
                 "currencyswitcher" -> {
                     Log.i("MageNative", "currencyswitcher" + " : IN")
                     (context as NewBaseActivity)!!.getCurrency()
-
                 }
                 "collections" -> {
                     val collection_all = Intent(context, CollectionList::class.java)

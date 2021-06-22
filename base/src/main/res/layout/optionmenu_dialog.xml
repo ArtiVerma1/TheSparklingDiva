@@ -135,7 +135,7 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="22dp"
                         android:fontFamily="@font/roboto_bold"
-                        android:text="@string/not_intrested_in"
+                        android:text="@string/close"
                         android:textAllCaps="true"
                         android:textColor="@color/main_color_gray_lt"
                         android:textSize="12sp"

@@ -358,6 +358,7 @@ class ProductView : NewBaseActivity() {
                         override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
                             variantId = variant.node.id
                             variantEdge = variant.node
+                            binding?.quantity?.text = "1"
                             variantValidation.accumulate(variant_title, variantId)
                             binding?.variantAvailableQty?.visibility = View.VISIBLE
                             binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
@@ -767,7 +768,6 @@ class ProductView : NewBaseActivity() {
                         quantity++
                         binding!!.quantity.text = quantity.toString()
                     }
-
                 } else {
                     Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
                 }
@@ -832,7 +832,7 @@ class ProductView : NewBaseActivity() {
             bottomsheet.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
             var reviewFormBinding = DataBindingUtil.inflate<ReviewFormBinding>(layoutInflater, R.layout.review_form, null, false)
             bottomsheet.setContentView(reviewFormBinding.root)
-            reviewFormBinding.ratingBar.progressTintList= ColorStateList.valueOf(Color.parseColor(themeColor))
+            reviewFormBinding.ratingBar.progressTintList = ColorStateList.valueOf(Color.parseColor(themeColor))
             bottomsheet.setCancelable(false)
             reviewFormBinding.closeBut.setOnClickListener {
                 bottomsheet.dismiss()

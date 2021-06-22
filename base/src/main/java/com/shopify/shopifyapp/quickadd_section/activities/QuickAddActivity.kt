@@ -46,6 +46,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     var bottomSheetDialog: BottomSheetDialog? = null
     var presentment_currency = "nopresentmentcurrency"
     var currency_list: ArrayList<Storefront.CurrencyCode>? = null
+    var quantity: Int = 1
     lateinit var quickVariantAdapter: QuickVariantAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,6 +158,8 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
             override fun variantSelection(variantData: Storefront.ProductVariantEdge) {
                 variant_id = variantData.node.id.toString()
                 variant = variantData
+                quantity = 1
+                binding?.quantity?.text = "1"
                 binding?.availableQty?.visibility = View.VISIBLE
                 binding?.availableQty?.text = variantData.node.quantityAvailable.toString() + " " + context.resources.getString(R.string.avaibale_qty_variant)
                 if (variantData.node.currentlyNotInStock == true) {
@@ -228,7 +231,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     }
 
     inner class VariantClickHandler {
-        var quantity: Int = 1
+
         fun addcart(view: View) {
             if (inStock) {
                 if (variant_id == null) {
