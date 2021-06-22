@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.productsection.adapters
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.activities.NewBaseActivity.Companion.themeColor
 import com.shopify.shopifyapp.databinding.AllReviewListItemBinding
 import com.shopify.shopifyapp.productsection.models.Review
 import javax.inject.Inject
@@ -33,6 +35,7 @@ class AllReviewListAdapter @Inject constructor() : RecyclerView.Adapter<AllRevie
         var binding = DataBindingUtil.inflate<AllReviewListItemBinding>(LayoutInflater.from(parent.context), R.layout.all_review_list_item, parent, false)
         var gradientDrawable = GradientDrawable()
         gradientDrawable.setSize(binding.circularName.layoutParams.width, binding.circularName.layoutParams.height)
+        binding?.ratingBar?.progressTintList = ColorStateList.valueOf(Color.parseColor(themeColor))
         gradientDrawable.cornerRadius = (binding.circularName.layoutParams.width / 2).toFloat()
         gradientDrawable.setStroke(2, Color.parseColor(NewBaseActivity.themeColor))
         binding.circularName.background = gradientDrawable

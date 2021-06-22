@@ -323,6 +323,7 @@ object Query {
                                                                         .presentmentPrices({ arg: PresentmentPricesArguments -> arg.first(25).presentmentCurrencies(list_currency) }) { price: ProductVariantPricePairConnectionQuery -> price.edges { e: ProductVariantPricePairEdgeQuery -> e.cursor().node { na: ProductVariantPricePairQuery -> na.price { pr: MoneyV2Query -> pr.amount().currencyCode() }.compareAtPrice { cp: MoneyV2Query -> cp.amount().currencyCode() } } } }
                                                                         .price()
                                                                         .quantityAvailable()
+                                                                        .currentlyNotInStock()
                                                                         .title()
                                                                         .selectedOptions { select: SelectedOptionQuery -> select.name().value() }
                                                                         .compareAtPriceV2 { compare: MoneyV2Query -> compare.amount().currencyCode() }

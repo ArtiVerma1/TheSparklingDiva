@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.productsection.activities
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -831,6 +832,7 @@ class ProductView : NewBaseActivity() {
             bottomsheet.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
             var reviewFormBinding = DataBindingUtil.inflate<ReviewFormBinding>(layoutInflater, R.layout.review_form, null, false)
             bottomsheet.setContentView(reviewFormBinding.root)
+            reviewFormBinding.ratingBar.progressTintList= ColorStateList.valueOf(Color.parseColor(themeColor))
             bottomsheet.setCancelable(false)
             reviewFormBinding.closeBut.setOnClickListener {
                 bottomsheet.dismiss()

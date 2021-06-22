@@ -42,6 +42,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     var variant_id: String? = null
     var carttArray = JSONArray()
     var product_price: Double = 0.0
+    private var variant: Storefront.ProductVariantEdge? = null
     var bottomSheetDialog: BottomSheetDialog? = null
     var presentment_currency = "nopresentmentcurrency"
     var currency_list: ArrayList<Storefront.CurrencyCode>? = null
@@ -71,21 +72,26 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
 
     fun initView() {
         currency_list = ArrayList<Storefront.CurrencyCode>()
-        GlobalScope.launch(Dispatchers.IO) {
+        val currency = runBlocking(Dispatchers.IO) {
             if (repository.localData[0].currencycode != null) {
-                presentment_currency = repository.localData[0].currencycode!!
-                currency_list?.add(Storefront.CurrencyCode.valueOf(presentment_currency))
+                return@runBlocking repository.localData[0].currencycode!!
+            } else {
+                return@runBlocking "nopresentmentcurrency"
             }
         }
+
+        currency_list?.add(Storefront.CurrencyCode.valueOf(currency))
+
         binding?.availableQty?.textSize = 14f
         quickVariantAdapter = QuickVariantAdapter()
+        Log.d(TAG, "initView: " + currency_list)
         doGraphQLQueryGraph(repository, Query.getProductById(product_id!!, currency_list!!), customResponse = object : CustomResponse {
             override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                 invoke(result)
             }
         }, context = context)
-        binding?.handler = VariantClickHandler()
         setPresentmentCurrencyForModel()
+        binding?.handler = VariantClickHandler()
     }
 
     private fun setPresentmentCurrencyForModel() {
@@ -150,14 +156,20 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
         quickVariantAdapter.setData(productedge.variants.edges, context, itemClick = object : QuickVariantAdapter.ItemClick {
             override fun variantSelection(variantData: Storefront.ProductVariantEdge) {
                 variant_id = variantData.node.id.toString()
+                variant = variantData
                 binding?.availableQty?.visibility = View.VISIBLE
                 binding?.availableQty?.text = variantData.node.quantityAvailable.toString() + " " + context.resources.getString(R.string.avaibale_qty_variant)
-                if (variantData.node.quantityAvailable == 0) {
-                    binding?.addCart?.text = context.getString(R.string.out_of_stock)
-                    inStock = false
-                } else {
+                if (variantData.node.currentlyNotInStock == true) {
                     binding?.addCart?.text = context.getString(R.string.addtocart)
                     inStock = true
+                } else {
+                    if (variantData.node.quantityAvailable == 0) {
+                        binding?.addCart?.text = context.getString(R.string.out_of_stock)
+                        inStock = false
+                    } else {
+                        binding?.addCart?.text = context.getString(R.string.addtocart)
+                        inStock = true
+                    }
                 }
                 Log.d(TAG, "variantSelection: " + variantData.node.id)
 
@@ -198,7 +210,8 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     (activity as NewBaseActivity).invalidateOptionsMenu()
                 }
             }
-            Constant.logAddToCartEvent(carttArray.toString(), product_id, "product", presentment_currency, product_price, activity ?: Activity())
+            Constant.logAddToCartEvent(carttArray.toString(), product_id, "product", presentment_currency, product_price, activity
+                    ?: Activity())
             if (wishListViewModel != null) {
                 if (activity is WishList) {
                     wishListViewModel!!.deleteData(product_id)
@@ -245,12 +258,17 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
             if (variant_id == null) {
                 Toast.makeText(view.context, view.context.resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
             } else {
-                var total = binding!!.quantity.text.toString().toInt() + getQtyInCart(variant_id!!)
-                if (total == binding?.availableQty?.text.toString().split(" ").get(0).toInt()) {
-                    Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
-                } else {
+                if (variant?.node?.currentlyNotInStock == true) {
                     quantity++
                     binding?.quantity?.text = quantity.toString()
+                } else {
+                    var total = binding!!.quantity.text.toString().toInt() + getQtyInCart(variant_id!!)
+                    if (total >= binding?.availableQty?.text.toString().split(" ").get(0).toInt()) {
+                        Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                    } else {
+                        quantity++
+                        binding?.quantity?.text = quantity.toString()
+                    }
                 }
             }
         }

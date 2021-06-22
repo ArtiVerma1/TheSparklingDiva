@@ -35,7 +35,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var productReview: Boolean? = false
+    var productReview: Boolean? = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.productReview)

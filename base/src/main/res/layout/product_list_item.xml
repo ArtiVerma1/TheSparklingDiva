@@ -43,12 +43,21 @@
             android:translationZ="10dp"
             bind:layout_constraintDimensionRatio="H,0.8:1.1" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/out_of_stock"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:src="@drawable/outofstock"
+            android:translationZ="10dp"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_bold"
+            android:padding="5dp"
+            android:textAllCaps="true"
+            android:text="@string/out_of_stock"
+            android:layout_marginStart="7dp"
+            android:layout_marginBottom="10dp"
             android:visibility="gone"
 
             />
@@ -78,8 +87,8 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginEnd="5dp"
                     android:maxLines="2"
-                    android:text="@{listdata.textdata}"
                     android:onClick="@{(view) -> clickproduct.productClick(view,listdata)}"
+                    android:text="@{listdata.textdata}"
                     android:textAppearance="?android:attr/textAppearanceListItemSmall"
                     bind:layout_constraintEnd_toStartOf="@+id/option_menu"
                     bind:layout_constraintStart_toStartOf="parent"
@@ -106,10 +115,10 @@
                     android:id="@+id/option_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:onClick="@{view->clickproduct.menuClick(view,listdata)}"
                     android:src="@drawable/menu_indicator"
                     android:tint="@color/black"
-                    android:layout_marginEnd="5dp"
                     bind:layout_constraintEnd_toEndOf="parent"
                     bind:layout_constraintStart_toEndOf="@+id/name"
                     bind:layout_constraintTop_toTopOf="parent" />

@@ -42,6 +42,7 @@ import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class CartList : NewBaseActivity() {
     @Inject
@@ -52,7 +53,7 @@ class CartList : NewBaseActivity() {
     private var count: Int = 1
     private val TAG = "CartList"
     private var grandTotal: String? = null
-    private var cartWarning: Boolean? = false
+    private var cartWarning: HashMap<String, Boolean>? = hashMapOf()
 
     @Inject
     lateinit var adapter: CartListAdapter
@@ -187,7 +188,7 @@ class CartList : NewBaseActivity() {
                 adapter!!.notifyDataSetChanged()
             } else {
                 adapter!!.setData(reponse.lineItems.edges, model, this, object : CartListAdapter.StockCallback {
-                    override fun cartWarning(warning: Boolean) {
+                    override fun cartWarning(warning: HashMap<String, Boolean>) {
                         cartWarning = warning
                     }
                 })
@@ -293,7 +294,8 @@ class CartList : NewBaseActivity() {
 
     inner class ClickHandler {
         fun loadCheckout(view: View, data: CartBottomData) {
-            if (cartWarning ?: false) {
+            Log.d(TAG, "loadCheckout: " + cartWarning?.values)
+            if (cartWarning?.values?.contains(true) == true) {
                 var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
                 alertDialog.setTitleText(view.context?.getString(R.string.warning_message))
                 alertDialog.setContentText(view?.context?.getString(R.string.cart_warning))
@@ -352,7 +354,11 @@ class CartList : NewBaseActivity() {
                         model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
                         model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })
                     } else {
-                        showPopUp(data)
+                        val intent = Intent(this@CartList, CheckoutWeblink::class.java)
+                        intent.putExtra("link", data?.checkouturl)
+                        intent.putExtra("id", data.checkoutId)
+                        startActivity(intent)
+                        Constant.activityTransition(this@CartList)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
