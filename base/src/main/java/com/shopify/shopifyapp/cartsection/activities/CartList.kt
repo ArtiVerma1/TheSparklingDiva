@@ -88,12 +88,7 @@ class CartList : NewBaseActivity() {
         model!!.getGiftCard().observe(this, Observer<Storefront.Mutation> { this.consumeResponseGift(it) })
         model!!.getGiftCardRemove().observe(this, Observer<Storefront.Mutation> { this.consumeResponseGiftRemove(it) })
         model!!.getDiscount().observe(this, Observer<Storefront.Mutation> { this.consumeResponseDiscount(it) })
-        if (model!!.cartCount > 0) {
-            model!!.prepareCart()
-        } else {
-            showToast(resources.getString(R.string.emptycart))
-            finish()
-        }
+
         binding!!.subtotaltext.textSize = 12f
         binding!!.subtotal.textSize = 12f
         binding!!.taxtext.textSize = 12f
@@ -288,6 +283,12 @@ class CartList : NewBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (model!!.cartCount > 0) {
+            model!!.prepareCart()
+        } else {
+            showToast(resources.getString(R.string.emptycart))
+            finish()
+        }
         invalidateOptionsMenu()
         count = 1
     }
