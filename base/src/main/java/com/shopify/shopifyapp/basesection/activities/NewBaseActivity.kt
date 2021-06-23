@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.basesection.activities
 
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -42,6 +43,7 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.R2
 import com.shopify.shopifyapp.basesection.ItemDecoration.GridSpacingItemDecoration
+import com.shopify.shopifyapp.basesection.adapters.LanguageListAdapter
 import com.shopify.shopifyapp.basesection.adapters.RecylerAdapter
 import com.shopify.shopifyapp.basesection.fragments.BaseFragment
 import com.shopify.shopifyapp.basesection.fragments.LeftMenu
@@ -50,11 +52,13 @@ import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.f
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.customviews.MageNativeTextView
 import com.shopify.shopifyapp.databinding.CurrencyListLayoutBinding
+import com.shopify.shopifyapp.databinding.LanguageDialogBinding
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 import com.shopify.shopifyapp.utils.*
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
@@ -63,6 +67,7 @@ import kotlinx.android.synthetic.main.m_newbaseactivity.*
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInteractionListener {
 
@@ -99,12 +104,17 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     }
 
     @Inject
+    lateinit var languageListAdapter: LanguageListAdapter
+
+    @Inject
     lateinit var recylerAdapter: RecylerAdapter
     private var listDialog: BottomSheetDialog? = null
     var cartCount: Int = 0
     lateinit var item: MenuItem
     lateinit var wishitem: MenuItem
     lateinit var cartitem: MenuItem
+    private var languages: HashMap<String, String>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_newbaseactivity)
@@ -250,7 +260,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     }
 
     fun updateConfig(wrapper: ContextThemeWrapper) {
-        var dLocale = Locale(Constant.locale)
+        var dLocale = Locale(MagePrefs.getLanguage())
         Locale.setDefault(dLocale)
         val configuration = Configuration()
         configuration.setLocale(dLocale)
@@ -320,6 +330,34 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         leftMenuViewModel!!.message.observe(this, Observer<String> { this.showToast(it) })
     }
 
+    fun showLanguageDialog() {
+        languages = hashMapOf()
+        languages?.put("English", "en")
+        languages?.put("Arabic", "ar")
+        val dialog = Dialog(this, R.style.WideDialog)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+        val binding = DataBindingUtil.inflate<LanguageDialogBinding>(layoutInflater, R.layout.language_dialog, null, false)
+        languageListAdapter.setData(languages?.keys?.toMutableList(), object : LanguageListAdapter.LanguageCallback {
+            override fun selectedLanguage(language: String) {
+                MagePrefs.setLanguage(languages?.get(language)!!)
+                dialog.dismiss()
+                val intent = Intent(this@NewBaseActivity, Splash::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                Constant.activityTransition(this@NewBaseActivity)
+            }
+        })
+        binding?.backButton?.setOnClickListener {
+            dialog.dismiss()
+        }
+        binding.languageList.adapter = languageListAdapter
+        dialog.setContentView(binding.root)
+        drawer_layout.closeDrawers()
+        dialog.show()
+    }
+
     private fun preparePopUp(currencyCodes: List<Storefront.CurrencyCode>) {
         if (listDialog == null) {
             showPopUp(currencyCodes)
@@ -342,6 +380,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             currencyBinding.closeBut.setOnClickListener {
                 listDialog?.dismiss()
             }
+            drawer_layout.closeDrawers()
             listDialog?.show()
         } catch (e: Exception) {
             e.printStackTrace()

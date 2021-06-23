@@ -212,7 +212,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
             data!!.removeAt(item.position)
             notifyItemRemoved(item.position)
             notifyItemRangeChanged(item.position, data!!.size)
-            warningList.put(item.variant_id.toString(), item.currentlyNotInStock)
+            warningList.remove(item.variant_id.toString())
             stockCallback?.cartWarning(warningList)
         }
 
@@ -233,7 +233,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
                 data!!.removeAt(item.position)
                 notifyItemRemoved(item.position)
                 notifyItemRangeChanged(item.position, data!!.size)
-                warningList.put(item.variant_id.toString(), item.currentlyNotInStock)
+                warningList.remove(item.variant_id.toString())
                 stockCallback?.cartWarning(warningList)
             }
             alertDialog.show()

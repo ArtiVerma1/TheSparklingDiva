@@ -1,13 +1,16 @@
 package com.shopify.shopifyapp.sharedprefsection
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 
+@SuppressLint("StaticFieldLeak")
 object MagePrefs {
     private var context: Context? = null
     private var sharedPreference: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
     private val HOMEDATA = "home_data"
+    private val LANGUAGE = "language"
     private val PREF_NAME = "MagenativeShopify"
     private val HOME_PRODUCTS = "home_products"
 
@@ -24,6 +27,16 @@ object MagePrefs {
 
     fun getHomepageData(): String? {
         return sharedPreference?.getString(HOMEDATA, null)
+    }
+
+    fun setLanguage(language: String) {
+        editor?.putString(LANGUAGE, language)
+        editor?.commit()
+    }
+
+
+    fun getLanguage(): String? {
+        return sharedPreference?.getString(LANGUAGE, "en")
     }
 
     fun clearHomeData() {

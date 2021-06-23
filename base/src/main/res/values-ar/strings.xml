@@ -190,4 +190,6 @@
     <string name="the_product_is_currently_not_in_stock">The product is currently not in stock</string>
     <string name="cart_warning">Some of the products in your cart are either Out of Stock or not available in the requested quantity. Please Update your cart in order to Proceed to Checkout.</string>
     <string name="close">Close</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="select_language">Select Language</string>
 </resources>

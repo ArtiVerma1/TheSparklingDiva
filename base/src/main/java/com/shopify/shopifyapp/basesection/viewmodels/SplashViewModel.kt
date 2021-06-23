@@ -265,7 +265,8 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
             })
             MyApplication.dataBaseReference?.child("additional_info")?.child("locale")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    Constant.locale = dataSnapshot.getValue(String::class.java)!!
+                    /*if you are using multi currency then comment this line*/
+                 //   MagePrefs.setLanguage(dataSnapshot.getValue(String::class.java)!!)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {

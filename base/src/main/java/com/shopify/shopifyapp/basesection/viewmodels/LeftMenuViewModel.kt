@@ -18,6 +18,7 @@ import com.shopify.shopifyapp.dbconnection.entities.LivePreviewData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.GraphQLResponse
@@ -128,7 +129,7 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
 
     private fun getMenus() {
         try {
-            disposables.add(repository.getMenus(Urls(MyApplication.context)!!.mid)
+            disposables.add(repository.getMenus(Urls(MyApplication.context)!!.mid, MagePrefs.getLanguage()!!)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(

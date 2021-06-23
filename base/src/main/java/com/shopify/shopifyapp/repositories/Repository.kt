@@ -13,6 +13,7 @@ import com.shopify.shopifyapp.dbconnection.database.AppDatabase
 import com.shopify.shopifyapp.dbconnection.entities.*
 import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.productsection.models.MediaModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.ApiCallInterface
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Urls
@@ -43,7 +44,7 @@ class Repository {
                     Unit
                 })
                 Unit
-            }, Constant.locale)
+            }, MagePrefs.getLanguage())
         }
     internal val requestHeader: OkHttpClient
         get() {
@@ -89,8 +90,8 @@ class Repository {
     val accessToken: List<CustomerTokenData>
         get() = appdatabase.appLocalDataDaoDao().customerToken
 
-    fun getMenus(mid: String): Single<JsonElement> {
-        return apiCallInterface.getMenus(mid)
+    fun getMenus(mid: String,code:String): Single<JsonElement> {
+        return apiCallInterface.getMenus(mid,code)
     }
 
     fun getRecommendation(body: Body): Single<JsonElement> {
@@ -122,7 +123,7 @@ class Repository {
         return Observable.fromIterable(list)
     }
 
-    fun getArModels(list: MutableList<MediaModel>):Observable<MediaModel>{
+    fun getArModels(list: MutableList<MediaModel>): Observable<MediaModel> {
         return Observable.fromIterable(list)
     }
 
