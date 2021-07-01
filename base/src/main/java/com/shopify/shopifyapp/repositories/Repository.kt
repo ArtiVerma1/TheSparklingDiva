@@ -20,6 +20,8 @@ import com.shopify.shopifyapp.utils.Urls
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
@@ -88,10 +90,16 @@ class Repository {
             false
         }
     val accessToken: List<CustomerTokenData>
-        get() = appdatabase.appLocalDataDaoDao().customerToken
+        get() {
+            var customerToken = runBlocking(Dispatchers.IO) {
+                return@runBlocking appdatabase.appLocalDataDaoDao().customerToken
+            }
+            return customerToken
+        }
+    //   get() = appdatabase.appLocalDataDaoDao().customerToken
 
-    fun getMenus(mid: String,code:String): Single<JsonElement> {
-        return apiCallInterface.getMenus(mid,code)
+    fun getMenus(mid: String, code: String): Single<JsonElement> {
+        return apiCallInterface.getMenus(mid, code)
     }
 
     fun getRecommendation(body: Body): Single<JsonElement> {
