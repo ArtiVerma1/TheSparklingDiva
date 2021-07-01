@@ -7,6 +7,13 @@ import androidx.databinding.library.baseAdapters.BR
 class FeaturesModel : BaseObservable() {
 
     @Bindable
+    var nativeOrderView: Boolean = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.nativeOrderView)
+        }
+
+    @Bindable
     var recommendedProducts: Boolean = false
         set(value) {
             field = value
