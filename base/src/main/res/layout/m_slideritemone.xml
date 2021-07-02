@@ -23,6 +23,7 @@
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        app:contentPadding="1dp"
         android:layout_marginEnd="5dp"
         app:cardPreventCornerOverlap="false"
         app:cardCornerRadius="16dp">
