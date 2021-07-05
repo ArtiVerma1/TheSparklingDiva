@@ -40,9 +40,10 @@ android {
     }
 }
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:28.2.0')
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
-    implementation 'com.google.firebase:firebase-analytics:17.5.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     def room_version = "1.1.1"
     kapt "com.android.databinding:compiler:3.2.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -84,7 +85,7 @@ dependencies {
     //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //shopify sdk
-    implementation 'com.shopify.mobilebuysdk:buy3:8.0.0'
+    implementation 'com.shopify.mobilebuysdk:buy3:9.0.1'
     //timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
     //imageslider
@@ -111,7 +112,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-ml-vision:24.0.1'
     implementation 'com.google.firebase:firebase-ml-vision-automl:18.0.3'
     implementation 'com.google.firebase:firebase-core:17.2.2'
-    implementation "com.google.android.gms:play-services-instantapps:17.0.0"
+   // implementation "com.google.android.gms:play-services-instantapps:17.0.0"
     implementation 'me.jessyan:retrofit-url-manager:1.4.0'
     //implementation "androidx.browser:browser:1.2.0"
     implementation 'com.google.firebase:firebase-auth-ktx:19.3.1'
@@ -123,6 +124,6 @@ dependencies {
     //Sweet Alert Dialog
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
     implementation 'com.karumi:dexter:6.2.2'
-    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
 }
 apply plugin: 'com.google.gms.google-services'

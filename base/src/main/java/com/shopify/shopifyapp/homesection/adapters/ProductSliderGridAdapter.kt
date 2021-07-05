@@ -192,7 +192,7 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 item.gridbinding.specialprice.visibility = View.VISIBLE
             }
         } else {
-            val edge = variant!!.presentmentPrices.edges[0]
+            val edge = variant?.presentmentPrices?.edges?.get(0)
             data.regularprice = CurrencyFormatter.setsymbol(edge?.node?.price?.amount!!, edge?.node?.price?.currencyCode.toString())
             if (variant.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(edge?.node?.compareAtPrice?.amount!!)
@@ -200,8 +200,6 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 if (BigDecimal.valueOf(special).compareTo(BigDecimal.valueOf(regular)) == 1) {
                     data.regularprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
                     data.specialprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
-
-
                 } else {
                     data.regularprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
                     data.specialprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())

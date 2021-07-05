@@ -45,6 +45,7 @@ import com.shopify.shopifyapp.homesection.adapters.*
 import com.shopify.shopifyapp.homesection.models.CategoryCircle
 import com.shopify.shopifyapp.homesection.models.ProductSlider
 import com.shopify.shopifyapp.homesection.models.StandAloneBanner
+import com.shopify.shopifyapp.loader_section.CustomLoader
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
@@ -80,12 +81,15 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     val hasBannerOnTop = MutableLiveData<Boolean>()
     val hasFullSearchOnTop = MutableLiveData<Boolean>()
     private val TAG = "HomePageViewModel"
+    private var customLoader: CustomLoader? = null
 
     companion object {
         var count_color: String? = null
         var count_textcolor: String? = null
         var icon_color: String? = null
         var panel_bg_color: String? = null
+        var search_position: String? = null
+        var search_placeholder: String? = null
     }
 
     @Inject
@@ -158,6 +162,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     fun dowloadJson(downloadlink: String, context: HomePage) {
         GlobalScope.launch(Dispatchers.Main) {
+            customLoader = CustomLoader(context)
+            customLoader?.show()
             var result = async(Dispatchers.IO) {
                 URL(downloadlink).readText()
             }
@@ -214,10 +220,16 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
             if (names.length() == context.homepage.childCount) {
                 //   Toast.makeText(context, "complete", Toast.LENGTH_SHORT).show()
+                if (customLoader != null && customLoader?.isShowing ?: false) {
+                    customLoader?.dismiss()
+                }
                 context.main_container.visibility = View.VISIBLE
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            if (customLoader != null && customLoader?.isShowing ?: false) {
+                customLoader?.dismiss()
+            }
         }
         //  MagePrefs.setHomepageData(apiResponse)
     }
@@ -257,6 +269,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
                     context.setToggle(context.toolbar)
                     delay(1000)
+                    search_position = jsonObject.getString("search_position")
+                    search_placeholder = jsonObject.getString("search_placeholder")
                     context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
                     context.setWishList(jsonObject.getString("wishlist"))
                     if (jsonObject.has("logo_image_url")) {
@@ -1284,7 +1298,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                         } else {
                                             when (jsonObject.getString("item_in_a_row")) {
                                                 "2" -> {
-                                                   var productTwoGridAdapter = ProductTwoGridAdapter()
+                                                    var productTwoGridAdapter = ProductTwoGridAdapter()
                                                     productTwoGridAdapter!!.presentmentcurrency = presentmentCurrency
                                                     context.setLayout(productdata!!, "grid")
                                                     productTwoGridAdapter!!.setData(list, context, jsonObject, repository)

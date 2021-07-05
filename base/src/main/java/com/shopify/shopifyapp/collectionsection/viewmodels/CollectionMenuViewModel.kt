@@ -8,6 +8,7 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.Urls
 import io.reactivex.disposables.CompositeDisposable
@@ -28,7 +29,7 @@ class CollectionMenuViewModel(private val repository: Repository) : ViewModel() 
 
     private fun getMenus() {
         try {
-            doRetrofitCall(repository.getMenus(Urls(MyApplication.context)!!.mid), disposables, customResponse = object : CustomResponse {
+            doRetrofitCall(repository.getMenus(Urls(MyApplication.context)!!.mid, MagePrefs.getLanguage()!!), disposables, customResponse = object : CustomResponse {
                 override fun onSuccessRetrofit(result: JsonElement) {
                     responseLiveData.setValue(ApiResponse.success(result))
                 }

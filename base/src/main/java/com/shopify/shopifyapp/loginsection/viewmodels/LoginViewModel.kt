@@ -23,6 +23,9 @@ import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.utils.Urls.Data.MulipassSecret
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -250,7 +253,9 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
 
     fun savetoken(token: Storefront.CustomerAccessToken) {
         val customerTokenData = CustomerTokenData(token.accessToken, token.expiresAt.toLocalDateTime().toString())
-        repository.saveaccesstoken(customerTokenData)
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.saveaccesstoken(customerTokenData)
+        }
         try {
             doGraphQLQueryGraph(repository, Query.getCustomerDetails(token.accessToken), customResponse = object : CustomResponse {
                 override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
@@ -298,7 +303,9 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
 
     fun saveUser(firstName: String, lastName: String) {
         val userLocalData = UserLocalData(firstName, lastName, username, password)
-        repository.insertUserData(userLocalData)
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.insertUserData(userLocalData)
+        }
     }
 
     fun recoverCustomer(email: String) {

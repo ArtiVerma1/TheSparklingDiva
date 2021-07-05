@@ -4,30 +4,18 @@ import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity.Companion.themeColor
-import com.shopify.shopifyapp.databinding.MVariantoptionBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.databinding.SwatchesListItemBinding
 import com.shopify.shopifyapp.productsection.models.VariantData
 import com.shopify.shopifyapp.productsection.viewholders.VariantItem
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.json.JSONArray
-import java.lang.IndexOutOfBoundsException
-
-import javax.inject.Inject
 
 class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
     private var variants: List<Storefront.ProductVariantEdge>? = null

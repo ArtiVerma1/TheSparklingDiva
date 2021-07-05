@@ -37,11 +37,13 @@ import com.shopify.shopifyapp.databinding.MCartlistBinding
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.*
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class CartList : NewBaseActivity() {
     @Inject
@@ -52,6 +54,7 @@ class CartList : NewBaseActivity() {
     private var count: Int = 1
     private val TAG = "CartList"
     private var grandTotal: String? = null
+    private var cartWarning: HashMap<String, Boolean>? = hashMapOf()
 
     @Inject
     lateinit var adapter: CartListAdapter
@@ -74,7 +77,7 @@ class CartList : NewBaseActivity() {
         model = ViewModelProvider(this, factory).get(CartListViewModel::class.java)
         model!!.context = this
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
-        personamodel?.activity=this
+        personamodel?.activity = this
         model!!.Response().observe(this, Observer<Storefront.Checkout> { this.consumeResponse(it) })
         if (SplashViewModel.featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
@@ -86,12 +89,7 @@ class CartList : NewBaseActivity() {
         model!!.getGiftCard().observe(this, Observer<Storefront.Mutation> { this.consumeResponseGift(it) })
         model!!.getGiftCardRemove().observe(this, Observer<Storefront.Mutation> { this.consumeResponseGiftRemove(it) })
         model!!.getDiscount().observe(this, Observer<Storefront.Mutation> { this.consumeResponseDiscount(it) })
-        if (model!!.cartCount > 0) {
-            model!!.prepareCart()
-        } else {
-            showToast(resources.getString(R.string.emptycart))
-            finish()
-        }
+
         binding!!.subtotaltext.textSize = 12f
         binding!!.subtotal.textSize = 12f
         binding!!.taxtext.textSize = 12f
@@ -185,7 +183,11 @@ class CartList : NewBaseActivity() {
                 adapter!!.data = reponse.lineItems.edges
                 adapter!!.notifyDataSetChanged()
             } else {
-                adapter!!.setData(reponse.lineItems.edges, model,this)
+                adapter!!.setData(reponse.lineItems.edges, model, this, object : CartListAdapter.StockCallback {
+                    override fun cartWarning(warning: HashMap<String, Boolean>) {
+                        cartWarning = warning
+                    }
+                })
                 cartlist!!.adapter = adapter
             }
             setBottomData(reponse)
@@ -255,6 +257,7 @@ class CartList : NewBaseActivity() {
                 bottomData.tax = CurrencyFormatter.setsymbol(checkout.totalTaxV2.amount, checkout.totalTaxV2.currencyCode.toString())
             }
             bottomData.grandtotal = CurrencyFormatter.setsymbol(checkout.totalPriceV2.amount, checkout.totalPriceV2.currencyCode.toString())
+            MagePrefs.setGrandTotal(bottomData.grandtotal ?: "")
             grandTotal = checkout.totalPriceV2.amount
             bottomData.checkouturl = checkout.webUrl
             binding!!.bottomdata = bottomData
@@ -282,13 +285,31 @@ class CartList : NewBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (model!!.cartCount > 0) {
+            model!!.prepareCart()
+        } else {
+            showToast(resources.getString(R.string.emptycart))
+            finish()
+        }
         invalidateOptionsMenu()
         count = 1
     }
 
     inner class ClickHandler {
         fun loadCheckout(view: View, data: CartBottomData) {
-            showApplyCouponDialog(data)
+            Log.d(TAG, "loadCheckout: " + cartWarning?.values)
+            if (cartWarning?.values?.contains(true) == true) {
+                var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
+                alertDialog.setTitleText(view.context?.getString(R.string.warning_message))
+                alertDialog.setContentText(view?.context?.getString(R.string.cart_warning))
+                alertDialog.setConfirmText(view?.context?.getString(R.string.dialog_ok))
+                alertDialog.setConfirmClickListener { sweetAlertDialog ->
+                    sweetAlertDialog.dismissWithAnimation()
+                }
+                alertDialog.show()
+            } else {
+                showApplyCouponDialog(data)
+            }
         }
 
         fun applyGiftCard(view: View, bottomData: CartBottomData) {
@@ -336,7 +357,11 @@ class CartList : NewBaseActivity() {
                         model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
                         model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })
                     } else {
-                        showPopUp(data)
+                        val intent = Intent(this@CartList, CheckoutWeblink::class.java)
+                        intent.putExtra("link", data?.checkouturl)
+                        intent.putExtra("id", data.checkoutId)
+                        startActivity(intent)
+                        Constant.activityTransition(this@CartList)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()

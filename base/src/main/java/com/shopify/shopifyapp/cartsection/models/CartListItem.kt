@@ -15,6 +15,14 @@ class CartListItem : BaseObservable() {
     var variant_three: String? = null
     var image: String? = null
     var offertext: String? = null
+    var quantity_available: Int? = null
+
+    @Bindable
+    var currentlyNotInStock: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.currentlyNotInStock)
+        }
 
     @get:Bindable
     var qty: String? = null

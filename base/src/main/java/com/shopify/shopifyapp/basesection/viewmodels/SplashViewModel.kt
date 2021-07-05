@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -31,6 +32,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,9 +56,14 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private val TAG = "SplashViewModel"
-    val isLogin: Boolean
-        get() = repository.isLogin
 
+    val isLogin: Boolean
+        get() {
+            var loggedin = runBlocking(Dispatchers.IO) {
+                return@runBlocking repository.isLogin
+            }
+            return loggedin
+        }
 
     fun Response(shop: String): MutableLiveData<LocalDbResponse> {
         val handler = Handler()
@@ -70,7 +77,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     fun setPresentmentCurrencyForModel() {
         try {
             val runnable = Runnable {
-                if(!repository.localData.isEmpty()) {
+                if (!repository.localData.isEmpty()) {
                     if (repository.localData[0].currencycode == null) {
                         presentmentcurrency = "nopresentmentcurrency"
                     } else {
@@ -199,6 +206,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
                     if (repository.localData.size == 0) {
                         appLocalData.currencycode = result.data?.getShop()?.paymentSettings?.currencyCode.toString()
+                        MagePrefs.setCurrency(appLocalData.currencycode ?: "")
                         repository.insertData(appLocalData)
                     }
                 }
@@ -224,6 +232,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                         } else {
                             appLocalData = repository.localData[0]
                             appLocalData!!.isIstrialexpire = value
+                            MagePrefs.setCurrency(appLocalData.currencycode ?: "")
                             repository.updateData(appLocalData)
                         }
                         Log.i("MageNative:", "Currency" +
@@ -259,7 +268,8 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
             })
             MyApplication.dataBaseReference?.child("additional_info")?.child("locale")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    Constant.locale = dataSnapshot.getValue(String::class.java)!!
+                    /*if you are using multi currency then comment this line*/
+                    //   MagePrefs.setLanguage(dataSnapshot.getValue(String::class.java)!!)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {

@@ -7,6 +7,8 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -69,6 +71,7 @@ class JudgeMeCreateReview : NewBaseActivity(), View.OnClickListener {
         model?.context = this
         model?.getjudgeMeReviewCreate?.observe(this, Observer { this.consumeReviewCreate(it) })
         binding?.addImage?.setOnClickListener(this)
+        binding?.ratingBar?.progressTintList= ColorStateList.valueOf(Color.parseColor(themeColor))
         binding?.submitReview?.setOnClickListener(this)
         camera = Camera.Builder()
                 .resetToCorrectOrientation(true)//1

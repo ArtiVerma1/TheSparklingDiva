@@ -1,5 +1,7 @@
 package com.shopify.shopifyapp.productsection.adapters
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +13,15 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.databinding.ZoomImageItemBinding
+import com.shopify.shopifyapp.productsection.activities.VideoPlayerActivity
+import com.shopify.shopifyapp.productsection.models.MediaModel
+import com.shopify.shopifyapp.utils.Constant
 import javax.inject.Inject
 
 class ZoomImageAdapter @Inject constructor() : PagerAdapter() {
-    var imageList: ArrayList<String>? = null
+    var imageList: MutableList<MediaModel>? = null
 
-    fun setData(imageList: ArrayList<String>?) {
+    fun setData(imageList: MutableList<MediaModel>?) {
         this.imageList = imageList
     }
 
@@ -27,7 +32,23 @@ class ZoomImageAdapter @Inject constructor() : PagerAdapter() {
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         var binding = DataBindingUtil.inflate<ZoomImageItemBinding>(LayoutInflater.from(container.context), R.layout.zoom_image_item, container, false)
         val model = CommanModel()
-        model.imageurl = imageList?.get(position)
+        model.imageurl = imageList?.get(position)?.previewUrl
+        if (imageList?.get(position)?.typeName?.equals("Video") ?: false || imageList?.get(position)?.typeName?.equals("ExternalVideo") ?: false) {
+            binding.playButton.visibility = View.VISIBLE
+        } else {
+            binding.playButton.visibility = View.GONE
+        }
+        binding.playButton.setOnClickListener {
+            if (imageList?.get(position)?.mediaUrl?.contains("youtu")!!) {
+                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(imageList?.get(position)?.mediaUrl)))
+                Constant.activityTransition(it.context)
+            } else {
+                var intent = Intent(it.context, VideoPlayerActivity::class.java)
+                intent.putExtra("videoLink", imageList?.get(position)?.mediaUrl)
+                it.context.startActivity(intent)
+                Constant.activityTransition(it.context)
+            }
+        }
         binding.commondata = model
         container.addView(binding.root)
         return binding.root

@@ -19,6 +19,7 @@ import com.shopify.shopifyapp.dependecyinjection.InnerData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.network_transaction.doRetrofitCall
+import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.ApiResponse
@@ -390,7 +391,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun getQtyInCart(variantId: String): Int {
-        var variant_qty = runBlocking {
+        var variant_qty = runBlocking(Dispatchers.IO) {
             if (repository.getSingLeItem(variantId) == null) {
                 return@runBlocking 0
             } else {
@@ -482,6 +483,17 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
         }
         Log.i("POST_STRING", "" + result)
         return result.toString()
+    }
+
+    fun filterArModel(armodelList: MutableList<MediaModel>): MutableLiveData<MutableList<MediaModel>> {
+        val ardatamodelList = MutableLiveData<MutableList<MediaModel>>()
+        disposables.add(repository.getArModels(armodelList).subscribeOn(Schedulers.io())
+                .filter { t -> t.typeName.equals("Model3d") }
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribe { result -> ardatamodelList.value = result }
+        )
+        return ardatamodelList
     }
 
     fun isValidEmail(target: String): Boolean {

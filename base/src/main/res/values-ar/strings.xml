@@ -176,4 +176,20 @@
     <string name="price">Price :</string>
     <string name="order_id">Order #</string>
     <string name="order_delivery_location">Order will be deliver here</string>
+    <string name="subtotal_amt">Subtotal :</string>
+    <string name="shipping_amt">Shipping (Standard Shipping) :</string>
+    <string name="tax_amt">Tax :</string>
+    <string name="payment_status">Payment Status :</string>
+    <string name="cancelled_at">Cancelled At</string>
+    <string name="cancelled_reason">Cancelled Reason</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="total_order_price">Total Order Price</string>
+    <string name="updates_sent_to">Updates Sent To</string>
+    <string name="you_ll_want_these_too">You Will Want These Too!</string>
+    <string name="please_select_the_ar_model">Please select the AR Model</string>
+    <string name="the_product_is_currently_not_in_stock">The product is currently not in stock</string>
+    <string name="cart_warning">Some of the products in your cart are either Out of Stock or not available in the requested quantity. Please Update your cart in order to Proceed to Checkout.</string>
+    <string name="close">Close</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="select_language">Select Language</string>
 </resources>

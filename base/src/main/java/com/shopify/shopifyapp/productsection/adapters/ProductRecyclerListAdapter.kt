@@ -16,6 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.models.ListData
@@ -40,12 +44,14 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
     lateinit var products: MutableList<Storefront.ProductEdge>
     private var activity: Activity? = null
     private var repository: Repository? = null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     var presentmentcurrency: String? = null
     var whilistArray = JSONArray()
     fun setData(products: List<Storefront.ProductEdge>?, activity: Activity, repository: Repository) {
         this.products = products as MutableList<Storefront.ProductEdge>
         this.activity = activity
         this.repository = repository
+        firebaseAnalytics = Firebase.analytics
     }
 
     class ProductRecyclerListViewHolder : RecyclerView.ViewHolder {
@@ -223,7 +229,17 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
             dialog.setCancelable(false)
             var binding = DataBindingUtil.inflate<OptionmenuDialogBinding>(LayoutInflater.from(activity), R.layout.optionmenu_dialog, null, false)
             dialog.setContentView(binding.root)
-            binding.wishlistBut.setOnClickListener {
+            if ((activity as ProductList).productListModel?.isInwishList(data.product?.id.toString())!!) {
+                Glide.with(activity!!)
+                        .load(R.drawable.wishlist_selected)
+                        .into(binding?.wishlistIcon!!)
+            } else {
+                Glide.with(activity!!)
+                        .load(R.drawable.wishlist_icon)
+                        .into(binding?.wishlistIcon!!)
+            }
+
+            binding.wishlistsection.setOnClickListener {
                 if ((activity as ProductList).productListModel?.setWishList(data.product?.id.toString())!!) {
                     Toast.makeText(view.context, view.context.resources.getString(R.string.successwish), Toast.LENGTH_LONG).show()
                     data.addtowish = view.context.resources.getString(R.string.alreadyinwish)
@@ -233,6 +249,12 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
                     whilistArray.put(wishlistData.toString())
                     Constant.logAddToWishlistEvent(whilistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                             ?: 0.0, activity ?: Activity())
+                    if (SplashViewModel.featuresModel.firebaseEvents) {
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
+                            param(FirebaseAnalytics.Param.ITEM_ID, data.product?.id.toString())
+                            param(FirebaseAnalytics.Param.QUANTITY, 1)
+                        }
+                    }
                 } else {
                     (activity as ProductList).productListModel?.deleteData(data.product?.id.toString())
                     data!!.addtowish = view.context.resources.getString(R.string.addtowish)
@@ -241,7 +263,7 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
                 (activity as ProductList).invalidateOptionsMenu()
                 dialog.dismiss()
             }
-            binding.shareBut.setOnClickListener {
+            binding.sharesection.setOnClickListener {
                 val shareString = activity?.resources?.getString(R.string.hey) + "  " + data.product!!.title + "  " + activity?.resources?.getString(R.string.on) + "  " + activity?.resources?.getString(R.string.app_name) + "\n" + data.product!!.onlineStoreUrl + "?pid=" + data.product!!.id.toString()
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = "text/plain"
@@ -251,7 +273,7 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
                 Constant.activityTransition(view.context)
                 dialog.dismiss()
             }
-            binding.closeBut.setOnClickListener {
+            binding.notintrestedsection.setOnClickListener {
                 dialog.dismiss()
             }
             dialog.show()

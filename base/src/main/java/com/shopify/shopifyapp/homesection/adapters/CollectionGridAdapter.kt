@@ -1,6 +1,7 @@
 package com.shopify.shopifyapp.homesection.adapters
 
 import android.app.Activity
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -78,8 +79,14 @@ constructor() : RecyclerView.Adapter<CollectionItem>() {
                     drawable.setStroke(1, Color.parseColor(background.getString("color")))
                     binding.main.background = drawable
                 } else if (jsonObject.getString("item_shape").equals("rounded")) {
-                    binding.card.cardElevation = 3f
+                    binding.card.cardElevation = 0f
                     binding.card.radius = 10f
+                    var background = JSONObject(jsonObject.getString("item_border_color"))
+                    var drawable = GradientDrawable()
+                    drawable.shape = GradientDrawable.RECTANGLE
+                    drawable.cornerRadius = 10f
+                    drawable.setStroke(2, Color.parseColor(background.getString("color")))
+                    binding.main.background = drawable
                 }
             } else if (jsonObject.getString("item_border").equals("0")) {
                 if (!jsonObject.getString("item_shape").equals("rounded")) {

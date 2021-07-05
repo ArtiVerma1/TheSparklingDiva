@@ -12,6 +12,10 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
@@ -36,12 +40,14 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
     lateinit var products: List<Storefront.Product>
     private var activity: Activity? = null
     private var repository: Repository? = null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     var presentmentcurrency: String? = null
     var whilistArray = JSONArray()
     fun setData(products: List<Storefront.Product>, activity: Activity, repository: Repository) {
         this.products = products
         this.activity = activity
         this.repository = repository
+        firebaseAnalytics = Firebase.analytics
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItem {
@@ -205,6 +211,12 @@ constructor() : RecyclerView.Adapter<ProductItem>() {
                 wishlistData.put("id", data.product?.id.toString())
                 wishlistData.put("quantity", 1)
                 whilistArray.put(wishlistData.toString())
+                if (SplashViewModel.featuresModel.firebaseEvents) {
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
+                        param(FirebaseAnalytics.Param.ITEM_ID, data.product?.id.toString())
+                        param(FirebaseAnalytics.Param.QUANTITY, 1)
+                    }
+                }
                 Constant.logAddToWishlistEvent(whilistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                         ?: 0.0, activity ?: Activity())
             } else {

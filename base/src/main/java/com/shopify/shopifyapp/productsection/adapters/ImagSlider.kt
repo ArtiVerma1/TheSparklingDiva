@@ -5,32 +5,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.google.gson.Gson
 
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.productsection.fragments.ImageFragment
+import com.shopify.shopifyapp.productsection.models.MediaModel
 
 class ImagSlider(fm: FragmentManager, behavior: Int) : FragmentStatePagerAdapter(fm, behavior) {
-    private var images: List<Storefront.ImageEdge>? = null
-    private var video_thumbnail: String? = null
-    private var videoLink: String? = null
-    fun setData(images: List<Storefront.ImageEdge>, video_thumbnail: String? = null, videoLink: String? = null) {
-        this.images = images
-        this.videoLink = videoLink
-        this.video_thumbnail = video_thumbnail
+    private var mediaList: MutableList<MediaModel>? = null
+    fun setData(mediaList: MutableList<MediaModel>) {
+        this.mediaList = mediaList
     }
 
     override fun getItem(position: Int): Fragment {
         var fragment: ImageFragment? = null
         try {
-            fragment = ImageFragment(images!!)
+            fragment = ImageFragment()
             val bundle = Bundle()
-            if (position == 1 && video_thumbnail != null) {
-                bundle.putString("url", video_thumbnail)
-                bundle.putString("type", "video")
-                bundle.putString("video_link", videoLink)
-            } else {
-                bundle.putString("url", images!![position].node.originalSrc)
-            }
+            bundle.putSerializable("mediaModel", mediaList?.get(position))
+            bundle.putString("mediaList",Gson().toJson(mediaList))
             fragment.arguments = bundle
         } catch (e: Exception) {
             e.printStackTrace()
@@ -40,6 +33,6 @@ class ImagSlider(fm: FragmentManager, behavior: Int) : FragmentStatePagerAdapter
     }
 
     override fun getCount(): Int {
-        return images!!.size
+        return mediaList?.size ?: 0
     }
 }

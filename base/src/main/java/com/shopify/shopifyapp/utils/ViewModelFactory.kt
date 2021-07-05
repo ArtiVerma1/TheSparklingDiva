@@ -13,6 +13,7 @@ import com.shopify.shopifyapp.collectionsection.viewmodels.CollectionViewModel
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
 import com.shopify.shopifyapp.loginsection.viewmodels.LoginViewModel
 import com.shopify.shopifyapp.loginsection.viewmodels.RegistrationViewModel
+import com.shopify.shopifyapp.ordersection.viewmodels.OrderDetailsViewModel
 import com.shopify.shopifyapp.ordersection.viewmodels.OrderListViewModel
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductListModel
@@ -68,6 +69,9 @@ constructor(private val repository: Repository) : ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(OrderListViewModel::class.java)) {
             return OrderListViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(OrderDetailsViewModel::class.java)) {
+            return OrderDetailsViewModel(repository) as T
         }
         if (modelClass.isAssignableFrom(AddressModel::class.java)) {
             return AddressModel(repository) as T
