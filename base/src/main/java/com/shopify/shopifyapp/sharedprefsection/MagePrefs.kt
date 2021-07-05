@@ -13,6 +13,8 @@ object MagePrefs {
     private val LANGUAGE = "language"
     private val PREF_NAME = "MagenativeShopify"
     private val HOME_PRODUCTS = "home_products"
+    private val CART_AMOUNT = "cart_amount"
+    private val APPCURRENCY = "currency"
 
     fun getInstance(context: Context) {
         this.context = context
@@ -37,6 +39,24 @@ object MagePrefs {
 
     fun getLanguage(): String? {
         return sharedPreference?.getString(LANGUAGE, "en")
+    }
+
+    fun setGrandTotal(grand_total: String) {
+        editor?.putString(CART_AMOUNT, grand_total)
+        editor?.commit()
+    }
+
+    fun getGrandTotal(): String? {
+        return sharedPreference?.getString(CART_AMOUNT, null)
+    }
+
+    fun setCurrency(currency: String) {
+        editor?.putString(APPCURRENCY, currency)
+        editor?.commit()
+    }
+
+    fun getCurrency(): String? {
+        return sharedPreference?.getString(APPCURRENCY, null)
     }
 
     fun clearHomeData() {

@@ -7,6 +7,13 @@ import androidx.databinding.library.baseAdapters.BR
 class FeaturesModel : BaseObservable() {
 
     @Bindable
+    var firebaseEvents: Boolean = false
+    set(value) {
+        field=value
+        notifyPropertyChanged(BR.firebaseEvents)
+    }
+
+    @Bindable
     var nativeOrderView: Boolean = true
         set(value) {
             field = value
@@ -42,7 +49,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var productReview: Boolean? = true
+    var productReview: Boolean? = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.productReview)
@@ -57,7 +64,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var showBottomNavigation: Boolean = true
+    var showBottomNavigation: Boolean = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.showBottomNavigation)

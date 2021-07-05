@@ -37,6 +37,7 @@ import com.shopify.shopifyapp.databinding.MCartlistBinding
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.*
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import org.json.JSONObject
@@ -256,6 +257,7 @@ class CartList : NewBaseActivity() {
                 bottomData.tax = CurrencyFormatter.setsymbol(checkout.totalTaxV2.amount, checkout.totalTaxV2.currencyCode.toString())
             }
             bottomData.grandtotal = CurrencyFormatter.setsymbol(checkout.totalPriceV2.amount, checkout.totalPriceV2.currencyCode.toString())
+            MagePrefs.setGrandTotal(bottomData.grandtotal ?: "")
             grandTotal = checkout.totalPriceV2.amount
             bottomData.checkouturl = checkout.webUrl
             binding!!.bottomdata = bottomData

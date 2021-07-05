@@ -10,12 +10,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.databinding.ActivityQuickAddBinding
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
@@ -41,6 +46,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     private var inStock: Boolean = true
     var variant_id: String? = null
     var carttArray = JSONArray()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     var product_price: Double = 0.0
     private var variant: Storefront.ProductVariantEdge? = null
     var bottomSheetDialog: BottomSheetDialog? = null
@@ -54,7 +60,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
         setContentView(binding?.root!!)
         this.window?.setBackgroundDrawableResource(android.R.color.transparent)
         bottomSheetDialog = this
-
+        firebaseAnalytics = Firebase.analytics
         //   binding?.availableQty?.textSize = 12f
         initView()
 
@@ -215,6 +221,12 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
             }
             Constant.logAddToCartEvent(carttArray.toString(), product_id, "product", presentment_currency, product_price, activity
                     ?: Activity())
+            if (SplashViewModel.featuresModel.firebaseEvents) {
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART) {
+                    param(FirebaseAnalytics.Param.ITEM_ID, product_id)
+                    param(FirebaseAnalytics.Param.QUANTITY, quantity.toString())
+                }
+            }
             if (wishListViewModel != null) {
                 if (activity is WishList) {
                     wishListViewModel!!.deleteData(product_id)
@@ -225,6 +237,7 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     (activity as WishList).invalidateOptionsMenu()
                 }
             }
+
         } catch (e: Exception) {
             e.printStackTrace()
         }

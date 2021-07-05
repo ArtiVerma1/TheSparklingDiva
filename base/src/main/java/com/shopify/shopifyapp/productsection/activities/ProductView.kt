@@ -20,6 +20,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
@@ -30,6 +34,7 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.*
@@ -66,6 +71,7 @@ class ProductView : NewBaseActivity() {
     var productID = "noid"
     var whishlistArray = JSONArray()
     var cartlistArray = JSONArray()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     var variantId: ID? = null
     var sizeChartUrl: String = ""
     private var singleVariant: Boolean = false
@@ -103,6 +109,7 @@ class ProductView : NewBaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
         model!!.context = this
+        firebaseAnalytics = Firebase.analytics
         model?.createreviewResponse?.observe(this, Observer { this.createReview(it) })
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         personamodel?.activity = this
@@ -667,10 +674,17 @@ class ProductView : NewBaseActivity() {
                         invalidateOptionsMenu()
                         var cartlistData = JSONObject()
                         cartlistData.put("id", data.product?.id.toString())
-                        cartlistData.put("quantity", 1)
+                        cartlistData.put("quantity", binding?.quantity?.text.toString())
                         cartlistArray.put(cartlistData.toString())
                         Constant.logAddToCartEvent(cartlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                                 ?: 0.0, this@ProductView ?: Activity())
+
+                        if (SplashViewModel.featuresModel.firebaseEvents) {
+                            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART) {
+                                param(FirebaseAnalytics.Param.ITEM_ID, data.product?.id.toString())
+                                param(FirebaseAnalytics.Param.QUANTITY, binding?.quantity?.text.toString())
+                            }
+                        }
 
                     } else {
                         Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
@@ -713,6 +727,13 @@ class ProductView : NewBaseActivity() {
                     whishlistArray.put(wishlistData.toString())
                     Constant.logAddToWishlistEvent(whishlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                             ?: 0.0, this@ProductView ?: Activity())
+                    if (SplashViewModel.featuresModel.firebaseEvents) {
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
+                            param(FirebaseAnalytics.Param.ITEM_ID, data.product?.id.toString())
+                            param(FirebaseAnalytics.Param.QUANTITY, 1)
+                        }
+                    }
+
                 } else {
                     model!!.deleteData(data.product?.id.toString())
                     data!!.addtowish = resources.getString(R.string.addtowish)

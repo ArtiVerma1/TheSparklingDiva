@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -205,6 +206,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
                     if (repository.localData.size == 0) {
                         appLocalData.currencycode = result.data?.getShop()?.paymentSettings?.currencyCode.toString()
+                        MagePrefs.setCurrency(appLocalData.currencycode ?: "")
                         repository.insertData(appLocalData)
                     }
                 }
@@ -230,6 +232,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                         } else {
                             appLocalData = repository.localData[0]
                             appLocalData!!.isIstrialexpire = value
+                            MagePrefs.setCurrency(appLocalData.currencycode ?: "")
                             repository.updateData(appLocalData)
                         }
                         Log.i("MageNative:", "Currency" +
@@ -266,7 +269,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
             MyApplication.dataBaseReference?.child("additional_info")?.child("locale")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     /*if you are using multi currency then comment this line*/
-                 //   MagePrefs.setLanguage(dataSnapshot.getValue(String::class.java)!!)
+                    //   MagePrefs.setLanguage(dataSnapshot.getValue(String::class.java)!!)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {

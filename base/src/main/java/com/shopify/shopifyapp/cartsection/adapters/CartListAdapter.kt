@@ -14,15 +14,21 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 
 
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MCartitemBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.models.CartListItem
 import com.shopify.shopifyapp.cartsection.viewholders.CartItem
 import com.shopify.shopifyapp.cartsection.viewmodels.CartListViewModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.CurrencyFormatter
 import org.json.JSONArray
@@ -37,6 +43,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
     private var layoutInflater: LayoutInflater? = null
     private var model: CartListViewModel? = null
     var cartlistArray = JSONArray()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private val TAG = "CartListAdapter"
     private var warningList: HashMap<String, Boolean> = hashMapOf()
     private var context: Context? = null
@@ -193,6 +200,7 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
         this.model = model
         this.context = context
         this.stockCallback = stockCallback
+        firebaseAnalytics = Firebase.analytics
     }
 
     fun getDiscount(regular: Double, special: Double): Int {
@@ -205,6 +213,12 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
             cartlistData.put("id", item.product_id)
             cartlistData.put("quantity", item.qty)
             cartlistArray.put(cartlistData.toString())
+            if (SplashViewModel.featuresModel.firebaseEvents) {
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
+                    param(FirebaseAnalytics.Param.ITEM_ID, item.product_id!!)
+                    param(FirebaseAnalytics.Param.QUANTITY, item.qty!!)
+                }
+            }
             Constant.logAddToWishlistEvent(cartlistArray.toString(), item.product_id, "product", currencyCode
                     ?: "", price
                     ?: 0.0, context ?: Activity())
