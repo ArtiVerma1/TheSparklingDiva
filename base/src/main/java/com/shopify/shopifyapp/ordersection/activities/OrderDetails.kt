@@ -51,7 +51,7 @@ class OrderDetails : NewBaseActivity() {
         model?.context = this
         model?.setPresentmentCurrencyForModel()
         showBackButton()
-        showTittle("Order Details")
+        showTittle(resources.getString(R.string.OrderDetails))
         model!!.recommendedLiveData.observe(this, androidx.lifecycle.Observer { this.consumeRecommended(it) })
         binding?.orderedItems?.adapter = orderDetailsListAdapter
         if (intent.hasExtra("orderData")) {
