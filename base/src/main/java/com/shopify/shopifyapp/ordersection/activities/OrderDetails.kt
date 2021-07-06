@@ -124,8 +124,8 @@ class OrderDetails : NewBaseActivity() {
         binding?.orderPrice?.text = CurrencyFormatter.setsymbol(orderEdge?.totalPriceV2?.amount
                 ?: "", orderEdge?.totalPriceV2?.currencyCode.toString())
 
-        binding?.customerEmail?.text = orderEdge?.email
-        binding?.customerMobile?.text = orderEdge?.phone
+        binding?.customerEmail?.text = orderEdge?.email?:" N/A"
+        binding?.customerMobile?.text = orderEdge?.phone?:" N/A"
         binding?.paymentStatus?.text = getString(R.string.payment_status) + " " + orderEdge?.financialStatus.toString()
         if (orderEdge?.financialStatus.toString().equals("REFUNDED")) {
             binding?.cancelledAt?.visibility = View.VISIBLE

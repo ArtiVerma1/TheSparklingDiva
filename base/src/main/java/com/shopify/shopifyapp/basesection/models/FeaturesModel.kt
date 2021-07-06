@@ -28,7 +28,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var reOrderEnabled: Boolean = true
+    var reOrderEnabled: Boolean = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.reOrderEnabled)
@@ -57,7 +57,7 @@ class FeaturesModel : BaseObservable() {
 
 
     @Bindable
-    var outOfStock: Boolean? = true
+    var outOfStock: Boolean? = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.outOfStock)
