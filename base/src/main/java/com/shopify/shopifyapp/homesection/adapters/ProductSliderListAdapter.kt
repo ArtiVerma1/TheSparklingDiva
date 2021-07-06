@@ -77,8 +77,9 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
                 var gradientDrawable = GradientDrawable()
                 gradientDrawable.shape = GradientDrawable.RECTANGLE
                 gradientDrawable.cornerRadius = 16f
-                gradientDrawable.setStroke(3, Color.parseColor(item_border_color.getString("color")))
-                binding.card.useCompatPadding = false
+                binding.main.background=gradientDrawable
+                gradientDrawable.setStroke(2, Color.parseColor(item_border_color.getString("color")))
+                binding.card.useCompatPadding = true
                 binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
                 binding.card.background = gradientDrawable
             }

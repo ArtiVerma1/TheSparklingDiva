@@ -11,6 +11,7 @@ import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.graphql.support.ID
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
@@ -203,12 +204,21 @@ class WishListViewModel(var repository: Repository) : ViewModel() {
     }
 
     private fun filterProduct(edges: MutableList<Storefront.Product>) {
-        repository.getProductListSlider(edges)
-                .subscribeOn(Schedulers.io())
-                .filter { x -> x.availableForSale }
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { result -> wishListData.value = result }
+        if (SplashViewModel.featuresModel.outOfStock!!) {
+            repository.getProductListSlider(edges)
+                    .subscribeOn(Schedulers.io())
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result -> wishListData.value = result }
+        } else {
+            repository.getProductListSlider(edges)
+                    .subscribeOn(Schedulers.io())
+                    .filter { x -> x.availableForSale }
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result -> wishListData.value = result }
+        }
+
     }
 
     fun deleteData(variant_id: String) {

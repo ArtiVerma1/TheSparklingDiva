@@ -1,7 +1,6 @@
 package com.shopify.shopifyapp.ordersection.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +8,6 @@ import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.databinding.OrderListItemBinding
-import com.shopify.shopifyapp.utils.CurrencyFormatter
 import javax.inject.Inject
 
 class OrderDetailsListAdapter @Inject constructor() : RecyclerView.Adapter<OrderDetailsListAdapter.OrderDetailsListViewHolder>() {
@@ -42,7 +40,13 @@ class OrderDetailsListAdapter @Inject constructor() : RecyclerView.Adapter<Order
         holder.orderListItemBinding.commondata = commanModel
         holder.orderListItemBinding.productName.text = orderlineItem?.get(position)?.node?.title
         holder.orderListItemBinding.productquantityTxt.text = orderlineItem?.get(position)?.node?.quantity.toString()
-        holder.orderListItemBinding.productpriceTxt.text = CurrencyFormatter.setsymbol(orderlineItem?.get(position)?.node?.variant?.priceV2?.amount
-                ?: "", orderlineItem?.get(position)?.node?.variant?.priceV2?.currencyCode.toString())
+        var variantTitle = StringBuffer()
+        for (i in 0 until orderlineItem?.get(position)?.node?.variant?.selectedOptions?.size!!) {
+            if (variantTitle.length > 0) {
+                variantTitle.append("/")
+            }
+            variantTitle.append(orderlineItem?.get(position)?.node?.variant?.selectedOptions?.get(i)?.value)
+        }
+        holder.orderListItemBinding.productvariant.text = variantTitle.toString()
     }
 }

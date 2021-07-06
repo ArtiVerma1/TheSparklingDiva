@@ -71,7 +71,6 @@ class LeftMenu : BaseFragment() {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-
         val version = pInfo!!.versionName
         val versioncode = pInfo.versionCode
         Log.i("MageNative", "LeftMenuResume 4")
@@ -81,7 +80,7 @@ class LeftMenu : BaseFragment() {
         menuData!!.copyright = resources.getString(R.string.copy) + " " + resources.getString(R.string.app_name)
         binding!!.features = featuresModel
         binding!!.menudata = menuData
-        binding!!.clickdata = ClickHandlers(currentcontext)
+        binding!!.clickdata = ClickHandlers(currentcontext, binding)
         (activity!!.application as MyApplication).mageNativeAppComponent!!.doLeftMeuInjection(this)
         leftmenu = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
         leftmenu.data.observe(viewLifecycleOwner, Observer<HashMap<String, String>> { this.consumeResponse(it) })
@@ -113,7 +112,7 @@ class LeftMenu : BaseFragment() {
         super.onDestroyView()
     }
 
-    class ClickHandlers(internal var context: Context?) {
+    class ClickHandlers(internal var context: Context?, internal var binding: MLeftmenufragmentBinding? = null) {
         private var open = false
 
         fun getMenu(view: View, menudata: MenuData) {
@@ -209,7 +208,9 @@ class LeftMenu : BaseFragment() {
                 "currencyswitcher" -> {
                     Log.i("MageNative", "currencyswitcher" + " : IN")
                     (context as NewBaseActivity)!!.getCurrency()
-
+                }
+                "languageswither" -> {
+                    (context as NewBaseActivity)!!.showLanguageDialog()
                 }
                 "collections" -> {
                     val collection_all = Intent(context, CollectionList::class.java)
@@ -246,6 +247,9 @@ class LeftMenu : BaseFragment() {
                     Constant.activityTransition(context!!)
                 }
                 "logout" -> {
+                    binding?.signin?.text = context?.resources?.getString(R.string.SignIn)
+                    binding?.signin?.tag = "Sign In"
+                    binding?.logout?.visibility = View.GONE
                     Toast.makeText(context, context!!.resources.getString(R.string.successlogout), Toast.LENGTH_LONG).show()
                     leftmenu.logOut()
                 }
@@ -285,7 +289,7 @@ class LeftMenu : BaseFragment() {
                 menuData!!.previewvislible = View.GONE
             }
         }
-        leftmenu.context=currentcontext
+        leftmenu.context = currentcontext
         leftmenu.fetchUserData()
     }
 

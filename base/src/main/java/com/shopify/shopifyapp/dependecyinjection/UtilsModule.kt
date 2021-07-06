@@ -81,8 +81,8 @@ class UtilsModule(private val context: Context) {
 
     @Provides
     @Singleton
-    internal fun getRepository(apiCallInterface: ApiCallInterface, appDatabase: AppDatabase, client: GraphClient): Repository {
-        return Repository(apiCallInterface, appDatabase, client)
+    internal fun getRepository(apiCallInterface: ApiCallInterface, appDatabase: AppDatabase): Repository {
+        return Repository(apiCallInterface, appDatabase)
     }
 
     @Provides
@@ -100,22 +100,7 @@ class UtilsModule(private val context: Context) {
     @Provides
     @Singleton
     internal fun getAppDatabase(context: Context): AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, "MageNative").fallbackToDestructiveMigration().allowMainThreadQueries().build()
+        return Room.databaseBuilder(context, AppDatabase::class.java, "MageNative").fallbackToDestructiveMigration().build()
     }
 
-    @Provides
-    @Singleton
-    internal fun getGraphClient(context: Context, client: OkHttpClient): GraphClient {
-
-        return GraphClient.build(context, context.resources.getString(R.string.shopdomain), context.resources.getString(R.string.apikey)
-        ) {
-            httpClient = client
-            httpCache(context.cacheDir, {
-                cacheMaxSizeBytes = 1024 * 1024 * 10
-                defaultCachePolicy = Constant.policy
-                Unit
-            })
-            Unit
-        }
-    }
 }

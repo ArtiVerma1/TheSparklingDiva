@@ -10,12 +10,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.databinding.ActivityQuickAddBinding
 import com.shopify.shopifyapp.dbconnection.entities.CartItemData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
@@ -41,10 +46,13 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
     private var inStock: Boolean = true
     var variant_id: String? = null
     var carttArray = JSONArray()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     var product_price: Double = 0.0
+    private var variant: Storefront.ProductVariantEdge? = null
     var bottomSheetDialog: BottomSheetDialog? = null
     var presentment_currency = "nopresentmentcurrency"
     var currency_list: ArrayList<Storefront.CurrencyCode>? = null
+    var quantity: Int = 1
     lateinit var quickVariantAdapter: QuickVariantAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,14 +60,14 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
         setContentView(binding?.root!!)
         this.window?.setBackgroundDrawableResource(android.R.color.transparent)
         bottomSheetDialog = this
-
+        firebaseAnalytics = Firebase.analytics
         //   binding?.availableQty?.textSize = 12f
         initView()
 
     }
 
     fun getQtyInCart(variantId: String): Int {
-        var variant_qty = runBlocking {
+        var variant_qty = runBlocking(Dispatchers.IO) {
             if (repository.getSingLeItem(variantId) == null) {
                 return@runBlocking 0
             } else {
@@ -71,19 +79,26 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
 
     fun initView() {
         currency_list = ArrayList<Storefront.CurrencyCode>()
-        if (repository.localData[0].currencycode != null) {
-            presentment_currency = repository.localData[0].currencycode!!
-            currency_list?.add(Storefront.CurrencyCode.valueOf(presentment_currency))
+        val currency = runBlocking(Dispatchers.IO) {
+            if (repository.localData[0].currencycode != null) {
+                return@runBlocking repository.localData[0].currencycode!!
+            } else {
+                return@runBlocking "nopresentmentcurrency"
+            }
         }
+
+        currency_list?.add(Storefront.CurrencyCode.valueOf(currency))
+
         binding?.availableQty?.textSize = 14f
         quickVariantAdapter = QuickVariantAdapter()
+        Log.d(TAG, "initView: " + currency_list)
         doGraphQLQueryGraph(repository, Query.getProductById(product_id!!, currency_list!!), customResponse = object : CustomResponse {
             override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
                 invoke(result)
             }
         }, context = context)
-        binding?.handler = VariantClickHandler()
         setPresentmentCurrencyForModel()
+        binding?.handler = VariantClickHandler()
     }
 
     private fun setPresentmentCurrencyForModel() {
@@ -148,14 +163,22 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
         quickVariantAdapter.setData(productedge.variants.edges, context, itemClick = object : QuickVariantAdapter.ItemClick {
             override fun variantSelection(variantData: Storefront.ProductVariantEdge) {
                 variant_id = variantData.node.id.toString()
+                variant = variantData
+                quantity = 1
+                binding?.quantity?.text = "1"
                 binding?.availableQty?.visibility = View.VISIBLE
                 binding?.availableQty?.text = variantData.node.quantityAvailable.toString() + " " + context.resources.getString(R.string.avaibale_qty_variant)
-                if (variantData.node.quantityAvailable == 0) {
-                    binding?.addCart?.text = context.getString(R.string.out_of_stock)
-                    inStock = false
-                } else {
+                if (variantData.node.currentlyNotInStock == true) {
                     binding?.addCart?.text = context.getString(R.string.addtocart)
                     inStock = true
+                } else {
+                    if (variantData.node.quantityAvailable == 0) {
+                        binding?.addCart?.text = context.getString(R.string.out_of_stock)
+                        inStock = false
+                    } else {
+                        binding?.addCart?.text = context.getString(R.string.addtocart)
+                        inStock = true
+                    }
                 }
                 Log.d(TAG, "variantSelection: " + variantData.node.id)
 
@@ -196,7 +219,14 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     (activity as NewBaseActivity).invalidateOptionsMenu()
                 }
             }
-            Constant.logAddToCartEvent(carttArray.toString(), product_id, "product", presentment_currency, product_price, activity ?: Activity())
+            Constant.logAddToCartEvent(carttArray.toString(), product_id, "product", presentment_currency, product_price, activity
+                    ?: Activity())
+            if (SplashViewModel.featuresModel.firebaseEvents) {
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART) {
+                    param(FirebaseAnalytics.Param.ITEM_ID, product_id)
+                    param(FirebaseAnalytics.Param.QUANTITY, quantity.toString())
+                }
+            }
             if (wishListViewModel != null) {
                 if (activity is WishList) {
                     wishListViewModel!!.deleteData(product_id)
@@ -207,13 +237,14 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
                     (activity as WishList).invalidateOptionsMenu()
                 }
             }
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     inner class VariantClickHandler {
-        var quantity: Int = 1
+
         fun addcart(view: View) {
             if (inStock) {
                 if (variant_id == null) {
@@ -243,12 +274,17 @@ class QuickAddActivity(context: Context, var activity: Context? = null, theme: I
             if (variant_id == null) {
                 Toast.makeText(view.context, view.context.resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
             } else {
-                var total = binding!!.quantity.text.toString().toInt() + getQtyInCart(variant_id!!)
-                if (total == binding?.availableQty?.text.toString().split(" ").get(0).toInt()) {
-                    Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
-                } else {
+                if (variant?.node?.currentlyNotInStock == true) {
                     quantity++
                     binding?.quantity?.text = quantity.toString()
+                } else {
+                    var total = binding!!.quantity.text.toString().toInt() + getQtyInCart(variant_id!!)
+                    if (total >= binding?.availableQty?.text.toString().split(" ").get(0).toInt()) {
+                        Toast.makeText(view.context, view.context.getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                    } else {
+                        quantity++
+                        binding?.quantity?.text = quantity.toString()
+                    }
                 }
             }
         }

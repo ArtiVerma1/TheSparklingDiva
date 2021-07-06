@@ -32,6 +32,8 @@ object Mutation {
                                                                                     .product({ p -> p })
                                                                                     .availableForSale()
                                                                                     .price()
+                                                                                    .currentlyNotInStock()
+                                                                                    .quantityAvailable()
                                                                                     .presentmentPrices({ arg -> arg.first(25).presentmentCurrencies(list_currency) },
                                                                                             { price -> price.edges({ e -> e.cursor().node({ n -> n.price({ p -> p.amount().currencyCode() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }) }) }
                                                                                     )
@@ -52,8 +54,10 @@ object Mutation {
                                                                                         select
                                                                                                 .name()
                                                                                                 .value()
+
                                                                                     }
                                                                                     )
+
                                                                         }
                                                                         )
                                                             }

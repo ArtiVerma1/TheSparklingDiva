@@ -91,6 +91,5 @@ class OrderList : NewBaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 }

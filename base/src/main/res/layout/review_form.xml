@@ -18,7 +18,7 @@
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Write A Review"
+                android:text="@string/write_a_review"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

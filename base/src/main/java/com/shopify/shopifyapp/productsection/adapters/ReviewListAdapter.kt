@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.productsection.adapters
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -33,6 +34,7 @@ constructor() : RecyclerView.Adapter<ReviewListAdapter.ReviewListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewListViewHolder {
         var binding = DataBindingUtil.inflate<ReviewListItemBinding>(LayoutInflater.from(parent.context), R.layout.review_list_item, parent, false)
         binding.root.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        binding.ratingBar.progressTintList = ColorStateList.valueOf(Color.parseColor(themeColor))
         var gradientDrawable = GradientDrawable()
         gradientDrawable.setSize(binding.circularName.layoutParams.width, binding.circularName.layoutParams.height)
         gradientDrawable.cornerRadius = (binding.circularName.layoutParams.width / 2).toFloat()

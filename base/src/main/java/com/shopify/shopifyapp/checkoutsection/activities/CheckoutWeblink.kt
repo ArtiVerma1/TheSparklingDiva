@@ -32,6 +32,7 @@ class CheckoutWeblink : NewBaseActivity() {
     private var id: String? = null
     private var postData: String? = null
     private var customLoader: CustomLoader? = null
+    private val TAG = "CheckoutWeblink"
 
     @Inject
     lateinit var factory: ViewModelFactory

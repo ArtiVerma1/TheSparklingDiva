@@ -37,8 +37,8 @@ class Urls {
         const val JUDGEME_REVIEWCREATE: String = JUDGEME_BASEURL + "reviews"
         const val JUDGEME_GETPRODUCTID: String = JUDGEME_BASEURL + "products/"
         const val JUDGEME_APITOKEN: String = "R8kqByFI_qHiHHQj6ZV1yWCYveQ"
-
     }
+
     val shopdomain: String
         get() {
             var domain = "magenative.myshopify.com" //magenative-store.myshopify.com

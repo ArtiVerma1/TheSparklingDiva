@@ -3,6 +3,7 @@ package com.shopify.shopifyapp.productsection.activities
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -19,6 +20,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
@@ -29,17 +34,17 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
-import com.shopify.shopifyapp.databinding.MProductviewBinding
-import com.shopify.shopifyapp.databinding.ReviewFormBinding
-import com.shopify.shopifyapp.databinding.SizeChartLayoutBinding
-import com.shopify.shopifyapp.databinding.SwatchesListBinding
+import com.shopify.shopifyapp.databinding.*
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
+import com.shopify.shopifyapp.productsection.adapters.ArImagesAdapter
 import com.shopify.shopifyapp.productsection.adapters.ImagSlider
 import com.shopify.shopifyapp.productsection.adapters.ReviewListAdapter
 import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
+import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.productsection.models.Review
 import com.shopify.shopifyapp.productsection.models.ReviewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
@@ -66,9 +71,11 @@ class ProductView : NewBaseActivity() {
     var productID = "noid"
     var whishlistArray = JSONArray()
     var cartlistArray = JSONArray()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     var variantId: ID? = null
     var sizeChartUrl: String = ""
     private var singleVariant: Boolean = false
+    private var variantEdge: Storefront.ProductVariant? = null
 
     @Inject
     lateinit var reviewAdapter: ReviewListAdapter
@@ -83,7 +90,10 @@ class ProductView : NewBaseActivity() {
     private var external_id: String? = null
     private var judgeme_productid: String? = null
     private var reviewList: ArrayList<Review>? = null
+    private var mediaList = mutableListOf<MediaModel>()
 
+    @Inject
+    lateinit var arImagesAdapter: ArImagesAdapter
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -99,6 +109,7 @@ class ProductView : NewBaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
         model!!.context = this
+        firebaseAnalytics = Firebase.analytics
         model?.createreviewResponse?.observe(this, Observer { this.createReview(it) })
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         personamodel?.activity = this
@@ -345,6 +356,7 @@ class ProductView : NewBaseActivity() {
                 adapter = VariantAdapter()
                 if (variant_data.toList().size == 1) {
                     variantId = list.get(0).node.id
+                    variantEdge = list.get(0).node
                     variantValidation.accumulate("title", variantId)
                     binding?.variantAvailableQty?.text = list.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
                     setProductPrice(list.get(0).node)
@@ -352,18 +364,24 @@ class ProductView : NewBaseActivity() {
                     adapter!!.setData(list, variant_data.toList(), variant_keys.getString(i), model, data, this, variantCallback_ = object : VariantAdapter.VariantCallback {
                         override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
                             variantId = variant.node.id
+                            variantEdge = variant.node
+                            binding?.quantity?.text = "1"
                             variantValidation.accumulate(variant_title, variantId)
                             binding?.variantAvailableQty?.visibility = View.VISIBLE
                             binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
                             setProductPrice(variant.node)
-
-                            if (variant.node.quantityAvailable == 0) {
-                                binding?.addtocart?.text = getString(R.string.out_of_stock)
-                                inStock = false
-                                adapter.notifyDataSetChanged()
+                            if (variant.node.currentlyNotInStock == false) {
+                                if (variant.node.quantityAvailable == 0) {
+                                    binding?.addtocart?.text = getString(R.string.out_of_stock)
+                                    inStock = false
+                                    adapter.notifyDataSetChanged()
+                                } else {
+                                    binding?.addtocart?.text = getString(R.string.addtocart)
+                                    inStock = true
+                                }
                             } else {
-                                binding?.addtocart?.text = getString(R.string.addtocart)
                                 inStock = true
+                                binding?.addtocart?.text = getString(R.string.addtocart)
                             }
                         }
                     })
@@ -396,8 +414,6 @@ class ProductView : NewBaseActivity() {
                     if (!model!!.id.isEmpty()) {
                         productedge = result.data!!.node as Storefront.Product
                     }
-
-
                     // a.previewImage
 
                     Log.i("MageNative", "Product_id" + productedge!!.id.toString())
@@ -434,35 +450,37 @@ class ProductView : NewBaseActivity() {
     }
 
     private fun setProductData(productedge: Storefront.Product?) {
-        var video_thumbnail: String? = null
-        var video_link: String? = null
         try {
-            loop@ for (i in 0..productedge!!.media.edges.size - 1) {
+            var mediaModel: MediaModel? = null
+            for (i in 0..productedge!!.media.edges.size - 1) {
                 var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
                 if (a.equals("Model3d")) {
                     var d = productedge!!.media.edges.get(i).node as Storefront.Model3d
-                    for (j in 0..d.sources.size - 1) {
-                        if (d.sources.get(j).url.contains(".glb")) {
-                            data!!.arimage = d.sources.get(j).url
-                            if (featuresModel.ardumented_reality) {
-                                binding!!.aricon.visibility = View.VISIBLE
-                            } else {
-                                binding!!.aricon.visibility = View.GONE
-                            }
-                            break@loop
+                    if (d.sources.get(0).url.contains(".glb")) {
+                        data!!.arimage = d.sources.get(0).url
+                        mediaModel = MediaModel(d.graphQlTypeName, d.previewImage.originalSrc, d.sources.get(0).url)
+                        mediaList.add(mediaModel)
+                        if (featuresModel.ardumented_reality) {
+                            binding!!.aricon.visibility = View.VISIBLE
+                        } else {
+                            binding!!.aricon.visibility = View.GONE
                         }
                     }
+                } else if (a.equals("Video")) {
+                    val video = productedge!!.media.edges.get(i).node as Storefront.Video
+                    mediaModel = MediaModel(video.graphQlTypeName, video.previewImage.originalSrc, video.sources.get(0).url)
+                    mediaList.add(mediaModel)
+                } else if (a.equals("ExternalVideo")) {
+                    val externalVideo = productedge!!.media.edges.get(i).node as Storefront.ExternalVideo
+                    mediaModel = MediaModel(externalVideo.graphQlTypeName, externalVideo.previewImage.originalSrc, externalVideo.embeddedUrl)
+                    mediaList.add(mediaModel)
+                } else if (a.equals("MediaImage")) {
+                    var mediaImage = productedge!!.media.edges.get(i).node as Storefront.MediaImage
+                    mediaModel = MediaModel(mediaImage.graphQlTypeName, mediaImage.previewImage.originalSrc, "")
+                    mediaList.add(mediaModel)
                 }
             }
-            for (i in 0 until productedge!!.media.edges.size) {
-                var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
-                if (a.equals("ExternalVideo")) {
-                    var externalVideo = productedge!!.media.edges.get(i).node as Storefront.ExternalVideo
-                    Log.d(TAG, "externalVideo: " + externalVideo.previewImage.originalSrc)
-                    video_thumbnail = externalVideo.previewImage.originalSrc
-                    video_link = externalVideo.embeddedUrl
-                }
-            }
+            Log.d(TAG, "setProductData: " + mediaList)
             Log.d(TAG, "setProductData: " + productedge.handle)
             product_handle = productedge.handle
             if (featuresModel.judgemeProductReview!!) {
@@ -513,10 +531,8 @@ class ProductView : NewBaseActivity() {
             binding?.availableQty?.text = getString(R.string.avaibale_qty) + " " + productedge.totalInventory
             val variant = productedge!!.variants.edges[0].node
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-            if (video_thumbnail == null) {
-                slider.setData(productedge.images.edges)
-            } else {
-                slider.setData(productedge.images.edges, video_thumbnail!!, video_link!!)
+            if (mediaList.size > 0) {
+                slider.setData(mediaList)
             }
             data!!.product = productedge
             binding!!.images.adapter = slider
@@ -526,7 +542,7 @@ class ProductView : NewBaseActivity() {
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
             binding?.description?.loadData(productedge.descriptionHtml, "text/html", "utf-8")
-
+            binding?.description?.getSettings()?.setJavaScriptEnabled(true)
             if (model?.isInwishList(model?.id!!)!!) {
                 data!!.addtowish = resources.getString(R.string.alreadyinwish)
                 Glide.with(this).load(R.drawable.wishlist_selected)
@@ -545,7 +561,6 @@ class ProductView : NewBaseActivity() {
                     ?: "",
                     productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.amount.toDouble()
                             ?: 0.0, this)
-
             setProductPrice(variant)
             binding?.regularprice?.textSize = 15f
             model!!.filterList(productedge.variants.edges)
@@ -659,10 +674,17 @@ class ProductView : NewBaseActivity() {
                         invalidateOptionsMenu()
                         var cartlistData = JSONObject()
                         cartlistData.put("id", data.product?.id.toString())
-                        cartlistData.put("quantity", 1)
+                        cartlistData.put("quantity", binding?.quantity?.text.toString())
                         cartlistArray.put(cartlistData.toString())
-                        Constant.logAddToWishlistEvent(cartlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
+                        Constant.logAddToCartEvent(cartlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                                 ?: 0.0, this@ProductView ?: Activity())
+
+                        if (SplashViewModel.featuresModel.firebaseEvents) {
+                            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART) {
+                                param(FirebaseAnalytics.Param.ITEM_ID, data.product?.id.toString())
+                                param(FirebaseAnalytics.Param.QUANTITY, binding?.quantity?.text.toString())
+                            }
+                        }
 
                     } else {
                         Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
@@ -705,6 +727,13 @@ class ProductView : NewBaseActivity() {
                     whishlistArray.put(wishlistData.toString())
                     Constant.logAddToWishlistEvent(whishlistArray.toString(), data.product?.id.toString(), "product", data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(), data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                             ?: 0.0, this@ProductView ?: Activity())
+                    if (SplashViewModel.featuresModel.firebaseEvents) {
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
+                            param(FirebaseAnalytics.Param.ITEM_ID, data.product?.id.toString())
+                            param(FirebaseAnalytics.Param.QUANTITY, 1)
+                        }
+                    }
+
                 } else {
                     model!!.deleteData(data.product?.id.toString())
                     data!!.addtowish = resources.getString(R.string.addtowish)
@@ -747,8 +776,14 @@ class ProductView : NewBaseActivity() {
                 if (variantValidation.names().length() >= totalVariant!!) {
                     Log.d(TAG, "increase: " + model?.getQtyInCart(variantId.toString()))
                     var total = binding!!.quantity.text.toString().toInt() + model?.getQtyInCart(variantId.toString())!!
-                    if (total == binding?.variantAvailableQty?.text.toString().split(" ").get(0).toInt()) {
-                        Toast.makeText(this@ProductView, getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                    if (variantEdge?.currentlyNotInStock == false) {
+                        if (total >= binding?.variantAvailableQty?.text.toString().split(" ").get(0).toInt()) {
+                            Toast.makeText(this@ProductView, getString(R.string.variant_quantity_warning), Toast.LENGTH_LONG).show()
+                        } else {
+                            var quantity: Int = binding!!.quantity.text.toString().toInt()
+                            quantity++
+                            binding!!.quantity.text = quantity.toString()
+                        }
                     } else {
                         var quantity: Int = binding!!.quantity.text.toString().toInt()
                         quantity++
@@ -774,18 +809,41 @@ class ProductView : NewBaseActivity() {
 
         fun showAR(view: View, data: ListData) {
             try {
-                var sceneViewerIntent = Intent(Intent.ACTION_VIEW)
-                var intentUri: Uri =
-                        Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
-                                .appendQueryParameter("file", data.arimage)
-                                .build()
-                sceneViewerIntent.setData(intentUri)
-                sceneViewerIntent.setPackage("com.google.ar.core")
-                startActivity(sceneViewerIntent)
-                Constant.activityTransition(view.context)
+                Log.d(TAG, "showAR: " + mediaList)
+                var dialog = Dialog(this@ProductView, R.style.WideDialog)
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+                var dialogBinding = DataBindingUtil.inflate<ArimagesDialogBinding>(layoutInflater, R.layout.arimages_dialog, null, false)
+                dialog.setContentView(dialogBinding.root)
+                dialogBinding.closeBut.setOnClickListener {
+                    dialog.dismiss()
+                }
+                model?.filterArModel(mediaList)?.observe(this@ProductView, Observer {
+                    arImagesAdapter.setData(it)
+                    dialogBinding.arList.adapter = arImagesAdapter
+                    if (it.size == 1) {
+                        try {
+                            val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
+                            val intentUri: Uri =
+                                    Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+                                            .appendQueryParameter("file", data.arimage)
+                                            .build()
+                            sceneViewerIntent.setData(intentUri)
+                            sceneViewerIntent.setPackage("com.google.ar.core")
+                            startActivity(sceneViewerIntent)
+                            Constant.activityTransition(view.context)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(this@ProductView, getString(R.string.ar_error_text), Toast.LENGTH_SHORT).show()
+                        }
+
+                    } else {
+                        dialog.show()
+                    }
+                })
+
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@ProductView, getString(R.string.ar_error_text), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -795,6 +853,7 @@ class ProductView : NewBaseActivity() {
             bottomsheet.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
             var reviewFormBinding = DataBindingUtil.inflate<ReviewFormBinding>(layoutInflater, R.layout.review_form, null, false)
             bottomsheet.setContentView(reviewFormBinding.root)
+            reviewFormBinding.ratingBar.progressTintList = ColorStateList.valueOf(Color.parseColor(themeColor))
             bottomsheet.setCancelable(false)
             reviewFormBinding.closeBut.setOnClickListener {
                 bottomsheet.dismiss()
@@ -817,8 +876,7 @@ class ProductView : NewBaseActivity() {
                     reviewFormBinding.emailEdt.requestFocus()
                 } else {
                     model?.getcreateReview(Urls(application as MyApplication).mid, reviewFormBinding.ratingBar.rating.toString(), getBase64Decode(productID)!!,
-                            reviewFormBinding.nameEdt.text.toString().trim(), reviewFormBinding.emailEdt.text.toString().trim(), reviewFormBinding.titleEdt.text.toString().trim()
-                            , reviewFormBinding.bodyEdt.text.toString().trim())
+                            reviewFormBinding.nameEdt.text.toString().trim(), reviewFormBinding.emailEdt.text.toString().trim(), reviewFormBinding.titleEdt.text.toString().trim(), reviewFormBinding.bodyEdt.text.toString().trim())
                     bottomsheet.dismiss()
                 }
             }

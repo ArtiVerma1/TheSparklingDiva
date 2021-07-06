@@ -12,24 +12,31 @@ import com.shopify.shopifyapp.MyApplication.Companion.context
 import com.shopify.shopifyapp.dbconnection.database.AppDatabase
 import com.shopify.shopifyapp.dbconnection.entities.*
 import com.shopify.shopifyapp.dependecyinjection.Body
+import com.shopify.shopifyapp.productsection.models.MediaModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.ApiCallInterface
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Urls
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import javax.inject.Singleton
 
 class Repository {
     private val TAG = "Repository"
     private val apiCallInterface: ApiCallInterface
     private val appdatabase: AppDatabase
-    var graphClient: GraphClient
+
+
+    val graphClient: GraphClient
         get() {
             return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey, {
                 httpClient = requestHeader
@@ -39,7 +46,7 @@ class Repository {
                     Unit
                 })
                 Unit
-            }, Constant.locale)
+            }, MagePrefs.getLanguage())
         }
     internal val requestHeader: OkHttpClient
         get() {
@@ -55,10 +62,9 @@ class Repository {
             return httpClient.build()
         }
 
-    constructor(apiCallInterface: ApiCallInterface, appdatabase: AppDatabase, graphClient: GraphClient) {
+    constructor(apiCallInterface: ApiCallInterface, appdatabase: AppDatabase) {
         this.apiCallInterface = apiCallInterface
         this.appdatabase = appdatabase
-        this.graphClient = graphClient
     }
 
     val localData: List<AppLocalData>
@@ -84,10 +90,16 @@ class Repository {
             false
         }
     val accessToken: List<CustomerTokenData>
-        get() = appdatabase.appLocalDataDaoDao().customerToken
+        get() {
+            var customerToken = runBlocking(Dispatchers.IO) {
+                return@runBlocking appdatabase.appLocalDataDaoDao().customerToken
+            }
+            return customerToken
+        }
+    //   get() = appdatabase.appLocalDataDaoDao().customerToken
 
-    fun getMenus(mid: String): Single<JsonElement> {
-        return apiCallInterface.getMenus(mid)
+    fun getMenus(mid: String, code: String): Single<JsonElement> {
+        return apiCallInterface.getMenus(mid, code)
     }
 
     fun getRecommendation(body: Body): Single<JsonElement> {
@@ -116,6 +128,10 @@ class Repository {
     }
 
     fun getProductListSlider(list: List<Storefront.Product>): Observable<Storefront.Product> {
+        return Observable.fromIterable(list)
+    }
+
+    fun getArModels(list: MutableList<MediaModel>): Observable<MediaModel> {
         return Observable.fromIterable(list)
     }
 

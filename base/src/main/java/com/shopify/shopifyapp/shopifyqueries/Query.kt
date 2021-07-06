@@ -49,18 +49,24 @@ object Query {
                                             .media({ m -> m.first(10) }, { me ->
                                                 me.edges({ e ->
                                                     e.node({ n ->
-                                                        n
+                                                        n.onMediaImage { media ->
+                                                            media.previewImage { p ->
+                                                                p.originalSrc()
+                                                            }
+                                                        }
                                                                 .onExternalVideo { _queryBuilder ->
                                                                     _queryBuilder.embeddedUrl()
                                                                             .previewImage {
                                                                                 it.originalSrc()
                                                                             }
                                                                 }
-//                                                                .onVideo(VideoQueryDefinition {
-//                                                                    it.previewImage {
-//                                                                        it.originalSrc()
-//                                                                    }
-//                                                                })
+                                                                .onVideo(VideoQueryDefinition {
+                                                                    it.previewImage {
+                                                                        it.originalSrc()
+                                                                    }.sources { it ->
+                                                                        it.url()
+                                                                    }
+                                                                })
                                                                 .onModel3d({ md ->
                                                                     md
                                                                             .sources({ s -> s.url() })
@@ -92,6 +98,7 @@ object Query {
                                                                                 .selectedOptions({ select -> select.name().value() })
                                                                                 .compareAtPriceV2({ compare -> compare.amount().currencyCode() })
                                                                                 .compareAtPrice()
+                                                                                .currentlyNotInStock()
                                                                                 .image({ image -> image.transformedSrc({ tr -> tr.maxHeight(600).maxWidth(600) }).originalSrc() })
                                                                                 .availableForSale()
                                                                     }
@@ -144,18 +151,24 @@ object Query {
                     .media({ m -> m.first(10) }, { me ->
                         me.edges({ e ->
                             e.node({ n ->
-                                n
+                                n.onMediaImage { media ->
+                                    media.previewImage { p ->
+                                        p.originalSrc()
+                                    }
+                                }
                                         .onExternalVideo { _queryBuilder ->
                                             _queryBuilder.embeddedUrl()
                                                     .previewImage {
                                                         it.originalSrc()
                                                     }
                                         }
-//                                                                .onVideo(VideoQueryDefinition {
-//                                                                    it.previewImage {
-//                                                                        it.originalSrc()
-//                                                                    }
-//                                                                })
+                                        .onVideo(VideoQueryDefinition {
+                                            it.previewImage {
+                                                it.originalSrc()
+                                            }.sources { it ->
+                                                it.url()
+                                            }
+                                        })
                                         .onModel3d({ md ->
                                             md
                                                     .sources({ s -> s.url() })
@@ -177,6 +190,7 @@ object Query {
                                                         .title()
                                                         .priceV2({ p -> p.amount().currencyCode() })
                                                         .quantityAvailable()
+                                                        .currentlyNotInStock()
                                                         .presentmentPrices({ a -> a.first(50).presentmentCurrencies(list_currency) }, { pre -> pre.edges({ ed -> ed.node({ n -> n.price({ p -> p.currencyCode().amount() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }).cursor() }) })
                                                         .selectedOptions({ select -> select.name().value() })
                                                         .compareAtPriceV2({ c -> c.amount().currencyCode() })
@@ -188,17 +202,6 @@ object Query {
                                 )
                     }
                     )
-                    .media({ m -> m.first(10) }, { me ->
-                        me.edges({ e ->
-                            e.node({ n ->
-                                n.onModel3d({ md ->
-                                    md
-                                            .sources({ s -> s.url().format() })
-                                            .previewImage({ p -> p.originalSrc() })
-                                })
-                            })
-                        })
-                    })
                     .onlineStoreUrl()
                     .options({ op ->
                         op.name()
@@ -275,22 +278,29 @@ object Query {
                                     .availableForSale()
                                     .descriptionHtml()
                                     .description()
+                                    .onlineStoreUrl()
                                     .handle()
                                     .media({ m -> m.first(10) }, { me ->
                                         me.edges({ e ->
                                             e.node({ n ->
-                                                n
+                                                n.onMediaImage { media ->
+                                                    media.previewImage { p ->
+                                                        p.originalSrc()
+                                                    }
+                                                }
                                                         .onExternalVideo { _queryBuilder ->
                                                             _queryBuilder.embeddedUrl()
                                                                     .previewImage {
                                                                         it.originalSrc()
                                                                     }
                                                         }
-//                                                                .onVideo(VideoQueryDefinition {
-//                                                                    it.previewImage {
-//                                                                        it.originalSrc()
-//                                                                    }
-//                                                                })
+                                                        .onVideo(VideoQueryDefinition {
+                                                            it.previewImage {
+                                                                it.originalSrc()
+                                                            }.sources { it ->
+                                                                it.url()
+                                                            }
+                                                        })
                                                         .onModel3d({ md ->
                                                             md
                                                                     .sources({ s -> s.url() })
@@ -313,6 +323,7 @@ object Query {
                                                                         .presentmentPrices({ arg: PresentmentPricesArguments -> arg.first(25).presentmentCurrencies(list_currency) }) { price: ProductVariantPricePairConnectionQuery -> price.edges { e: ProductVariantPricePairEdgeQuery -> e.cursor().node { na: ProductVariantPricePairQuery -> na.price { pr: MoneyV2Query -> pr.amount().currencyCode() }.compareAtPrice { cp: MoneyV2Query -> cp.amount().currencyCode() } } } }
                                                                         .price()
                                                                         .quantityAvailable()
+                                                                        .currentlyNotInStock()
                                                                         .title()
                                                                         .selectedOptions { select: SelectedOptionQuery -> select.name().value() }
                                                                         .compareAtPriceV2 { compare: MoneyV2Query -> compare.amount().currencyCode() }
@@ -432,6 +443,14 @@ object Query {
                                                                     .name()
                                                                     .processedAt()
                                                                     .orderNumber()
+                                                                    .fulfillmentStatus()
+                                                                    .canceledAt()
+                                                                    .cancelReason()
+                                                                    .financialStatus()
+                                                                    .totalRefundedV2 { _queryBuilder ->
+                                                                        _queryBuilder.amount().currencyCode()
+                                                                    }.email()
+                                                                    .phone()
                                                                     .totalPriceV2 { _queryBuilder -> _queryBuilder.amount().currencyCode() }
                                                                     .shippingAddress { _queryBuilder ->
                                                                         _queryBuilder.address1().address2().city().company().country().firstName().lastName()
@@ -451,6 +470,8 @@ object Query {
                                                                                     itemedge
                                                                                             .node({ n ->
                                                                                                 n.title().quantity().variant({ v ->
+                                                                                                    v.product {
+                                                                                                    }
                                                                                                     v.priceV2({ p -> p.amount().currencyCode() })
                                                                                                             .selectedOptions({ select -> select.name().value() })
                                                                                                             .compareAtPriceV2({ c -> c.amount().currencyCode() })
@@ -481,9 +502,9 @@ object Query {
     private fun order_list(arg: Storefront.CustomerQuery.OrdersArguments, cursor: String): Storefront.CustomerQuery.OrdersArguments {
         val definition: Storefront.CustomerQuery.OrdersArguments
         if (cursor == "nocursor") {
-            definition = arg!!.first(10)
+            definition = arg!!.first(10).reverse(true)
         } else {
-            definition = arg!!.first(10).after(cursor)
+            definition = arg!!.first(10).after(cursor).reverse(true)
         }
         return definition
     }

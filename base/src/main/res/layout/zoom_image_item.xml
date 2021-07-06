@@ -18,5 +18,17 @@
             android:layout_height="match_parent"
             bind:imageUrl="@{commondata.imageurl}" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play_icon"
+            android:translationZ="10dp"
+            android:visibility="gone"
+            bind:layout_constraintBottom_toBottomOf="@+id/product_image"
+            bind:layout_constraintEnd_toEndOf="@+id/product_image"
+            bind:layout_constraintStart_toStartOf="@+id/product_image"
+            bind:layout_constraintTop_toTopOf="@+id/product_image" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

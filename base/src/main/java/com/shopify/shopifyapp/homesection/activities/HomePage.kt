@@ -1,14 +1,13 @@
 package com.shopify.shopifyapp.homesection.activities
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -31,6 +30,11 @@ import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MHomepageModifiedBinding
 import com.shopify.shopifyapp.databinding.MTopbarBinding
 import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel
+import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel.Companion.count_color
+import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel.Companion.count_textcolor
+import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel.Companion.icon_color
+import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel.Companion.search_placeholder
+import com.shopify.shopifyapp.homesection.viewmodels.HomePageViewModel.Companion.search_position
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
@@ -39,6 +43,10 @@ import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import info.androidhive.fontawesome.FontTextView
 import kotlinx.android.synthetic.main.m_homepage_modified.*
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
@@ -53,6 +61,10 @@ class HomePage : NewBaseActivity() {
     private var personamodel: PersonalisedViewModel? = null
     private var hasBanner: Boolean? = null
     private var hasFullSearch: Boolean = false
+    lateinit var searchItem: MenuItem
+    lateinit var wishitemHome: MenuItem
+    lateinit var cartitemHome: MenuItem
+    private var scrollYPosition: Int = -1
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -103,6 +115,7 @@ class HomePage : NewBaseActivity() {
                 Log.i(TAG, "Scroll UP")
             }
             if (scrollY == 0) {
+                scrollYPosition = 0
                 Log.i(TAG, "TOP SCROLL")
                 if (hasBanner!! && hasFullSearch) {
                     toolbar.visibility = View.GONE
@@ -119,6 +132,7 @@ class HomePage : NewBaseActivity() {
                 }
             }
             if (scrollY <= 200) {
+                scrollYPosition = scrollY
                 if (hasBanner!! && hasFullSearch) {
                     toolbar.visibility = View.GONE
                     fullsearch.visibility = View.GONE
@@ -180,18 +194,31 @@ class HomePage : NewBaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.m_search, menu)
         item = menu.findItem(R.id.search_item)
+        searchItem = menu.findItem(R.id.search_item)
         wishitem = menu.findItem(R.id.wish_item)
+        wishitemHome = menu.findItem(R.id.wish_item)
         cartitem = menu.findItem(R.id.cart_item)
+        cartitemHome = menu.findItem(R.id.cart_item)
         item?.setActionView(R.layout.m_search)
+        searchItem?.setActionView(R.layout.m_search)
         wishitem?.setActionView(R.layout.m_wishcount)
+        wishitemHome?.setActionView(R.layout.m_wishcount)
         cartitem?.setActionView(R.layout.m_count)
+        cartitemHome?.setActionView(R.layout.m_count)
         val search = item?.actionView
+        val searchHome = searchItem?.actionView
         search?.setOnClickListener {
             val searchpage = Intent(this, AutoSearch::class.java)
             startActivity(searchpage)
             Constant.activityTransition(this)
         }
+        searchHome?.setOnClickListener {
+            val searchpage = Intent(this, AutoSearch::class.java)
+            startActivity(searchpage)
+            Constant.activityTransition(this)
+        }
         val notifCount = cartitem?.actionView
+        val notifCountHomePage = cartitemHome?.actionView
         textView = notifCount?.findViewById<TextView>(R.id.count)
         textView!!.text = "" + cartCount
         notifCount?.setOnClickListener {
@@ -199,13 +226,56 @@ class HomePage : NewBaseActivity() {
             startActivity(mycartlist)
             Constant.activityTransition(this)
         }
+        notifCountHomePage?.setOnClickListener {
+            val mycartlist = Intent(this, CartList::class.java)
+            startActivity(mycartlist)
+            Constant.activityTransition(this)
+        }
         val wishcount = wishitem?.actionView
+        val wishcountHomePage = wishitemHome?.actionView
         wishtextView = wishcount?.findViewById<TextView>(R.id.count)
         wishtextView!!.text = "" + leftMenuViewModel!!.wishListcount
         wishcount?.setOnClickListener {
             val wishlist = Intent(this, WishList::class.java)
             startActivity(wishlist)
             Constant.activityTransition(this)
+        }
+        wishcountHomePage?.setOnClickListener {
+            val wishlist = Intent(this, WishList::class.java)
+            startActivity(wishlist)
+            Constant.activityTransition(this)
+        }
+        if (scrollYPosition > 0) {
+            GlobalScope.launch(Dispatchers.Main) {
+                delay(1000)
+                setToggle(toolbar)
+            }
+            setHomeIconColors(
+                    count_color ?: "#000000",
+                    count_textcolor ?: "#000000",
+                    icon_color ?: "#000000"
+            )
+            var binding: MTopbarBinding? = DataBindingUtil.inflate(getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
+            setHomeSearchOption(search_position ?: "", search_placeholder
+                    ?: "", binding!!)
+        } else if (scrollYPosition == 0) {
+            if (homepage.childCount > 0) {
+                if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
+                    var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
+                    GlobalScope.launch(Dispatchers.Main) {
+                        delay(1000)
+                        setToggle(home_toolbar)
+                    }
+                    setHomeIconColors(
+                            count_color ?: "#000000",
+                            count_textcolor ?: "#000000",
+                            icon_color ?: "#000000"
+                    )
+                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+                    setHomeSearchOption(search_position ?: "", search_placeholder
+                            ?: "", binding!!)
+                }
+            }
         }
         return true
     }
@@ -264,6 +334,7 @@ class HomePage : NewBaseActivity() {
     fun setHomeSearchOption(type: String, placeholder: String, binding: MTopbarBinding) {
         when (type) {
             "middle-width-search" -> {
+                searchItem?.setVisible(false)
                 item?.setVisible(false)
                 binding.toolimage.visibility = View.GONE
                 binding.searchsection.visibility = View.VISIBLE
@@ -275,11 +346,13 @@ class HomePage : NewBaseActivity() {
                 }
             }
             "full-width-search" -> {
+                searchItem?.setVisible(false)
                 item?.setVisible(false)
                 binding.toolimage.visibility = View.VISIBLE
                 binding.searchsection.visibility = View.GONE
             }
             else -> {
+                searchItem?.setVisible(true)
                 item?.setVisible(true)
                 binding.toolimage.visibility = View.VISIBLE
                 binding.searchsection.visibility = View.GONE
@@ -331,9 +404,27 @@ class HomePage : NewBaseActivity() {
         super.onResume()
         if (featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
-
                 homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
                 homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            }
+        }
+        if (homepage.childCount > 0) {
+            if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
+                var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
+                invalidateOptionsMenu()
+                setToggle(home_toolbar)
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(100)
+                    setHomeIconColors(
+                            count_color ?: "#000000",
+                            count_textcolor ?: "#000000",
+                            icon_color ?: "#000000"
+                    )
+                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+                    setHomeSearchOption(search_position ?: "", search_placeholder
+                            ?: "", binding!!)
+                }
+
             }
         }
         nav_view.menu.findItem(R.id.home_bottom).setChecked(true)

@@ -39,6 +39,13 @@ class MyApplication : MultiDexApplication() {
                 .setApiKey("AIzaSyD0GhHgrwqVQC7m3LBOkoxVzVefP6EQAZw") // Required for Auth.
                 .setDatabaseUrl("https://shopify-dev-project-2f51e.firebaseio.com/") // Required for RTDB.
                 .build()
+
+//        val options = FirebaseOptions.Builder()
+//                .setProjectId("live-shopify-project")
+//                .setApplicationId("1:322600045606:android:ccd0e8d87b47235fab6ae7") // Required for Analytics.
+//                .setApiKey("AIzaSyC1LTEUGgrKWBDVRV0VMQJOCN2O-UyVKr4") // Required for Auth.
+//                .setDatabaseUrl("https://live-shopify-project.firebaseio.com/") // Required for RTDB.
+//                .build()
         firebaseapp = FirebaseApp.initializeApp(this /* Context */, options, "MageNative")
 
     }
@@ -60,6 +67,6 @@ class MyApplication : MultiDexApplication() {
             return mFirebaseSecondanyInstance as FirebaseDatabase
         }
 
-         var dataBaseReference: DatabaseReference?=null
+        var dataBaseReference: DatabaseReference? = null
     }
 }

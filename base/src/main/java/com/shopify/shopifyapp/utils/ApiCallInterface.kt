@@ -15,7 +15,7 @@ import retrofit2.http.*
 interface ApiCallInterface {
 
     @GET(Urls.MENU)
-    fun getMenus(@Query("mid") mid: String): Single<JsonElement>
+    fun getMenus(@Query("mid") mid: String, @Query("code") code: String): Single<JsonElement>
 
     @GET(Urls.HOMEPAGE)
     fun getHomePage(@Query("mid") mid: String): Single<JsonElement>
@@ -53,8 +53,7 @@ interface ApiCallInterface {
     fun getJudgemeReviewCount(@Query("api_token") api_token: String, @Query("shop_domain") shop_domain: String, @Query("product_id") product_id: String): Single<JsonElement>
 
     @GET(JUDGEME_REVIEWINDEX)
-    fun getJudgemeIndex(@Query("api_token") api_token: String, @Query("shop_domain") shop_domain: String, @Query("per_page") per_page: Int
-                        , @Query("page") page: Int, @Query("product_id") product_id: String): Single<JsonElement>
+    fun getJudgemeIndex(@Query("api_token") api_token: String, @Query("shop_domain") shop_domain: String, @Query("per_page") per_page: Int, @Query("page") page: Int, @Query("product_id") product_id: String): Single<JsonElement>
 
     @POST(JUDGEME_REVIEWCREATE)
     fun createJudgemeReview(@Body params: JsonObject): Single<JsonElement>
