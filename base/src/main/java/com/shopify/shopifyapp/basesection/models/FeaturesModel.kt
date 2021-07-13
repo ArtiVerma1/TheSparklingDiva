@@ -8,10 +8,10 @@ class FeaturesModel : BaseObservable() {
 
     @Bindable
     var firebaseEvents: Boolean = false
-    set(value) {
-        field=value
-        notifyPropertyChanged(BR.firebaseEvents)
-    }
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.firebaseEvents)
+        }
 
     @Bindable
     var nativeOrderView: Boolean = true
@@ -57,7 +57,7 @@ class FeaturesModel : BaseObservable() {
 
 
     @Bindable
-    var outOfStock: Boolean? = false
+    var outOfStock: Boolean? = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.outOfStock)

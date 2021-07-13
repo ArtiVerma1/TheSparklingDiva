@@ -334,8 +334,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         context.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
                         draw1.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
                         //context.fullsearch.background = draw1
-
-
                     }
                 }
 
@@ -394,8 +392,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             JSONObject(jsonObject.getString("icon_color")).getString("color")
                     )
                 }
-
-
                 when (jsonObject.getString("search_position")) {
                     "middle-width-search" -> {
                         if (jsonObject.has("item_banner") && !jsonObject.getString("item_banner").equals("1")) {
@@ -440,7 +436,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         draw1.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
                         //  context.fullsearch.background = draw1
                     }
-
                 }
             }
             homepagedata.setValue(hashMapOf("top-bar_" to binding.root))
@@ -998,7 +993,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             }
         }
         if (jsonObject.getString("item_border").equals("1")) {
-            Handler(Looper.getMainLooper()).post {
+           // Handler(Looper.getMainLooper()).post {
                 var background = JSONObject(jsonObject.getString("item_border_color"))
                 binding.cardOne.setCardBackgroundColor(Color.parseColor(background.getString("color")))
                 binding.cardTwo.setCardBackgroundColor(Color.parseColor(background.getString("color")))
@@ -1010,7 +1005,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 binding.cardThree.setContentPadding(2, 2, 2, 2)
                 binding.cardFour.setContentPadding(2, 2, 2, 2)
                 binding.cardFive.setContentPadding(2, 2, 2, 2)
-            }
+           // }
         }
         category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
         category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")

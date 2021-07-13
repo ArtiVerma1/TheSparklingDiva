@@ -38,9 +38,12 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <activity android:name=".ordersection.activities.OrderDetails" />
-        <activity android:name=".productsection.activities.AllJudgeMeReviews" />
-        <activity android:name=".productsection.activities.JudgeMeCreateReview" />
+        <activity android:name=".ordersection.activities.OrderDetails"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".productsection.activities.AllJudgeMeReviews"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".productsection.activities.JudgeMeCreateReview"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".productsection.activities.VideoPlayerActivity"
             android:screenOrientation="portrait" />

@@ -428,7 +428,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                 if (view.itemDecorationCount == 0) {
                     view.addItemDecoration(GridSpacingItemDecoration(4, dpToPx(6), true))
                 }
-
             }
             "customisablegrid" -> {
                 view.layoutManager = GridLayoutManager(this, 3)
