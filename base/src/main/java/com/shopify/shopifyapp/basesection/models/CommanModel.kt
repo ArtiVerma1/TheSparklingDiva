@@ -11,6 +11,7 @@ import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.databinding.library.baseAdapters.BR
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -114,6 +115,7 @@ class CommanModel : BaseObservable() {
                 Glide.with(context)
                         .asBitmap()
                         .load(imageUrl)
+                        .priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(view)
             } else {
@@ -122,6 +124,7 @@ class CommanModel : BaseObservable() {
                         .load(imageUrl)
                         .placeholder(R.drawable.image_placeholder)
                         .error(R.drawable.image_placeholder)
+                        .priority(Priority.HIGH)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(view)
             }
