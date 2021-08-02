@@ -314,7 +314,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             Status.SUCCESS -> LeftMenu.renderSuccessResponse(reponse.data!!)
             Status.ERROR -> {
                 reponse.error!!.printStackTrace()
-                showToast(resources.getString(R.string.errorString))
+                //  showToast(resources.getString(R.string.errorString))
             }
             else -> {
             }

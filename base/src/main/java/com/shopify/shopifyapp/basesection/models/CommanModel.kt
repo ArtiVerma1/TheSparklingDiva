@@ -27,7 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-
+private val TAG = "CommanModel"
 fun <String> ImageView.loadCircularImage(
         model: kotlin.String,
         borderSize: Float = 0F,
@@ -133,6 +133,7 @@ class CommanModel : BaseObservable() {
         @BindingAdapter("circleImageUrl")
         @JvmStatic
         fun circleLoadImage(view: ImageView, imageUrl: String?) {
+            Log.d(TAG, "circleLoadImage: " + imageUrl)
             val observable = Observable.fromCallable { imageUrl }
             observable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<String?> {

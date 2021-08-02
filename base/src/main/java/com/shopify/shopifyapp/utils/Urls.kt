@@ -37,6 +37,10 @@ class Urls {
         const val JUDGEME_REVIEWCREATE: String = JUDGEME_BASEURL + "reviews"
         const val JUDGEME_GETPRODUCTID: String = JUDGEME_BASEURL + "products/"
         const val JUDGEME_APITOKEN: String = "R8kqByFI_qHiHHQj6ZV1yWCYveQ"
+        const val ALIREVIEW_BASEURL: String = "https://alireviews.fireapps.io/"
+        const val ALIREVIEW_INSTALLSTATUS: String = ALIREVIEW_BASEURL + "api/shops/magenative.myshopify.com"
+        const val ALIREVIEW_PRODUCT: String = ALIREVIEW_BASEURL + "comment/get_review"
+
     }
 
     val shopdomain: String

@@ -14,6 +14,13 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
+    var aliReviews: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.aliReviews)
+        }
+
+    @Bindable
     var nativeOrderView: Boolean = true
         set(value) {
             field = value
@@ -57,7 +64,7 @@ class FeaturesModel : BaseObservable() {
 
 
     @Bindable
-    var outOfStock: Boolean? = true
+    var outOfStock: Boolean? = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.outOfStock)

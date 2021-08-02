@@ -27,6 +27,8 @@ android {
         targetSdkVersion 29
         versionCode 49
         versionName "3.4"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -55,8 +57,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    /*Espresso Testing*/
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.0'
+
     implementation 'com.jakewharton:butterknife:10.2.0'
     kapt 'com.jakewharton:butterknife-compiler:10.2.0'
     /* dagger dependency for DI*/
@@ -115,9 +121,9 @@ dependencies {
     //autoML
     implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
     implementation 'com.google.firebase:firebase-ml-vision-image-label-model:20.0.1'
-   // implementation 'com.google.firebase:firebase-ml-vision-automl:18.0.3'
+    // implementation 'com.google.firebase:firebase-ml-vision-automl:18.0.3'
     //implementation 'com.google.firebase:firebase-core:17.2.2'
-   // implementation "com.google.android.gms:play-services-instantapps:17.0.0"
+    // implementation "com.google.android.gms:play-services-instantapps:17.0.0"
     implementation 'me.jessyan:retrofit-url-manager:1.4.0'
     //implementation "androidx.browser:browser:1.2.0"
     implementation 'com.google.firebase:firebase-auth-ktx:19.3.1'
@@ -130,7 +136,7 @@ dependencies {
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
     implementation 'com.karumi:dexter:6.2.2'
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
-  //  testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+    //  testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
     testImplementation 'org.mockito:mockito-inline:3.11.2'
 }
 apply plugin: 'com.google.gms.google-services'

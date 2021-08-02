@@ -89,6 +89,8 @@ class ProductView : NewBaseActivity() {
     var reviewModel: ReviewModel? = null
     private var external_id: String? = null
     private var judgeme_productid: String? = null
+    private var AliProductId: String? = null
+    private var AliShopId: String? = null
     private var reviewList: ArrayList<Review>? = null
     private var mediaList = mutableListOf<MediaModel>()
 
@@ -120,6 +122,8 @@ class ProductView : NewBaseActivity() {
             model!!.id = intent.getStringExtra("ID")
             productID = model!!.id
         }
+        Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)
+        Log.d(TAG, "onCreate: " + productID!!)
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(Urls(application as MyApplication).mid, getBase64Decode(productID)!!)?.observe(this, Observer { this.consumeBadges(it) })
             model?.getReviews(Urls(application as MyApplication).mid, getBase64Decode(productID)!!, 1)?.observe(this, Observer { this.consumeReview(it) })
@@ -129,10 +133,15 @@ class ProductView : NewBaseActivity() {
             model?.sizeChartVisibility?.observe(this, Observer { this.consumeSizeChartVisibility(it) })
             model?.sizeChartUrl?.observe(this, Observer { this.consumeSizeChartURL(it) })
         }
+        if (featuresModel.aliReviews) {
+            model?.getAlireviewInstallStatus?.observe(this, Observer { this.consumeAliReviewStatus(it) })
+            model?.getAlireviewProduct?.observe(this, Observer { this.consumeAliReviews(it) })
+            model?.getAliReviewStatus()
+        }
 
         data = ListData()
         if (model!!.setPresentmentCurrencyForModel()) {
-            model!!.filteredlist.observe(this, Observer<List<Storefront.ProductVariantEdge>> { this.filterResponse(it) })
+            //  model!!.filteredlist.observe(this, Observer<List<Storefront.ProductVariantEdge>> { this.filterResponse(it) })
             if (featuresModel.ai_product_reccomendaton) {
                 model!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
             }
@@ -152,6 +161,68 @@ class ProductView : NewBaseActivity() {
         }
         binding?.variantAvailableQty?.textSize = 14f
         binding?.qtyTitleTxt?.textSize = 14f
+    }
+
+    private fun consumeAliReviews(response: ApiResponse?) {
+        Log.d(TAG, "consumeAliReviews: " + response?.data)
+        var responseData = JSONObject(response?.data.toString())
+        if (responseData.getBoolean("status")) {
+            var shopPlanInfo = responseData.getJSONObject("shopPlanInfo")
+            var data = JSONObject(response?.data.toString()).getJSONObject("data")
+            binding?.reviewCard?.visibility = View.VISIBLE
+            binding?.ratingTxt?.text = responseData.getString("avg")
+            binding?.totalReview?.text = responseData.getString("total_review")
+        }
+        var reviews = responseData.getJSONObject("data").getJSONArray("data")
+        reviewList = ArrayList<Review>()
+        var review_model: Review? = null
+        for (i in 0 until reviews.length()) {
+            review_model = Review(reviews.getJSONObject(i).getString("content"),
+                    reviews.getJSONObject(i).getString("id"),
+                    reviews.getJSONObject(i).getString("star"),
+                    reviews.getJSONObject(i).getString("star"),
+                    reviews.getJSONObject(i).getString("created_at"),
+                    reviews.getJSONObject(i).getString("author"),
+                    ""
+                    /*  reviews.getJSONObject(i).getString("title")*/
+            )
+            reviewList?.add(review_model)
+        }
+
+        if (reviewList?.size!! > 0) {
+            binding?.aliNoReviews?.visibility = View.GONE
+            binding?.aliReviewList?.visibility = View.VISIBLE
+            binding?.aliViewAllBut?.visibility = View.VISIBLE
+            binding?.aliRateProductBut?.visibility = View.GONE
+            binding?.aliReviewIndecator?.visibility = View.VISIBLE
+            reviewAdapter = ReviewListAdapter()
+            reviewAdapter.setData(reviewList)
+            binding?.aliReviewList?.adapter = reviewAdapter
+            binding?.aliReviewIndecator?.tintIndicator(Color.parseColor(themeColor))
+            binding?.aliReviewIndecator?.setViewPager(binding?.aliReviewList)
+        } else {
+            binding?.aliNoReviews?.visibility = View.VISIBLE
+            binding?.aliReviewList?.visibility = View.GONE
+            binding?.aliRateProductBut?.visibility = View.GONE
+            binding?.aliReviewIndecator?.visibility = View.GONE
+            binding?.aliViewAllBut?.visibility = View.GONE
+        }
+
+    }
+
+    private fun consumeAliReviewStatus(response: ApiResponse?) {
+        Log.d(TAG, "consumeAliReviewStatus: " + response?.data)
+        try {
+            var responseData = JSONObject(response?.data.toString())
+            if (responseData.getBoolean("status")) {
+                AliProductId = getBase64Decode(productID)!!
+                AliShopId = responseData.getJSONObject("result").getString("shop_id")
+                model?.getAliReviewProduct(responseData.getJSONObject("result").getString("shop_id"), getBase64Decode(productID)!!, 1)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     private fun consumeJudgeMeReview(response: ApiResponse?) {
@@ -315,83 +386,6 @@ class ProductView : NewBaseActivity() {
         text = datavalue2[0]
         return text
     }
-
-    private fun filterResponse(list: List<Storefront.ProductVariantEdge>) {
-        if (list.size > 1) {
-            binding!!.variantheading.visibility = View.VISIBLE
-            binding!!.variantContainer.visibility = View.VISIBLE
-        } else {
-            binding!!.variantheading.visibility = View.GONE
-            binding!!.variantContainer.visibility = View.GONE
-            binding?.variantAvailableQty?.visibility = View.GONE
-            singleVariant = true
-        }
-        if (list.size > 0) {
-            var swatches_object = JSONObject()
-            for (j in 0 until list.size) {
-                if (list.get(j).node.selectedOptions.size > 0) {
-                    for (i in 0 until list.get(j).node.selectedOptions.size) {
-                        swatches_object.accumulate(list.get(j).node.selectedOptions.get(i).name, list.get(j).node.selectedOptions.get(i).value)
-                    }
-                }
-            }
-            Log.d(TAG, "filterResponse: " + swatches_object)
-            var variant_keys = swatches_object.names() as JSONArray
-            var swatechView: SwatchesListBinding? = null
-            var variant_data: MutableSet<String>? = null
-            totalVariant = variant_keys.length()
-            for (i in 0 until variant_keys.length()) {
-                variant_data = mutableSetOf()
-                swatechView = DataBindingUtil.inflate(layoutInflater, R.layout.swatches_list, null, false)
-                swatechView.variantTitle.text = variant_keys.getString(i)
-                swatechView.variantTitle.setTag(variant_keys.getString(i))
-                swatechView.variantTitle.textSize = 14f
-                if (swatches_object.optJSONArray(variant_keys.getString(i)) != null) {
-                    for (j in 0 until swatches_object.getJSONArray(variant_keys.getString(i)).length()) {
-                        variant_data.add(swatches_object.getJSONArray(variant_keys.getString(i)).getString(j))
-                    }
-                } else {
-                    variant_data.add(swatches_object.getString(variant_keys.getString(i)))
-                }
-                adapter = VariantAdapter()
-                if (variant_data.toList().size == 1) {
-                    variantId = list.get(0).node.id
-                    variantEdge = list.get(0).node
-                    variantValidation.accumulate("title", variantId)
-                    binding?.variantAvailableQty?.text = list.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
-                    setProductPrice(list.get(0).node)
-                } else {
-                    adapter!!.setData(list, variant_data.toList(), variant_keys.getString(i), model, data, this, variantCallback_ = object : VariantAdapter.VariantCallback {
-                        override fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String) {
-                            variantId = variant.node.id
-                            variantEdge = variant.node
-                            binding?.quantity?.text = "1"
-                            variantValidation.accumulate(variant_title, variantId)
-                            binding?.variantAvailableQty?.visibility = View.VISIBLE
-                            binding?.variantAvailableQty?.text = variant.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
-                            setProductPrice(variant.node)
-                            if (variant.node.currentlyNotInStock == false) {
-                                if (variant.node.quantityAvailable == 0) {
-                                    binding?.addtocart?.text = getString(R.string.out_of_stock)
-                                    inStock = false
-                                    adapter.notifyDataSetChanged()
-                                } else {
-                                    binding?.addtocart?.text = getString(R.string.addtocart)
-                                    inStock = true
-                                }
-                            } else {
-                                inStock = true
-                                binding?.addtocart?.text = getString(R.string.addtocart)
-                            }
-                        }
-                    })
-                    swatechView.variantList.adapter = adapter
-                    binding?.variantContainer?.addView(swatechView.root)
-                }
-            }
-        }
-    }
-
     private fun consumeResponse(reponse: GraphQLResponse) {
         when (reponse.status) {
             Status.SUCCESS -> {
@@ -414,8 +408,6 @@ class ProductView : NewBaseActivity() {
                     if (!model!!.id.isEmpty()) {
                         productedge = result.data!!.node as Storefront.Product
                     }
-                    // a.previewImage
-
                     Log.i("MageNative", "Product_id" + productedge!!.id.toString())
                     setProductData(productedge)
                 }
@@ -541,7 +533,7 @@ class ProductView : NewBaseActivity() {
             productName = productedge.title
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
-            binding?.description?.loadData(productedge.descriptionHtml, "text/html", "utf-8")
+            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
             binding?.description?.getSettings()?.setJavaScriptEnabled(true)
             if (model?.isInwishList(model?.id!!)!!) {
                 data!!.addtowish = resources.getString(R.string.alreadyinwish)
@@ -563,13 +555,92 @@ class ProductView : NewBaseActivity() {
                             ?: 0.0, this)
             setProductPrice(variant)
             binding?.regularprice?.textSize = 15f
-            model!!.filterList(productedge.variants.edges)
+            //  model!!.filterList(productedge.variants.edges)
+            filterOptionList(productedge.options, productedge.variants.edges)
             binding!!.productdata = data
             binding!!.clickhandlers = ClickHandlers()
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
+    }
+
+    private fun filterOptionList(options: List<Storefront.ProductOption>, edges: MutableList<Storefront.ProductVariantEdge>) {
+        Log.d(TAG, "filterOptionList: " + options)
+        var swatechView: SwatchesListBinding? = null
+        var outofStockList: MutableList<String> = mutableListOf()
+        if (edges.size > 1) {
+            binding!!.variantheading.visibility = View.VISIBLE
+            binding!!.variantContainer.visibility = View.VISIBLE
+        } else {
+            binding!!.variantheading.visibility = View.GONE
+            binding!!.variantContainer.visibility = View.GONE
+            binding?.variantAvailableQty?.visibility = View.GONE
+            singleVariant = true
+            variantId = edges.get(0).node.id
+            variantValidation.accumulate("title", variantId)
+            binding?.variantAvailableQty?.text = edges.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
+            setProductPrice(edges.get(0).node)
+        }
+        for (i in 0 until edges.size) {
+            if (!edges.get(i).node.availableForSale) {
+                outofStockList.add(edges.get(i).node.title)
+            }
+        }
+        totalVariant = options.size
+        var variant_pair: MutableSet<String> = mutableSetOf()
+        for (j in 0 until options.size) {
+            swatechView = DataBindingUtil.inflate(layoutInflater, R.layout.swatches_list, null, false)
+            swatechView.variantTitle.text = options.get(j).name
+            adapter = VariantAdapter()
+            adapter.setData(options.get(j).values, outofStockList, this, object : VariantAdapter.VariantCallback {
+                override fun clickVariant(variantName: String) {
+                    variant_pair.add(variantName)
+                    if (totalVariant == variant_pair.size) {
+                        variantFilter(variant_pair.toList(), edges)
+                    } else if (variant_pair.size > totalVariant!!) {
+                        variantFilter(variant_pair.toList().subList(1, variant_pair.size).reversed(), edges)
+                        variant_pair.remove(variantName)
+                    }
+                    variantValidation.accumulate(variantName, options.get(j).id)
+                }
+            })
+            swatechView.variantList.adapter = adapter
+            binding?.variantContainer?.addView(swatechView.root)
+        }
+    }
+
+    private fun variantFilter(variantPair: List<String>, edges: MutableList<Storefront.ProductVariantEdge>) {
+        val new_pair = StringBuilder()
+        for (i in 0 until variantPair.size) {
+            if (new_pair.length > 0) {
+                new_pair.append(" / ")
+            }
+            new_pair.append(variantPair.get(i))
+        }
+        Log.d(TAG, "variantFilter: " + new_pair)
+        edges.forEach {
+            if (it.node.title.equals(new_pair.toString())) {
+                variantId = it.node.id
+                binding?.variantAvailableQty?.visibility = View.VISIBLE
+                binding?.variantAvailableQty?.text = it.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
+                setProductPrice(it.node)
+                if (it.node.currentlyNotInStock == false) {
+                    if (it.node.quantityAvailable == 0) {
+                        binding?.addtocart?.text = getString(R.string.out_of_stock)
+                        inStock = false
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        binding?.addtocart?.text = getString(R.string.addtocart)
+                        inStock = true
+                    }
+                } else {
+                    inStock = true
+                    binding?.addtocart?.text = getString(R.string.addtocart)
+                }
+                Log.d(TAG, "variantFilter: " + variantId)
+            }
+        }
     }
 
     private fun setProductPrice(variant: Storefront.ProductVariant?) {
@@ -685,7 +756,6 @@ class ProductView : NewBaseActivity() {
                                 param(FirebaseAnalytics.Param.QUANTITY, binding?.quantity?.text.toString())
                             }
                         }
-
                     } else {
                         Toast.makeText(view.context, resources.getString(R.string.selectvariant), Toast.LENGTH_LONG).show()
                     }
@@ -759,6 +829,16 @@ class ProductView : NewBaseActivity() {
             intent.putExtra("reviewList", reviewList)
             intent.putExtra("product_name", productName)
             intent.putExtra("product_id", judgeme_productid)
+            startActivity(intent)
+            Constant.activityTransition(view.context)
+        }
+
+        fun viewAllAliReview(view: View) {
+            var intent = Intent(this@ProductView, AllAliReviewsListActivity::class.java)
+            intent.putExtra("reviewList", reviewList)
+            intent.putExtra("product_name", productName)
+            intent.putExtra("product_id", AliProductId)
+            intent.putExtra("shop_id", AliShopId)
             startActivity(intent)
             Constant.activityTransition(view.context)
         }
