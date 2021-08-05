@@ -621,6 +621,7 @@ class ProductView : NewBaseActivity() {
         edges.forEach {
             if (it.node.title.equals(new_pair.toString())) {
                 variantId = it.node.id
+                variantEdge=it.node
                 binding?.variantAvailableQty?.visibility = View.VISIBLE
                 binding?.variantAvailableQty?.text = it.node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
                 setProductPrice(it.node)
