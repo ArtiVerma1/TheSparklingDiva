@@ -117,7 +117,6 @@ class WishListViewModel(var repository: Repository) : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
             return currency[0]
         }
 
@@ -148,7 +147,6 @@ class WishListViewModel(var repository: Repository) : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     private fun getAllProductsById(productIds: ArrayList<ID>, edges: MutableList<Storefront.Product>, currency_list: ArrayList<Storefront.CurrencyCode>) {

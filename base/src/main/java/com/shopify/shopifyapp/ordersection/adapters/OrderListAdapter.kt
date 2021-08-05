@@ -68,34 +68,32 @@ constructor() : RecyclerView.Adapter<OrderItem>() {
                 holder.binding.boughtforheading.visibility = View.GONE
             }
             holder.binding.reorderBut.setOnClickListener {
-                for (i in 0 until data?.get(position)?.node?.lineItems?.edges?.size!!) {
-                    Log.d(TAG, "onBindViewHolder: " + data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.variant?.id)
-                    Log.d(TAG, "onBindViewHolder: " + data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.quantity)
-
-                    var alertDialog = SweetAlertDialog(holder.binding.reorderBut.context, SweetAlertDialog.NORMAL_TYPE)
-                    alertDialog.setTitleText(holder.binding.reorderBut.context?.getString(R.string.confirmation))
-                    alertDialog.setContentText(holder.binding.reorderBut.context?.getString(R.string.reorder_confirmation))
-                    alertDialog.setConfirmText(holder.binding.reorderBut.context?.getString(R.string.yes))
-                    alertDialog.setCancelText(holder.binding.reorderBut.context?.getString(R.string.no))
-                    alertDialog.setConfirmClickListener { sweetAlertDialog ->
-                        sweetAlertDialog.setTitleText(holder.binding.reorderBut.context?.getString(R.string.done))
-                                .setContentText(holder.binding.reorderBut.context?.getString(R.string.reorder_success_msg))
-                                .setConfirmText(holder.binding.reorderBut.context?.getString(R.string.done))
-                                .showCancelButton(false)
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
+                val alertDialog = SweetAlertDialog(holder.binding.reorderBut.context, SweetAlertDialog.NORMAL_TYPE)
+                alertDialog.setTitleText(holder.binding.reorderBut.context?.getString(R.string.confirmation))
+                alertDialog.setContentText(holder.binding.reorderBut.context?.getString(R.string.reorder_confirmation))
+                alertDialog.setConfirmText(holder.binding.reorderBut.context?.getString(R.string.yes))
+                alertDialog.setCancelText(holder.binding.reorderBut.context?.getString(R.string.no))
+                alertDialog.setConfirmClickListener { sweetAlertDialog ->
+                    sweetAlertDialog.setTitleText(holder.binding.reorderBut.context?.getString(R.string.done))
+                            .setContentText(holder.binding.reorderBut.context?.getString(R.string.reorder_success_msg))
+                            .setConfirmText(holder.binding.reorderBut.context?.getString(R.string.done))
+                            .showCancelButton(false)
+                            .setConfirmClickListener(null)
+                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
+                    for (i in 0 until data?.get(position)?.node?.lineItems?.edges?.size!!) {
+                        Log.d(TAG, "onBindViewHolder: " + data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.variant?.id)
+                        Log.d(TAG, "onBindViewHolder: " + data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.quantity)
                         model?.addToCart(data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.variant?.id.toString(), data?.get(position)?.node?.lineItems?.edges?.get(i)?.node?.quantity?.toInt()
                                 ?: 0)
                     }
-                    alertDialog.show()
                 }
+                alertDialog.show()
             }
             if (SplashViewModel.featuresModel.reOrderEnabled) {
                 holder.binding.reorderBut.visibility = View.VISIBLE
             } else {
                 holder.binding.reorderBut.visibility = View.GONE
             }
-
             holder?.binding?.features = SplashViewModel.featuresModel
             holder.binding.order = order
         } catch (e: Exception) {

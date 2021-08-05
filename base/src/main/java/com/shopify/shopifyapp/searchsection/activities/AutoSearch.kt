@@ -24,6 +24,7 @@ import com.google.firebase.ml.vision.automl.FirebaseAutoMLLocalModel
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler
 import com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceAutoMLImageLabelerOptions
+import com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions
 import com.google.zxing.integration.android.IntentIntegrator
 import com.mindorks.paracamera.Camera
 import com.shopify.buy3.Storefront
@@ -89,8 +90,11 @@ class AutoSearch : NewBaseActivity() {
                 .setAssetFilePath("manifest.json")
                 .build()
         val optionsBuilder = FirebaseVisionOnDeviceAutoMLImageLabelerOptions.Builder(localModel)
-        val options = optionsBuilder.setConfidenceThreshold(0.5f).build()
-        labeler = FirebaseVision.getInstance(secondary).getOnDeviceAutoMLImageLabeler(options)
+        // val options = optionsBuilder.setConfidenceThreshold(0.5f).build()
+        val options = FirebaseVisionOnDeviceImageLabelerOptions.Builder()
+                .setConfidenceThreshold(0.7f)
+                .build()
+        labeler = FirebaseVision.getInstance().getOnDeviceImageLabeler(options)
         camera = Camera.Builder()
                 .resetToCorrectOrientation(true)//1
                 .setTakePhotoRequestCode(Camera.REQUEST_TAKE_PHOTO)//2
@@ -280,7 +284,7 @@ class AutoSearch : NewBaseActivity() {
                     for (label in labels) {
                         val text = label.text
                         val confidence = label.confidence
-                        if (label.confidence > 0.5) {
+                        if (label.confidence > 0.7) {
                             model!!.getProductsByKeywords(text)
                             Log.i("MageNative", "Label : " + text)
                             Log.i("MageNative", "confidence : $confidence")

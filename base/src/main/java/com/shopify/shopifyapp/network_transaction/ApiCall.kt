@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 var customLoader: CustomLoader? = null
 private val TAG = "ApiCall"
 fun ViewModel.doGraphQLMutateGraph(repository: Repository, query: Storefront.MutationQuery, customResponse: CustomResponse, context: Context) {
-    Log.d(TAG, "doGraphQLMutateGraph: " + query)
+//    Log.d(TAG, "doGraphQLMutateGraph: " + query)
     GlobalScope.launch(Dispatchers.Main) {
         if (customLoader != null) {
             customLoader!!.dismiss()

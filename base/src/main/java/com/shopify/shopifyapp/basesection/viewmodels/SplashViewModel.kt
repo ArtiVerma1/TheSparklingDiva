@@ -29,10 +29,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import java.lang.Runnable
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -66,11 +64,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
         }
 
     fun Response(shop: String): MutableLiveData<LocalDbResponse> {
-        val handler = Handler()
-        handler.postDelayed({ // Do something after 5s = 5000ms
-            connectFirebaseForTrial(shop)
-        }, 2000)
-
+        connectFirebaseForTrial(shop)
         return responseLiveData
     }
 
@@ -97,11 +91,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun firebaseResponse(): MutableLiveData<FireBaseResponse> {
-        val handler = Handler()
-        handler.postDelayed({ // Do something after 5s = 5000ms
-            connectFireBaseForSplashData()
-        }, 2000)
-
+        connectFireBaseForSplashData()
         return fireBaseResponseMutableLiveData
     }
 
@@ -247,6 +237,29 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                     }
                     Thread(runnable).start()
 
+//                    GlobalScope.launch(Dispatchers.IO) {
+//                        Log.i("MageNative:", "TrialExpired$value")
+//                        Log.i("MageNative:", "LocalData" + repository.localData)
+//
+//                        if (repository.localData.size == 0) {
+//                            appLocalData?.isIstrialexpire = value
+//                            getCurrency()
+//                        } else {
+//                            appLocalData = repository.localData[0]
+//                            appLocalData!!.isIstrialexpire = value
+//                            MagePrefs.setCurrency(appLocalData.currencycode ?: "")
+//                            repository.updateData(appLocalData)
+//                        }
+//                        Log.i("MageNative:", "Currency" +
+//                                appLocalData.currencycode)
+//
+//                        var data = async {
+//                            repository.getSingle(appLocalData)
+//                        }
+//                        responseLiveData.postValue(LocalDbResponse.success(data.await()))
+//                    }
+
+
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -268,7 +281,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
             })
             MyApplication.dataBaseReference?.child("additional_info")?.child("locale")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    /*if you are using multi currency then comment this line*/
+                    /*if you are using multi language then comment this line*/
                     //   MagePrefs.setLanguage(dataSnapshot.getValue(String::class.java)!!)
                 }
 
@@ -288,15 +301,15 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
         try {
             MyApplication.dataBaseReference?.child("additional_info")?.child("splash")?.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    disposables.add(Single.just(dataSnapshot)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    { result -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.success(result)) },
-                                    { throwable -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.error(throwable)) }
-                            ))
+                    fireBaseResponseMutableLiveData.setValue(FireBaseResponse.success(dataSnapshot))
+//                    disposables.add(Single.just(dataSnapshot)
+//                            .subscribeOn(Schedulers.io())
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .subscribe(
+//                                    { result -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.success(result)) },
+//                                    { throwable -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.error(throwable)) }
+//                            ))
                 }
-
                 override fun onCancelled(databaseError: DatabaseError) {
                     Log.i("DBConnectionError", "" + databaseError.details)
                     Log.i("DBConnectionError", "" + databaseError.message)

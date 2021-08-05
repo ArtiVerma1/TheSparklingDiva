@@ -103,7 +103,7 @@ class Splash : AppCompatActivity() {
     }
 
     private fun showToast(it: String?) {
-        Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
     }
 
     private fun initializeFirebase() {

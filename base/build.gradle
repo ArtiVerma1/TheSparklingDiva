@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'
 android {
     signingConfigs {
         release {
@@ -12,6 +13,9 @@ android {
             keyAlias 'newshopify'
             keyPassword 'newshopify'
         }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
     dataBinding {
         enabled = true
@@ -23,6 +27,7 @@ android {
         targetSdkVersion 29
         versionCode 50
         versionName "3.5"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -43,6 +48,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.2.0')
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx:20.0.1'
     def room_version = "1.1.1"
     kapt "com.android.databinding:compiler:3.2.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -50,8 +56,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    /*Espresso Testing*/
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.0'
+
     implementation 'com.jakewharton:butterknife:10.2.0'
     kapt 'com.jakewharton:butterknife-compiler:10.2.0'
     /* dagger dependency for DI*/
@@ -79,7 +89,7 @@ dependencies {
     implementation "androidx.drawerlayout:drawerlayout:1.0.0"
     implementation 'com.android.support:multidex:1.0.3'
     implementation "com.google.firebase:firebase-database:19.2.1"
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -108,10 +118,11 @@ dependencies {
     //camera
     implementation 'com.mindorks:paracamera:0.2.2'
     //autoML
-    implementation 'com.google.firebase:firebase-ml-vision:24.0.1'
-    implementation 'com.google.firebase:firebase-ml-vision-automl:18.0.3'
-    implementation 'com.google.firebase:firebase-core:17.2.2'
-   // implementation "com.google.android.gms:play-services-instantapps:17.0.0"
+    implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
+    implementation 'com.google.firebase:firebase-ml-vision-image-label-model:20.0.1'
+    // implementation 'com.google.firebase:firebase-ml-vision-automl:18.0.3'
+    //implementation 'com.google.firebase:firebase-core:17.2.2'
+    // implementation "com.google.android.gms:play-services-instantapps:17.0.0"
     implementation 'me.jessyan:retrofit-url-manager:1.4.0'
     //implementation "androidx.browser:browser:1.2.0"
     implementation 'com.google.firebase:firebase-auth-ktx:19.3.1'
@@ -124,5 +135,7 @@ dependencies {
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
     implementation 'com.karumi:dexter:6.2.2'
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
+    //  testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
+    testImplementation 'org.mockito:mockito-inline:3.11.2'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -3,19 +3,17 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.shopify.shopifyapp">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
-<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <dist:module dist:instant="true" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -29,7 +27,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
+        <activity android:name=".productsection.activities.AllAliReviewsListActivity"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -38,9 +37,15 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <activity android:name=".ordersection.activities.OrderDetails" />
-        <activity android:name=".productsection.activities.AllJudgeMeReviews" />
-        <activity android:name=".productsection.activities.JudgeMeCreateReview" />
+        <activity
+            android:name=".ordersection.activities.OrderDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".productsection.activities.AllJudgeMeReviews"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".productsection.activities.JudgeMeCreateReview"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".productsection.activities.VideoPlayerActivity"
             android:screenOrientation="portrait" />
@@ -171,6 +176,9 @@
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ica" />
         <meta-data
             android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
             android:value="true" />
