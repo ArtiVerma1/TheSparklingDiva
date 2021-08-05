@@ -167,47 +167,45 @@ class ProductView : NewBaseActivity() {
         Log.d(TAG, "consumeAliReviews: " + response?.data)
         var responseData = JSONObject(response?.data.toString())
         if (responseData.getBoolean("status")) {
-            var shopPlanInfo = responseData.getJSONObject("shopPlanInfo")
-            var data = JSONObject(response?.data.toString()).getJSONObject("data")
             binding?.reviewCard?.visibility = View.VISIBLE
             binding?.ratingTxt?.text = responseData.getString("avg")
             binding?.totalReview?.text = responseData.getString("total_review")
-        }
-        var reviews = responseData.getJSONObject("data").getJSONArray("data")
-        reviewList = ArrayList<Review>()
-        var review_model: Review? = null
-        for (i in 0 until reviews.length()) {
-            review_model = Review(reviews.getJSONObject(i).getString("content"),
-                    reviews.getJSONObject(i).getString("id"),
-                    reviews.getJSONObject(i).getString("star"),
-                    reviews.getJSONObject(i).getString("star"),
-                    reviews.getJSONObject(i).getString("created_at"),
-                    reviews.getJSONObject(i).getString("author"),
-                    ""
-                    /*  reviews.getJSONObject(i).getString("title")*/
-            )
-            reviewList?.add(review_model)
-        }
 
-        if (reviewList?.size!! > 0) {
-            binding?.aliNoReviews?.visibility = View.GONE
-            binding?.aliReviewList?.visibility = View.VISIBLE
-            binding?.aliViewAllBut?.visibility = View.VISIBLE
-            binding?.aliRateProductBut?.visibility = View.GONE
-            binding?.aliReviewIndecator?.visibility = View.VISIBLE
-            reviewAdapter = ReviewListAdapter()
-            reviewAdapter.setData(reviewList)
-            binding?.aliReviewList?.adapter = reviewAdapter
-            binding?.aliReviewIndecator?.tintIndicator(Color.parseColor(themeColor))
-            binding?.aliReviewIndecator?.setViewPager(binding?.aliReviewList)
-        } else {
-            binding?.aliNoReviews?.visibility = View.VISIBLE
-            binding?.aliReviewList?.visibility = View.GONE
-            binding?.aliRateProductBut?.visibility = View.GONE
-            binding?.aliReviewIndecator?.visibility = View.GONE
-            binding?.aliViewAllBut?.visibility = View.GONE
-        }
+            var reviews = responseData.getJSONObject("data").getJSONArray("data")
+            reviewList = ArrayList<Review>()
+            var review_model: Review? = null
+            for (i in 0 until reviews.length()) {
+                review_model = Review(reviews.getJSONObject(i).getString("content"),
+                        reviews.getJSONObject(i).getString("id"),
+                        reviews.getJSONObject(i).getString("star"),
+                        reviews.getJSONObject(i).getString("star"),
+                        reviews.getJSONObject(i).getString("created_at"),
+                        reviews.getJSONObject(i).getString("author"),
+                        ""
+                        /*  reviews.getJSONObject(i).getString("title")*/
+                )
+                reviewList?.add(review_model)
+            }
 
+            if (reviewList?.size!! > 0) {
+                binding?.aliNoReviews?.visibility = View.GONE
+                binding?.aliReviewList?.visibility = View.VISIBLE
+                binding?.aliViewAllBut?.visibility = View.VISIBLE
+                binding?.aliRateProductBut?.visibility = View.GONE
+                binding?.aliReviewIndecator?.visibility = View.VISIBLE
+                reviewAdapter = ReviewListAdapter()
+                reviewAdapter.setData(reviewList)
+                binding?.aliReviewList?.adapter = reviewAdapter
+                binding?.aliReviewIndecator?.tintIndicator(Color.parseColor(themeColor))
+                binding?.aliReviewIndecator?.setViewPager(binding?.aliReviewList)
+            } else {
+                binding?.aliNoReviews?.visibility = View.VISIBLE
+                binding?.aliReviewList?.visibility = View.GONE
+                binding?.aliRateProductBut?.visibility = View.GONE
+                binding?.aliReviewIndecator?.visibility = View.GONE
+                binding?.aliViewAllBut?.visibility = View.GONE
+            }
+        }
     }
 
     private fun consumeAliReviewStatus(response: ApiResponse?) {
@@ -386,6 +384,7 @@ class ProductView : NewBaseActivity() {
         text = datavalue2[0]
         return text
     }
+
     private fun consumeResponse(reponse: GraphQLResponse) {
         when (reponse.status) {
             Status.SUCCESS -> {

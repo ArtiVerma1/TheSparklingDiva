@@ -72,6 +72,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import kotlin.concurrent.timerTask
 
 class HomePageViewModel(var repository: Repository) : ViewModel() {
     var presentmentCurrency: String? = null
@@ -364,6 +365,17 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     binding!!.indicators.setDotIndicatorColor(Color.parseColor(background.getString("color")))
                     binding!!.indicators.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
                     binding!!.indicators.setViewPager(binding!!.bannerss)
+
+                    var i = 0
+                    val timer = Timer()
+                    timer.scheduleAtFixedRate(timerTask {
+                        GlobalScope.launch(Dispatchers.Main) {
+                            binding.bannerss.setCurrentItem(i++);
+                            if (i == jsonObject.getJSONArray("items").length()) {
+                                i = 0
+                            }
+                        }
+                    }, 3000, 3000)
                 }
                 common.imageurl = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
                 binding.commondata = common
@@ -993,19 +1005,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             }
         }
         if (jsonObject.getString("item_border").equals("1")) {
-           // Handler(Looper.getMainLooper()).post {
-                var background = JSONObject(jsonObject.getString("item_border_color"))
-                binding.cardOne.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.cardTwo.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.cardThree.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.cardFour.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.cardFive.setCardBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.cardOne.setContentPadding(2, 2, 2, 2)
-                binding.cardTwo.setContentPadding(2, 2, 2, 2)
-                binding.cardThree.setContentPadding(2, 2, 2, 2)
-                binding.cardFour.setContentPadding(2, 2, 2, 2)
-                binding.cardFive.setContentPadding(2, 2, 2, 2)
-           // }
+            // Handler(Looper.getMainLooper()).post {
+            var background = JSONObject(jsonObject.getString("item_border_color"))
+            binding.cardOne.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+            binding.cardTwo.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+            binding.cardThree.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+            binding.cardFour.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+            binding.cardFive.setCardBackgroundColor(Color.parseColor(background.getString("color")))
+            binding.cardOne.setContentPadding(2, 2, 2, 2)
+            binding.cardTwo.setContentPadding(2, 2, 2, 2)
+            binding.cardThree.setContentPadding(2, 2, 2, 2)
+            binding.cardFour.setContentPadding(2, 2, 2, 2)
+            binding.cardFive.setContentPadding(2, 2, 2, 2)
+            // }
         }
         category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
         category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
@@ -1414,6 +1426,16 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 binding!!.indicator.setDotIndicatorColor(Color.parseColor(background.getString("color")))
                 binding!!.indicator.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
                 binding!!.indicator.setViewPager(binding!!.banners)
+                var i = 0
+                val timer = Timer()
+                timer.scheduleAtFixedRate(timerTask {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        binding.banners.setCurrentItem(i++);
+                        if (i == jsonObject.getJSONArray("items").length()) {
+                            i = 0
+                        }
+                    }
+                }, 3000, 3000)
             }
             homepagedata.setValue(hashMapOf("banner-slider_" to binding.root))
         } catch (ex: Exception) {
