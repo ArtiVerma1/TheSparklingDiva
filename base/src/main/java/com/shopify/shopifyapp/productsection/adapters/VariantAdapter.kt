@@ -18,12 +18,13 @@ import com.shopify.shopifyapp.productsection.viewholders.VariantItem
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
 
 class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
-    private var variants: List<Storefront.ProductVariantEdge>? = null
+    private var variants: MutableList<String>? = null
     private var model: ProductViewModel? = null
     private var context: Context? = null
     private var data: ListData? = null
     private var variant_data: List<String>? = null
     private val TAG = "VariantAdapter"
+    private var outofStockList: MutableList<String>? = null
     private var selectedPosition = -1
     private var variant_title: String? = null
 
@@ -38,45 +39,76 @@ class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
     }
 
     interface VariantCallback {
-        fun clickVariant(variant: Storefront.ProductVariantEdge, variant_title: String)
+        fun clickVariant(variantName: String)
     }
 
     override fun onBindViewHolder(holder: VariantItem, position: Int) {
-        val model = CommanModel()
-        model.imageurl = variants?.get(position)?.node?.image?.originalSrc
-        val data = VariantData()
-        data.position = position
-        data.variant_id = variants!![position].node.id.toString()
-        data.variantimage = variants!![position]?.node?.image?.transformedSrc
-        data.data = this.data
-        data.model = this.model
-        holder.binding.variantName.text = variant_data?.get(position)
-        Log.d(TAG, "onBindViewHolder: " + variant_data?.get(position))
-        if (position == selectedPosition) {
-            holder.binding.variantCard.setCardBackgroundColor(Color.parseColor(themeColor))
-            holder.binding.variantName.setTextColor(Color.WHITE)
-        } else {
-            holder.binding.variantCard.setCardBackgroundColor(Color.WHITE)
-            holder.binding.variantName.setTextColor(Color.BLACK)
-        }
-        holder.binding.variantCard.setOnClickListener {
-            selectedPosition = position
-            variantCallback?.clickVariant(variants?.get(position)!!, variant_title!!)
-            notifyDataSetChanged()
+//        val model = CommanModel()
+//        model.imageurl = variants?.get(position)?.node?.image?.originalSrc
+//        val data = VariantData()
+//        data.position = position
+//        data.variant_id = variants!![position].node.id.toString()
+//        data.variantimage = variants!![position]?.node?.image?.transformedSrc
+//        data.data = this.data
+//        data.model = this.model
+//        holder.binding.variantName.text = variant_data?.get(position)
+//        Log.d(TAG, "onBindViewHolder: " + variant_data?.get(position))
+//        if (position == selectedPosition) {
+//            holder.binding.variantCard.setCardBackgroundColor(Color.parseColor(themeColor))
+//            holder.binding.variantName.setTextColor(Color.WHITE)
+//        } else {
+//            holder.binding.variantCard.setCardBackgroundColor(Color.WHITE)
+//            holder.binding.variantName.setTextColor(Color.BLACK)
+//        }
+//        holder.binding.variantCard.setOnClickListener {
+//            selectedPosition = position
+//            variantCallback?.clickVariant(variants?.get(position)!!, variant_title!!)
+//            notifyDataSetChanged()
+//        }
+
+
+        try {
+            holder.binding.variantName.text = variants?.get(position)
+            if (selectedPosition == position) {
+                holder.binding.variantCard.setCardBackgroundColor(Color.parseColor(themeColor))
+                holder.binding.variantName.setTextColor(Color.WHITE)
+                holder.binding.variantName.isEnabled = true
+                holder.binding.variantName.tag = "selected"
+            } else {
+//                if (outofStockList?.contains(variants?.get(position))!!) {
+////                    holder.binding.variantName.background =
+////                            context?.resources?.getDrawable(R.drawable.unselect_variant_bg)
+//                    holder.binding.variantName.setTextColor(Color.parseColor("#D3D3D3"))
+//                    holder.binding.variantName.isEnabled = false
+//                } else {
+                holder.binding.variantCard.setCardBackgroundColor(Color.WHITE)
+                holder.binding.variantName.setTextColor(Color.BLACK)
+                holder.binding.variantName.isEnabled = true
+//                }
+                holder.binding.variantName.tag = "unselected"
+            }
+
+            holder.binding.variantName.setOnClickListener {
+                if (it.tag.equals("unselected")) {
+                    selectedPosition = position
+                    variantCallback?.clickVariant(variants?.get(position) ?: "")
+                    notifyDataSetChanged()
+                }
+            }
+            holder.setIsRecyclable(false)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
     }
 
     override fun getItemCount(): Int {
-        return variant_data?.size!!
+        return variants?.size!!
     }
 
-    fun setData(variants: List<Storefront.ProductVariantEdge>, variant_data: List<String>, variant_title: String, model: ProductViewModel?, data: ListData?, context: Context, variantCallback_: VariantCallback) {
+    fun setData(variants: MutableList<String>, outofStockList: MutableList<String>, context: Context, variantCallback_: VariantCallback) {
         this.variants = variants
-        this.model = model
-        this.data = data
-        this.variant_title = variant_title
-        this.variant_data = variant_data
+        this.outofStockList = outofStockList
         variantCallback = variantCallback_
         this.context = context
     }

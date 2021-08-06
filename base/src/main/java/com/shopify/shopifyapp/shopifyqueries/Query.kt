@@ -93,6 +93,7 @@ object Query {
                                                                         productVariantQuery
                                                                                 .priceV2({ price -> price.amount().currencyCode() })
                                                                                 .price()
+                                                                                .title()
                                                                                 .quantityAvailable()
                                                                                 .presentmentPrices({ arg -> arg.first(25).presentmentCurrencies(list_currency) }, { price -> price.edges({ e -> e.cursor().node({ n -> n.price({ p -> p.amount().currencyCode() }).compareAtPrice({ cp -> cp.amount().currencyCode() }) }) }) })
                                                                                 .selectedOptions({ select -> select.name().value() })
@@ -279,6 +280,7 @@ object Query {
                                     .descriptionHtml()
                                     .description()
                                     .onlineStoreUrl()
+                                    .options { option -> option.name().values() }
                                     .handle()
                                     .media({ m -> m.first(10) }, { me ->
                                         me.edges({ e ->

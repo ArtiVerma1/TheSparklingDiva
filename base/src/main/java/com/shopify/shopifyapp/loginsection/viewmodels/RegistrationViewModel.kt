@@ -21,6 +21,9 @@ import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class RegistrationViewModel(private val repository: Repository) : ViewModel() {
@@ -102,7 +105,9 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
 
     fun insertUserData(customer: Storefront.Customer) {
         val userLocalData = UserLocalData(customer.firstName, customer.lastName, customer.email, password)
-        repository.insertUserData(userLocalData)
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.insertUserData(userLocalData)
+        }
         getLoginData(customer.email, password)
     }
 
@@ -165,7 +170,9 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
 
     fun savetoken(token: Storefront.CustomerAccessToken) {
         val customerTokenData = CustomerTokenData(token.accessToken, token.expiresAt.toLocalDateTime().toString())
-        repository.saveaccesstoken(customerTokenData)
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.saveaccesstoken(customerTokenData)
+        }
     }
 
     fun isValidEmail(target: String): Boolean {

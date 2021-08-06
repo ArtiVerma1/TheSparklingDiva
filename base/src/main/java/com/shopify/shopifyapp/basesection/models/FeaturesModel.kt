@@ -15,10 +15,17 @@ class FeaturesModel : BaseObservable() {
 
     @Bindable
     var firebaseEvents: Boolean = false
-    set(value) {
-        field=value
-        notifyPropertyChanged(BR.firebaseEvents)
-    }
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.firebaseEvents)
+        }
+
+    @Bindable
+    var aliReviews: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.aliReviews)
+        }
 
     @Bindable
     var nativeOrderView: Boolean = true

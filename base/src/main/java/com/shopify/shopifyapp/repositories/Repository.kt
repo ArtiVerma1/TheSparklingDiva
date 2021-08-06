@@ -15,6 +15,7 @@ import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.ApiCallInterface
+import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Urls
 import dagger.Provides
@@ -256,6 +257,14 @@ class Repository {
 
     fun judgemeProductID(url: String, handle: String, apiToken: String, shopDomain: String): Single<JsonElement> {
         return apiCallInterface.getJudgemeProductID(url, apiToken, shopDomain, handle)
+    }
+
+    fun AliReviewInstallStatus(): Single<JsonElement> {
+        return apiCallInterface.getAlireviewStatus()
+    }
+
+    fun getAliProductReview(shop_id: String, product_id: String, currentPage: Int): Single<JsonElement> {
+        return apiCallInterface.getAliProductReview(shop_id, product_id,currentPage)
     }
 
 }

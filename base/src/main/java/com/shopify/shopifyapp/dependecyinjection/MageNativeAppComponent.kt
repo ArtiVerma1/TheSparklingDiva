@@ -40,6 +40,7 @@ interface MageNativeAppComponent {
     fun doJudgeMeReviewInjection(judgeMeCreateReview: JudgeMeCreateReview)
     fun doReviewListInjection(reviewListActivity: AllReviewListActivity)
     fun doAllJudgeMeReviewListInjection(judgeMeReviews: AllJudgeMeReviews)
+    fun doAllAliReviewListInjection(aliReviews: AllAliReviewsListActivity)
     fun doZoomActivityInjection(base: ZoomActivity)
     fun doBaseActivityInjection(base: NewBaseActivity)
     fun doWishListActivityInjection(wish: WishList)

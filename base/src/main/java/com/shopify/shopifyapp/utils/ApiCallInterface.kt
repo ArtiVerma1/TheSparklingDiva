@@ -2,6 +2,8 @@ package com.shopify.shopifyapp.utils
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.shopify.shopifyapp.utils.Urls.Data.ALIREVIEW_INSTALLSTATUS
+import com.shopify.shopifyapp.utils.Urls.Data.ALIREVIEW_PRODUCT
 import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_GETPRODUCTID
 import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWCOUNT
 import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWCREATE
@@ -58,7 +60,13 @@ interface ApiCallInterface {
     @POST(JUDGEME_REVIEWCREATE)
     fun createJudgemeReview(@Body params: JsonObject): Single<JsonElement>
 
-
     @GET
     fun getJudgemeProductID(@Url url: String, @Query("api_token") api_token: String, @Query("shop_domain") shop_domain: String, @Query("handle") handle: String): Single<JsonElement>
+
+    @GET(ALIREVIEW_INSTALLSTATUS)
+    fun getAlireviewStatus(): Single<JsonElement>
+
+    @GET(ALIREVIEW_PRODUCT)
+    fun getAliProductReview(@Query("shop_id") shop_id: String, @Query("product_id") product_id: String, @Query("currentPage") currentPage: Int): Single<JsonElement>
+
 }

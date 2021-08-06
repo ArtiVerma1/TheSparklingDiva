@@ -54,12 +54,38 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var getjudgeMeReviewCount = MutableLiveData<ApiResponse>()
     var getjudgeMeReviewCreate = MutableLiveData<ApiResponse>()
     var getjudgeMeReviewIndex = MutableLiveData<ApiResponse>()
+    var getAlireviewInstallStatus = MutableLiveData<ApiResponse>()
+    var getAlireviewProduct = MutableLiveData<ApiResponse>()
     var sizeChartVisibility = MutableLiveData<Boolean>()
     var sizeChartUrl = MutableLiveData<String>()
     lateinit var context: Context
     private val TAG = "ProductViewModel"
     val filteredlist = MutableLiveData<List<Storefront.ProductVariantEdge>>()
 
+
+    fun getAliReviewStatus() {
+        doRetrofitCall(repository.AliReviewInstallStatus(), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getAlireviewInstallStatus.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getAlireviewInstallStatus.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
+
+    fun getAliReviewProduct(shop_id: String, product_id: String,currentPage:Int) {
+        doRetrofitCall(repository.getAliProductReview(shop_id, product_id,currentPage), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getAlireviewProduct.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getAlireviewProduct.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
 
     fun judgemeProductID(url: String, handle: String, apiToken: String, shopDomain: String) {
         doRetrofitCall(repository.judgemeProductID(url, handle, apiToken, shopDomain), disposables, customResponse = object : CustomResponse {
