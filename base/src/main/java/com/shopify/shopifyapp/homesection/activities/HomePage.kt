@@ -79,15 +79,18 @@ class HomePage : NewBaseActivity() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_homepage_modified, group, true)
         homepage = binding!!.homecontainer
         (application as MyApplication).mageNativeAppComponent!!.doHomePageInjection(this)
-        MyApplication.dataBaseReference = MyApplication.getmFirebaseSecondanyInstance().getReference(Urls(MyApplication.context).shopdomain.replace(".myshopify.com", ""))
+        MyApplication.dataBaseReference = MyApplication.getmFirebaseSecondanyInstance()
+            .getReference(Urls(MyApplication.context).shopdomain.replace(".myshopify.com", ""))
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
         showHumburger()
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         personamodel?.activity = this
         homemodel!!.connectFirebaseForHomePageData(this, homepage)
-        homemodel!!.getToastMessage().observe(this@HomePage, Observer<String> { consumeResponse(it) })
-        homemodel!!.getHomePageData()?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
+        homemodel!!.getToastMessage()
+            .observe(this@HomePage, Observer<String> { consumeResponse(it) })
+        homemodel!!.getHomePageData()
+            ?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
         homemodel!!.hasBannerOnTop.observe(this, Observer { this.ConsumeBanner(it) })
         homemodel!!.hasFullSearchOnTop.observe(this, Observer { this.consumeFullSearch(it) })
         scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
@@ -171,7 +174,13 @@ class HomePage : NewBaseActivity() {
         setSupportActionBar(toolbar)
         Objects.requireNonNull<ActionBar>(supportActionBar).setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-        mDrawerToggle = object : ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = object : ActionBarDrawerToggle(
+            this,
+            drawer_layout,
+            toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ) {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 invalidateOptionsMenu()
@@ -251,29 +260,40 @@ class HomePage : NewBaseActivity() {
                 setToggle(toolbar)
             }
             setHomeIconColors(
-                    count_color ?: "#000000",
-                    count_textcolor ?: "#000000",
-                    icon_color ?: "#000000"
+                count_color ?: "#000000",
+                count_textcolor ?: "#000000",
+                icon_color ?: "#000000"
             )
-            var binding: MTopbarBinding? = DataBindingUtil.inflate(getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
-            setHomeSearchOption(search_position ?: "", search_placeholder
-                    ?: "", binding!!)
+            var binding: MTopbarBinding? = DataBindingUtil.inflate(
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                R.layout.m_topbar,
+                null,
+                false
+            )
+            setHomeSearchOption(
+                search_position ?: "", search_placeholder
+                    ?: "", binding!!
+            )
         } else if (scrollYPosition == 0) {
             if (homepage.childCount > 0) {
                 if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
-                    var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
+                    var home_toolbar =
+                        (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
                     GlobalScope.launch(Dispatchers.Main) {
                         delay(1000)
                         setToggle(home_toolbar)
                     }
                     setHomeIconColors(
-                            count_color ?: "#000000",
-                            count_textcolor ?: "#000000",
-                            icon_color ?: "#000000"
+                        count_color ?: "#000000",
+                        count_textcolor ?: "#000000",
+                        icon_color ?: "#000000"
                     )
-                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
-                    setHomeSearchOption(search_position ?: "", search_placeholder
-                            ?: "", binding!!)
+                    var binding: MTopbarBinding? =
+                        DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+                    setHomeSearchOption(
+                        search_position ?: "", search_placeholder
+                            ?: "", binding!!
+                    )
                 }
             }
         }
@@ -284,10 +304,14 @@ class HomePage : NewBaseActivity() {
         if (!this.isDestroyed) {
             Log.i("MageNative", "Image URL" + url)
             Glide.with(this)
-                    .load(url)
-                    .thumbnail(0.5f)
-                    .apply(RequestOptions().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).dontTransform().diskCacheStrategy(DiskCacheStrategy.ALL))
-                    .into(binding.toolimage)
+                .load(url)
+                .thumbnail(0.5f)
+                .apply(
+                    RequestOptions().placeholder(R.drawable.image_placeholder)
+                        .error(R.drawable.image_placeholder).dontTransform()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                )
+                .into(binding.toolimage)
         }
     }
 
@@ -323,7 +347,12 @@ class HomePage : NewBaseActivity() {
         mDrawerToggle!!.getDrawerArrowDrawable().setColor(Color.parseColor(iconcolor))
     }
 
-    fun setHomeSearchOptions(searchback: String, searchtext: String, searhcborder: String, binding: MTopbarBinding) {
+    fun setHomeSearchOptions(
+        searchback: String,
+        searchtext: String,
+        searhcborder: String,
+        binding: MTopbarBinding
+    ) {
         var draw: GradientDrawable = binding.search.background as GradientDrawable
         draw.setColor(Color.parseColor(searchback))
         binding.search.setTextColor(Color.parseColor(searchtext))
@@ -352,6 +381,17 @@ class HomePage : NewBaseActivity() {
                 binding.searchsection.visibility = View.GONE
             }
             else -> {
+                /*Uncomment this code when normal toolbar selected from panel*/
+//                invalidateOptionsMenu()
+//                setToggle(toolbar)
+//                GlobalScope.launch(Dispatchers.Main) {
+//                    delay(100)
+//                    setHomeIconColors(
+//                        count_color ?: "#000000",
+//                        count_textcolor ?: "#000000",
+//                        icon_color ?: "#000000"
+//                    )
+//                }
                 searchItem?.setVisible(true)
                 item?.setVisible(true)
                 binding.toolimage.visibility = View.VISIBLE
@@ -404,30 +444,36 @@ class HomePage : NewBaseActivity() {
         super.onResume()
         if (featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
-                homemodel!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-                homemodel!!.getBestApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                homemodel!!.getApiResponse()
+                    .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                homemodel!!.getBestApiResponse()
+                    .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
             }
         }
         if (homepage.childCount > 0) {
             if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
-                var home_toolbar = (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
+                var home_toolbar =
+                    (homepage.getChildAt(0) as ViewGroup).getChildAt(2) as androidx.appcompat.widget.Toolbar
                 invalidateOptionsMenu()
                 setToggle(home_toolbar)
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(100)
                     setHomeIconColors(
-                            count_color ?: "#000000",
-                            count_textcolor ?: "#000000",
-                            icon_color ?: "#000000"
+                        count_color ?: "#000000",
+                        count_textcolor ?: "#000000",
+                        icon_color ?: "#000000"
                     )
-                    var binding: MTopbarBinding? = DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
-                    setHomeSearchOption(search_position ?: "", search_placeholder
-                            ?: "", binding!!)
+                    var binding: MTopbarBinding? =
+                        DataBindingUtil.getBinding<MTopbarBinding>(homepage.getChildAt(0) as View)
+                    setHomeSearchOption(
+                        search_position ?: "", search_placeholder
+                            ?: "", binding!!
+                    )
                 }
 
             }
+            nav_view.menu.findItem(R.id.home_bottom).setChecked(true)
         }
-        nav_view.menu.findItem(R.id.home_bottom).setChecked(true)
     }
 
     override fun onBackPressed() {
@@ -439,7 +485,11 @@ class HomePage : NewBaseActivity() {
             Status.SUCCESS -> setPersonalisedData(reponse.data!!)
             Status.ERROR -> {
                 reponse.error!!.printStackTrace()
-                Toast.makeText(this, resources.getString(R.string.errorString), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.errorString),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -451,12 +501,22 @@ class HomePage : NewBaseActivity() {
             if (jsondata.has("trending")) {
                 binding!!.personalisedsection.visibility = View.VISIBLE
                 setLayout(binding!!.personalised, "horizontal")
-                personamodel!!.setPersonalisedData(jsondata.getJSONObject("trending").getJSONArray("products"), personalisedadapter, homemodel!!.presentmentCurrency!!, binding!!.personalised)
+                personamodel!!.setPersonalisedData(
+                    jsondata.getJSONObject("trending").getJSONArray("products"),
+                    personalisedadapter,
+                    homemodel!!.presentmentCurrency!!,
+                    binding!!.personalised
+                )
             }
             if (jsondata.has("bestsellers")) {
                 binding!!.bestsellerpersonalisedsection.visibility = View.VISIBLE
                 setLayout(binding!!.bestpersonalised, "horizontal")
-                personamodel!!.setPersonalisedData(jsondata.getJSONObject("bestsellers").getJSONArray("products"), padapter, homemodel!!.presentmentCurrency!!, binding!!.bestpersonalised)
+                personamodel!!.setPersonalisedData(
+                    jsondata.getJSONObject("bestsellers").getJSONArray("products"),
+                    padapter,
+                    homemodel!!.presentmentCurrency!!,
+                    binding!!.bestpersonalised
+                )
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
