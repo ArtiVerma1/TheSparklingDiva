@@ -83,17 +83,17 @@ class ProductList : NewBaseActivity() {
         productlist = setLayout(binding!!.root.findViewById(R.id.productlist), "grid")
         showBackButton()
         if (intent.hasExtra("tittle") && intent.getStringExtra("tittle") != null) {
-            showTittle(intent.getStringExtra("tittle"))
+            showTittle(intent.getStringExtra("tittle")?:"")
         }
         (application as MyApplication).mageNativeAppComponent!!.doProductListInjection(this)
         productListModel = ViewModelProvider(this, factory).get(ProductListModel::class.java)
         productListModel!!.context = this
         productListModel?.collectionData?.observe(this, Observer { this.collectionResponse(it) })
         if (intent.getStringExtra("ID") != null) {
-            productListModel!!.setcategoryID(intent.getStringExtra("ID"))
+            productListModel!!.setcategoryID(intent.getStringExtra("ID")!!)
         }
         if (intent.getStringExtra("handle") != null) {
-            productListModel!!.setcategoryHandle(intent.getStringExtra("handle"))
+            productListModel!!.setcategoryHandle(intent.getStringExtra("handle")!!)
         }
         if (intent.getStringExtra("ID") == null && intent.getStringExtra("handle") == null) {
             productListModel!!.shopID = "allproduct"

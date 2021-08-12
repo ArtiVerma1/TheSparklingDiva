@@ -78,7 +78,7 @@ class AllJudgeMeReviews : NewBaseActivity() {
             productID = intent.getStringExtra("product_id")
             reviewAdapter.setData(reviewList)
             binding?.reviewList?.adapter = reviewAdapter
-            showTittle(intent.getStringExtra("product_name"))
+            showTittle(intent.getStringExtra("product_name")?:"")
         }
         binding?.reviewList?.addOnScrollListener(recyclerViewOnScrollListener)
     }
