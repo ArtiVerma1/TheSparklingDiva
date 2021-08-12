@@ -59,15 +59,17 @@ class ProductTwoGridAdapter : RecyclerView.Adapter<ProductTwoGridAdapter.Product
         var binding = DataBindingUtil.inflate<ProductGridItemsBinding>(LayoutInflater.from(parent.context), R.layout.product_grid_items, parent, false) as ProductGridItemsBinding
         when (jsonObject!!.getString("item_shape")) {
             "square" -> {
+                val item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
                 binding.card.radius = 0f
                 binding.card.cardElevation = 0f
-                binding.card.useCompatPadding = false
-                var layout = binding.main.layoutParams as FrameLayout.LayoutParams
-                layout.setMargins(0, 0, 0, 2)
+                binding.card.useCompatPadding = true
+                binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
+//                var layout = binding.main.layoutParams as FrameLayout.LayoutParams
+//                layout.setMargins(0, 0, 0, 2)
             }
         }
         if (jsonObject!!.getString("item_border").equals("1")) {
-            var item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
+            val item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
             if (jsonObject!!.getString("item_shape").equals("rounded")) {
 //                var gradientDrawable = GradientDrawable()
 //                gradientDrawable.shape = GradientDrawable.RECTANGLE

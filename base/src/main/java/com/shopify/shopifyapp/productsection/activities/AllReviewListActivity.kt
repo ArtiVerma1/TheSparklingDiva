@@ -108,7 +108,7 @@ class AllReviewListActivity : NewBaseActivity() {
             product_id = intent.getStringExtra("product_id")
             reviewAdapter.setData(reviewList)
             reviewBinding?.reviewList?.adapter = reviewAdapter
-            showTittle(intent.getStringExtra("product_name"))
+            showTittle(intent.getStringExtra("product_name")?:"")
         }
         reviewBinding?.reviewList?.addOnScrollListener(recyclerViewOnScrollListener)
     }

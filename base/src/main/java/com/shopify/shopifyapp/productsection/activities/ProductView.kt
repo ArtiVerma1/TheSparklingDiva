@@ -116,10 +116,10 @@ class ProductView : NewBaseActivity() {
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         personamodel?.activity = this
         if (intent.getStringExtra("handle") != null) {
-            model!!.handle = intent.getStringExtra("handle")
+            model!!.handle = intent.getStringExtra("handle")!!
         }
         if (intent.getStringExtra("ID") != null) {
-            model!!.id = intent.getStringExtra("ID")
+            model!!.id = intent.getStringExtra("ID")!!
             productID = model!!.id
         }
         Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)

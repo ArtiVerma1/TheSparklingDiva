@@ -30,17 +30,23 @@ class Weblink : NewBaseActivity() {
         super.onCreate(savedInstanceState)
         val content = findViewById<ViewGroup>(R.id.container)
         getLayoutInflater().inflate(R.layout.m_webpage, content, true)
-        binding = DataBindingUtil.inflate<MWebpageBinding>(getLayoutInflater(), R.layout.m_webpage, content, true)
+        binding = DataBindingUtil.inflate<MWebpageBinding>(
+            getLayoutInflater(),
+            R.layout.m_webpage,
+            content,
+            true
+        )
         webView = binding!!.webview
         showBackButton()
         if (getIntent().hasExtra("name") && getIntent().getStringExtra("name") != null) {
-            showTittle(getIntent().getStringExtra("name"))
+            showTittle(getIntent().getStringExtra("name") ?: "")
         }
         Log.i("MageNative", "Link :" + getIntent().getStringExtra("link")!!)
         if (getIntent().getStringExtra("link")!!.contains("https")) {
             currentUrl = getIntent().getStringExtra("link")
         } else {
-            currentUrl = "https://" + Urls(MyApplication.context).shopdomain + getIntent().getStringExtra("link")
+            currentUrl =
+                "https://" + Urls(MyApplication.context).shopdomain + getIntent().getStringExtra("link")
         }
         customLoader = CustomLoader(this)
         customLoader?.show()
@@ -65,7 +71,12 @@ class Weblink : NewBaseActivity() {
             WebView.setWebContentsDebuggingEnabled(true)
         }
         webView.setWebViewClient(object : WebViewClient() {
-            public override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
+            public override fun onReceivedError(
+                view: WebView,
+                errorCode: Int,
+                description: String,
+                failingUrl: String
+            ) {
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 Log.i("URL", "" + description)
                 customLoader?.dismiss()
@@ -78,12 +89,18 @@ class Weblink : NewBaseActivity() {
             public override fun onPageFinished(view: WebView, url: String) {
                 customLoader?.dismiss()
                 Log.i("pageURL", "" + url)
-                val javascript = "javascript: document.getElementsByClassName('grid--table')[0].style.display = 'none' "
-                val javascript1 = "javascript: document.getElementsByClassName('site-header')[0].style.display = 'none' "
-                val javascript2 = "javascript: document.getElementsByClassName('site-footer')[0].style.display = 'none' "
-                val javascript3 = "javascript: document.getElementsByClassName('ui-admin-bar__content')[0].style.display = 'none' "
-                val javascript4 = "javascript: document.getElementsByClassName('sweettooth-launcher-container')[0].style.display = 'none' "
-                val javascript5 = "javascript: document.getElementsByClassName('ui-admin-bar__body')[0].style.display = 'none' "
+                val javascript =
+                    "javascript: document.getElementsByClassName('grid--table')[0].style.display = 'none' "
+                val javascript1 =
+                    "javascript: document.getElementsByClassName('site-header')[0].style.display = 'none' "
+                val javascript2 =
+                    "javascript: document.getElementsByClassName('site-footer')[0].style.display = 'none' "
+                val javascript3 =
+                    "javascript: document.getElementsByClassName('ui-admin-bar__content')[0].style.display = 'none' "
+                val javascript4 =
+                    "javascript: document.getElementsByClassName('sweettooth-launcher-container')[0].style.display = 'none' "
+                val javascript5 =
+                    "javascript: document.getElementsByClassName('ui-admin-bar__body')[0].style.display = 'none' "
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     webView.evaluateJavascript(javascript, object : ValueCallback<String> {
                         public override fun onReceiveValue(value: String) {
@@ -125,7 +142,11 @@ class Weblink : NewBaseActivity() {
                 }
             }
 
-            public override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
+            public override fun onReceivedSslError(
+                view: WebView,
+                handler: SslErrorHandler,
+                error: SslError
+            ) {
                 super.onReceivedSslError(view, handler, error)
                 Log.i("URL", "" + error.getUrl())
                 customLoader?.dismiss()

@@ -19,14 +19,10 @@ import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
 
 class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
     private var variants: MutableList<String>? = null
-    private var model: ProductViewModel? = null
     private var context: Context? = null
-    private var data: ListData? = null
-    private var variant_data: List<String>? = null
     private val TAG = "VariantAdapter"
     private var outofStockList: MutableList<String>? = null
     private var selectedPosition = -1
-    private var variant_title: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VariantItem {
         val binding = DataBindingUtil.inflate<SwatchesListItemBinding>(LayoutInflater.from(parent.context), R.layout.swatches_list_item, parent, false)
