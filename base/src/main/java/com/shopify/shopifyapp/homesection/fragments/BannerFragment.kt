@@ -28,6 +28,4 @@ class BannerFragment : Fragment() {
         binding!!.home = home
         return binding!!.root
     }
-
-
 }

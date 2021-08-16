@@ -225,6 +225,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     customLoader?.dismiss()
                 }
                 context.main_container.visibility = View.VISIBLE
+                GlobalScope.cancel()
             }
         } catch (e: Exception) {
             e.printStackTrace()
