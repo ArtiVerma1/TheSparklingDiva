@@ -116,10 +116,10 @@ class ProductView : NewBaseActivity() {
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         personamodel?.activity = this
         if (intent.getStringExtra("handle") != null) {
-            model!!.handle = intent.getStringExtra("handle")
+            model!!.handle = intent.getStringExtra("handle")!!
         }
         if (intent.getStringExtra("ID") != null) {
-            model!!.id = intent.getStringExtra("ID")
+            model!!.id = intent.getStringExtra("ID")!!
             productID = model!!.id
         }
         Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)
@@ -422,7 +422,7 @@ class ProductView : NewBaseActivity() {
             Status.SUCCESS -> setPersonalisedData(reponse.data!!)
             Status.ERROR -> {
                 reponse.error!!.printStackTrace()
-                Toast.makeText(this, resources.getString(R.string.errorString), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, resources.getString(R.string.errorString), Toast.LENGTH_SHORT).show()
             }
         }
     }

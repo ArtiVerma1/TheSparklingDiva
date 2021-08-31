@@ -285,6 +285,7 @@ class AutoSearch : NewBaseActivity() {
                         val text = label.text
                         val confidence = label.confidence
                         if (label.confidence > 0.7) {
+                            Log.d(TAG, "checkImage: "+text)
                             model!!.getProductsByKeywords(text)
                             Log.i("MageNative", "Label : " + text)
                             Log.i("MageNative", "confidence : $confidence")

@@ -35,7 +35,12 @@ class ProductTwoGridAdapter : RecyclerView.Adapter<ProductTwoGridAdapter.Product
     private val TAG = "ProductSliderListAdapte"
     var jsonObject: JSONObject? = null
     lateinit var repository: Repository
-    fun setData(products: List<Storefront.Product>?, activity: Activity, jsonObject: JSONObject, repository: Repository) {
+    fun setData(
+        products: List<Storefront.Product>?,
+        activity: Activity,
+        jsonObject: JSONObject,
+        repository: Repository
+    ) {
         this.products = products
         this.activity = activity
         this.jsonObject = jsonObject
@@ -56,25 +61,32 @@ class ProductTwoGridAdapter : RecyclerView.Adapter<ProductTwoGridAdapter.Product
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductGridItems {
-        var binding = DataBindingUtil.inflate<ProductGridItemsBinding>(LayoutInflater.from(parent.context), R.layout.product_grid_items, parent, false) as ProductGridItemsBinding
+        var binding = DataBindingUtil.inflate<ProductGridItemsBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.product_grid_items,
+            parent,
+            false
+        ) as ProductGridItemsBinding
         when (jsonObject!!.getString("item_shape")) {
             "square" -> {
+                val item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
                 binding.card.radius = 0f
                 binding.card.cardElevation = 0f
-                binding.card.useCompatPadding = false
-                var layout = binding.main.layoutParams as FrameLayout.LayoutParams
-                layout.setMargins(0, 0, 0, 2)
+                binding.card.useCompatPadding = true
+                binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
+//                var layout = binding.main.layoutParams as FrameLayout.LayoutParams
+//                layout.setMargins(0, 0, 0, 2)
             }
         }
         if (jsonObject!!.getString("item_border").equals("1")) {
-            var item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
+            val item_border_color = JSONObject(jsonObject!!.getString("item_border_color"))
             if (jsonObject!!.getString("item_shape").equals("rounded")) {
 //                var gradientDrawable = GradientDrawable()
 //                gradientDrawable.shape = GradientDrawable.RECTANGLE
 //                gradientDrawable.cornerRadius = 16f
 //                gradientDrawable.setStroke(3, Color.parseColor(item_border_color.getString("color")))
 //                binding.card.useCompatPadding = false
-                binding.card.elevation=3f
+                binding.card.elevation = 3f
                 binding.card.setCardBackgroundColor(Color.parseColor(item_border_color.getString("color")))
                 //   binding.card.background = gradientDrawable
             }
@@ -94,46 +106,82 @@ class ProductTwoGridAdapter : RecyclerView.Adapter<ProductTwoGridAdapter.Product
         data.product = products?.get(position)
         data.textdata = products?.get(position)?.title.toString().trim()
         if (presentmentcurrency == "nopresentmentcurrency") {
-            data.regularprice = CurrencyFormatter.setsymbol(variant!!.priceV2.amount, variant.priceV2.currencyCode.toString())
+            data.regularprice = CurrencyFormatter.setsymbol(
+                variant!!.priceV2.amount,
+                variant.priceV2.currencyCode.toString()
+            )
             if (variant.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(variant.compareAtPriceV2.amount)
                 val regular = java.lang.Double.valueOf(variant.priceV2.amount)
                 if (BigDecimal.valueOf(special).compareTo(BigDecimal.valueOf(regular)) == 1) {
-                    data.regularprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
-                    data.specialprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
+                    data.regularprice = CurrencyFormatter.setsymbol(
+                        variant.compareAtPriceV2.amount,
+                        variant.compareAtPriceV2.currencyCode.toString()
+                    )
+                    data.specialprice = CurrencyFormatter.setsymbol(
+                        variant.priceV2.amount,
+                        variant.priceV2.currencyCode.toString()
+                    )
                 } else {
-                    data.regularprice = CurrencyFormatter.setsymbol(variant.priceV2.amount, variant.priceV2.currencyCode.toString())
-                    data.specialprice = CurrencyFormatter.setsymbol(variant.compareAtPriceV2.amount, variant.compareAtPriceV2.currencyCode.toString())
+                    data.regularprice = CurrencyFormatter.setsymbol(
+                        variant.priceV2.amount,
+                        variant.priceV2.currencyCode.toString()
+                    )
+                    data.specialprice = CurrencyFormatter.setsymbol(
+                        variant.compareAtPriceV2.amount,
+                        variant.compareAtPriceV2.currencyCode.toString()
+                    )
                 }
-                item.binding.regularprice.paintFlags = item.binding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                item.binding.regularprice.paintFlags =
+                    item.binding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 item.binding.specialprice.visibility = View.VISIBLE
             } else {
                 item.binding.specialprice.visibility = View.GONE
-                item.binding.regularprice.paintFlags = item.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                item.binding.regularprice.paintFlags =
+                    item.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         } else {
             val edge = variant!!.presentmentPrices.edges[0]
-            data.regularprice = CurrencyFormatter.setsymbol(edge?.node?.price?.amount!!, edge?.node?.price?.currencyCode.toString())
+            data.regularprice = CurrencyFormatter.setsymbol(
+                edge?.node?.price?.amount!!,
+                edge?.node?.price?.currencyCode.toString()
+            )
             if (variant.compareAtPriceV2 != null) {
                 val special = java.lang.Double.valueOf(edge.node.compareAtPrice.amount)
                 val regular = java.lang.Double.valueOf(edge.node.price.amount)
                 if (BigDecimal.valueOf(special).compareTo(BigDecimal.valueOf(regular)) == 1) {
-                    data.regularprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
-                    data.specialprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
+                    data.regularprice = CurrencyFormatter.setsymbol(
+                        edge.node.compareAtPrice.amount,
+                        edge.node.compareAtPrice.currencyCode.toString()
+                    )
+                    data.specialprice = CurrencyFormatter.setsymbol(
+                        edge.node.price.amount,
+                        edge.node.price.currencyCode.toString()
+                    )
 
                 } else {
-                    data.regularprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
-                    data.specialprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
+                    data.regularprice = CurrencyFormatter.setsymbol(
+                        edge.node.price.amount,
+                        edge.node.price.currencyCode.toString()
+                    )
+                    data.specialprice = CurrencyFormatter.setsymbol(
+                        edge.node.compareAtPrice.amount,
+                        edge.node.compareAtPrice.currencyCode.toString()
+                    )
                 }
-                item.binding.regularprice.paintFlags = item.binding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                item.binding.regularprice.paintFlags =
+                    item.binding.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 item.binding.specialprice.visibility = View.VISIBLE
             } else {
                 item.binding.specialprice.visibility = View.GONE
-                item.binding.regularprice.paintFlags = item.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                item.binding.regularprice.paintFlags =
+                    item.binding.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }
         val model = CommanModel()
-        model.imageurl = products?.get(position)?.images?.edges?.get(0)?.node?.transformedSrc
+        if (products?.get(position)?.images?.edges?.size ?: 0 >= 1) {
+            model.imageurl = products?.get(position)?.images?.edges?.get(0)?.node?.transformedSrc
+        }
         item.binding.listdata = data
         item.binding.commondata = model
         item.binding.clickproduct = ProductSliderAdapter().Product(repository, activity!!)
@@ -199,7 +247,8 @@ class ProductTwoGridAdapter : RecyclerView.Adapter<ProductTwoGridAdapter.Product
 
         var item_title_color = JSONObject(jsonObject!!.getString("item_title_color"))
         var item_price_color = JSONObject(jsonObject!!.getString("item_price_color"))
-        var item_compare_at_price_color = JSONObject(jsonObject!!.getString("item_compare_at_price_color"))
+        var item_compare_at_price_color =
+            JSONObject(jsonObject!!.getString("item_compare_at_price_color"))
         view.setBackgroundColor(Color.parseColor(cell_background_color.getString("color")))
         tittle.setTextColor(Color.parseColor(item_title_color.getString("color")))
         price.setTextColor(Color.parseColor(item_price_color.getString("color")))

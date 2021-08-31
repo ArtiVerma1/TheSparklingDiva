@@ -96,13 +96,13 @@ class CheckoutWeblink : NewBaseActivity() {
                  Log.i("checkout", postData)
 
                  webView!!.postUrl(checkouturl, postData!!.toByteArray())*/
-                webView!!.loadUrl(currentUrl, map)
+                webView!!.loadUrl(currentUrl!!, map)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
         } else {
-            webView!!.loadUrl(currentUrl)
+            webView!!.loadUrl(currentUrl!!)
         }
         webView!!.webChromeClient = WebChromeClient()
     }

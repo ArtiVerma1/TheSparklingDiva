@@ -20,13 +20,14 @@ android {
     dataBinding {
         enabled = true
     }
-    compileSdkVersion 29
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.shopify.shopifyapp"
         minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 50
-        versionName "3.5"
+        targetSdkVersion 31
+        versionCode 49
+        versionName "3.4"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

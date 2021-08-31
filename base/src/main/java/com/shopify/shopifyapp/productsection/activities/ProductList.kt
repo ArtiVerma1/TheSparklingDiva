@@ -21,6 +21,8 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MProductlistitemBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.activities.Splash
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.SortDialogLayoutBinding
 import com.shopify.shopifyapp.productsection.adapters.ProductRecyclerListAdapter
@@ -81,17 +83,17 @@ class ProductList : NewBaseActivity() {
         productlist = setLayout(binding!!.root.findViewById(R.id.productlist), "grid")
         showBackButton()
         if (intent.hasExtra("tittle") && intent.getStringExtra("tittle") != null) {
-            showTittle(intent.getStringExtra("tittle"))
+            showTittle(intent.getStringExtra("tittle")?:"")
         }
         (application as MyApplication).mageNativeAppComponent!!.doProductListInjection(this)
         productListModel = ViewModelProvider(this, factory).get(ProductListModel::class.java)
         productListModel!!.context = this
         productListModel?.collectionData?.observe(this, Observer { this.collectionResponse(it) })
         if (intent.getStringExtra("ID") != null) {
-            productListModel!!.setcategoryID(intent.getStringExtra("ID"))
+            productListModel!!.setcategoryID(intent.getStringExtra("ID")!!)
         }
         if (intent.getStringExtra("handle") != null) {
-            productListModel!!.setcategoryHandle(intent.getStringExtra("handle"))
+            productListModel!!.setcategoryHandle(intent.getStringExtra("handle")!!)
         }
         if (intent.getStringExtra("ID") == null && intent.getStringExtra("handle") == null) {
             productListModel!!.shopID = "allproduct"
@@ -117,6 +119,13 @@ class ProductList : NewBaseActivity() {
             products = null
             binding?.mainview?.productListContainer?.visibility = View.GONE
             productListModel!!.cursor = "nocursor"
+        }
+        if (SplashViewModel.featuresModel.productListEnabled) {
+            binding?.mainview?.grid_but?.visibility = View.VISIBLE
+            binding?.mainview?.list_but?.visibility = View.VISIBLE
+        } else {
+            binding?.mainview?.grid_but?.visibility = View.GONE
+            binding?.mainview?.list_but?.visibility = View.GONE
         }
     }
 

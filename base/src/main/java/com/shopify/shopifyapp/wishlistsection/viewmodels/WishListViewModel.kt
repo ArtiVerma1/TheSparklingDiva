@@ -188,7 +188,7 @@ class WishListViewModel(var repository: Repository) : ViewModel() {
                         e.printStackTrace()
                         when (context!!.getPackageName()) {
                             "com.shopify.shopifyapp" -> {
-                                Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
+                             //   Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
                             }
                         }
                     }

@@ -7,6 +7,13 @@ import androidx.databinding.library.baseAdapters.BR
 class FeaturesModel : BaseObservable() {
 
     @Bindable
+    var productListEnabled: Boolean = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.productListEnabled)
+        }
+
+    @Bindable
     var firebaseEvents: Boolean = false
         set(value) {
             field = value

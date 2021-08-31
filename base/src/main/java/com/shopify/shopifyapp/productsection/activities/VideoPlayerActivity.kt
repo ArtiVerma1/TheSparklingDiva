@@ -33,7 +33,7 @@ class VideoPlayerActivity : NewBaseActivity() {
         val group = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_video_player, group, true)
         showBackButton()
-        initializePlayer(intent.getStringExtra("videoLink"))
+        intent.getStringExtra("videoLink")?.let { initializePlayer(it) }
     }
 
 

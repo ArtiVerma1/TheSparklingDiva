@@ -129,13 +129,16 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
 
     private fun getMenus() {
         try {
-            disposables.add(repository.getMenus(Urls(MyApplication.context)!!.mid, MagePrefs.getLanguage()!!)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { result -> responseLiveData.setValue(ApiResponse.success(result)) },
-                            { throwable -> responseLiveData.setValue(ApiResponse.error(throwable)) }
-                    ))
+            disposables.add(repository.getMenus(
+                Urls(MyApplication.context)!!.mid,
+                MagePrefs.getLanguage()!!
+            )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result -> responseLiveData.setValue(ApiResponse.success(result)) },
+                    { throwable -> responseLiveData.setValue(ApiResponse.error(throwable)) }
+                ))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -149,11 +152,16 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
 
     private fun getCurrency() {
         try {
-            doGraphQLQueryGraph(repository, Query.shopDetails, customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                    invoke(result)
-                }
-            }, context = context!!)
+            doGraphQLQueryGraph(
+                repository,
+                Query.shopDetails,
+                customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        invoke(result)
+                    }
+                },
+                context = context!!
+            )
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -177,7 +185,8 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
     private fun consumeResponse(reponse: GraphQLResponse) {
         when (reponse.status) {
             Status.SUCCESS -> {
-                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                val result =
+                    (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -189,7 +198,11 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
                     }
                     message.setValue(errormessage.toString())
                 } else {
-                    currencyResponseLiveData.setValue(Objects.requireNonNull<Storefront.QueryRoot>(result.data).getShop().getPaymentSettings().getEnabledPresentmentCurrencies())
+                    currencyResponseLiveData.setValue(
+                        Objects.requireNonNull<Storefront.QueryRoot>(
+                            result.data
+                        ).getShop().getPaymentSettings().getEnabledPresentmentCurrencies()
+                    )
                 }
             }
             Status.ERROR -> message.setValue(reponse.error!!.error.message)
@@ -293,7 +306,11 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
         val runnable = Runnable {
             var lpreview = repository.getPreviewData()
             if (lpreview.size == 0) {
-                var preview = LivePreviewData(data.getString("mid"), data.getString("shopUrl"), data.getString("token"))
+                var preview = LivePreviewData(
+                    data.getString("mid"),
+                    data.getString("shopUrl"),
+                    data.getString("token")
+                )
                 repository.insertPreviewData(preview)
             } else {
                 var preview = lpreview.get(0)

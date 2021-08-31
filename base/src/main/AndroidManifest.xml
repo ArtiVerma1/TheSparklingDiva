@@ -62,12 +62,13 @@
             android:name=".checkoutsection.activities.OrderSuccessActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name=".notificationsection.FirebaseInstanceIDService">
+        <service android:name=".notificationsection.FirebaseInstanceIDService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".notificationsection.FirebaseMessagingService">
+        <service android:name=".notificationsection.FirebaseMessagingService" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -80,7 +81,8 @@
 
         <activity
             android:name=".basesection.activities.Splash"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -96,7 +98,12 @@
 
                 <data
                     android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp"
                     android:scheme="https" />
+                <data
+                    android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
