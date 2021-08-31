@@ -30,7 +30,12 @@ import java.util.concurrent.Executors
 class PersonalisedViewModel(var repository: Repository) : ViewModel() {
     var activity: Activity? = null
 
-    fun setPersonalisedData(data: JSONArray, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView) {
+    fun setPersonalisedData(
+        data: JSONArray,
+        adapter: PersonalisedAdapter,
+        presentmentcurrency: String,
+        recyler: RecyclerView
+    ) {
         try {
             val edges = mutableListOf<Storefront.Product>()
             var currency_list = ArrayList<Storefront.CurrencyCode>()
@@ -39,7 +44,15 @@ class PersonalisedViewModel(var repository: Repository) : ViewModel() {
             }
             var runnable = Runnable {
                 for (i in 0..data.length() - 1) {
-                    getProductById(data.getJSONObject(i).getString("product_id"), adapter, presentmentcurrency, recyler, edges, data, currency_list)
+                    getProductById(
+                        data.getJSONObject(i).getString("product_id"),
+                        adapter,
+                        presentmentcurrency,
+                        recyler,
+                        edges,
+                        data,
+                        currency_list
+                    )
                 }
             }
             Thread(runnable).start()
@@ -69,14 +82,37 @@ class PersonalisedViewModel(var repository: Repository) : ViewModel() {
             return currency[0]
         }
 
-    fun getProductById(id: String, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView, edges: MutableList<Storefront.Product>, data: JSONArray, currency_list: ArrayList<Storefront.CurrencyCode>) {
+    fun getProductById(
+        id: String,
+        adapter: PersonalisedAdapter,
+        presentmentcurrency: String,
+        recyler: RecyclerView,
+        edges: MutableList<Storefront.Product>,
+        data: JSONArray,
+        currency_list: ArrayList<Storefront.CurrencyCode>
+    ) {
         try {
-            val call = repository.graphClient.queryGraph(Query.getProductById(getID(id), currency_list))
+            val call =
+                repository.graphClient.queryGraph(Query.getProductById(getID(id), currency_list))
             call.enqueue(Handler(Looper.getMainLooper())) { result ->
                 if (result is GraphCallResult.Success<*>) {
-                    consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), adapter, presentmentcurrency, recyler, edges, data)
+                    consumeResponse(
+                        GraphQLResponse.success(result as GraphCallResult.Success<*>),
+                        adapter,
+                        presentmentcurrency,
+                        recyler,
+                        edges,
+                        data
+                    )
                 } else {
-                    consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), adapter, presentmentcurrency, recyler, edges, data)
+                    consumeResponse(
+                        GraphQLResponse.error(result as GraphCallResult.Failure),
+                        adapter,
+                        presentmentcurrency,
+                        recyler,
+                        edges,
+                        data
+                    )
                 }
             }
         } catch (e: Exception) {
@@ -85,10 +121,18 @@ class PersonalisedViewModel(var repository: Repository) : ViewModel() {
 
     }
 
-    private fun consumeResponse(reponse: GraphQLResponse, adapter: PersonalisedAdapter, presentmentcurrency: String, recyler: RecyclerView, edges: MutableList<Storefront.Product>, data: JSONArray) {
+    private fun consumeResponse(
+        reponse: GraphQLResponse,
+        adapter: PersonalisedAdapter,
+        presentmentcurrency: String,
+        recyler: RecyclerView,
+        edges: MutableList<Storefront.Product>,
+        data: JSONArray
+    ) {
         when (reponse.status) {
             Status.SUCCESS -> {
-                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                val result =
+                    (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -111,7 +155,7 @@ class PersonalisedViewModel(var repository: Repository) : ViewModel() {
                         e.printStackTrace()
                         when (MyApplication.context!!.getPackageName()) {
                             "com.shopify.shopifyapp" -> {
-                                Toast.makeText(MyApplication.context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
+                                //Toast.makeText(MyApplication.context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
@@ -123,30 +167,35 @@ class PersonalisedViewModel(var repository: Repository) : ViewModel() {
         }
     }
 
-    private fun filterProduct(list: List<Storefront.Product>, productdata: RecyclerView?, adapter: PersonalisedAdapter, currency: String) {
+    private fun filterProduct(
+        list: List<Storefront.Product>,
+        productdata: RecyclerView?,
+        adapter: PersonalisedAdapter,
+        currency: String
+    ) {
         try {
             repository.getProductListSlider(list)
-                    .subscribeOn(Schedulers.io())
-                    .filter { x -> x.availableForSale }
-                    .toList()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<List<Storefront.Product>> {
-                        override fun onSubscribe(d: Disposable) {
-                        }
+                .subscribeOn(Schedulers.io())
+                .filter { x -> x.availableForSale }
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<List<Storefront.Product>> {
+                    override fun onSubscribe(d: Disposable) {
+                    }
 
-                        override fun onSuccess(list: List<Storefront.Product>) {
-                            adapter!!.presentmentcurrency = currency
-                            if (!adapter.hasObservers()) {
-                                adapter!!.setHasStableIds(true)
-                            }
-                            adapter!!.setData(list, activity ?: Activity(), repository)
-                            productdata!!.adapter = adapter
+                    override fun onSuccess(list: List<Storefront.Product>) {
+                        adapter!!.presentmentcurrency = currency
+                        if (!adapter.hasObservers()) {
+                            adapter!!.setHasStableIds(true)
                         }
+                        adapter!!.setData(list, activity ?: Activity(), repository)
+                        productdata!!.adapter = adapter
+                    }
 
-                        override fun onError(e: Throwable) {
-                            e.printStackTrace()
-                        }
-                    })
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                    }
+                })
         } catch (e: Exception) {
             e.printStackTrace()
         }

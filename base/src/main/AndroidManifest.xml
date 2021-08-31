@@ -98,7 +98,12 @@
 
                 <data
                     android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp"
                     android:scheme="https" />
+                <data
+                    android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity

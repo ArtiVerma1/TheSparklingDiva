@@ -142,20 +142,23 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         try {
             setPresentmentCurrencyForModel()
             this.context = context
-            (context.application as MyApplication).mageNativeAppComponent!!.doHomePageModelInjection(this)
-            MyApplication.dataBaseReference?.child("homepage_component")?.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val downloadlink = dataSnapshot.getValue(String::class.java)!!
-                    Log.i("MageNative", "DownloadLink " + downloadlink)
-                    dowloadJson(downloadlink, context)
-                }
+            (context.application as MyApplication).mageNativeAppComponent!!.doHomePageModelInjection(
+                this
+            )
+            MyApplication.dataBaseReference?.child("homepage_component")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val downloadlink = dataSnapshot.getValue(String::class.java)!!
+                        Log.i("MageNative", "DownloadLink " + downloadlink)
+                        dowloadJson(downloadlink, context)
+                    }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.i("DBConnectionError", "" + databaseError.details)
-                    Log.i("DBConnectionError", "" + databaseError.message)
-                    Log.i("DBConnectionError", "" + databaseError.code)
-                }
-            })
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -238,10 +241,22 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     private fun topbar(jsonObject: JSONObject) {
         try {
-            var binding: MTopbarBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_topbar, null, false)
+            var binding: MTopbarBinding = DataBindingUtil.inflate(
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                R.layout.m_topbar,
+                null,
+                false
+            )
 
-            binding.root.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-            panel_bg_color = JSONObject(jsonObject.getString("panel_background_color")).getString("color")
+            binding.root.setBackgroundColor(
+                Color.parseColor(
+                    JSONObject(jsonObject.getString("panel_background_color")).getString(
+                        "color"
+                    )
+                )
+            )
+            panel_bg_color =
+                JSONObject(jsonObject.getString("panel_background_color")).getString("color")
             count_color = JSONObject(jsonObject.getString("count_color")).getString("color")
             count_textcolor = JSONObject(jsonObject.getString("count_textcolor")).getString("color")
             icon_color = JSONObject(jsonObject.getString("icon_color")).getString("color")
@@ -249,7 +264,11 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             if (jsonObject.has("item_banner") && jsonObject.getString("item_banner").equals("1")) {
                 hasBannerOnTop.value = true
                 var common = CommanModel()
-                var adp = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
+                var adp = HomePageBanner(
+                    context.supportFragmentManager,
+                    context,
+                    jsonObject.getJSONArray("items")
+                )
                 binding!!.bannerss.adapter = adp
                 adp.notifyDataSetChanged()
                 context.toolbar.visibility = View.GONE
@@ -259,11 +278,15 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(1000)
                     context.setHomeIconColors(
-                            JSONObject(jsonObject.getString("count_color")).getString("color"),
-                            JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
-                            JSONObject(jsonObject.getString("icon_color")).getString("color")
+                        JSONObject(jsonObject.getString("count_color")).getString("color"),
+                        JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
+                        JSONObject(jsonObject.getString("icon_color")).getString("color")
                     )
-                    context.setHomeSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"), binding)
+                    context.setHomeSearchOption(
+                        jsonObject.getString("search_position"),
+                        jsonObject.getString("search_placeholder"),
+                        binding
+                    )
                     context.setHomeWishList(jsonObject.getString("wishlist"))
                     if (jsonObject.has("logo_image_url")) {
                         context.setHomeLogoImage(jsonObject.getString("logo_image_url"), binding)
@@ -273,16 +296,23 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     delay(1000)
                     search_position = jsonObject.getString("search_position")
                     search_placeholder = jsonObject.getString("search_placeholder")
-                    context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
+                    context.setSearchOption(
+                        jsonObject.getString("search_position"),
+                        jsonObject.getString("search_placeholder")
+                    )
                     context.setWishList(jsonObject.getString("wishlist"))
                     if (jsonObject.has("logo_image_url")) {
                         context.setLogoImage(jsonObject.getString("logo_image_url"))
                     }
-                    context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
+                    context.setPanelBackgroundColor(
+                        JSONObject(jsonObject.getString("panel_background_color")).getString(
+                            "color"
+                        )
+                    )
                     context.setIconColors(
-                            JSONObject(jsonObject.getString("count_color")).getString("color"),
-                            JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
-                            JSONObject(jsonObject.getString("icon_color")).getString("color")
+                        JSONObject(jsonObject.getString("count_color")).getString("color"),
+                        JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
+                        JSONObject(jsonObject.getString("icon_color")).getString("color")
                     )
                 }
 
@@ -291,15 +321,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         GlobalScope.launch(Dispatchers.Main) {
                             delay(1000)
                             context.setHomeSearchOptions(
-                                    JSONObject(jsonObject.getString("search_background_color")).getString("color"),
-                                    JSONObject(jsonObject.getString("search_text_color")).getString("color"),
-                                    JSONObject(jsonObject.getString("search_border_color")).getString("color"),
-                                    binding
+                                JSONObject(jsonObject.getString("search_background_color")).getString(
+                                    "color"
+                                ),
+                                JSONObject(jsonObject.getString("search_text_color")).getString("color"),
+                                JSONObject(jsonObject.getString("search_border_color")).getString("color"),
+                                binding
                             )
                             context.setSearchOptions(
-                                    JSONObject(jsonObject.getString("search_background_color")).getString("color"),
-                                    JSONObject(jsonObject.getString("search_text_color")).getString("color"),
-                                    JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                                JSONObject(jsonObject.getString("search_background_color")).getString(
+                                    "color"
+                                ),
+                                JSONObject(jsonObject.getString("search_text_color")).getString("color"),
+                                JSONObject(jsonObject.getString("search_border_color")).getString("color")
                             )
 
                         }
@@ -313,14 +347,48 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             context.startActivity(searchpage)
                             Constant.activityTransition(context)
                         }
-                        var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
-                        draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
-                        binding.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        binding.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        draw.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+                        var draw: GradientDrawable =
+                            binding.fullsearch.background as GradientDrawable
+                        draw.setColor(
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_background_color")).getString(
+                                    "color"
+                                )
+                            )
+                        )
+                        binding.fullsearch.setTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        binding.fullsearch.setHintTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        draw.setStroke(
+                            2,
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                            )
+                        );
 
 
-                        context.fullsearch_container.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                        context.fullsearch_container.setBackgroundColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString("panel_background_color")
+                                ).getString("color")
+                            )
+                        )
                         context.fullsearch.visibility = View.GONE
                         context.fullsearch_container.visibility = View.GONE
                         context.fullsearch.text = jsonObject.getString("search_placeholder")
@@ -330,11 +398,39 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             Constant.activityTransition(context)
                         }
 
-                        var draw1: GradientDrawable = context.fullsearch.background as GradientDrawable
-                        draw1.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
-                        context.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        context.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        draw1.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+                        var draw1: GradientDrawable =
+                            context.fullsearch.background as GradientDrawable
+                        draw1.setColor(
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_background_color")).getString(
+                                    "color"
+                                )
+                            )
+                        )
+                        context.fullsearch.setTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        context.fullsearch.setHintTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        draw1.setStroke(
+                            2,
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                            )
+                        );
                         //context.fullsearch.background = draw1
                     }
                 }
@@ -346,15 +442,24 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
                     }
 
-                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    override fun onPageScrolled(
+                        position: Int,
+                        positionOffset: Float,
+                        positionOffsetPixels: Int
+                    ) {
                     }
 
                     override fun onPageSelected(position: Int) {
-                        common.imageurl = jsonObject.getJSONArray("items").getJSONObject(position).getString("image_url")
+                        common.imageurl = jsonObject.getJSONArray("items").getJSONObject(position)
+                            .getString("image_url")
                     }
 
                 })
-                binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                binding.bannersection.backgroundTintList = ColorStateList.valueOf(
+                    Color.parseColor(
+                        JSONObject(jsonObject.getString("panel_background_color")).getString("color")
+                    )
+                )
                 if (jsonObject.getString("shape").equals("square")) {
                     binding.card.radius = 0f
                     binding.card.cardElevation = 0f
@@ -363,8 +468,18 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     var background = JSONObject(jsonObject.getString("active_dot_color"))
                     var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
                     binding!!.indicators.visibility = View.VISIBLE
-                    binding!!.indicators.setDotIndicatorColor(Color.parseColor(background.getString("color")))
-                    binding!!.indicators.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
+                    binding!!.indicators.setDotIndicatorColor(
+                        Color.parseColor(
+                            background.getString(
+                                "color"
+                            )
+                        )
+                    )
+                    binding!!.indicators.setStrokeDotsIndicatorColor(
+                        Color.parseColor(
+                            strokebackground.getString("color")
+                        )
+                    )
                     binding!!.indicators.setViewPager(binding!!.bannerss)
 
                     var i = 0
@@ -378,7 +493,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         }
                     }, 3000, 3000)
                 }
-                common.imageurl = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+                common.imageurl =
+                    jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
                 binding.commondata = common
                 binding.bannersection.visibility = View.VISIBLE
                 binding.backImage.visibility = View.VISIBLE
@@ -393,26 +509,41 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 context.setToggle(context.toolbar)
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(1000)
-                    context.setSearchOption(jsonObject.getString("search_position"), jsonObject.getString("search_placeholder"))
+                    context.setSearchOption(
+                        jsonObject.getString("search_position"),
+                        jsonObject.getString("search_placeholder")
+                    )
                     context.setWishList(jsonObject.getString("wishlist"))
                     if (jsonObject.has("logo_image_url")) {
                         context.setLogoImage(jsonObject.getString("logo_image_url"))
                     }
-                    context.setPanelBackgroundColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color"))
+                    context.setPanelBackgroundColor(
+                        JSONObject(jsonObject.getString("panel_background_color")).getString(
+                            "color"
+                        )
+                    )
                     context.setIconColors(
-                            JSONObject(jsonObject.getString("count_color")).getString("color"),
-                            JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
-                            JSONObject(jsonObject.getString("icon_color")).getString("color")
+                        JSONObject(jsonObject.getString("count_color")).getString("color"),
+                        JSONObject(jsonObject.getString("count_textcolor")).getString("color"),
+                        JSONObject(jsonObject.getString("icon_color")).getString("color")
                     )
                 }
                 when (jsonObject.getString("search_position")) {
                     "middle-width-search" -> {
-                        if (jsonObject.has("item_banner") && !jsonObject.getString("item_banner").equals("1")) {
+                        if (jsonObject.has("item_banner") && !jsonObject.getString("item_banner")
+                                .equals("1")
+                        ) {
                             GlobalScope.launch(Dispatchers.Main) {
                                 context.setSearchOptions(
-                                        JSONObject(jsonObject.getString("search_background_color")).getString("color"),
-                                        JSONObject(jsonObject.getString("search_text_color")).getString("color"),
-                                        JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                                    JSONObject(jsonObject.getString("search_background_color")).getString(
+                                        "color"
+                                    ),
+                                    JSONObject(jsonObject.getString("search_text_color")).getString(
+                                        "color"
+                                    ),
+                                    JSONObject(jsonObject.getString("search_border_color")).getString(
+                                        "color"
+                                    )
                                 )
                             }
 
@@ -427,13 +558,47 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             context.startActivity(searchpage)
                             Constant.activityTransition(context)
                         }
-                        var draw: GradientDrawable = binding.fullsearch.background as GradientDrawable
-                        draw.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
-                        binding.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        binding.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        draw.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+                        var draw: GradientDrawable =
+                            binding.fullsearch.background as GradientDrawable
+                        draw.setColor(
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_background_color")).getString(
+                                    "color"
+                                )
+                            )
+                        )
+                        binding.fullsearch.setTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        binding.fullsearch.setHintTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        draw.setStroke(
+                            2,
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                            )
+                        );
 
-                        context.fullsearch_container.setBackgroundColor(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
+                        context.fullsearch_container.setBackgroundColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString("panel_background_color")
+                                ).getString("color")
+                            )
+                        )
                         context.fullsearch.visibility = View.GONE
                         context.fullsearch_container.visibility = View.GONE
                         context.fullsearch.text = jsonObject.getString("search_placeholder")
@@ -442,11 +607,39 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             context.startActivity(searchpage)
                             Constant.activityTransition(context)
                         }
-                        var draw1: GradientDrawable = context.fullsearch.background as GradientDrawable
-                        draw1.setColor(Color.parseColor(JSONObject(jsonObject.getString("search_background_color")).getString("color")))
-                        context.fullsearch.setTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        context.fullsearch.setHintTextColor(Color.parseColor(JSONObject(jsonObject.getString("search_text_color")).getString("color")))
-                        draw1.setStroke(2, Color.parseColor(JSONObject(jsonObject.getString("search_border_color")).getString("color")));
+                        var draw1: GradientDrawable =
+                            context.fullsearch.background as GradientDrawable
+                        draw1.setColor(
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_background_color")).getString(
+                                    "color"
+                                )
+                            )
+                        )
+                        context.fullsearch.setTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        context.fullsearch.setHintTextColor(
+                            Color.parseColor(
+                                JSONObject(
+                                    jsonObject.getString(
+                                        "search_text_color"
+                                    )
+                                ).getString("color")
+                            )
+                        )
+                        draw1.setStroke(
+                            2,
+                            Color.parseColor(
+                                JSONObject(jsonObject.getString("search_border_color")).getString("color")
+                            )
+                        );
                         //  context.fullsearch.background = draw1
                     }
                 }
@@ -460,14 +653,37 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     private fun createFixedCustomisableLayout(jsonObject: JSONObject) {
         try {
-            var binding: MFixedcustomisableBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_fixedcustomisable, null, false)
+            var binding: MFixedcustomisableBinding = DataBindingUtil.inflate(
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                R.layout.m_fixedcustomisable,
+                null,
+                false
+            )
             var productSlider = ProductSlider()
-            updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), " ", jsonObject)
+            updateDataInRecylerView(
+                binding.productdata,
+                jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"),
+                " ",
+                jsonObject
+            )
             // updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("items").getJSONObject(0).getJSONArray("product_value"), "152927698980", jsonObject)
-            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var header_background_color =
+                JSONObject(jsonObject.getString("header_background_color"))
             var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
-            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            binding.panelbackgroundcolor.setBackgroundColor(
+                Color.parseColor(
+                    panel_background_color.getString(
+                        "color"
+                    )
+                )
+            )
+            binding.headerback.setBackgroundColor(
+                Color.parseColor(
+                    header_background_color.getString(
+                        "color"
+                    )
+                )
+            )
             if (jsonObject.getString("header").equals("1")) {
                 productSlider.headertextvisibility = View.VISIBLE
                 productSlider.headertext = jsonObject.getString("header_title_text")
@@ -485,13 +701,23 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 }
                 binding.headertext.setTypeface(face)
                 if (jsonObject.getString("item_header_font_style").equals("italic")) {
-                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
+                    binding.headertext.setTypeface(
+                        binding.headertext.getTypeface(),
+                        Typeface.ITALIC
+                    );
                 }
                 if (jsonObject.getString("header_subtitle").equals("1")) {
                     productSlider.subheadertextvisibity = View.VISIBLE
                     productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                    var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
-                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    var header_subtitle_color =
+                        JSONObject(jsonObject.getString("header_subtitle_color"))
+                    binding.subheadertext.setTextColor(
+                        Color.parseColor(
+                            header_subtitle_color.getString(
+                                "color"
+                            )
+                        )
+                    )
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
@@ -503,7 +729,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     binding.subheadertext.setTypeface(face)
                     if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
-                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
+                        binding.subheadertext.setTypeface(
+                            binding.subheadertext.getTypeface(),
+                            Typeface.ITALIC
+                        );
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -546,11 +775,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 }
                 if (jsonObject.getString("header_action").equals("1")) {
                     productSlider.actiontextvisibity = View.VISIBLE
-                    productSlider.action_id = getcategoryID(jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value"))
+                    productSlider.action_id = getcategoryID(
+                        jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+                    )
                     productSlider.actiontext = jsonObject.getString("header_action_text")
-                    var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
-                    var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
-                    binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
+                    var header_action_color =
+                        JSONObject(jsonObject.getString("header_action_color"))
+                    var header_action_background_color =
+                        JSONObject(jsonObject.getString("header_action_background_color"))
+                    binding.actiontext.setBackgroundColor(
+                        Color.parseColor(
+                            header_action_background_color.getString("color")
+                        )
+                    )
                     binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
@@ -563,7 +800,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     binding.actiontext.setTypeface(face)
                     if (jsonObject.getString("header_action_title_font_style").equals("italic")) {
-                        binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
+                        binding.actiontext.setTypeface(
+                            binding.actiontext.getTypeface(),
+                            Typeface.ITALIC
+                        );
                     }
 
                 } else {
@@ -581,14 +821,32 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     private fun createCollectionListSlider(jsonObject: JSONObject) {
         try {
-            var binding: MCollectionsliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionslider, null, false)
+            var binding: MCollectionsliderBinding = DataBindingUtil.inflate(
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                R.layout.m_collectionslider,
+                null,
+                false
+            )
             var productSlider = ProductSlider()
-            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var header_background_color =
+                JSONObject(jsonObject.getString("header_background_color"))
             var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
             var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
             var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
-            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            binding.panelbackgroundcolor.setBackgroundColor(
+                Color.parseColor(
+                    panel_background_color.getString(
+                        "color"
+                    )
+                )
+            )
+            binding.headerback.setBackgroundColor(
+                Color.parseColor(
+                    header_background_color.getString(
+                        "color"
+                    )
+                )
+            )
             if (jsonObject.getString("header").equals("1")) {
                 productSlider.headertextvisibility = View.VISIBLE
                 productSlider.headertext = jsonObject.getString("header_title_text")
@@ -605,12 +863,21 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 }
                 binding.headertext.setTypeface(face)
                 if (jsonObject.getString("header_title_font_style").equals("italic")) {
-                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
+                    binding.headertext.setTypeface(
+                        binding.headertext.getTypeface(),
+                        Typeface.ITALIC
+                    );
                 }
                 if (jsonObject.getString("header_subtitle").equals("1")) {
                     productSlider.subheadertextvisibity = View.VISIBLE
                     productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    binding.subheadertext.setTextColor(
+                        Color.parseColor(
+                            header_subtitle_color.getString(
+                                "color"
+                            )
+                        )
+                    )
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
@@ -622,7 +889,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     binding.subheadertext.setTypeface(face)
                     if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
-                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
+                        binding.subheadertext.setTypeface(
+                            binding.subheadertext.getTypeface(),
+                            Typeface.ITALIC
+                        );
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -644,17 +914,36 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     private fun createHvLayout(jsonObject: JSONObject) {
         try {
-            var binding: MProductHvLayoutBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_hv_layout, null, false)
+            var binding: MProductHvLayoutBinding = DataBindingUtil.inflate(
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                R.layout.m_product_hv_layout,
+                null,
+                false
+            )
             var productSlider = ProductSlider()
-            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var header_background_color =
+                JSONObject(jsonObject.getString("header_background_color"))
             var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
             var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
             var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
-            var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
+            var header_action_background_color =
+                JSONObject(jsonObject.getString("header_action_background_color"))
             var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
             var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
-            binding.productdata.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            binding.productdata.setBackgroundColor(
+                Color.parseColor(
+                    panel_background_color.getString(
+                        "color"
+                    )
+                )
+            )
+            binding.headerback.setBackgroundColor(
+                Color.parseColor(
+                    header_background_color.getString(
+                        "color"
+                    )
+                )
+            )
             if (jsonObject.getString("header").equals("1")) {
                 productSlider.headertextvisibility = View.VISIBLE
                 binding.headertext.textSize = 20f
@@ -671,12 +960,21 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 }
                 binding.headertext.setTypeface(face)
                 if (jsonObject.getString("header_title_font_style").equals("italic")) {
-                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
+                    binding.headertext.setTypeface(
+                        binding.headertext.getTypeface(),
+                        Typeface.ITALIC
+                    );
                 }
                 if (jsonObject.getString("header_subtitle").equals("1")) {
                     productSlider.subheadertextvisibity = View.VISIBLE
                     productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    binding.subheadertext.setTextColor(
+                        Color.parseColor(
+                            header_subtitle_color.getString(
+                                "color"
+                            )
+                        )
+                    )
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
@@ -688,7 +986,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     binding.subheadertext.setTypeface(face)
                     if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
-                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
+                        binding.subheadertext.setTypeface(
+                            binding.subheadertext.getTypeface(),
+                            Typeface.ITALIC
+                        );
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -732,7 +1033,11 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     productSlider.actiontextvisibity = View.VISIBLE
                     //productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
                     productSlider.actiontext = jsonObject.getString("header_action_text")
-                    binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
+                    binding.actiontext.setBackgroundColor(
+                        Color.parseColor(
+                            header_action_background_color.getString("color")
+                        )
+                    )
                     binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
@@ -745,7 +1050,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     binding.actiontext.setTypeface(face)
                     if (jsonObject.getString("header_action_font_style").equals("italic")) {
-                        binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
+                        binding.actiontext.setTypeface(
+                            binding.actiontext.getTypeface(),
+                            Typeface.ITALIC
+                        );
                     }
 
                 } else {
@@ -756,23 +1064,35 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             }
 
             /**************first hv***************************/
-            productSlider.hvimageone = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+            productSlider.hvimageone =
+                jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
             // productSlider.hvimageone="https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
-            productSlider.hvnameone = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-            productSlider.hvtypeone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-            productSlider.hvvalueone = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+            productSlider.hvnameone =
+                jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+            productSlider.hvtypeone =
+                jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+            productSlider.hvvalueone =
+                jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
             /**************second hv***************************/
-            productSlider.hvimagetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+            productSlider.hvimagetwo =
+                jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
             //productSlider.hvimagetwo="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
-            productSlider.hvnametwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-            productSlider.hvtypetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-            productSlider.hvvaluetwo = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+            productSlider.hvnametwo =
+                jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+            productSlider.hvtypetwo =
+                jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+            productSlider.hvvaluetwo =
+                jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
             /**************third hv***************************/
-            productSlider.hvimagethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+            productSlider.hvimagethree =
+                jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
             //productSlider.hvimagethree="https://images.unsplash.com/photo-1570589107939-54ebe3183842?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=719&q=80"
-            productSlider.hvnamethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-            productSlider.hvtypethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-            productSlider.hvvaluethree = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+            productSlider.hvnamethree =
+                jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+            productSlider.hvtypethree =
+                jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+            productSlider.hvvaluethree =
+                jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
             when (jsonObject.getString("item_text_alignment")) {
                 "left" -> {
                     productSlider.textaligment = Gravity.START
@@ -812,7 +1132,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     first_hv_shape.shape = GradientDrawable.RECTANGLE
                     first_hv_shape.setStroke(2, Color.parseColor(background.getString("color")))
                     binding.firsthvsection.setPadding(2, 2, 2, 2)
-                    first_hv_shape.setSize(binding.firsthvsection.width, binding.firsthvsection.height)
+                    first_hv_shape.setSize(
+                        binding.firsthvsection.width,
+                        binding.firsthvsection.height
+                    )
                     binding.firsthvsection.background = first_hv_shape
                     binding.cardOne.radius = 0f
 
@@ -853,7 +1176,12 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     private fun createStandAloneBanner(jsonObject: JSONObject) {
-        var binding: MStandlonebannerBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_standlonebanner, null, false)
+        var binding: MStandlonebannerBinding = DataBindingUtil.inflate(
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+            R.layout.m_standlonebanner,
+            null,
+            false
+        )
         var stand = StandAloneBanner()
         stand.image = jsonObject.getString("banner_url")
         Handler(Looper.getMainLooper()).post {
@@ -865,8 +1193,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     stand.bannertype = jsonObject.getString("banner_link_type")
                 }
                 "bottom" -> {
-                    var buttononeparams = (binding.sectionOne.layoutParams as ConstraintLayout.LayoutParams)
-                    var buttontwoparams = (binding.sectionTwo.layoutParams as ConstraintLayout.LayoutParams)
+                    var buttononeparams =
+                        (binding.sectionOne.layoutParams as ConstraintLayout.LayoutParams)
+                    var buttontwoparams =
+                        (binding.sectionTwo.layoutParams as ConstraintLayout.LayoutParams)
                     buttononeparams.topToTop = ConstraintSet.GONE
                     buttontwoparams.topToTop = ConstraintSet.GONE
                 }
@@ -892,8 +1222,20 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 var button_text_color = JSONObject(jsonObject.getString("button_text_color"))
                 binding.buttonOne.setBackgroundColor(Color.parseColor(background.getString("color")))
                 binding.buttonTwo.setBackgroundColor(Color.parseColor(background.getString("color")))
-                binding.borderOne.setBackgroundColor(Color.parseColor(button_border_color.getString("color")))
-                binding.borderTwo.setBackgroundColor(Color.parseColor(button_border_color.getString("color")))
+                binding.borderOne.setBackgroundColor(
+                    Color.parseColor(
+                        button_border_color.getString(
+                            "color"
+                        )
+                    )
+                )
+                binding.borderTwo.setBackgroundColor(
+                    Color.parseColor(
+                        button_border_color.getString(
+                            "color"
+                        )
+                    )
+                )
                 binding.buttonOne.setTextColor(Color.parseColor(button_text_color.getString("color")))
                 binding.buttonTwo.setTextColor(Color.parseColor(button_text_color.getString("color")))
                 if (jsonObject.getString("item_font_weight").equals("bold")) {
@@ -919,29 +1261,34 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     private fun createCollectionGrid(jsonObject: JSONObject) {
-        val binding: MCollectionlgridBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_collectionlgrid, null, false)
+        val binding: MCollectionlgridBinding = DataBindingUtil.inflate(
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+            R.layout.m_collectionlgrid,
+            null,
+            false
+        )
         context.setLayout(binding!!.categorylist, "3grid")
         try {
             repository.getJSonArray(JsonParser().parse(jsonObject!!.getString("items")).asJsonArray)
-                    .subscribeOn(Schedulers.io())
-                    .filter { x -> x.asJsonObject.get("link_type").asString.isNotEmpty() }
-                    .toList()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<List<JsonElement>> {
-                        override fun onSubscribe(d: Disposable) {
+                .subscribeOn(Schedulers.io())
+                .filter { x -> x.asJsonObject.get("link_type").asString.isNotEmpty() }
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<List<JsonElement>> {
+                    override fun onSubscribe(d: Disposable) {
 
-                        }
+                    }
 
-                        override fun onSuccess(list: List<JsonElement>) {
-                            adapter = CollectionGridAdapter()
-                            adapter!!.setData(list, context, jsonObject!!)
-                            binding!!.categorylist.adapter = adapter
-                        }
+                    override fun onSuccess(list: List<JsonElement>) {
+                        adapter = CollectionGridAdapter()
+                        adapter!!.setData(list, context, jsonObject!!)
+                        binding!!.categorylist.adapter = adapter
+                    }
 
-                        override fun onError(e: Throwable) {
-                            e.printStackTrace()
-                        }
-                    })
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                    }
+                })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -951,7 +1298,12 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     private fun createCategorySquare(jsonObject: JSONObject) {
-        var binding: MCategorySquareBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_square, null, false)
+        var binding: MCategorySquareBinding = DataBindingUtil.inflate(
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+            R.layout.m_category_square,
+            null,
+            false
+        )
         var category = CategoryCircle()
         binding.category = category
         when (jsonObject.getString("item_shape")) {
@@ -971,11 +1323,16 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         var background = JSONObject(jsonObject.getString("panel_background_color"))
         binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
         if (jsonObject.getString("item_title").equals("1")) {
-            category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-            category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-            category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-            category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
-            category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
+            category.cat_text_one =
+                jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+            category.cat_text_two =
+                jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+            category.cat_text_three =
+                jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+            category.cat_text_four =
+                jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
+            category.cat_text_five =
+                jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
             var item_color = JSONObject(jsonObject.getString("item_title_color"))
             binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
             binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
@@ -1000,7 +1357,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             if (jsonObject.getString("item_font_style").equals("italic")) {
                 binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
                 binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
-                binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
+                binding.catTextThree.setTypeface(
+                    binding.catTextThree.getTypeface(),
+                    Typeface.ITALIC
+                );
                 binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
                 binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
             }
@@ -1020,43 +1380,82 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             binding.cardFive.setContentPadding(2, 2, 2, 2)
             // }
         }
-        category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-        category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
-        category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-        category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
-        category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
-        category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-        category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
-        category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
-        category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-        category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
-        category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
-        category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
-        category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
+        category.cat_image_one =
+            jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+        category.cat_value_one =
+            jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+        category.cat_link_one =
+            jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+        category.cat_image_two =
+            jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+        category.cat_value_two =
+            jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+        category.cat_link_two =
+            jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+        category.cat_image_three =
+            jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+        category.cat_value_three =
+            jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+        category.cat_link_three =
+            jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+        category.cat_image_four =
+            jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
+        category.cat_value_four =
+            jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
+        category.cat_link_four =
+            jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
+        category.cat_image_five =
+            jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
         if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
-            category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
+            category.cat_value_five =
+                jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
         } else {
             category.cat_value_five = "list_collection"
         }
-        category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
+        category.cat_link_five =
+            jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
         homepagedata.setValue(hashMapOf("category-square_" to binding.root))
     }
 
     private fun createProductSlider(jsonObject: JSONObject) {
         try {
-            val binding: MProductSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_product_slider, null, false)
+            val binding: MProductSliderBinding = DataBindingUtil.inflate(
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                R.layout.m_product_slider,
+                null,
+                false
+            )
             var productSlider = ProductSlider()
             Log.d(TAG, "createProductSlider: " + jsonObject.getJSONArray("item_value"))
-            updateDataInRecylerView(binding.productdata, jsonObject.getJSONArray("item_value"), " ", jsonObject)
+            updateDataInRecylerView(
+                binding.productdata,
+                jsonObject.getJSONArray("item_value"),
+                " ",
+                jsonObject
+            )
             var header_title_color = JSONObject(jsonObject.getString("header_title_color"))
             var header_action_color = JSONObject(jsonObject.getString("header_action_color"))
-            var header_action_background_color = JSONObject(jsonObject.getString("header_action_background_color"))
+            var header_action_background_color =
+                JSONObject(jsonObject.getString("header_action_background_color"))
             var header_subtitle_color = JSONObject(jsonObject.getString("header_subtitle_color"))
             var header_deal_color = JSONObject(jsonObject.getString("header_deal_color"))
-            var header_background_color = JSONObject(jsonObject.getString("header_background_color"))
+            var header_background_color =
+                JSONObject(jsonObject.getString("header_background_color"))
             var panel_background_color = JSONObject(jsonObject.getString("panel_background_color"))
-            binding.panelbackgroundcolor.setBackgroundColor(Color.parseColor(panel_background_color.getString("color")))
-            binding.headerback.setBackgroundColor(Color.parseColor(header_background_color.getString("color")))
+            binding.panelbackgroundcolor.setBackgroundColor(
+                Color.parseColor(
+                    panel_background_color.getString(
+                        "color"
+                    )
+                )
+            )
+            binding.headerback.setBackgroundColor(
+                Color.parseColor(
+                    header_background_color.getString(
+                        "color"
+                    )
+                )
+            )
             if (jsonObject.getString("header").equals("1")) {
                 productSlider.headertextvisibility = View.VISIBLE
                 productSlider.headertext = jsonObject.getString("header_title_text")
@@ -1073,18 +1472,28 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 }
                 binding.headertext.setTypeface(face)
                 if (jsonObject.getString("item_header_font_style").equals("italic")) {
-                    binding.headertext.setTypeface(binding.headertext.getTypeface(), Typeface.ITALIC);
+                    binding.headertext.setTypeface(
+                        binding.headertext.getTypeface(),
+                        Typeface.ITALIC
+                    );
                 }
                 if (jsonObject.getString("header_action").equals("1")) {
                     productSlider.actiontextvisibity = View.VISIBLE
-                    productSlider.action_id = getcategoryID(jsonObject.getString("item_link_action_value"))
+                    productSlider.action_id =
+                        getcategoryID(jsonObject.getString("item_link_action_value"))
                     productSlider.actiontext = jsonObject.getString("header_action_text")
                     binding.headertext.textSize = 20f
 
                     var action_drawable = GradientDrawable()
                     action_drawable.shape = GradientDrawable.RECTANGLE
                     action_drawable.cornerRadius = 8f
-                    action_drawable.setColor(Color.parseColor(header_action_background_color.getString("color")))
+                    action_drawable.setColor(
+                        Color.parseColor(
+                            header_action_background_color.getString(
+                                "color"
+                            )
+                        )
+                    )
                     binding.actiontext.background = action_drawable
                     // binding.actiontext.setBackgroundColor(Color.parseColor(header_action_background_color.getString("color")))
                     binding.actiontext.setTextColor(Color.parseColor(header_action_color.getString("color")))
@@ -1099,7 +1508,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     binding.actiontext.setTypeface(face)
                     if (jsonObject.getString("header_action_font_style").equals("italic")) {
-                        binding.actiontext.setTypeface(binding.actiontext.getTypeface(), Typeface.ITALIC);
+                        binding.actiontext.setTypeface(
+                            binding.actiontext.getTypeface(),
+                            Typeface.ITALIC
+                        );
                     }
 
                 } else {
@@ -1108,7 +1520,13 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 if (jsonObject.getString("header_subtitle").equals("1")) {
                     productSlider.subheadertextvisibity = View.VISIBLE
                     productSlider.subheadertext = jsonObject.getString("header_subtitle_text")
-                    binding.subheadertext.setTextColor(Color.parseColor(header_subtitle_color.getString("color")))
+                    binding.subheadertext.setTextColor(
+                        Color.parseColor(
+                            header_subtitle_color.getString(
+                                "color"
+                            )
+                        )
+                    )
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
@@ -1121,7 +1539,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     binding.subheadertext.setTypeface(face)
                     if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
-                        binding.subheadertext.setTypeface(binding.subheadertext.getTypeface(), Typeface.ITALIC);
+                        binding.subheadertext.setTypeface(
+                            binding.subheadertext.getTypeface(),
+                            Typeface.ITALIC
+                        );
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -1179,36 +1600,78 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
     }
 
-    private fun updateDataInRecylerView(productdata: RecyclerView?, jsonArray: JSONArray, cat_id: String, jsonObject: JSONObject) {
-        try {
-            val edges = mutableListOf<Storefront.Product>()
-            var product_ids = ArrayList<ID>()
-            for (i in 0..jsonArray.length() - 1) {
-                Log.d(TAG, "updateDataInRecylerView: " + ID(getProductID(jsonArray.getString(i))))
-                product_ids.add(ID(getProductID(jsonArray.getString(i))))
-            }
+    private fun updateDataInRecylerView(
+        productdata: RecyclerView?,
+        jsonArray: JSONArray,
+        cat_id: String,
+        jsonObject: JSONObject
+    ) {
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val edges = mutableListOf<Storefront.Product>()
+                val product_ids = ArrayList<ID>()
+                for (i in 0..jsonArray.length() - 1) {
+                    Log.d(
+                        TAG,
+                        "updateDataInRecylerView: " + ID(getProductID(jsonArray.getString(i)))
+                    )
+                    product_ids.add(ID(getProductID(jsonArray.getString(i))))
+                }
 
-            var currency_list = ArrayList<Storefront.CurrencyCode>()
-            if (presentmentCurrency != "nopresentmentcurrency") {
-                currency_list.add(Storefront.CurrencyCode.valueOf(presentmentCurrency!!))
+                val currency_list = ArrayList<Storefront.CurrencyCode>()
+                if (presentmentCurrency != "nopresentmentcurrency") {
+                    currency_list.add(Storefront.CurrencyCode.valueOf(presentmentCurrency!!))
+                }
+                getProductsById(
+                    product_ids,
+                    productdata,
+                    jsonArray,
+                    jsonObject,
+                    edges,
+                    currency_list
+                )
+            } catch (ex: Exception) {
+                ex.printStackTrace()
             }
-            getProductsById(product_ids, productdata, jsonArray, jsonObject, edges, currency_list)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
         }
+
     }
 
-    fun getProductsById(id: ArrayList<ID>, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>, currency_list: ArrayList<Storefront.CurrencyCode>) {
+    suspend fun getProductsById(
+        id: ArrayList<ID>,
+        productdata: RecyclerView?,
+        jsonArray: JSONArray,
+        jsonObject: JSONObject,
+        edges: MutableList<Storefront.Product>,
+        currency_list: ArrayList<Storefront.CurrencyCode>
+    ) {
         try {
-            doGraphQLQueryGraph(repository, Query.getAllProductsByID(id, currency_list), customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                    if (result is GraphCallResult.Success<*>) {
-                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>), productdata, jsonArray, jsonObject, edges)
-                    } else {
-                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure), productdata, jsonArray, jsonObject, edges)
+            doGraphQLQueryGraph(
+                repository,
+                Query.getAllProductsByID(id, currency_list),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        if (result is GraphCallResult.Success<*>) {
+                            consumeResponse(
+                                GraphQLResponse.success(result as GraphCallResult.Success<*>),
+                                productdata,
+                                jsonArray,
+                                jsonObject,
+                                edges
+                            )
+                        } else {
+                            consumeResponse(
+                                GraphQLResponse.error(result as GraphCallResult.Failure),
+                                productdata,
+                                jsonArray,
+                                jsonObject,
+                                edges
+                            )
+                        }
                     }
-                }
-            }, context = context)
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1217,7 +1680,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     private fun getProductID(id: String?): String? {
         var cat_id: String? = null
         try {
-            val data = Base64.encode(("gid://shopify/Product/" + id!!).toByteArray(), Base64.DEFAULT)
+            val data =
+                Base64.encode(("gid://shopify/Product/" + id!!).toByteArray(), Base64.DEFAULT)
             cat_id = String(data, Charset.defaultCharset()).trim { it <= ' ' }
             Log.i("MageNatyive", "ProductSliderID :$id " + cat_id)
         } catch (e: Exception) {
@@ -1239,10 +1703,17 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         return cat_id
     }
 
-    private fun consumeResponse(reponse: GraphQLResponse, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject, edges: MutableList<Storefront.Product>) {
+    private fun consumeResponse(
+        reponse: GraphQLResponse,
+        productdata: RecyclerView?,
+        jsonArray: JSONArray,
+        jsonObject: JSONObject,
+        edges: MutableList<Storefront.Product>
+    ) {
         when (reponse.status) {
             Status.SUCCESS -> {
-                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                val result =
+                    (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -1269,7 +1740,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         e.printStackTrace()
                         when (context!!.getPackageName()) {
                             "com.shopify.shopifyapp" -> {
-                                Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
+                                //    Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
@@ -1282,114 +1753,137 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
     }
 
-    private fun filterProduct(list: List<Storefront.Product>, productdata: RecyclerView?, jsonArray: JSONArray, jsonObject: JSONObject) {
+    private fun filterProduct(
+        list: List<Storefront.Product>,
+        productdata: RecyclerView?,
+        jsonArray: JSONArray,
+        jsonObject: JSONObject
+    ) {
         try {
 
             if (SplashViewModel.featuresModel.outOfStock!!) {
                 repository.getProductListSlider(list)
-                        .subscribeOn(Schedulers.io())
-                        .toList()
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(object : SingleObserver<List<Storefront.Product>> {
-                            override fun onSubscribe(d: Disposable) {
+                    .subscribeOn(Schedulers.io())
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<List<Storefront.Product>> {
+                        override fun onSubscribe(d: Disposable) {
 
-                            }
+                        }
 
-                            override fun onSuccess(list: List<Storefront.Product>) {
-                                when (jsonObject.getString("type")) {
-                                    "fixed-customisable-layout" -> {
-                                        if (jsonObject.getString("item_layout_type").equals("list")) {
-                                            productListAdapter = ProductListSliderAdapter()
-                                            productListAdapter!!.presentmentcurrency = presentmentCurrency
-                                            context.setLayout(productdata!!, "vertical")
-                                            productListAdapter!!.setData(list, context, jsonObject)
-                                            productdata!!.adapter = productListAdapter
-                                        } else {
-                                            when (jsonObject.getString("item_in_a_row")) {
-                                                "2" -> {
-                                                    var productTwoGridAdapter = ProductTwoGridAdapter()
-                                                    productTwoGridAdapter!!.presentmentcurrency = presentmentCurrency
-                                                    context.setLayout(productdata!!, "grid")
-                                                    productTwoGridAdapter!!.setData(list, context, jsonObject, repository)
-                                                    productdata!!.adapter = productTwoGridAdapter
-                                                }
-                                                "3" -> {
-                                                    gridAdapter = ProductSliderGridAdapter()
-                                                    gridAdapter!!.presentmentcurrency = presentmentCurrency
-                                                    context.setLayout(productdata!!, "customisablegrid")
-                                                    gridAdapter!!.setData(list, context, jsonObject)
-                                                    productdata!!.adapter = gridAdapter
-                                                }
+                        override fun onSuccess(list: List<Storefront.Product>) {
+                            when (jsonObject.getString("type")) {
+                                "fixed-customisable-layout" -> {
+                                    if (jsonObject.getString("item_layout_type").equals("list")) {
+                                        productListAdapter = ProductListSliderAdapter()
+                                        productListAdapter!!.presentmentcurrency =
+                                            presentmentCurrency
+                                        context.setLayout(productdata!!, "vertical")
+                                        productListAdapter!!.setData(list, context, jsonObject)
+                                        productdata!!.adapter = productListAdapter
+                                    } else {
+                                        when (jsonObject.getString("item_in_a_row")) {
+                                            "2" -> {
+                                                var productTwoGridAdapter = ProductTwoGridAdapter()
+                                                productTwoGridAdapter!!.presentmentcurrency =
+                                                    presentmentCurrency
+                                                context.setLayout(productdata!!, "grid")
+                                                productTwoGridAdapter!!.setData(
+                                                    list,
+                                                    context,
+                                                    jsonObject,
+                                                    repository
+                                                )
+                                                productdata!!.adapter = productTwoGridAdapter
+                                            }
+                                            "3" -> {
+                                                gridAdapter = ProductSliderGridAdapter()
+                                                gridAdapter!!.presentmentcurrency =
+                                                    presentmentCurrency
+                                                context.setLayout(productdata!!, "customisablegrid")
+                                                gridAdapter!!.setData(list, context, jsonObject)
+                                                productdata!!.adapter = gridAdapter
                                             }
                                         }
                                     }
-                                    else -> {
-                                        Log.i("MageNatyive", "Data" + list.size)
-                                        homeadapter = ProductSliderListAdapter()
-                                        homeadapter!!.presentmentcurrency = presentmentCurrency
-                                        context.setLayout(productdata!!, "horizontal")
-                                        homeadapter!!.setData(list, context, jsonObject, repository)
-                                        productdata!!.adapter = homeadapter
-                                    }
+                                }
+                                else -> {
+                                    Log.i("MageNatyive", "Data" + list.size)
+                                    homeadapter = ProductSliderListAdapter()
+                                    homeadapter!!.presentmentcurrency = presentmentCurrency
+                                    context.setLayout(productdata!!, "horizontal")
+                                    homeadapter!!.setData(list, context, jsonObject, repository)
+                                    productdata!!.adapter = homeadapter
                                 }
                             }
+                        }
 
-                            override fun onError(e: Throwable) {
-                                e.printStackTrace()
-                            }
-                        })
+                        override fun onError(e: Throwable) {
+                            e.printStackTrace()
+                        }
+                    })
             } else {
                 repository.getProductListSlider(list)
-                        .subscribeOn(Schedulers.io())
-                        .filter { x -> x.availableForSale }
-                        .toList()
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(object : SingleObserver<List<Storefront.Product>> {
-                            override fun onSubscribe(d: Disposable) {
+                    .subscribeOn(Schedulers.io())
+                    .filter { x -> x.availableForSale }
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<List<Storefront.Product>> {
+                        override fun onSubscribe(d: Disposable) {
 
-                            }
+                        }
 
-                            override fun onSuccess(list: List<Storefront.Product>) {
-                                when (jsonObject.getString("type")) {
-                                    "fixed-customisable-layout" -> {
-                                        if (jsonObject.getString("item_layout_type").equals("list")) {
-                                            productListAdapter = ProductListSliderAdapter()
-                                            productListAdapter!!.presentmentcurrency = presentmentCurrency
-                                            context.setLayout(productdata!!, "vertical")
-                                            productListAdapter!!.setData(list, context, jsonObject)
-                                            productdata!!.adapter = productListAdapter
-                                        } else {
-                                            when (jsonObject.getString("item_in_a_row")) {
-                                                "2" -> {
-                                                    var productTwoGridAdapter = ProductTwoGridAdapter()
-                                                    productTwoGridAdapter!!.presentmentcurrency = presentmentCurrency
-                                                    context.setLayout(productdata!!, "grid")
-                                                    productTwoGridAdapter!!.setData(list, context, jsonObject, repository)
-                                                    productdata!!.adapter = productTwoGridAdapter
-                                                }
-                                                "3" -> {
-                                                    gridAdapter = ProductSliderGridAdapter()
-                                                    gridAdapter!!.presentmentcurrency = presentmentCurrency
-                                                    context.setLayout(productdata!!, "customisablegrid")
-                                                    gridAdapter!!.setData(list, context, jsonObject)
-                                                    productdata!!.adapter = gridAdapter
-                                                }
+                        override fun onSuccess(list: List<Storefront.Product>) {
+                            when (jsonObject.getString("type")) {
+                                "fixed-customisable-layout" -> {
+                                    if (jsonObject.getString("item_layout_type").equals("list")) {
+                                        productListAdapter = ProductListSliderAdapter()
+                                        productListAdapter!!.presentmentcurrency =
+                                            presentmentCurrency
+                                        context.setLayout(productdata!!, "vertical")
+                                        productListAdapter!!.setData(list, context, jsonObject)
+                                        productdata!!.adapter = productListAdapter
+                                    } else {
+                                        when (jsonObject.getString("item_in_a_row")) {
+                                            "2" -> {
+                                                var productTwoGridAdapter = ProductTwoGridAdapter()
+                                                productTwoGridAdapter!!.presentmentcurrency =
+                                                    presentmentCurrency
+                                                context.setLayout(productdata!!, "grid")
+                                                productTwoGridAdapter!!.setData(
+                                                    list,
+                                                    context,
+                                                    jsonObject,
+                                                    repository
+                                                )
+                                                productdata!!.adapter = productTwoGridAdapter
+                                            }
+                                            "3" -> {
+                                                gridAdapter = ProductSliderGridAdapter()
+                                                gridAdapter!!.presentmentcurrency =
+                                                    presentmentCurrency
+                                                context.setLayout(productdata!!, "customisablegrid")
+                                                gridAdapter!!.setData(list, context, jsonObject)
+                                                productdata!!.adapter = gridAdapter
                                             }
                                         }
                                     }
-                                    else -> {
-                                        Log.i("MageNatyive", "Data" + list.size)
-                                        homeadapter = ProductSliderListAdapter()
-                                        homeadapter!!.presentmentcurrency = presentmentCurrency
-                                        context.setLayout(productdata!!, "horizontal")
-                                        homeadapter!!.setData(list, context, jsonObject, repository)
-                                        productdata!!.adapter = homeadapter
-                                    }
+                                }
+                                else -> {
+                                    Log.i("MageNatyive", "Data" + list.size)
+                                    homeadapter = ProductSliderListAdapter()
+                                    homeadapter!!.presentmentcurrency = presentmentCurrency
+                                    context.setLayout(productdata!!, "horizontal")
+                                    homeadapter!!.setData(list, context, jsonObject, repository)
+                                    productdata!!.adapter = homeadapter
                                 }
                             }
+                        }
 
-                            override fun onError(e: Throwable) {
-                                e.printStackTrace()
-                            }
-                        })
+                        override fun onError(e: Throwable) {
+                            e.printStackTrace()
+                        }
+                    })
             }
 
         } catch (e: Exception) {
@@ -1403,7 +1897,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         try {
 
             for (data in 0..jsonArray.length() - 1) {
-                val data = Base64.encode(("gid://shopify/Product/" + jsonArray[data]).toByteArray(), Base64.DEFAULT)
+                val data = Base64.encode(
+                    ("gid://shopify/Product/" + jsonArray[data]).toByteArray(),
+                    Base64.DEFAULT
+                )
                 val id = String(data, Charset.defaultCharset()).trim { it <= ' ' }
                 if (id.equals(productedge.node.id.toString())) {
                     flag = true
@@ -1418,14 +1915,29 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     private fun createBannerSlider(jsonObject: JSONObject) {
         try {
-            var binding: MBannerSliderBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_banner_slider, null, false)
-            binding!!.banners.adapter = HomePageBanner(context.supportFragmentManager, context, jsonObject.getJSONArray("items"))
+            var binding: MBannerSliderBinding = DataBindingUtil.inflate(
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                R.layout.m_banner_slider,
+                null,
+                false
+            )
+            binding!!.banners.adapter = HomePageBanner(
+                context.supportFragmentManager,
+                context,
+                jsonObject.getJSONArray("items")
+            )
             if (jsonObject.getString("item_dots").equals("1")) {
                 binding!!.indicator.visibility = View.VISIBLE
                 var background = JSONObject(jsonObject.getString("active_dot_color"))
                 var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
                 binding!!.indicator.setDotIndicatorColor(Color.parseColor(background.getString("color")))
-                binding!!.indicator.setStrokeDotsIndicatorColor(Color.parseColor(strokebackground.getString("color")))
+                binding!!.indicator.setStrokeDotsIndicatorColor(
+                    Color.parseColor(
+                        strokebackground.getString(
+                            "color"
+                        )
+                    )
+                )
                 binding!!.indicator.setViewPager(binding!!.banners)
                 var i = 0
                 val timer = Timer()
@@ -1445,18 +1957,28 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     private fun createCategoryCircle(jsonObject: JSONObject) {
-        var binding: MCategoryCircleBinding = DataBindingUtil.inflate(context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_category_circle, null, false)
+        var binding: MCategoryCircleBinding = DataBindingUtil.inflate(
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+            R.layout.m_category_circle,
+            null,
+            false
+        )
         var category = CategoryCircle()
         binding.category = category
         var background = JSONObject(jsonObject.getString("panel_background_color"))
 
         binding.root.setBackgroundColor(Color.parseColor(background.getString("color")))
         if (jsonObject.getString("item_title").equals("1")) {
-            category.cat_text_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
-            category.cat_text_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
-            category.cat_text_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
-            category.cat_text_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
-            category.cat_text_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
+            category.cat_text_one =
+                jsonObject.getJSONArray("items").getJSONObject(0).getString("title")
+            category.cat_text_two =
+                jsonObject.getJSONArray("items").getJSONObject(1).getString("title")
+            category.cat_text_three =
+                jsonObject.getJSONArray("items").getJSONObject(2).getString("title")
+            category.cat_text_four =
+                jsonObject.getJSONArray("items").getJSONObject(3).getString("title")
+            category.cat_text_five =
+                jsonObject.getJSONArray("items").getJSONObject(4).getString("title")
             var item_color = JSONObject(jsonObject.getString("item_title_color"))
             binding.catTextOne.setTextColor(Color.parseColor(item_color.getString("color")))
             binding.catTextTwo.setTextColor(Color.parseColor(item_color.getString("color")))
@@ -1474,7 +1996,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             if (jsonObject.getString("item_font_style").equals("italic")) {
                 binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
                 binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
-                binding.catTextThree.setTypeface(binding.catTextThree.getTypeface(), Typeface.ITALIC);
+                binding.catTextThree.setTypeface(
+                    binding.catTextThree.getTypeface(),
+                    Typeface.ITALIC
+                );
                 binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
                 binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
             }
@@ -1493,25 +2018,40 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             binding.imageFour.tag = background.getString("color")
             binding.imageFive.tag = background.getString("color")
         }
-        category.cat_image_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
-        category.cat_value_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
-        category.cat_link_one = jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
-        category.cat_image_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
-        category.cat_value_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
-        category.cat_link_two = jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
-        category.cat_image_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
-        category.cat_value_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
-        category.cat_link_three = jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
-        category.cat_image_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
-        category.cat_value_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
-        category.cat_link_four = jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
-        category.cat_image_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
+        category.cat_image_one =
+            jsonObject.getJSONArray("items").getJSONObject(0).getString("image_url")
+        category.cat_value_one =
+            jsonObject.getJSONArray("items").getJSONObject(0).getString("link_value")
+        category.cat_link_one =
+            jsonObject.getJSONArray("items").getJSONObject(0).getString("link_type")
+        category.cat_image_two =
+            jsonObject.getJSONArray("items").getJSONObject(1).getString("image_url")
+        category.cat_value_two =
+            jsonObject.getJSONArray("items").getJSONObject(1).getString("link_value")
+        category.cat_link_two =
+            jsonObject.getJSONArray("items").getJSONObject(1).getString("link_type")
+        category.cat_image_three =
+            jsonObject.getJSONArray("items").getJSONObject(2).getString("image_url")
+        category.cat_value_three =
+            jsonObject.getJSONArray("items").getJSONObject(2).getString("link_value")
+        category.cat_link_three =
+            jsonObject.getJSONArray("items").getJSONObject(2).getString("link_type")
+        category.cat_image_four =
+            jsonObject.getJSONArray("items").getJSONObject(3).getString("image_url")
+        category.cat_value_four =
+            jsonObject.getJSONArray("items").getJSONObject(3).getString("link_value")
+        category.cat_link_four =
+            jsonObject.getJSONArray("items").getJSONObject(3).getString("link_type")
+        category.cat_image_five =
+            jsonObject.getJSONArray("items").getJSONObject(4).getString("image_url")
         if (jsonObject.getJSONArray("items").getJSONObject(4).has("link_value")) {
-            category.cat_value_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
+            category.cat_value_five =
+                jsonObject.getJSONArray("items").getJSONObject(4).getString("link_value")
         } else {
             category.cat_value_five = "list_collection"
         }
-        category.cat_link_five = jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
+        category.cat_link_five =
+            jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
         homepagedata.setValue(hashMapOf("category-circle_" to binding.root))
     }
 
@@ -1519,7 +2059,12 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         var productSlider: ProductSlider
         var format: String
 
-        constructor(millisInFuture: Long, countDownInterval: Long, productSlider: ProductSlider, format: String) : super(millisInFuture, countDownInterval) {
+        constructor(
+            millisInFuture: Long,
+            countDownInterval: Long,
+            productSlider: ProductSlider,
+            format: String
+        ) : super(millisInFuture, countDownInterval) {
             this.productSlider = productSlider
             this.format = format
         }
@@ -1530,7 +2075,14 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
         override fun onTick(millisUntilFinished: Long) {
             var millis = millisUntilFinished;
-            var hms = " " + (TimeUnit.MILLISECONDS.toDays(millis)) + " Day $format " + (TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis))) + " H $format " + (TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))) + " M $format " + (TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))) + " S"
+            var hms =
+                " " + (TimeUnit.MILLISECONDS.toDays(millis)) + " Day $format " + (TimeUnit.MILLISECONDS.toHours(
+                    millis
+                ) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis))) + " H $format " + (TimeUnit.MILLISECONDS.toMinutes(
+                    millis
+                ) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))) + " M $format " + (TimeUnit.MILLISECONDS.toSeconds(
+                    millis
+                ) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))) + " S"
             productSlider.timertext = hms
         }
     }
@@ -1558,17 +2110,17 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             body.queries = mutableListOf(query)
 
             disposables.add(repository.getRecommendation(body)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { result ->
-                                api.setValue(ApiResponse.success(result))
-                            },
-                            { throwable ->
-                                // customLoader!!.dismiss()
-                                api.setValue(ApiResponse.error(throwable))
-                            }
-                    ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        api.setValue(ApiResponse.success(result))
+                    },
+                    { throwable ->
+                        // customLoader!!.dismiss()
+                        api.setValue(ApiResponse.error(throwable))
+                    }
+                ))
 
 //            doRetrofitCall(repository.getRecommendation(body), disposables, customResponse = object : CustomResponse {
 //                override fun onSuccessRetrofit(result: JsonElement) {

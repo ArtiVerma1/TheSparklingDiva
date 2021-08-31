@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.provider.Settings
 import android.util.Log
@@ -16,8 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
+import com.facebook.applinks.AppLinkData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -29,17 +29,21 @@ import com.shopify.shopifyapp.MyApplication.Companion.dataBaseReference
 import com.shopify.shopifyapp.MyApplication.Companion.firebaseapp
 import com.shopify.shopifyapp.MyApplication.Companion.getmFirebaseSecondanyInstance
 import com.shopify.shopifyapp.R
-import com.shopify.shopifyapp.databinding.MSplashBinding
 import com.shopify.shopifyapp.basesection.models.CommanModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
+import com.shopify.shopifyapp.databinding.MSplashBinding
 import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.trialsection.activities.TrialExpired
 import com.shopify.shopifyapp.utils.*
+import java.math.BigInteger
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
+
 
 class Splash : AppCompatActivity() {
     @Inject
@@ -51,6 +55,7 @@ class Splash : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private var productTitle: String? = null
     private var productData: Storefront.Product? = null
+    private val TAG = "Splash"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +65,12 @@ class Splash : AppCompatActivity() {
         splashmodel = ViewModelProvider(this, viewModelFactory).get(SplashViewModel::class.java)
         splashmodel!!.message.observe(this, Observer<String> { this.showToast(it) })
         splashmodel?.setPresentmentCurrencyForModel()
-        splashmodel!!.filteredproducts!!.observe(this, Observer<MutableList<Storefront.ProductEdge>> { this.setProductData(it) })
+        splashmodel!!.filteredproducts!!.observe(
+            this,
+            Observer<MutableList<Storefront.ProductEdge>> { this.setProductData(it) })
         initializeFirebase();
-        val mServiceComponent = ComponentName(this, com.shopify.shopifyapp.jobservicessection.JobScheduler::class.java)
+        val mServiceComponent =
+            ComponentName(this, com.shopify.shopifyapp.jobservicessection.JobScheduler::class.java)
         val builder = JobInfo.Builder(101, mServiceComponent)
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
         builder.setRequiresDeviceIdle(false)
@@ -83,13 +91,22 @@ class Splash : AppCompatActivity() {
                         product_id = appLinkIntent.data!!.getQueryParameters("pid")[0]
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        var link_array = appLinkIntent.data!!.toString().replace("https://", "").split("/")
+                        var link_array =
+                            appLinkIntent.data!!.toString().replace("https://", "").split("/")
                         productTitle = link_array.get(link_array.size - 1)
                         splashmodel?.getProductsByKeywords(productTitle!!)
                     }
                 }
             }
         }
+
+        AppLinkData.fetchDeferredAppLinkData(this) {
+            // Process app link data
+        }
+        AppLinkData.fetchDeferredAppLinkData(this) {
+            // Process app link data
+        }
+
     }
 
     private fun setProductData(product: MutableList<Storefront.ProductEdge>?) {
@@ -103,37 +120,48 @@ class Splash : AppCompatActivity() {
     }
 
     private fun showToast(it: String?) {
-       // Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
     }
 
     private fun initializeFirebase() {
         auth = Firebase.auth(firebaseapp!!)
         auth.signInWithEmailAndPassword("sudhanshshah@magenative.com", "asdcxzasd")
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
-                        val user = auth.currentUser
+                    val user = auth.currentUser
 
-                        dataBaseReference = getmFirebaseSecondanyInstance().getReference(Urls(context).shopdomain.replace(".myshopify.com", ""))
-                        if (splashmodel!!.isLogin) {
-                            splashmodel!!.refreshTokenIfRequired()
-                        }
-                        splashmodel!!.firebaseResponse().observe(this, Observer<FireBaseResponse> { this.consumeResponse(it) })
-                        splashmodel!!.Response(resources.getString(R.string.shopdomain)).observe(this, Observer<LocalDbResponse> { this.consumeResponse(it) })
-                        splashmodel!!.errorMessageResponse.observe(this, Observer<String> { this.consumeErrorResponse(it) })
-                        splashmodel!!.getNotificationCompaign().observe(this, Observer { this.cartNotification(it) })
-                        @SuppressLint("HardwareIds") val deviceId = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
-                        splashmodel!!.sendTokenToServer(deviceId)
-
-                        /* Toast.makeText(baseContext, "Authentication success",
-                                 Toast.LENGTH_SHORT).show()*/
-                    } else {
-
-                        /*    Toast.makeText(baseContext, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show()*/
+                    dataBaseReference = getmFirebaseSecondanyInstance().getReference(
+                        Urls(context).shopdomain.replace(
+                            ".myshopify.com",
+                            ""
+                        )
+                    )
+                    if (splashmodel!!.isLogin) {
+                        splashmodel!!.refreshTokenIfRequired()
                     }
+                    splashmodel!!.firebaseResponse()
+                        .observe(this, Observer<FireBaseResponse> { this.consumeResponse(it) })
+                    splashmodel!!.Response(resources.getString(R.string.shopdomain))
+                        .observe(this, Observer<LocalDbResponse> { this.consumeResponse(it) })
+                    splashmodel!!.errorMessageResponse.observe(
+                        this,
+                        Observer<String> { this.consumeErrorResponse(it) })
+                    splashmodel!!.getNotificationCompaign()
+                        .observe(this, Observer { this.cartNotification(it) })
+                    @SuppressLint("HardwareIds") val deviceId =
+                        Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+                    splashmodel!!.sendTokenToServer(deviceId)
 
+                    /* Toast.makeText(baseContext, "Authentication success",
+                             Toast.LENGTH_SHORT).show()*/
+                } else {
+
+                    /*    Toast.makeText(baseContext, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show()*/
                 }
+
+            }
     }
 
     private fun cartNotification(it: Boolean?) {
@@ -143,7 +171,7 @@ class Splash : AppCompatActivity() {
     }
 
     private fun consumeErrorResponse(error: String) {
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+      //  Toast.makeText(this, error, Toast.LENGTH_LONG).show()
     }
 
     private fun consumeResponse(reponse: LocalDbResponse) {
@@ -211,7 +239,7 @@ class Splash : AppCompatActivity() {
             intent[0] = homepage
 
         }
-        Handler().postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
             startActivities(intent)
             Constant.activityTransition(this)
             finish()

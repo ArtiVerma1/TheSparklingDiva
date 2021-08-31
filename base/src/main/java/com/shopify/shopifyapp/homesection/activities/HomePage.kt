@@ -485,11 +485,11 @@ class HomePage : NewBaseActivity() {
             Status.SUCCESS -> setPersonalisedData(reponse.data!!)
             Status.ERROR -> {
                 reponse.error!!.printStackTrace()
-                Toast.makeText(
-                    this,
-                    resources.getString(R.string.errorString),
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    this,
+//                    resources.getString(R.string.errorString),
+//                    Toast.LENGTH_SHORT
+//                ).show()
             }
         }
     }
