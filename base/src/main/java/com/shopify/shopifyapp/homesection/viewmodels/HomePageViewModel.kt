@@ -1606,7 +1606,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         cat_id: String,
         jsonObject: JSONObject
     ) {
-        GlobalScope.launch(Dispatchers.IO) {
+        runBlocking(Dispatchers.IO) {
             try {
                 val edges = mutableListOf<Storefront.Product>()
                 val product_ids = ArrayList<ID>()
