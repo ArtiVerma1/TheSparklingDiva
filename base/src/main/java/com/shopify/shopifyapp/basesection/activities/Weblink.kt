@@ -42,7 +42,7 @@ class Weblink : NewBaseActivity() {
             showTittle(getIntent().getStringExtra("name") ?: "")
         }
         Log.i("MageNative", "Link :" + getIntent().getStringExtra("link")!!)
-        if (getIntent().getStringExtra("link")!!.contains("https")) {
+        if (getIntent().getStringExtra("link")!!.contains("https") || getIntent().getStringExtra("link")!!.contains("http")) {
             currentUrl = getIntent().getStringExtra("link")
         } else {
             currentUrl =
