@@ -27,8 +27,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".productsection.activities.AllAliReviewsListActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".productsection.activities.AllAliReviewsListActivity"
+            android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -62,13 +63,16 @@
             android:name=".checkoutsection.activities.OrderSuccessActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name=".notificationsection.FirebaseInstanceIDService"
+        <service
+            android:name=".notificationsection.FirebaseInstanceIDService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".notificationsection.FirebaseMessagingService" android:exported="true">
+        <service
+            android:name=".notificationsection.FirebaseMessagingService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -88,22 +92,49 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter
-                android:autoVerify="true"
-                tools:targetApi="m">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
+                    android:scheme="https"
                     android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp"
-                    android:scheme="https" />
+                    android:pathPrefix="/openapp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
+                    android:scheme="https"
                     android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp"
-                    android:scheme="http" />
+                    android:pathPrefix="/openapp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp" />
             </intent-filter>
         </activity>
         <activity

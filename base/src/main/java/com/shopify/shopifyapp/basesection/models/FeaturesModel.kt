@@ -6,6 +6,14 @@ import androidx.databinding.library.baseAdapters.BR
 
 class FeaturesModel : BaseObservable() {
 
+
+    @Bindable
+    var forceUpdate: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.forceUpdate)
+        }
+
     @Bindable
     var productListEnabled: Boolean = true
         set(value) {

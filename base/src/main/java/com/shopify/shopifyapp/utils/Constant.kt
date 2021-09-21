@@ -10,6 +10,7 @@ import android.os.Bundle
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.shopify.buy3.HttpCachePolicy
+import com.shopify.shopifyapp.basesection.models.FeaturesModel
 import com.shopify.shopifyapp.productsection.models.VariantData
 import java.util.concurrent.TimeUnit
 

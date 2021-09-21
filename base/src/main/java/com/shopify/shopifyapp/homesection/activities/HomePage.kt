@@ -21,6 +21,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.gson.JsonElement
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
@@ -50,6 +58,12 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.tasks.Task
+import android.content.IntentSender
+import android.content.IntentSender.SendIntentException
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
+
 
 class HomePage : NewBaseActivity() {
     private var binding: MHomepageModifiedBinding? = null
@@ -65,6 +79,8 @@ class HomePage : NewBaseActivity() {
     lateinit var wishitemHome: MenuItem
     lateinit var cartitemHome: MenuItem
     private var scrollYPosition: Int = -1
+    private val MY_REQUEST_CODE = 105
+    private var appUpdateManager: AppUpdateManager? = null
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -81,6 +97,7 @@ class HomePage : NewBaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doHomePageInjection(this)
         MyApplication.dataBaseReference = MyApplication.getmFirebaseSecondanyInstance()
             .getReference(Urls(MyApplication.context).shopdomain.replace(".myshopify.com", ""))
+        appUpdateManager = AppUpdateManagerFactory.create(this)
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
         showHumburger()
@@ -152,6 +169,63 @@ class HomePage : NewBaseActivity() {
             }
             if (scrollY == (v?.measuredHeight!! - v?.getChildAt(0).measuredHeight)) {
                 Log.i(TAG, "BOTTOM SCROLL")
+            }
+        }
+        if (featuresModel.forceUpdate) {
+            forceUpdate()
+        }
+    }
+
+    private fun forceUpdate() {
+        val appUpdateInfoTask: Task<AppUpdateInfo> = appUpdateManager!!.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)
+            ) {
+                startUpdateFlow(appUpdateInfo)
+            } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                startUpdateFlow(appUpdateInfo)
+            }
+        }
+    }
+
+    private fun startUpdateFlow(appUpdateInfo: AppUpdateInfo) {
+        try {
+            appUpdateManager!!.startUpdateFlowForResult(
+                appUpdateInfo,
+                IMMEDIATE,
+                this,
+                MY_REQUEST_CODE
+            )
+        } catch (e: SendIntentException) {
+            e.printStackTrace()
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MY_REQUEST_CODE) {
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(
+                    getApplicationContext(),
+                    "Update canceled by user! Result Code: " + resultCode,
+                    Toast.LENGTH_LONG
+                ).show();
+                finishAffinity()
+            } else if (resultCode == RESULT_OK) {
+                Toast.makeText(
+                    getApplicationContext(),
+                    "Update success! Result Code: " + resultCode,
+                    Toast.LENGTH_LONG
+                ).show();
+            } else {
+                Toast.makeText(
+                    getApplicationContext(),
+                    "Update Failed! Result Code: " + resultCode,
+                    Toast.LENGTH_LONG
+                ).show();
+                forceUpdate();
             }
         }
     }

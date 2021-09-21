@@ -142,7 +142,6 @@ class LeftMenuViewModel(var repository: Repository) : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     fun currencyResponse(): MutableLiveData<List<Storefront.CurrencyCode>> {

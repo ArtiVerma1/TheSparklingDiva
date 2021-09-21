@@ -171,7 +171,7 @@ class Splash : AppCompatActivity() {
     }
 
     private fun consumeErrorResponse(error: String) {
-      //  Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        //  Toast.makeText(this, error, Toast.LENGTH_LONG).show()
     }
 
     private fun consumeResponse(reponse: LocalDbResponse) {
