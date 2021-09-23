@@ -206,4 +206,28 @@
     <string name="choose_language">Choose Language</string>
     <string name="select_language">Select Language</string>
     <string name="OrderDetails">Order Details</string>
+    <!--Yotpo Strings Starts from here-->
+    <string name="earn_rewards">My Reward Points</string>
+    <string name="create_account">Create an Account</string>
+    <string name="earn_points_for_actions">Earn Points For Actions</string>
+    <string name="redeem_points_for_discount">Redeem points for discount</string>
+    <string name="login_or_sign_up_to_earn_rewards_today">Login or sign up to earn rewards today</string>
+    <string name="rewardponts">Reward Points</string>
+    <string name="get_rewards">REDEEM MY POINTS</string>
+    <string name="earn_points">EARN POINTS</string>
+    <string name="refer_friends">Refer Friends</string>
+    <string name="my_rewads">MY POINTS HISTORY</string>
+    <string name="faqs">FAQS</string>
+    <string name="date">Date</string>
+    <string name="action">Action</string>
+    <string name="points">Points</string>
+    <string name="status">Status</string>
+    <string name="frequently_asked">FREQUENTLY ASKED QUESTIONS</string>
+    <string name="your_point">"Total Points Earned : "</string>
+    <string name="redeem">Redeem</string>
+    <string name="send_emails">Send Emails</string>
+    <string name="refer_dailog_title">Just enter their email addresses (separated by a comma) and we will share your link with them</string>
+    <string name="tell_your_friends">Tell Your Friends</string>
+    <string name="mail_sent">Mail Sent</string>
+    <string name="order_note_title">SPECIAL INSTRUCTIONS FOR SELLER</string>
 </resources>

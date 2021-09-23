@@ -43,10 +43,13 @@ import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.searchsection.activities.SearchByScanner
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
+import com.shopify.shopifyapp.yotporewards.rewarddashboard.RewardDashboard
+import com.shopify.shopifyapp.yotporewards.withoutlogin.RewardsPointActivity
 import org.json.JSONArray
 import org.json.JSONObject
 import java.nio.charset.Charset
@@ -61,9 +64,18 @@ class LeftMenu : BaseFragment() {
 
     private var currentactivity: Activity? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_leftmenufragment, container, true)
+        binding = DataBindingUtil.inflate(
+            context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+            R.layout.m_leftmenufragment,
+            container,
+            true
+        )
         menulist = binding!!.menulist
         var pInfo: PackageInfo? = null
         try {
@@ -77,13 +89,16 @@ class LeftMenu : BaseFragment() {
         menuData = MenuData()
         val app_version = "App Version $version($versioncode)"
         menuData!!.appversion = app_version
-        menuData!!.copyright = resources.getString(R.string.copy) + " " + resources.getString(R.string.app_name)
+        menuData!!.copyright =
+            resources.getString(R.string.copy) + " " + resources.getString(R.string.app_name)
         binding!!.features = featuresModel
         binding!!.menudata = menuData
         binding!!.clickdata = ClickHandlers(currentcontext, binding)
         (activity!!.application as MyApplication).mageNativeAppComponent!!.doLeftMeuInjection(this)
         leftmenu = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
-        leftmenu.data.observe(viewLifecycleOwner, Observer<HashMap<String, String>> { this.consumeResponse(it) })
+        leftmenu.data.observe(
+            viewLifecycleOwner,
+            Observer<HashMap<String, String>> { this.consumeResponse(it) })
         return binding!!.root
     }
 
@@ -112,7 +127,10 @@ class LeftMenu : BaseFragment() {
         super.onDestroyView()
     }
 
-    class ClickHandlers(internal var context: Context?, internal var binding: MLeftmenufragmentBinding? = null) {
+    class ClickHandlers(
+        internal var context: Context?,
+        internal var binding: MLeftmenufragmentBinding? = null
+    ) {
         private var open = false
 
         fun getMenu(view: View, menudata: MenuData) {
@@ -123,7 +141,10 @@ class LeftMenu : BaseFragment() {
                         intent.putExtra("handle", menudata.handle)
                     } else {
                         try {
-                            val data = Base64.encode(("gid://shopify/Collection/" + menudata.id!!).toByteArray(), Base64.DEFAULT)
+                            val data = Base64.encode(
+                                ("gid://shopify/Collection/" + menudata.id!!).toByteArray(),
+                                Base64.DEFAULT
+                            )
                             val id = String(data, Charset.defaultCharset()).trim { it <= ' ' }
                             intent.putExtra("ID", id)
                         } catch (e: Exception) {
@@ -141,7 +162,10 @@ class LeftMenu : BaseFragment() {
                         productintent.putExtra("handle", menudata.handle)
                     } else {
                         try {
-                            val data = Base64.encode(("gid://shopify/Product/" + menudata.id!!).toByteArray(), Base64.DEFAULT)
+                            val data = Base64.encode(
+                                ("gid://shopify/Product/" + menudata.id!!).toByteArray(),
+                                Base64.DEFAULT
+                            )
                             val id = String(data, Charset.defaultCharset()).trim { it <= ' ' }
                             productintent.putExtra("ID", id)
                         } catch (e: Exception) {
@@ -233,12 +257,24 @@ class LeftMenu : BaseFragment() {
                     Constant.activityTransition(context!!)
                 }
                 "invitefriends" -> {
-                    val appPackageName = view.context.packageName // getPackageName() from Context or Activity object
+                    val appPackageName =
+                        view.context.packageName // getPackageName() from Context or Activity object
                     val shareIntent = Intent(Intent.ACTION_SEND)
                     shareIntent.type = "text/plain"
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, view.context.resources.getString(R.string.app_name))
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=$appPackageName")
-                    view.context.startActivity(Intent.createChooser(shareIntent, view.context.resources.getString(R.string.shareproduct)))
+                    shareIntent.putExtra(
+                        Intent.EXTRA_SUBJECT,
+                        view.context.resources.getString(R.string.app_name)
+                    )
+                    shareIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        "https://play.google.com/store/apps/details?id=$appPackageName"
+                    )
+                    view.context.startActivity(
+                        Intent.createChooser(
+                            shareIntent,
+                            view.context.resources.getString(R.string.shareproduct)
+                        )
+                    )
                     Constant.activityTransition(view.context)
                 }
                 "autosearch" -> {
@@ -246,11 +282,27 @@ class LeftMenu : BaseFragment() {
                     context!!.startActivity(autosearch)
                     Constant.activityTransition(context!!)
                 }
+                "earnrewards" -> {
+                    if (leftmenu.isLoggedIn) {
+                        val rewards = Intent(context, RewardDashboard::class.java)
+                        context!!.startActivity(rewards)
+                        Constant.activityTransition(context!!)
+                    } else {
+                        val rewards = Intent(context, RewardsPointActivity::class.java)
+                        context!!.startActivity(rewards)
+                        Constant.activityTransition(context!!)
+                    }
+                }
                 "logout" -> {
+                    MagePrefs.clearUserData()
                     binding?.signin?.text = context?.resources?.getString(R.string.SignIn)
                     binding?.signin?.tag = "Sign In"
                     binding?.logout?.visibility = View.GONE
-                    Toast.makeText(context, context!!.resources.getString(R.string.successlogout), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        context!!.resources.getString(R.string.successlogout),
+                        Toast.LENGTH_LONG
+                    ).show()
                     leftmenu.logOut()
                 }
                 "myprofile" -> if (leftmenu.isLoggedIn) {
@@ -258,21 +310,33 @@ class LeftMenu : BaseFragment() {
                     context!!.startActivity(myprofile)
                     Constant.activityTransition(context!!)
                 } else {
-                    Toast.makeText(context, context!!.resources.getString(R.string.logginfirst), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        context!!.resources.getString(R.string.logginfirst),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 "myorders" -> if (leftmenu.isLoggedIn) {
                     val myprofile = Intent(context, OrderList::class.java)
                     context!!.startActivity(myprofile)
                     Constant.activityTransition(context!!)
                 } else {
-                    Toast.makeText(context, context!!.resources.getString(R.string.logginfirst), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        context!!.resources.getString(R.string.logginfirst),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 "myaddress" -> if (leftmenu.isLoggedIn) {
                     val myaddress = Intent(context, AddressList::class.java)
                     context!!.startActivity(myaddress)
                     Constant.activityTransition(context!!)
                 } else {
-                    Toast.makeText(context, context!!.resources.getString(R.string.logginfirst), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        context!!.resources.getString(R.string.logginfirst),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -313,26 +377,42 @@ class LeftMenu : BaseFragment() {
                                         handler.post {
                                             try {
                                                 // Log.i("MageNative","CurrentContext :"+currentcontext)
-                                                val binding: MDynamicmenuBinding = DataBindingUtil.inflate(currentcontext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_dynamicmenu, null, false)
+                                                val binding: MDynamicmenuBinding =
+                                                    DataBindingUtil.inflate(
+                                                        currentcontext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                                                        R.layout.m_dynamicmenu,
+                                                        null,
+                                                        false
+                                                    )
                                                 val menuData = MenuData()
                                                 if (array.getJSONObject(i).has("id")) {
-                                                    menuData.id = array.getJSONObject(i).getString("id")
+                                                    menuData.id =
+                                                        array.getJSONObject(i).getString("id")
                                                 }
                                                 if (array.getJSONObject(i).has("handle")) {
-                                                    menuData.handle = array.getJSONObject(i).getString("handle")
+                                                    menuData.handle =
+                                                        array.getJSONObject(i).getString("handle")
                                                 }
                                                 if (array.getJSONObject(i).has("type")) {
-                                                    menuData.type = array.getJSONObject(i).getString("type")
+                                                    menuData.type =
+                                                        array.getJSONObject(i).getString("type")
                                                 }
-                                                menuData.title = array.getJSONObject(i).getString("title")
+                                                menuData.title =
+                                                    array.getJSONObject(i).getString("title")
                                                 if (array.getJSONObject(i).has("url")) {
-                                                    menuData.url = array.getJSONObject(i).getString("url")
+                                                    menuData.url =
+                                                        array.getJSONObject(i).getString("url")
                                                 }
                                                 binding.menudata = menuData
                                                 binding.clickdata = ClickHandlers(currentcontext)
                                                 if (array.getJSONObject(i).has("menus")) {
-                                                    binding.root.findViewById<View>(R.id.expand_collapse).visibility = View.VISIBLE
-                                                    updateMenu(array.getJSONObject(i).getJSONArray("menus"), binding.root.findViewById(R.id.submenus))
+                                                    binding.root.findViewById<View>(R.id.expand_collapse).visibility =
+                                                        View.VISIBLE
+                                                    updateMenu(
+                                                        array.getJSONObject(i)
+                                                            .getJSONArray("menus"),
+                                                        binding.root.findViewById(R.id.submenus)
+                                                    )
                                                 }
                                                 menulist.addView(binding.root)
                                             } catch (e: Exception) {
@@ -361,7 +441,12 @@ class LeftMenu : BaseFragment() {
                         handler.post {
                             try {
                                 try {
-                                    val binding = DataBindingUtil.inflate<MDynamicmenuBinding>(currentcontext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.m_dynamicmenu, null, false)
+                                    val binding = DataBindingUtil.inflate<MDynamicmenuBinding>(
+                                        currentcontext!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
+                                        R.layout.m_dynamicmenu,
+                                        null,
+                                        false
+                                    )
                                     val menuData = MenuData()
                                     if (array.getJSONObject(i).has("id")) {
                                         menuData.id = array.getJSONObject(i).getString("id")
@@ -379,8 +464,12 @@ class LeftMenu : BaseFragment() {
                                     binding.menudata = menuData
                                     binding.clickdata = ClickHandlers(currentcontext)
                                     if (array.getJSONObject(i).has("menus")) {
-                                        binding.root.findViewById<View>(R.id.expand_collapse).visibility = View.VISIBLE
-                                        updateMenu(array.getJSONObject(i).getJSONArray("menus"), binding.root.findViewById(R.id.submenus))
+                                        binding.root.findViewById<View>(R.id.expand_collapse).visibility =
+                                            View.VISIBLE
+                                        updateMenu(
+                                            array.getJSONObject(i).getJSONArray("menus"),
+                                            binding.root.findViewById(R.id.submenus)
+                                        )
                                     }
                                     menulist.addView(binding.root)
                                 } catch (e: Exception) {

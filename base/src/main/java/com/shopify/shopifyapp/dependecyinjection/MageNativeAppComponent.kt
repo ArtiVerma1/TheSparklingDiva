@@ -23,6 +23,13 @@ import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
+import com.shopify.shopifyapp.yotporewards.earnrewards.EarnRewardsActivity
+import com.shopify.shopifyapp.yotporewards.earnrewards.FaqsActivity
+import com.shopify.shopifyapp.yotporewards.getrewards.GetRewardsActivity
+import com.shopify.shopifyapp.yotporewards.myrewards.MyRewardsActivity
+import com.shopify.shopifyapp.yotporewards.referfriend.ReferFriendActivity
+import com.shopify.shopifyapp.yotporewards.rewarddashboard.RewardDashboard
+import com.shopify.shopifyapp.yotporewards.withoutlogin.RewardsPointActivity
 
 import javax.inject.Singleton
 
@@ -60,4 +67,11 @@ interface MageNativeAppComponent {
     fun quickAddInjection(quickAddActivity: QuickAddActivity)
     fun doServiceInjection(job: JobScheduler)
     fun doURlInjection(urls: Urls)
+    fun doRewarsPointsInjection(rewardsPointActivity: RewardsPointActivity)
+    fun doRewarsDashbordInjection(rewardsDashboard: RewardDashboard)
+    fun doGetRewadsInjection(getRewardsActivity: GetRewardsActivity)
+    fun doEarnRewadsInjection(earnRewardsActivity: EarnRewardsActivity)
+    fun doReferFriendInjection(referFriendActivity: ReferFriendActivity)
+    fun doMyRewardInjection(myRewardsActivity: MyRewardsActivity)
+    fun doFaqsInjection(faqsActivity: FaqsActivity)
 }

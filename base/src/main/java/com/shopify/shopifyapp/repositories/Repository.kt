@@ -328,4 +328,24 @@ class Repository {
         return apiCallInterface.getAliProductReview(shop_id, product_id, currentPage)
     }
 
+    fun getRewards(x_guid: String, x_api_key: String, customer_email: String, customer_id: String): Single<JsonElement> {
+        return apiCallInterface.getrewards(x_guid, x_api_key/*, customer_email, customer_id*/)
+    }
+
+    fun redeemPoints(x_guid: String, x_api_key: String, customer_external_id: String, customer_email: String, redemption_option_id: String): Single<JsonElement> {
+        return apiCallInterface.redeemPoints(x_guid, x_api_key, customer_external_id, customer_email, redemption_option_id)
+    }
+
+    fun earnRewards(x_guid: String, x_api_key: String): Single<JsonElement> {
+        return apiCallInterface.earnRewards(x_guid, x_api_key)
+    }
+
+    fun myrewards(x_guid: String, x_api_key: String, customer_email: String, customer_id: String): Single<JsonElement> {
+        return apiCallInterface.myrewards(x_guid, x_api_key, customer_email, customer_id, true, true)
+    }
+
+    fun referfriend(x_guid: String, x_api_key: String, customer_id: String, emails: String): Single<JsonElement> {
+        return apiCallInterface.referfriend(x_guid, x_api_key, customer_id, emails)
+    }
+
 }

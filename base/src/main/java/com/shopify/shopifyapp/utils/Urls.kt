@@ -40,7 +40,14 @@ class Urls {
         const val ALIREVIEW_BASEURL: String = "https://alireviews.fireapps.io/"
         const val ALIREVIEW_INSTALLSTATUS: String = ALIREVIEW_BASEURL + "api/shops/magenative.myshopify.com"
         const val ALIREVIEW_PRODUCT: String = ALIREVIEW_BASEURL + "comment/get_review"
-
+        const val YOTPOBASE_URL = "https://loyalty.yotpo.com/api/v2/"
+        const val GETREWARDS = YOTPOBASE_URL + "redemption_options"
+        const val REDEEMPOINTS = YOTPOBASE_URL + "redemptions"
+        const val EARNREWARD = YOTPOBASE_URL + "campaigns"
+        const val MYREWARDS = YOTPOBASE_URL + "customers"
+        const val SENDREFERRAL = YOTPOBASE_URL + "referral/share"
+        const val XGUID = "oyeoRDurwhul3WK-zN5ScA"
+        const val X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
     }
 
     val shopdomain: String

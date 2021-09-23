@@ -4,10 +4,15 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.shopify.shopifyapp.utils.Urls.Data.ALIREVIEW_INSTALLSTATUS
 import com.shopify.shopifyapp.utils.Urls.Data.ALIREVIEW_PRODUCT
+import com.shopify.shopifyapp.utils.Urls.Data.EARNREWARD
+import com.shopify.shopifyapp.utils.Urls.Data.GETREWARDS
 import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_GETPRODUCTID
 import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWCOUNT
 import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWCREATE
 import com.shopify.shopifyapp.utils.Urls.Data.JUDGEME_REVIEWINDEX
+import com.shopify.shopifyapp.utils.Urls.Data.MYREWARDS
+import com.shopify.shopifyapp.utils.Urls.Data.REDEEMPOINTS
+import com.shopify.shopifyapp.utils.Urls.Data.SENDREFERRAL
 import com.shopify.shopifyapp.utils.Urls.Data.SIZECHART
 import io.reactivex.Single
 import org.json.JSONObject
@@ -69,4 +74,22 @@ interface ApiCallInterface {
     @GET(ALIREVIEW_PRODUCT)
     fun getAliProductReview(@Query("shop_id") shop_id: String, @Query("product_id") product_id: String, @Query("currentPage") currentPage: Int): Single<JsonElement>
 
+    @GET(GETREWARDS)
+    fun getrewards(@Header("x-guid") xguid: String, @Header("x-api-key") xapikey: String/*, @Query("customer_email") customer_email: String, @Query("customer_id") customer_id: String*/): Single<JsonElement>
+
+    @POST(REDEEMPOINTS)
+    fun redeemPoints(@Header("x-guid") xguid: String, @Header("x-api-key") xapikey: String, @Query("customer_external_id") customer_external_id: String,
+                     @Query("customer_email") customer_email: String, @Query("redemption_option_id") redemption_option_id: String): Single<JsonElement>
+
+    @GET(EARNREWARD)
+    fun earnRewards(@Header("x-guid") xguid: String, @Header("x-api-key") xapikey: String): Single<JsonElement>
+
+    @GET(MYREWARDS)
+    fun myrewards(@Header("x-guid") xguid: String, @Header("x-api-key") xapikey: String, @Query("customer_email") customer_email: String, @Query("customer_id") customer_id: String,
+                  @Query("with_referral_code") with_referral_code: Boolean,
+                  @Query("with_history") with_history: Boolean): Single<JsonElement>
+
+    @POST(SENDREFERRAL)
+    fun referfriend(@Header("x-guid") xguid: String, @Header("x-api-key") xapikey: String, @Query("customer_id") customer_id: String,
+                    @Query("emails") emails: String): Single<JsonElement>
 }

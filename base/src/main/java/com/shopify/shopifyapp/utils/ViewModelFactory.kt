@@ -22,6 +22,11 @@ import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.viewmodels.SearchListModel
 import com.shopify.shopifyapp.userprofilesection.viewmodels.UserProfileViewModel
 import com.shopify.shopifyapp.wishlistsection.viewmodels.WishListViewModel
+import com.shopify.shopifyapp.yotporewards.earnrewards.EarnRewardsViewModel
+import com.shopify.shopifyapp.yotporewards.getrewards.GetRewardsViewModel
+import com.shopify.shopifyapp.yotporewards.myrewards.MyRewardsViewModel
+import com.shopify.shopifyapp.yotporewards.referfriend.ReferFriendViewModel
+import com.shopify.shopifyapp.yotporewards.rewarddashboard.RewardDashbordViewModel
 
 import javax.inject.Inject
 
@@ -81,6 +86,21 @@ constructor(private val repository: Repository) : ViewModelProvider.Factory {
         }
         if (modelClass.isAssignableFrom(PersonalisedViewModel::class.java)) {
             return PersonalisedViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(GetRewardsViewModel::class.java)) {
+            return GetRewardsViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(EarnRewardsViewModel::class.java)) {
+            return EarnRewardsViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(MyRewardsViewModel::class.java)) {
+            return MyRewardsViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(RewardDashbordViewModel::class.java)) {
+            return RewardDashbordViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(ReferFriendViewModel::class.java)) {
+            return ReferFriendViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown class name")
     }

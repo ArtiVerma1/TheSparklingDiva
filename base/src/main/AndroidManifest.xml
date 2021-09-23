@@ -63,6 +63,28 @@
             android:name=".checkoutsection.activities.OrderSuccessActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".yotporewards.earnrewards.FaqsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.myrewards.MyRewardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.referfriend.ReferFriendActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.earnrewards.EarnRewardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.getrewards.GetRewardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.rewarddashboard.RewardDashboard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.withoutlogin.RewardsPointActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".notificationsection.FirebaseInstanceIDService"
             android:exported="true">
@@ -85,8 +107,8 @@
 
         <activity
             android:name=".basesection.activities.Splash"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -99,9 +121,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp" />
+                    android:pathPrefix="/openapp"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -110,9 +132,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp" />
+                    android:pathPrefix="/openapp"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -121,9 +143,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
                     android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp" />
+                    android:pathPrefix="/openapp"
+                    android:scheme="http" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -132,9 +154,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
                     android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp" />
+                    android:pathPrefix="/openapp"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity

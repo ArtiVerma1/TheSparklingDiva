@@ -9,9 +9,26 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="0.17407407407407408" />
+        <entry key="base/src/main/res/drawable/blackborder_selector.xml" value="0.16574074074074074" />
+        <entry key="base/src/main/res/drawable/button_shape.xml" value="0.16574074074074074" />
+        <entry key="base/src/main/res/layout/activity_earn_rewards.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/activity_faqs.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/activity_get_rewards.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/activity_my_rewards.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/activity_refer_friend.xml" value="0.12" />
+        <entry key="base/src/main/res/layout/activity_reward_dashboard.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/activity_rewards_point.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_video_player.xml" value="0.12418906394810009" />
+        <entry key="base/src/main/res/layout/earnreward_item.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/getrewads_item.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/googlepay_button.xml" value="0.20969202898550723" />
+        <entry key="base/src/main/res/layout/m_cartlist.xml" value="0.15" />
         <entry key="base/src/main/res/layout/m_homepage_modified.xml" value="0.1" />
+        <entry key="base/src/main/res/layout/m_leftmenufragment.xml" value="0.25" />
+        <entry key="base/src/main/res/layout/myreward_item.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/redeem_point_item.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/redeemdialog.xml" value="0.196875" />
+        <entry key="base/src/main/res/layout/referfriend_dialog.xml" value="0.196875" />
       </map>
     </option>
   </component>
