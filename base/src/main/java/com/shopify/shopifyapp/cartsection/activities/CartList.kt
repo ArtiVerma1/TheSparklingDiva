@@ -81,14 +81,19 @@ class CartList : NewBaseActivity() {
         model!!.Response().observe(this, Observer<Storefront.Checkout> { this.consumeResponse(it) })
         if (SplashViewModel.featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
-                model!!.getApiResponse().observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-                model!!.getYouMAyAPiResponse().observe(this, Observer<ApiResponse> { this.Response(it) })
+                model!!.getApiResponse()
+                    .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+                model!!.getYouMAyAPiResponse()
+                    .observe(this, Observer<ApiResponse> { this.Response(it) })
             }
         }
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
-        model!!.getGiftCard().observe(this, Observer<Storefront.Mutation> { this.consumeResponseGift(it) })
-        model!!.getGiftCardRemove().observe(this, Observer<Storefront.Mutation> { this.consumeResponseGiftRemove(it) })
-        model!!.getDiscount().observe(this, Observer<Storefront.Mutation> { this.consumeResponseDiscount(it) })
+        model!!.getGiftCard()
+            .observe(this, Observer<Storefront.Mutation> { this.consumeResponseGift(it) })
+        model!!.getGiftCardRemove()
+            .observe(this, Observer<Storefront.Mutation> { this.consumeResponseGiftRemove(it) })
+        model!!.getDiscount()
+            .observe(this, Observer<Storefront.Mutation> { this.consumeResponseDiscount(it) })
 
         binding!!.subtotaltext.textSize = 12f
         binding!!.subtotal.textSize = 12f
@@ -105,14 +110,24 @@ class CartList : NewBaseActivity() {
             val bottomData = CartBottomData()
             bottomData.checkoutId = it!!.checkoutDiscountCodeApplyV2.checkout.id
             Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
-            bottomData.subtotaltext = resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
-            bottomData.subtotal = CurrencyFormatter.setsymbol(it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.amount, it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.currencyCode.toString())
+            bottomData.subtotaltext =
+                resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
+            bottomData.subtotal = CurrencyFormatter.setsymbol(
+                it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.amount,
+                it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.currencyCode.toString()
+            )
             if (it!!.checkoutDiscountCodeApplyV2.checkout.taxExempt!!) {
                 binding!!.taxtext.visibility = View.VISIBLE
                 binding!!.tax.visibility = View.VISIBLE
-                bottomData.tax = CurrencyFormatter.setsymbol(it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.amount, it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.currencyCode.toString())
+                bottomData.tax = CurrencyFormatter.setsymbol(
+                    it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.amount,
+                    it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.currencyCode.toString()
+                )
             }
-            bottomData.grandtotal = CurrencyFormatter.setsymbol(it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.amount, it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.currencyCode.toString())
+            bottomData.grandtotal = CurrencyFormatter.setsymbol(
+                it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.amount,
+                it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.currencyCode.toString()
+            )
             bottomData.checkouturl = it!!.checkoutDiscountCodeApplyV2.checkout.webUrl
             binding!!.bottomdata = bottomData
             binding!!.root.visibility = View.VISIBLE
@@ -120,8 +135,12 @@ class CartList : NewBaseActivity() {
                 if (model!!.isLoggedIn) {
                     Log.i("herer", " " + bottomData.checkoutId)
                     Log.i("herer", "token : " + model?.customeraccessToken?.customerAccessToken)
-                    model?.associatecheckout(bottomData.checkoutId, model!!.customeraccessToken?.customerAccessToken)
-                    model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { ClickHandler().getResonse(it) })
+                    model?.associatecheckout(
+                        bottomData.checkoutId,
+                        model!!.customeraccessToken?.customerAccessToken
+                    )
+                    model?.getassociatecheckoutResponse()
+                        ?.observe(this@CartList, Observer { ClickHandler().getResonse(it) })
                 } else {
                     ClickHandler().showPopUp(bottomData)
                 }
@@ -138,14 +157,24 @@ class CartList : NewBaseActivity() {
         val bottomData = CartBottomData()
         bottomData.checkoutId = it!!.checkoutGiftCardRemoveV2.checkout.id
         Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
-        bottomData.subtotaltext = resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
-        bottomData.subtotal = CurrencyFormatter.setsymbol(it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.amount, it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.currencyCode.toString())
+        bottomData.subtotaltext =
+            resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
+        bottomData.subtotal = CurrencyFormatter.setsymbol(
+            it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.amount,
+            it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.currencyCode.toString()
+        )
         if (it!!.checkoutGiftCardRemoveV2.checkout.taxExempt!!) {
             binding!!.taxtext.visibility = View.VISIBLE
             binding!!.tax.visibility = View.VISIBLE
-            bottomData.tax = CurrencyFormatter.setsymbol(it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.amount, it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.currencyCode.toString())
+            bottomData.tax = CurrencyFormatter.setsymbol(
+                it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.amount,
+                it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.currencyCode.toString()
+            )
         }
-        bottomData.grandtotal = CurrencyFormatter.setsymbol(it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.amount, it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.currencyCode.toString())
+        bottomData.grandtotal = CurrencyFormatter.setsymbol(
+            it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.amount,
+            it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.currencyCode.toString()
+        )
         bottomData.checkouturl = it!!.checkoutGiftCardRemoveV2.checkout.webUrl
         binding!!.bottomdata = bottomData
         binding!!.root.visibility = View.VISIBLE
@@ -158,14 +187,24 @@ class CartList : NewBaseActivity() {
         bottomData.giftcardID = it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].id
         bottomData.checkoutId = it!!.checkoutGiftCardsAppend.checkout.id
         Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
-        bottomData.subtotaltext = resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
-        bottomData.subtotal = CurrencyFormatter.setsymbol((it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(), it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.currencyCode.toString())
+        bottomData.subtotaltext =
+            resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
+        bottomData.subtotal = CurrencyFormatter.setsymbol(
+            (it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
+            it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.currencyCode.toString()
+        )
         if (it!!.checkoutGiftCardsAppend.checkout.taxExempt!!) {
             binding!!.taxtext.visibility = View.VISIBLE
             binding!!.tax.visibility = View.VISIBLE
-            bottomData.tax = CurrencyFormatter.setsymbol(it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.amount, it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.currencyCode.toString())
+            bottomData.tax = CurrencyFormatter.setsymbol(
+                it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.amount,
+                it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.currencyCode.toString()
+            )
         }
-        bottomData.grandtotal = CurrencyFormatter.setsymbol((it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(), it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.currencyCode.toString())
+        bottomData.grandtotal = CurrencyFormatter.setsymbol(
+            (it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
+            it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.currencyCode.toString()
+        )
         bottomData.checkouturl = it!!.checkoutGiftCardsAppend.checkout.webUrl
         binding!!.bottomdata = bottomData
         binding!!.root.visibility = View.VISIBLE
@@ -183,11 +222,15 @@ class CartList : NewBaseActivity() {
                 adapter!!.data = reponse.lineItems.edges
                 adapter!!.notifyDataSetChanged()
             } else {
-                adapter!!.setData(reponse.lineItems.edges, model, this, object : CartListAdapter.StockCallback {
-                    override fun cartWarning(warning: HashMap<String, Boolean>) {
-                        cartWarning = warning
-                    }
-                })
+                adapter!!.setData(
+                    reponse.lineItems.edges,
+                    model,
+                    this,
+                    object : CartListAdapter.StockCallback {
+                        override fun cartWarning(warning: HashMap<String, Boolean>) {
+                            cartWarning = warning
+                        }
+                    })
                 cartlist!!.adapter = adapter
             }
             setBottomData(reponse)
@@ -224,7 +267,12 @@ class CartList : NewBaseActivity() {
             if (jsondata.has("query1")) {
                 binding!!.personalisedsection.visibility = View.VISIBLE
                 setLayout(binding!!.personalised, "horizontal")
-                personamodel!!.setPersonalisedData(jsondata.getJSONObject("query1").getJSONArray("products"), personalisedadapter, model!!.presentCurrency!!, binding!!.personalised)
+                personamodel!!.setPersonalisedData(
+                    jsondata.getJSONObject("query1").getJSONArray("products"),
+                    personalisedadapter,
+                    model!!.presentCurrency!!,
+                    binding!!.personalised
+                )
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -237,7 +285,12 @@ class CartList : NewBaseActivity() {
             if (jsondata.has("query1")) {
                 binding!!.personalisedsection2.visibility = View.VISIBLE
                 setLayout(binding!!.personalised2, "horizontal")
-                personamodel!!.setPersonalisedData(jsondata.getJSONObject("query1").getJSONArray("products"), padapter, model!!.presentCurrency!!, binding!!.personalised2)
+                personamodel!!.setPersonalisedData(
+                    jsondata.getJSONObject("query1").getJSONArray("products"),
+                    padapter,
+                    model!!.presentCurrency!!,
+                    binding!!.personalised2
+                )
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -249,14 +302,24 @@ class CartList : NewBaseActivity() {
             val bottomData = CartBottomData()
             bottomData.checkoutId = checkout.id
             Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
-            bottomData.subtotaltext = resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
-            bottomData.subtotal = CurrencyFormatter.setsymbol(checkout.subtotalPriceV2.amount, checkout.subtotalPriceV2.currencyCode.toString())
+            bottomData.subtotaltext =
+                resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
+            bottomData.subtotal = CurrencyFormatter.setsymbol(
+                checkout.subtotalPriceV2.amount,
+                checkout.subtotalPriceV2.currencyCode.toString()
+            )
             if (checkout.taxExempt!!) {
                 binding!!.taxtext.visibility = View.VISIBLE
                 binding!!.tax.visibility = View.VISIBLE
-                bottomData.tax = CurrencyFormatter.setsymbol(checkout.totalTaxV2.amount, checkout.totalTaxV2.currencyCode.toString())
+                bottomData.tax = CurrencyFormatter.setsymbol(
+                    checkout.totalTaxV2.amount,
+                    checkout.totalTaxV2.currencyCode.toString()
+                )
             }
-            bottomData.grandtotal = CurrencyFormatter.setsymbol(checkout.totalPriceV2.amount, checkout.totalPriceV2.currencyCode.toString())
+            bottomData.grandtotal = CurrencyFormatter.setsymbol(
+                checkout.totalPriceV2.amount,
+                checkout.totalPriceV2.currencyCode.toString()
+            )
             MagePrefs.setGrandTotal(bottomData.grandtotal ?: "")
             grandTotal = checkout.totalPriceV2.amount
             bottomData.checkouturl = checkout.webUrl
@@ -312,12 +375,30 @@ class CartList : NewBaseActivity() {
             }
         }
 
+        fun payWithGpay(view: View, data: CartBottomData) {
+            val idempotencyKey = UUID.randomUUID().toString()
+            val billingAddressInput: Storefront.MailingAddressInput = Storefront.MailingAddressInput()
+            billingAddressInput.address1= "3/446 Gomti Nagar Vishvash Khand Lucknow"
+            billingAddressInput.address2="3/446 Gomti Nagar Vishvash Khand Lucknow"
+            billingAddressInput.city="Lucknow"
+            billingAddressInput.company=""
+            billingAddressInput.country="India"
+            billingAddressInput.firstName="Abhishek"
+            billingAddressInput.lastName="Dubey"
+            billingAddressInput.zip="226010"
+
+            model?.doGooglePay(data.checkoutId,  "100", idempotencyKey,billingAddressInput)
+        }
+
         fun applyGiftCard(view: View, bottomData: CartBottomData) {
             if ((view as MageNativeButton).text == getString(R.string.apply)) {
                 if (TextUtils.isEmpty(binding!!.giftcardEdt.text.toString().trim())) {
                     binding!!.giftcardEdt.error = getString(R.string.giftcard_validation)
                 } else {
-                    model!!.applyGiftCard(binding!!.giftcardEdt.text.toString().trim(), bottomData.checkoutId)
+                    model!!.applyGiftCard(
+                        binding!!.giftcardEdt.text.toString().trim(),
+                        bottomData.checkoutId
+                    )
                 }
             } else if ((view as MageNativeButton).text == getString(R.string.remove)) {
                 model!!.removeGiftCard(bottomData.giftcardID, bottomData.checkoutId)
@@ -332,11 +413,11 @@ class CartList : NewBaseActivity() {
             alertDialog.setCancelText(getString(R.string.no))
             alertDialog.setConfirmClickListener { sweetAlertDialog ->
                 sweetAlertDialog.setTitleText(getString(R.string.deleted))
-                        .setContentText(getString(R.string.cart_deleted_message))
-                        .setConfirmText(getString(R.string.done))
-                        .showCancelButton(false)
-                        .setConfirmClickListener(null)
-                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
+                    .setContentText(getString(R.string.cart_deleted_message))
+                    .setConfirmText(getString(R.string.done))
+                    .showCancelButton(false)
+                    .setConfirmClickListener(null)
+                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
                 model!!.clearCartData()
             }
             alertDialog.show()
@@ -345,8 +426,16 @@ class CartList : NewBaseActivity() {
         private fun showApplyCouponDialog(data: CartBottomData) {
             var listdialog = Dialog(this@CartList, R.style.WideDialog)
             listdialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)
-            listdialog.getWindow()!!.setLayout(Constraints.LayoutParams.MATCH_PARENT, Constraints.LayoutParams.MATCH_PARENT)
-            var discountCodeLayoutBinding = DataBindingUtil.inflate<DiscountCodeLayoutBinding>(layoutInflater, R.layout.discount_code_layout, null, false)
+            listdialog.getWindow()!!.setLayout(
+                Constraints.LayoutParams.MATCH_PARENT,
+                Constraints.LayoutParams.MATCH_PARENT
+            )
+            var discountCodeLayoutBinding = DataBindingUtil.inflate<DiscountCodeLayoutBinding>(
+                layoutInflater,
+                R.layout.discount_code_layout,
+                null,
+                false
+            )
             listdialog.setContentView(discountCodeLayoutBinding.root)
             discountCodeLayoutBinding.noBut.setOnClickListener {
                 try {
@@ -354,8 +443,12 @@ class CartList : NewBaseActivity() {
                     if (model!!.isLoggedIn) {
                         Log.i("herer", " " + data.checkoutId)
                         Log.i("herer", "token : " + model?.customeraccessToken?.customerAccessToken)
-                        model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
-                        model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })
+                        model?.associatecheckout(
+                            data.checkoutId,
+                            model!!.customeraccessToken?.customerAccessToken
+                        )
+                        model?.getassociatecheckoutResponse()
+                            ?.observe(this@CartList, Observer { this.getResonse(it) })
                     } else {
                         val intent = Intent(this@CartList, CheckoutWeblink::class.java)
                         intent.putExtra("link", data?.checkouturl)
@@ -368,10 +461,17 @@ class CartList : NewBaseActivity() {
                 }
             }
             discountCodeLayoutBinding.yesBut.setOnClickListener {
-                if (TextUtils.isEmpty(discountCodeLayoutBinding.discountCodeEdt.text.toString().trim())) {
-                    discountCodeLayoutBinding.discountCodeEdt.error = getString(R.string.discount_validation)
+                if (TextUtils.isEmpty(
+                        discountCodeLayoutBinding.discountCodeEdt.text.toString().trim()
+                    )
+                ) {
+                    discountCodeLayoutBinding.discountCodeEdt.error =
+                        getString(R.string.discount_validation)
                 } else {
-                    model!!.applyDiscount(data.checkoutId, discountCodeLayoutBinding.discountCodeEdt.text.toString())
+                    model!!.applyDiscount(
+                        data.checkoutId,
+                        discountCodeLayoutBinding.discountCodeEdt.text.toString()
+                    )
                     listdialog.dismiss()
                 }
             }
@@ -392,15 +492,19 @@ class CartList : NewBaseActivity() {
         fun showPopUp(data: CartBottomData) {
             try {
                 val listDialog = Dialog(this@CartList, R.style.PauseDialog)
-                ((Objects.requireNonNull<Window>(listDialog.window).getDecorView() as ViewGroup).getChildAt(0) as ViewGroup)
-                        .getChildAt(1)
-                        .setBackgroundColor(this@CartList.resources.getColor(R.color.black))
+                ((Objects.requireNonNull<Window>(listDialog.window)
+                    .getDecorView() as ViewGroup).getChildAt(0) as ViewGroup)
+                    .getChildAt(1)
+                    .setBackgroundColor(this@CartList.resources.getColor(R.color.black))
                 listDialog.setTitle(Html.fromHtml("<font color='#ffffff'>" + resources.getString(R.string.logintype) + "</font>"))
-                val li = this@CartList.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                @SuppressLint("InflateParams") val loginoptions = Objects.requireNonNull(li).inflate(R.layout.m_login_options, null, false)
+                val li =
+                    this@CartList.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                @SuppressLint("InflateParams") val loginoptions =
+                    Objects.requireNonNull(li).inflate(R.layout.m_login_options, null, false)
                 val Guest = loginoptions.findViewById<RadioButton>(R.id.Guest)
                 val User = loginoptions.findViewById<RadioButton>(R.id.User)
-                val id = Resources.getSystem().getIdentifier("btn_check_holo_light", "drawable", "android")
+                val id = Resources.getSystem()
+                    .getIdentifier("btn_check_holo_light", "drawable", "android")
                 Guest.setButtonDrawable(id)
                 User.setButtonDrawable(id)
                 Guest.setOnCheckedChangeListener { buttonView, isChecked ->

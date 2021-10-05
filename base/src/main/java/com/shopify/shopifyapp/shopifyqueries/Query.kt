@@ -9,7 +9,7 @@ import com.shopify.graphql.support.ID
 
 object Query {
     private val TAG = "Query"
-    val shopDetails: Storefront.QueryRootQuery
+    val shopDetails: QueryRootQuery
         get() = Storefront.query { q ->
             q
                 .shop { shop ->
@@ -157,7 +157,7 @@ object Query {
     fun recommendedProducts(
         product_id: String,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         return Storefront.query { root ->
             root.productRecommendations(ID(product_id), productQuery(list_currency))
         }
@@ -271,7 +271,7 @@ object Query {
         direction: Boolean,
         number: Int,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
             definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
@@ -310,7 +310,7 @@ object Query {
     fun getAllProductsByID(
         id: List<ID>,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         return Storefront.query { root: QueryRootQuery ->
             root
                 .nodes(
@@ -444,7 +444,7 @@ object Query {
         direction: Boolean,
         number: Int,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
             definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
@@ -471,27 +471,27 @@ object Query {
         direction: Boolean,
         number: Int,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
-        val shoppro: Storefront.QueryRootQuery.ProductsArgumentsDefinition
+    ): QueryRootQuery {
+        val shoppro: QueryRootQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
-            shoppro = Storefront.QueryRootQuery.ProductsArgumentsDefinition { args ->
+            shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
                 args.first(number).sortKey(sortby_key).reverse(direction)
             }
         } else {
-            shoppro = Storefront.QueryRootQuery.ProductsArgumentsDefinition { args ->
+            shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
                 args.first(number).after(cursor).sortKey(sortby_key).reverse(direction)
             }
         }
         return Storefront.query { root -> root.products(shoppro, productDefinition(list_currency)) }
     }
 
-    fun getCollections(cursor: String): Storefront.QueryRootQuery {
-        val definition: Storefront.QueryRootQuery.CollectionsArgumentsDefinition
+    fun getCollections(cursor: String): QueryRootQuery {
+        val definition: QueryRootQuery.CollectionsArgumentsDefinition
         if (cursor == "nocursor") {
             definition =
-                Storefront.QueryRootQuery.CollectionsArgumentsDefinition { args -> args.first(250) }
+                QueryRootQuery.CollectionsArgumentsDefinition { args -> args.first(250) }
         } else {
-            definition = Storefront.QueryRootQuery.CollectionsArgumentsDefinition { args ->
+            definition = QueryRootQuery.CollectionsArgumentsDefinition { args ->
                 args.first(250).after(cursor)
             }
         }
@@ -516,7 +516,7 @@ object Query {
     fun getProductById(
         product_id: String,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         return Storefront.query { root ->
             root.node(ID(product_id)) { rootnode ->
                 rootnode.onProduct(
@@ -529,7 +529,7 @@ object Query {
     fun getProductByHandle(
         handle: String,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         return Storefront.query { root ->
             root.productByHandle(
                 handle,
@@ -542,13 +542,13 @@ object Query {
         keyword: String,
         cursor: String,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         Log.d(TAG, "getSearchProducts: " + keyword)
         return Storefront.query { root ->
             root
                 .products(
                     //   Storefront.QueryRootQuery.ProductsArgumentsDefinition { args -> args.query(keyword).first(30).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false) }, productDefinition)
-                    Storefront.QueryRootQuery.ProductsArgumentsDefinition { args ->
+                    QueryRootQuery.ProductsArgumentsDefinition { args ->
                         product_list(
                             args,
                             cursor
@@ -560,10 +560,10 @@ object Query {
     }
 
     private fun product_list(
-        args: Storefront.QueryRootQuery.ProductsArguments?,
+        args: QueryRootQuery.ProductsArguments?,
         cursor: String
-    ): Storefront.QueryRootQuery.ProductsArguments {
-        var defination: Storefront.QueryRootQuery.ProductsArguments? = null
+    ): QueryRootQuery.ProductsArguments {
+        var defination: QueryRootQuery.ProductsArguments? = null
         if (cursor == "nocursor") {
             defination = args!!.first(15)
         } else {
@@ -572,7 +572,7 @@ object Query {
         return defination
     }
 
-    fun getCustomerDetails(customeraccestoken: String): Storefront.QueryRootQuery {
+    fun getCustomerDetails(customeraccestoken: String): QueryRootQuery {
         return Storefront.query { root ->
             root
                 .customer(
@@ -587,7 +587,7 @@ object Query {
         }
     }
 
-    fun getOrderList(accesstoken: String?, cursor: String): Storefront.QueryRootQuery {
+    fun getOrderList(accesstoken: String?, cursor: String): QueryRootQuery {
 
         return Storefront.query { root ->
             root
@@ -697,7 +697,7 @@ object Query {
         return definition
     }
 
-    fun getAddressList(accesstoken: String?, cursor: String): Storefront.QueryRootQuery {
+    fun getAddressList(accesstoken: String?, cursor: String): QueryRootQuery {
         return Storefront.query { root ->
             root
                 .customer(accesstoken) { customer ->
@@ -738,16 +738,41 @@ object Query {
     fun getProductByBarcode(
         barcode: String,
         list_currency: List<Storefront.CurrencyCode>
-    ): Storefront.QueryRootQuery {
+    ): QueryRootQuery {
         return Storefront.query { root ->
             root
                 .products(
-                    Storefront.QueryRootQuery.ProductsArgumentsDefinition { args ->
+                    QueryRootQuery.ProductsArgumentsDefinition { args ->
                         args.query(
                             barcode
                         ).first(1).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false)
                     }, productDefinition(list_currency)
                 )
+        }
+    }
+
+    fun pollCheckoutCompletion(paymentId: ID): QueryRootQuery {
+        return query { rootQuery: QueryRootQuery ->
+            rootQuery
+                .node(
+                    paymentId
+                ) { nodeQuery: NodeQuery ->
+                    nodeQuery
+                        .onPayment { paymentQuery: PaymentQuery ->
+                            paymentQuery
+                                .checkout { checkoutQuery: CheckoutQuery ->
+                                    checkoutQuery
+                                        .order { orderQuery: OrderQuery ->
+                                            orderQuery
+                                                .processedAt()
+                                                .orderNumber()
+                                                .totalPrice()
+                                        }
+                                }
+                                .errorMessage()
+                                .ready()
+                        }
+                }
         }
     }
 

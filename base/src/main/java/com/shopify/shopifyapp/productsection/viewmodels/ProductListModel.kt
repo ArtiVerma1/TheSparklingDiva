@@ -51,7 +51,8 @@ class ProductListModel(var repository: Repository) : ViewModel() {
 
             return currency[0]
         }
-    var collectionData: MutableLiveData<Storefront.Collection> = MutableLiveData<Storefront.Collection>()
+    var collectionData: MutableLiveData<Storefront.Collection> =
+        MutableLiveData<Storefront.Collection>()
     private var categoryHandle = ""
     var cursor = "nocursor"
         set(cursor) {
@@ -59,7 +60,8 @@ class ProductListModel(var repository: Repository) : ViewModel() {
             Response()
         }
     var isDirection = false
-    var sortKeys: Storefront.ProductCollectionSortKeys = Storefront.ProductCollectionSortKeys.BEST_SELLING
+    var sortKeys: Storefront.ProductCollectionSortKeys =
+        Storefront.ProductCollectionSortKeys.BEST_SELLING
     var keys: Storefront.ProductSortKeys = Storefront.ProductSortKeys.BEST_SELLING
     var number = 10
     private val disposables = CompositeDisposable()
@@ -121,11 +123,16 @@ class ProductListModel(var repository: Repository) : ViewModel() {
             currency_list.add(Storefront.CurrencyCode.valueOf(presentmentCurrency!!))
         }
         try {
-            doGraphQLQueryGraph(repository, Query.getAllProducts(cursor, keys, isDirection, number, currency_list), customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                    invoke(result)
-                }
-            }, context = context)
+            doGraphQLQueryGraph(
+                repository,
+                Query.getAllProducts(cursor, keys, isDirection, number, currency_list),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        invoke(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -139,11 +146,23 @@ class ProductListModel(var repository: Repository) : ViewModel() {
         }
 
         try {
-            doGraphQLQueryGraph(repository, Query.getProductsById(getcategoryID(), cursor, sortKeys, isDirection, number, currency_list), customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                    invoke(result)
-                }
-            }, context = context)
+            doGraphQLQueryGraph(
+                repository,
+                Query.getProductsById(
+                    getcategoryID(),
+                    cursor,
+                    sortKeys,
+                    isDirection,
+                    number,
+                    currency_list
+                ),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        invoke(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -156,17 +175,27 @@ class ProductListModel(var repository: Repository) : ViewModel() {
             currency_list.add(Storefront.CurrencyCode.valueOf(presentmentCurrency!!))
         }
         try {
-            doGraphQLQueryGraph(repository, Query.getProductsByHandle(getcategoryHandle(), cursor, sortKeys, isDirection, number, currency_list), customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                    invoke(result)
-                }
-            }, context = context)
+            doGraphQLQueryGraph(
+                repository,
+                Query.getProductsByHandle(
+                    getcategoryHandle(),
+                    cursor,
+                    sortKeys,
+                    isDirection,
+                    number,
+                    currency_list
+                ),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        invoke(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
-
 
     private operator fun invoke(result: GraphCallResult<Storefront.QueryRoot>): Unit {
         if (result is GraphCallResult.Success<*>) {
@@ -180,7 +209,8 @@ class ProductListModel(var repository: Repository) : ViewModel() {
     private fun consumeResponse(reponse: GraphQLResponse) {
         when (reponse.status) {
             Status.SUCCESS -> {
-                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                val result =
+                    (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -218,17 +248,17 @@ class ProductListModel(var repository: Repository) : ViewModel() {
         try {
             if (featuresModel.outOfStock!!) {
                 disposables.add(repository.getProductList(list!!)
-                        .subscribeOn(Schedulers.io())
-                        .toList()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { result -> filteredproducts.setValue(result) })
+                    .subscribeOn(Schedulers.io())
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result -> filteredproducts.setValue(result) })
             } else {
                 disposables.add(repository.getProductList(list!!)
-                        .subscribeOn(Schedulers.io())
-                        .filter { x -> x.node.availableForSale }
-                        .toList()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { result -> filteredproducts.setValue(result) })
+                    .subscribeOn(Schedulers.io())
+                    .filter { x -> x.node.availableForSale }
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result -> filteredproducts.setValue(result) })
             }
 
         } catch (e: Exception) {

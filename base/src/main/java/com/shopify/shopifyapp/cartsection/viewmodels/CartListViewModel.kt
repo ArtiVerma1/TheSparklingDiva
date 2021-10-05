@@ -16,9 +16,11 @@ import com.shopify.shopifyapp.dependecyinjection.Body
 import com.shopify.shopifyapp.dependecyinjection.InnerData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLMutateGraph
+import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Mutation
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
+import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
@@ -29,8 +31,14 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
+import org.json.JSONObject
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
+import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
+import com.shopify.buy3.Storefront.Payment
+import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
+import com.shopify.buy3.Storefront.Checkout
+
 
 class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val data = MutableLiveData<Storefront.Checkout>()
@@ -80,7 +88,10 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                 val dataList = repository.allCartItems
                 val size = dataList.size
                 for (i in 0 until size) {
-                    itemInput = Storefront.CheckoutLineItemInput(dataList[i].qty, ID(dataList[i].variant_id))
+                    itemInput = Storefront.CheckoutLineItemInput(
+                        dataList[i].qty,
+                        ID(dataList[i].variant_id)
+                    )
                     checkoutLineItemInputs.add(itemInput)
                 }
             } catch (e: Exception) {
@@ -106,7 +117,6 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
             return currency[0]
         }
     val wishListcount: Int
@@ -126,7 +136,6 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
             return count[0]
         }
     val isLoggedIn: Boolean
@@ -168,11 +177,16 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
 
     fun associatecheckout(checkoutId: ID?, customerAccessToken: String?) {
         try {
-            doGraphQLMutateGraph(repository, MutationQuery.checkoutCustomerAssociateV2(checkoutId, customerAccessToken), customResponse = object : CustomResponse {
-                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                    invoke(result)
-                }
-            }, context = context)
+            doGraphQLMutateGraph(
+                repository,
+                MutationQuery.checkoutCustomerAssociateV2(checkoutId, customerAccessToken),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                        invoke(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -190,7 +204,8 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private fun consumeResponseassociate(response: GraphQLResponse) {
         when (response.status) {
             Status.SUCCESS -> {
-                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                val result =
+                    (response.data as GraphCallResult.Success<Storefront.Mutation>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -212,7 +227,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                          }
                          *//*errormessage.setValue(err)*//*
                     } else {*/
-                    responsedata.setValue(result.data!!.getCheckoutCustomerAssociateV2().getCheckout())
+                    responsedata.setValue(
+                        result.data!!.getCheckoutCustomerAssociateV2().getCheckout()
+                    )
                     /*}*/
                 }
             }
@@ -236,11 +253,16 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                             currency_list.add(Storefront.CurrencyCode.valueOf(presentCurrency))
                         }
 
-                        doGraphQLMutateGraph(repository, Mutation.createCheckout(input, currency_list), customResponse = object : CustomResponse {
-                            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                                invoke(result)
-                            }
-                        }, context = context)
+                        doGraphQLMutateGraph(
+                            repository,
+                            Mutation.createCheckout(input, currency_list),
+                            customResponse = object : CustomResponse {
+                                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                                    invoke(result)
+                                }
+                            },
+                            context = context
+                        )
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -314,7 +336,8 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         try {
             when (response.status) {
                 Status.SUCCESS -> {
-                    val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                    val result =
+                        (response.data as GraphCallResult.Success<Storefront.Mutation>).response
                     if (result.hasErrors) {
                         val errors = result.errors
                         val iterator = errors.iterator()
@@ -360,7 +383,12 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             query.recommendationType = "cross_sell"
             var list = mutableListOf<Long>()
             for (i in 0..checkout.lineItems.edges.size - 1) {
-                var s = String(Base64.decode(checkout.lineItems.edges.get(i).node.variant.product.id.toString(), Base64.DEFAULT))
+                var s = String(
+                    Base64.decode(
+                        checkout.lineItems.edges.get(i).node.variant.product.id.toString(),
+                        Base64.DEFAULT
+                    )
+                )
                 list.add(s.replace("gid://shopify/Product/", "").toLong())
             }
             query.productIds = list
@@ -368,11 +396,11 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             body.queries = mutableListOf(query)
             Log.i("Body", "" + list)
             disposables.add(repository.getRecommendation(body)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result -> youmayapi.setValue(ApiResponse.success(result)) },
-                            { throwable -> youmayapi.setValue(ApiResponse.error(throwable)) }
-                    ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result -> youmayapi.setValue(ApiResponse.success(result)) },
+                    { throwable -> youmayapi.setValue(ApiResponse.error(throwable)) }
+                ))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -387,7 +415,12 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             query.recommendationType = "bought_together"
             var list = mutableListOf<Long>()
             for (i in 0..checkout.lineItems.edges.size - 1) {
-                var s = String(Base64.decode(checkout.lineItems.edges.get(i).node.variant.product.id.toString(), Base64.DEFAULT))
+                var s = String(
+                    Base64.decode(
+                        checkout.lineItems.edges.get(i).node.variant.product.id.toString(),
+                        Base64.DEFAULT
+                    )
+                )
                 list.add(s.replace("gid://shopify/Product/", "").toLong())
             }
             query.productIds = list
@@ -395,11 +428,11 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             body.queries = mutableListOf(query)
             Log.i("Body", "" + list)
             disposables.add(repository.getRecommendation(body)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result -> api.setValue(ApiResponse.success(result)) },
-                            { throwable -> api.setValue(ApiResponse.error(throwable)) }
-                    ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result -> api.setValue(ApiResponse.success(result)) },
+                    { throwable -> api.setValue(ApiResponse.error(throwable)) }
+                ))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -424,23 +457,46 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     fun applyGiftCard(gift_card: String, checkoutId: ID?) {
         var list = ArrayList<String>()
         list.add(gift_card)
-        doGraphQLMutateGraph(repository, MutationQuery.checkoutGiftCardsAppend(checkoutId, list), customResponse = object : CustomResponse {
-            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                invokeGift(result)
-            }
-        }, context = context)
+        doGraphQLMutateGraph(
+            repository,
+            MutationQuery.checkoutGiftCardsAppend(checkoutId, list),
+            customResponse = object : CustomResponse {
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invokeGift(result)
+                }
+            },
+            context = context
+        )
 
     }
 
-    fun doGooglePay(checkoutId: ID?, totalPrice: String, idempotencyKey: String, billingAddressInput: Storefront.MailingAddressInput) {
-        val input = Storefront.TokenizedPaymentInputV3(Storefront.MoneyInput(totalPrice, presentCurrency as Storefront.CurrencyCode), idempotencyKey,
-                billingAddressInput, "google_pay", Storefront.PaymentTokenType.GOOGLE_PAY)
+    fun doGooglePay(
+        checkoutId: ID?,
+        totalPrice: String,
+        idempotencyKey: String,
+        billingAddressInput: Storefront.MailingAddressInput
+    ) {
+        var paymentData = JSONObject()
+        paymentData.put("type", "google_pay")
 
-        doGraphQLMutateGraph(repository, Mutation.checkoutWithGpay(checkoutId!!, input), customResponse = object : CustomResponse {
-            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                invokeGooglePay(result)
-            }
-        }, context = context)
+        val input = Storefront.TokenizedPaymentInputV3(
+            Storefront.MoneyInput(totalPrice, Storefront.CurrencyCode.valueOf(presentCurrency)),
+            idempotencyKey,
+            billingAddressInput,
+            paymentData.toString(),
+            Storefront.PaymentTokenType.GOOGLE_PAY
+        )
+        //input.test = true
+        doGraphQLMutateGraph(
+            repository,
+            Mutation.checkoutWithGpay(checkoutId!!, input),
+            customResponse = object : CustomResponse {
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invokeGooglePay(result)
+                }
+            },
+            context = context
+        )
     }
 
     private fun invokeGooglePay(result: GraphCallResult<Storefront.Mutation>) {
@@ -456,7 +512,8 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         try {
             when (response.status) {
                 Status.SUCCESS -> {
-                    val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                    val result =
+                        (response.data as GraphCallResult.Success<Storefront.Mutation>).response
                     if (result.hasErrors) {
                         val errors = result.errors
                         val iterator = errors.iterator()
@@ -469,19 +526,15 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
                         message.setValue(errormessage.toString())
                     } else {
                         val payload = result.data!!.checkoutCompleteWithTokenizedPaymentV3
-                        if (payload.checkoutUserErrors.size > 0) {
-                            val iterator = payload.checkoutUserErrors.iterator()
-                            var error: Storefront.CheckoutUserError? = null
-                            while (iterator.hasNext()) {
-                                error = iterator.next() as Storefront.CheckoutUserError
-                                message.setValue(error.message)
-                            }
-                        } else {
-                            val checkout = payload.checkout
-                            getRecommendations(checkout)
-                            getYouMayRecommendations(checkout)
-                            data.setValue(checkout)
-                        }
+                        doGraphQLQueryGraph(
+                            repository,
+                            Query.pollCheckoutCompletion(payload.checkout.id),
+                            customResponse = object :CustomResponse{
+                                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                                   invokePollCompletion(result)
+                                }
+                            },context = context
+                        )
                     }
                 }
                 Status.ERROR -> message.setValue(response.error!!.error.message)
@@ -490,6 +543,45 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun invokePollCompletion(result: GraphCallResult<Storefront.QueryRoot>) {
+        if (result is GraphCallResult.Success<*>) {
+            consumeResponsePollCompletion(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+        } else {
+            consumeResponsePollCompletion(GraphQLResponse.error(result as GraphCallResult.Failure))
+        }
+    }
+
+    private fun consumeResponsePollCompletion(reponse: GraphQLResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    message.setValue(errormessage.toString())
+                } else {
+                    val payment = result.data?.node as Storefront.Checkout
+                    Log.d(TAG, "consumeResponsePollCompletion: "+payment.paymentDueV2.amount)
+//                    if (payment.errorMessage == null || payment.errorMessage.isEmpty()) {
+//                        val checkout = payment.checkout
+//                        val orderId = checkout.order.id.toString()
+//                    } else {
+//                        val errorMessage = payment.errorMessage
+//                    }
+                }
+            }
+            Status.ERROR -> message.setValue(reponse.error!!.error.message)
+            else -> {
+            }
         }
     }
 
@@ -506,7 +598,8 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private fun consumeResponseGift(response: GraphQLResponse) {
         when (response.status) {
             Status.SUCCESS -> {
-                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                val result =
+                    (response.data as GraphCallResult.Success<Storefront.Mutation>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -538,11 +631,16 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun removeGiftCard(giftcardID: ID?, checkoutId: ID?) {
-        doGraphQLMutateGraph(repository, MutationQuery.checkoutGiftCardsRemove(giftcardID, checkoutId), customResponse = object : CustomResponse {
-            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                invokeGiftRemove(result)
-            }
-        }, context = context)
+        doGraphQLMutateGraph(
+            repository,
+            MutationQuery.checkoutGiftCardsRemove(giftcardID, checkoutId),
+            customResponse = object : CustomResponse {
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invokeGiftRemove(result)
+                }
+            },
+            context = context
+        )
 
     }
 
@@ -557,7 +655,8 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private fun consumeResponseGiftRemove(response: GraphQLResponse) {
         when (response.status) {
             Status.SUCCESS -> {
-                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                val result =
+                    (response.data as GraphCallResult.Success<Storefront.Mutation>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -589,11 +688,16 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun applyDiscount(checkoutId: ID?, discount_code: String) {
-        doGraphQLMutateGraph(repository, MutationQuery.checkoutDiscountCodeApply(checkoutId, discount_code), customResponse = object : CustomResponse {
-            override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                invokeDiscount(result)
-            }
-        }, context = context)
+        doGraphQLMutateGraph(
+            repository,
+            MutationQuery.checkoutDiscountCodeApply(checkoutId, discount_code),
+            customResponse = object : CustomResponse {
+                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                    invokeDiscount(result)
+                }
+            },
+            context = context
+        )
     }
 
     private fun invokeDiscount(result: GraphCallResult<Storefront.Mutation>) {
@@ -607,7 +711,8 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private fun consumeResponseDiscount(response: GraphQLResponse) {
         when (response.status) {
             Status.SUCCESS -> {
-                val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                val result =
+                    (response.data as GraphCallResult.Success<Storefront.Mutation>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
