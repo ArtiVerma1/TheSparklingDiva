@@ -16,6 +16,7 @@
         <entry key="base/src/main/res/layout/activity_faqs.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_get_rewards.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_my_rewards.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/activity_order_success.xml" value="0.1" />
         <entry key="base/src/main/res/layout/activity_refer_friend.xml" value="0.12" />
         <entry key="base/src/main/res/layout/activity_reward_dashboard.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_rewards_point.xml" value="0.17135416666666667" />
