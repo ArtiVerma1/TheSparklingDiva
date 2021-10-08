@@ -72,7 +72,7 @@ object Mutation {
 
     fun checkoutWithGpay(checkoutID: ID, input: Storefront.TokenizedPaymentInputV3): Storefront.MutationQuery {
         return Storefront.mutation { it ->
-            it.checkoutCompleteWithTokenizedPaymentV3(ID(""), input) { _queryBuilder ->
+            it.checkoutCompleteWithTokenizedPaymentV3(checkoutID, input) { _queryBuilder ->
                 _queryBuilder.payment { paymentquery ->
                     paymentquery.ready().errorMessage()
                 }

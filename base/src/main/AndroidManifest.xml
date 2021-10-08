@@ -27,8 +27,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".productsection.activities.AllAliReviewsListActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".productsection.activities.AllAliReviewsListActivity"
+            android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -62,13 +63,38 @@
             android:name=".checkoutsection.activities.OrderSuccessActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name=".notificationsection.FirebaseInstanceIDService"
+        <activity
+            android:name=".yotporewards.earnrewards.FaqsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.myrewards.MyRewardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.referfriend.ReferFriendActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.earnrewards.EarnRewardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.getrewards.GetRewardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.rewarddashboard.RewardDashboard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".yotporewards.withoutlogin.RewardsPointActivity"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".notificationsection.FirebaseInstanceIDService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".notificationsection.FirebaseMessagingService" android:exported="true">
+        <service
+            android:name=".notificationsection.FirebaseMessagingService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -81,16 +107,14 @@
 
         <activity
             android:name=".basesection.activities.Splash"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter
-                android:autoVerify="true"
-                tools:targetApi="m">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -100,6 +124,35 @@
                     android:host="magenative.myshopify.com"
                     android:pathPrefix="/openapp"
                     android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="magenative.myshopify.com"
+                    android:pathPrefix="/openapp"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="magenative.myshopify.com"
                     android:pathPrefix="/openapp"

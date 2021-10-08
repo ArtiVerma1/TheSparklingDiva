@@ -44,7 +44,9 @@ class CheckoutWeblink : NewBaseActivity() {
         super.onCreate(savedInstanceState)
         val content = findViewById<ViewGroup>(R.id.container)
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_webpage, content, true)
-        (application as MyApplication).mageNativeAppComponent!!.doCheckoutWeblinkActivityInjection(this)
+        (application as MyApplication).mageNativeAppComponent!!.doCheckoutWeblinkActivityInjection(
+            this
+        )
         model = ViewModelProviders.of(this, factory).get(CheckoutWebLinkViewModel::class.java)
         model!!.context = this
         showTittle(resources.getString(R.string.checkout))
@@ -53,6 +55,7 @@ class CheckoutWeblink : NewBaseActivity() {
         customLoader?.show()
         webView = binding!!.webview
         currentUrl = intent.getStringExtra("link")
+        Log.d(TAG, "onCreate: " + currentUrl)
         id = intent.getStringExtra("id")
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.loadWithOverviewMode = true
@@ -85,7 +88,10 @@ class CheckoutWeblink : NewBaseActivity() {
                 webView.postUrl(checkouturl,postData.getBytes());*/
 
                 val map = HashMap<String, String?>()
-                map.put("X-Shopify-Customer-Access-Token", model?.customeraccessToken?.customerAccessToken)
+                map.put(
+                    "X-Shopify-Customer-Access-Token",
+                    model?.customeraccessToken?.customerAccessToken
+                )
                 /* val checkouturl = "https://" + resources.getString(R.string.shopdomain) + "/account/login"
                  postData = ("checkout_url=" + URLEncoder.encode(currentUrl!!.replace("https://" + resources.getString(R.string.shopdomain), ""), "UTF-8") +
                          "&form_type=" + URLEncoder.encode("customer_login", "UTF-8")
@@ -120,7 +126,12 @@ class CheckoutWeblink : NewBaseActivity() {
             WebView.setWebContentsDebuggingEnabled(true)
         }
         webView.webViewClient = object : WebViewClient() {
-            override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
+            override fun onReceivedError(
+                view: WebView,
+                errorCode: Int,
+                description: String,
+                failingUrl: String
+            ) {
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 Log.i("URL", "" + description)
                 customLoader?.dismiss()
@@ -134,7 +145,12 @@ class CheckoutWeblink : NewBaseActivity() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         Handler().postDelayed({
                             if (count == 1) {
-                                startActivity(Intent(this@CheckoutWeblink, OrderSuccessActivity::class.java))
+                                startActivity(
+                                    Intent(
+                                        this@CheckoutWeblink,
+                                        OrderSuccessActivity::class.java
+                                    )
+                                )
                                 finishAffinity()
                                 Constant.activityTransition(this@CheckoutWeblink)
                             }
@@ -154,7 +170,12 @@ class CheckoutWeblink : NewBaseActivity() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         Handler().postDelayed({
                             if (count == 1) {
-                                startActivity(Intent(this@CheckoutWeblink, OrderSuccessActivity::class.java))
+                                startActivity(
+                                    Intent(
+                                        this@CheckoutWeblink,
+                                        OrderSuccessActivity::class.java
+                                    )
+                                )
                                 finishAffinity()
                                 Constant.activityTransition(this@CheckoutWeblink)
                             }
@@ -162,18 +183,45 @@ class CheckoutWeblink : NewBaseActivity() {
                         }, 3000, 3000)
                     }
                 }
-                val javascript = "javascript: document.getElementsByClassName('section__header')[0].style.display = 'none' "
-                val javascript1 = "javascript: document.getElementsByClassName('logged-in-customer-information')[0].style.display = 'none' "
+                val javascript =
+                    "javascript: document.getElementsByClassName('section__header')[0].style.display = 'none' "
+                val javascript1 =
+                    "javascript: document.getElementsByClassName('logged-in-customer-information')[0].style.display = 'none' "
+//                 val javascript2 = "var length = document.querySelectorAll(\".reduction-code__text\").length;\n" +
+//                         "for(var i=0; i<length; i++){\n" +
+//                         "    (document.querySelectorAll(\".reduction-code__text\")[i]).innerHTML = \"ABCD\";\n" +
+//                         "}"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    webView.evaluateJavascript(javascript) { value -> Log.i("pageVALUE1", "" + value) }
-                    webView.evaluateJavascript(javascript1) { value -> Log.i("pageVALUE1", "" + value) }
+                    webView.evaluateJavascript(javascript) { value ->
+                        Log.i(
+                            "pageVALUE1",
+                            "" + value
+                        )
+                    }
+                    webView.evaluateJavascript(javascript1) { value ->
+                        Log.i(
+                            "pageVALUE1",
+                            "" + value
+                        )
+                    }
+//                    webView.evaluateJavascript(javascript2) { value ->
+//                        Log.i(
+//                            "pageVALUE1",
+//                            "" + value
+//                        )
+//                    }
                 } else {
                     webView.loadUrl(javascript)
                     webView.loadUrl(javascript1)
+                    //   webView.loadUrl(javascript2)
                 }
             }
 
-            override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
+            override fun onReceivedSslError(
+                view: WebView,
+                handler: SslErrorHandler,
+                error: SslError
+            ) {
                 super.onReceivedSslError(view, handler, error)
                 Log.i("URL", "" + error.url)
                 customLoader?.dismiss()

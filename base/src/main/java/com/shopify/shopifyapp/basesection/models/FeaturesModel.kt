@@ -7,6 +7,20 @@ import androidx.databinding.library.baseAdapters.BR
 class FeaturesModel : BaseObservable() {
 
     @Bindable
+    var yoptoLoyalty: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.yoptoLoyalty)
+        }
+
+    @Bindable
+    var forceUpdate: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.forceUpdate)
+        }
+
+    @Bindable
     var productListEnabled: Boolean = true
         set(value) {
             field = value

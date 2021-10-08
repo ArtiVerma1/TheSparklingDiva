@@ -23,6 +23,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
@@ -39,15 +40,21 @@ class Repository {
 
     val graphClient: GraphClient
         get() {
-            return GraphClient.build(context, Urls(MyApplication.context).shopdomain, Urls(MyApplication.context).apikey, {
-                httpClient = requestHeader
-                httpCache(context.cacheDir, {
-                    cacheMaxSizeBytes = 1024 * 1024 * 10
-                    defaultCachePolicy = Constant.policy
+            return GraphClient.build(
+                context,
+                Urls(MyApplication.context).shopdomain,
+                Urls(MyApplication.context).apikey,
+                {
+                    httpClient = requestHeader
+                    httpCache(context.cacheDir, {
+                        cacheMaxSizeBytes = 1024 * 1024 * 10
+                        defaultCachePolicy = Constant.policy
+                        Unit
+                    })
                     Unit
-                })
-                Unit
-            }, MagePrefs.getLanguage())
+                },
+                MagePrefs.getLanguage()
+            )
         }
     internal val requestHeader: OkHttpClient
         get() {
@@ -57,9 +64,9 @@ class Repository {
                 val request = original.newBuilder().build()
                 chain.proceed(request)
             }
-                    .connectTimeout(100, TimeUnit.SECONDS)
-                    .writeTimeout(100, TimeUnit.SECONDS)
-                    .readTimeout(300, TimeUnit.SECONDS)
+                .connectTimeout(100, TimeUnit.SECONDS)
+                .writeTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(300, TimeUnit.SECONDS)
             return httpClient.build()
         }
 
@@ -101,18 +108,31 @@ class Repository {
 
     fun getMenus(mid: String, code: String): Single<JsonElement> {
         return apiCallInterface.getMenus(mid, code)
+
     }
 
     fun getRecommendation(body: Body): Single<JsonElement> {
         Log.i("MageNative", "Cross-sell-3" + body)
-        return apiCallInterface.getRecommendations(Urls(context).shopdomain, Urls.CLIENT, Urls.TOKEN, "application/json", body)
+        return apiCallInterface.getRecommendations(
+            Urls(context).shopdomain,
+            Urls.CLIENT,
+            Urls.TOKEN,
+            "application/json",
+            body
+        )
     }
 
     fun getHomePage(mid: String): Single<JsonElement> {
         return apiCallInterface.getHomePage(mid)
     }
 
-    fun setDevice(mid: String, device_id: String, email: String, type: String, unique_id: String): Single<JsonElement> {
+    fun setDevice(
+        mid: String,
+        device_id: String,
+        email: String,
+        type: String,
+        unique_id: String
+    ): Single<JsonElement> {
         return apiCallInterface.setDevices(mid, device_id, email, type, unique_id)
     }
 
@@ -235,19 +255,51 @@ class Repository {
         return apiCallInterface.getBadges(mid, product_id)
     }
 
-    fun getcreateReview(mid: String, reviewRating: String, product_id: String, reviewAuthor: String, reviewEmail: String, reviewTitle: String, reviewBody: String): Single<JsonElement> {
-        return apiCallInterface.createReview(mid, reviewRating, product_id, reviewAuthor, reviewEmail, reviewTitle, reviewBody)
+    fun getcreateReview(
+        mid: String,
+        reviewRating: String,
+        product_id: String,
+        reviewAuthor: String,
+        reviewEmail: String,
+        reviewTitle: String,
+        reviewBody: String
+    ): Single<JsonElement> {
+        return apiCallInterface.createReview(
+            mid,
+            reviewRating,
+            product_id,
+            reviewAuthor,
+            reviewEmail,
+            reviewTitle,
+            reviewBody
+        )
     }
 
-    fun sizeChart(shop: String, source: String, product_id: String, tags: String, vendor: String): String {
+    fun sizeChart(
+        shop: String,
+        source: String,
+        product_id: String,
+        tags: String,
+        vendor: String
+    ): String {
         return apiCallInterface.getSizeChart(shop, source, product_id, tags, vendor)
     }
 
-    fun judgemeReviewCount(product_id: String, apiToken: String, shopDomain: String): Single<JsonElement> {
+    fun judgemeReviewCount(
+        product_id: String,
+        apiToken: String,
+        shopDomain: String
+    ): Single<JsonElement> {
         return apiCallInterface.getJudgemeReviewCount(apiToken, shopDomain, product_id)
     }
 
-    fun judgemeReviewIndex(apiToken: String, shopDomain: String, per_page: Int, page: Int, product_id: String): Single<JsonElement> {
+    fun judgemeReviewIndex(
+        apiToken: String,
+        shopDomain: String,
+        per_page: Int,
+        page: Int,
+        product_id: String
+    ): Single<JsonElement> {
         return apiCallInterface.getJudgemeIndex(apiToken, shopDomain, per_page, page, product_id)
     }
 
@@ -255,7 +307,12 @@ class Repository {
         return apiCallInterface.createJudgemeReview(params)
     }
 
-    fun judgemeProductID(url: String, handle: String, apiToken: String, shopDomain: String): Single<JsonElement> {
+    fun judgemeProductID(
+        url: String,
+        handle: String,
+        apiToken: String,
+        shopDomain: String
+    ): Single<JsonElement> {
         return apiCallInterface.getJudgemeProductID(url, apiToken, shopDomain, handle)
     }
 
@@ -263,8 +320,32 @@ class Repository {
         return apiCallInterface.getAlireviewStatus()
     }
 
-    fun getAliProductReview(shop_id: String, product_id: String, currentPage: Int): Single<JsonElement> {
-        return apiCallInterface.getAliProductReview(shop_id, product_id,currentPage)
+    fun getAliProductReview(
+        shop_id: String,
+        product_id: String,
+        currentPage: Int
+    ): Single<JsonElement> {
+        return apiCallInterface.getAliProductReview(shop_id, product_id, currentPage)
+    }
+
+    fun getRewards(x_guid: String, x_api_key: String, customer_email: String, customer_id: String): Single<JsonElement> {
+        return apiCallInterface.getrewards(x_guid, x_api_key/*, customer_email, customer_id*/)
+    }
+
+    fun redeemPoints(x_guid: String, x_api_key: String, customer_external_id: String, customer_email: String, redemption_option_id: String): Single<JsonElement> {
+        return apiCallInterface.redeemPoints(x_guid, x_api_key, customer_external_id, customer_email, redemption_option_id)
+    }
+
+    fun earnRewards(x_guid: String, x_api_key: String): Single<JsonElement> {
+        return apiCallInterface.earnRewards(x_guid, x_api_key)
+    }
+
+    fun myrewards(x_guid: String, x_api_key: String, customer_email: String, customer_id: String): Single<JsonElement> {
+        return apiCallInterface.myrewards(x_guid, x_api_key, customer_email, customer_id, true, true)
+    }
+
+    fun referfriend(x_guid: String, x_api_key: String, customer_id: String, emails: String): Single<JsonElement> {
+        return apiCallInterface.referfriend(x_guid, x_api_key, customer_id, emails)
     }
 
 }

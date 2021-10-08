@@ -333,7 +333,8 @@
                     layout="@layout/buy_with_googlepay_button"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
+                    android:onClick="@{view->handler.payWithGpay(view,bottomdata)}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

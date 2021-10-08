@@ -15,6 +15,8 @@ object MagePrefs {
     private val HOME_PRODUCTS = "home_products"
     private val CART_AMOUNT = "cart_amount"
     private val APPCURRENCY = "currency"
+    private const val CUSTOMERID = "customerId"
+    private const val CUSTOMEREMAIL = "customerEmail"
 
     fun getInstance(context: Context) {
         this.context = context
@@ -61,6 +63,30 @@ object MagePrefs {
 
     fun clearHomeData() {
         editor?.remove(HOMEDATA)
+        editor?.commit()
+    }
+
+    fun setCustomerId(customerID: String) {
+        editor?.putString(CUSTOMERID, customerID)
+        editor?.commit()
+    }
+
+    fun getCustomerID(): String? {
+        return sharedPreference?.getString(CUSTOMERID, null)
+    }
+
+    fun setCustomerEmail(customerEmail: String) {
+        editor?.putString(CUSTOMEREMAIL, customerEmail)
+        editor?.commit()
+    }
+
+    fun getCustomerEmail(): String? {
+        return sharedPreference?.getString(CUSTOMEREMAIL, null)
+    }
+
+    fun clearUserData() {
+        editor?.remove(CUSTOMERID)
+        editor?.remove(CUSTOMEREMAIL)
         editor?.commit()
     }
 

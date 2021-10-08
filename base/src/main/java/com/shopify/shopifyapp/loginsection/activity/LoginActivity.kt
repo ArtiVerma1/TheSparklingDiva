@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -18,9 +19,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
@@ -30,9 +34,11 @@ import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MForgotbottomsheetBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loginsection.viewmodels.LoginViewModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
+import java.nio.charset.StandardCharsets
 
 import javax.inject.Inject
 
@@ -42,6 +48,7 @@ class LoginActivity : NewBaseActivity() {
     @Inject
     lateinit var factory: ViewModelFactory
     private var model: LoginViewModel? = null
+    lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +60,7 @@ class LoginActivity : NewBaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doLoginActivtyInjection(this)
         model = ViewModelProviders.of(this, factory).get(LoginViewModel::class.java)
         model!!.context = this
+        firebaseAnalytics = Firebase.analytics
         model!!.Response().observe(this, Observer<Storefront.CustomerAccessToken> { this.consumeResponse(it) })
         model!!.getResponsedata_().observe(this, Observer<Storefront.Customer> { this.MapLoginDetails(it) })
         model!!.errormessage.observe(this, Observer<String> { this.showToast(it) })
@@ -90,6 +98,8 @@ class LoginActivity : NewBaseActivity() {
 
     private fun MapLoginDetails(customer: Storefront.Customer) {
         model!!.saveUser(customer.firstName, customer.lastName)
+        MagePrefs.setCustomerEmail(customer.email)
+        MagePrefs.setCustomerId(getBase64Decode(customer.id.toString())!!)
         if (intent.getStringExtra("checkout_id") != null) {
             val intent = Intent(this@LoginActivity, CartList::class.java)
             intent.putExtra("checkout_id", getIntent().getStringExtra("checkout_id"))
@@ -105,7 +115,15 @@ class LoginActivity : NewBaseActivity() {
         }
         finish()
     }
-
+    fun getBase64Decode(id: String?): String? {
+        val data = Base64.decode(id, Base64.DEFAULT)
+        var text = String(data, StandardCharsets.UTF_8)
+        val datavalue = text.split("/".toRegex()).toTypedArray()
+        val valueid = datavalue[datavalue.size - 1]
+        val datavalue2 = valueid.split("key".toRegex()).toTypedArray()
+        text = datavalue2[0]
+        return text
+    }
     inner class MyClickHandlers(private val context: Context) : BaseObservable() {
         @get:Bindable
         var image: String? = null
@@ -128,6 +146,9 @@ class LoginActivity : NewBaseActivity() {
                         binding!!.includedlogin.password.requestFocus()
                     } else {
                         model!!.getUser(binding!!.includedlogin.username.text!!.toString(), binding!!.includedlogin.password.text!!.toString())
+                        val params = Bundle()
+                        params.putString("user_email", binding!!.includedlogin.username.text!!.toString())
+                        firebaseAnalytics.logEvent("android_custom_log", params)
                     }
                 }
             }

@@ -293,6 +293,22 @@
                 app:texttype="normal" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
+                android:id="@+id/rewards_but"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:onClick="@{(view) -> clickdata.navigationClicks(view)}"
+                android:tag="earnrewards"
+                android:text="@string/earn_rewards"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:visibility="@{features.yoptoLoyalty ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toEndOf="@id/verticalguideline"
+                app:layout_constraintTop_toBottomOf="@id/invitefriends"
+                app:texttype="normal" />
+
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/logout"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -304,7 +320,7 @@
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:visibility="@{menudata.visible}"
                 app:layout_constraintStart_toEndOf="@id/verticalguideline"
-                app:layout_constraintTop_toBottomOf="@id/invitefriends"
+                app:layout_constraintTop_toBottomOf="@id/rewards_but"
                 app:texttype="bold" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView

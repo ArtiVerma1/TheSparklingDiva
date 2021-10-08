@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -35,6 +36,10 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import android.os.Bundle
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+
 
 class SplashViewModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
@@ -43,11 +48,17 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     private val fireBaseResponseMutableLiveData = MutableLiveData<FireBaseResponse>()
     private val notification_compaign = MutableLiveData<Boolean>()
     val errorMessageResponse = MutableLiveData<String>()
-    var filteredproducts: MutableLiveData<MutableList<Storefront.ProductEdge>>? = MutableLiveData<MutableList<Storefront.ProductEdge>>()
+    var filteredproducts: MutableLiveData<MutableList<Storefront.ProductEdge>>? =
+        MutableLiveData<MutableList<Storefront.ProductEdge>>()
     var presentmentcurrency: String? = null
     var appLocalData: AppLocalData = AppLocalData()
     val message = MutableLiveData<String>()
     var searchcursor: String = "nocursor"
+    var firebaseAnalytics: FirebaseAnalytics
+
+    init {
+        firebaseAnalytics = Firebase.analytics
+    }
 
     companion object {
         var featuresModel: FeaturesModel = FeaturesModel()
@@ -105,14 +116,24 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     }
 
-    public fun getProductsByKeywords(keyword: String): Unit {
+    fun getProductsByKeywords(keyword: String): Unit {
         var currency_list = ArrayList<Storefront.CurrencyCode>()
         if (presentmentcurrency != "nopresentmentcurrency") {
             currency_list.add(Storefront.CurrencyCode.valueOf(presentmentcurrency!!))
         }
         try {
-            val call = repository.graphClient.queryGraph(Query.getSearchProducts(keyword, searchcursor, currency_list))
-            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> -> this.invokeProduct(result) }
+            val call = repository.graphClient.queryGraph(
+                Query.getSearchProducts(
+                    keyword,
+                    searchcursor,
+                    currency_list
+                )
+            )
+            call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.QueryRoot> ->
+                this.invokeProduct(
+                    result
+                )
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -130,7 +151,8 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     private fun consumeProductResponse(reponse: GraphQLResponse) {
         when (reponse.status) {
             Status.SUCCESS -> {
-                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                val result =
+                    (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -158,11 +180,11 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     fun filterProduct(list: MutableList<Storefront.ProductEdge>) {
         try {
             disposables.add(repository.getProductList(list)
-                    .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
 //                     { x -> x.node.availableForSale }
-                    .toList()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { result -> filteredproducts!!.value = result })
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { result -> filteredproducts!!.value = result })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -181,7 +203,8 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
     private fun consumeResponseCurrency(reponse: GraphQLResponse) {
         when (reponse.status) {
             Status.SUCCESS -> {
-                val result = (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                val result =
+                    (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -195,7 +218,8 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                 } else {
 
                     if (repository.localData.size == 0) {
-                        appLocalData.currencycode = result.data?.getShop()?.paymentSettings?.currencyCode.toString()
+                        appLocalData.currencycode =
+                            result.data?.getShop()?.paymentSettings?.currencyCode.toString()
                         MagePrefs.setCurrency(appLocalData.currencycode ?: "")
                         repository.insertData(appLocalData)
                     }
@@ -209,33 +233,48 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     private fun connectFirebaseForTrial(shop: String) {
         try {
-            MyApplication.dataBaseReference?.child("additional_info")?.child("validity")?.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val value = dataSnapshot.getValue(Boolean::class.java)!!
-                    val runnable = Runnable {
-                        Log.i("MageNative:", "TrialExpired$value")
-                        Log.i("MageNative:", "LocalData" + repository.localData)
+            MyApplication.dataBaseReference?.child("additional_info")?.child("validity")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val value = dataSnapshot.getValue(Boolean::class.java)!!
+                        val runnable = Runnable {
+                            Log.i("MageNative:", "TrialExpired$value")
+                            Log.i("MageNative:", "LocalData" + repository.localData)
 
-                        if (repository.localData.size == 0) {
-                            appLocalData?.isIstrialexpire = value
-                            getCurrency()
-                        } else {
-                            appLocalData = repository.localData[0]
-                            appLocalData!!.isIstrialexpire = value
-                            MagePrefs.setCurrency(appLocalData.currencycode ?: "")
-                            repository.updateData(appLocalData)
-                        }
-                        Log.i("MageNative:", "Currency" +
-                                appLocalData.currencycode)
-                        disposables.add(repository.getSingle(appLocalData)
+                            if (repository.localData.size == 0) {
+                                appLocalData?.isIstrialexpire = value
+                                getCurrency()
+                            } else {
+                                appLocalData = repository.localData[0]
+                                appLocalData!!.isIstrialexpire = value
+                                MagePrefs.setCurrency(appLocalData.currencycode ?: "")
+                                repository.updateData(appLocalData)
+                            }
+                            Log.i(
+                                "MageNative:", "Currency" +
+                                        appLocalData.currencycode
+                            )
+                            disposables.add(repository.getSingle(appLocalData)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(
-                                        { result -> responseLiveData.setValue(LocalDbResponse.success(result)) },
-                                        { throwable -> responseLiveData.setValue(LocalDbResponse.error(throwable)) }
+                                    { result ->
+                                        responseLiveData.setValue(
+                                            LocalDbResponse.success(
+                                                result
+                                            )
+                                        )
+                                    },
+                                    { throwable ->
+                                        responseLiveData.setValue(
+                                            LocalDbResponse.error(
+                                                throwable
+                                            )
+                                        )
+                                    }
                                 ))
-                    }
-                    Thread(runnable).start()
+                        }
+                        Thread(runnable).start()
 
 //                    GlobalScope.launch(Dispatchers.IO) {
 //                        Log.i("MageNative:", "TrialExpired$value")
@@ -260,37 +299,39 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 //                    }
 
 
-                }
+                    }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.i("DBConnectionError", "" + databaseError.details)
-                    Log.i("DBConnectionError", "" + databaseError.message)
-                    Log.i("DBConnectionError", "" + databaseError.code)
-                }
-            })
-            MyApplication.dataBaseReference?.child("additional_info")?.child("personalise")?.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    Constant.ispersonalisedEnable = dataSnapshot.getValue(Boolean::class.java)!!
-                }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
+            MyApplication.dataBaseReference?.child("additional_info")?.child("personalise")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        Constant.ispersonalisedEnable = dataSnapshot.getValue(Boolean::class.java)!!
+                    }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.i("DBConnectionError", "" + databaseError.details)
-                    Log.i("DBConnectionError", "" + databaseError.message)
-                    Log.i("DBConnectionError", "" + databaseError.code)
-                }
-            })
-            MyApplication.dataBaseReference?.child("additional_info")?.child("locale")?.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    /*if you are using multi language then comment this line*/
-                    //   MagePrefs.setLanguage(dataSnapshot.getValue(String::class.java)!!)
-                }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
+            MyApplication.dataBaseReference?.child("additional_info")?.child("locale")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        /*if you are using multi language then comment this line*/
+                        //   MagePrefs.setLanguage(dataSnapshot.getValue(String::class.java)!!)
+                    }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.i("DBConnectionError", "" + databaseError.details)
-                    Log.i("DBConnectionError", "" + databaseError.message)
-                    Log.i("DBConnectionError", "" + databaseError.code)
-                }
-            })
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -299,9 +340,14 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     private fun connectFireBaseForSplashData() {
         try {
-            MyApplication.dataBaseReference?.child("additional_info")?.child("splash")?.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    fireBaseResponseMutableLiveData.setValue(FireBaseResponse.success(dataSnapshot))
+            MyApplication.dataBaseReference?.child("additional_info")?.child("splash")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        fireBaseResponseMutableLiveData.setValue(
+                            FireBaseResponse.success(
+                                dataSnapshot
+                            )
+                        )
 //                    disposables.add(Single.just(dataSnapshot)
 //                            .subscribeOn(Schedulers.io())
 //                            .observeOn(AndroidSchedulers.mainThread())
@@ -309,58 +355,68 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 //                                    { result -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.success(result)) },
 //                                    { throwable -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.error(throwable)) }
 //                            ))
-                }
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.i("DBConnectionError", "" + databaseError.details)
-                    Log.i("DBConnectionError", "" + databaseError.message)
-                    Log.i("DBConnectionError", "" + databaseError.code)
-                }
-            })
-
-            MyApplication.dataBaseReference?.child("features")?.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    Log.d(TAG, "onDataChange: " + dataSnapshot.exists())
-                    if (dataSnapshot.value != null) {
-                        val featuresList = dataSnapshot.value as ArrayList<String>
-                        for (i in 0..featuresList.size - 1) {
-                            if (featuresList[i].equals("in-app-whislist", true)) {
-                                featuresModel.in_app_wishlist = true //Implemented
-                            } else if (featuresList[i].equals("product-share", true)) {
-                                featuresModel.product_share = true //Implemented
-                            } else if (featuresList[i].equals("multi-currency", true)) {
-                                featuresModel.multi_currency = true //Implemented
-                            } else if (featuresList[i].equals("multi-language", true)) {
-                                featuresModel.multi_language = true
-                            } else if (featuresList[i].equals("abandoned-cart-campaigns", true)) {
-                                featuresModel.abandoned_cart_compaigns = true //Implemented
-                                notification_compaign.value = true //Implemented
-                            } else if (featuresList[i].equals("augmented-reality", true)) {
-                                featuresModel.ardumented_reality = true //Implemented
-                            } else if (featuresList[i].equals("ai-product-reccomendation", true)) {
-                                featuresModel.ai_product_reccomendaton = true //Implemented
-                            } else if (featuresList[i].equals("qr-code-search-scanner", true)) {
-                                featuresModel.qr_code_search_scanner = true //Implemented
-                            }
-                        }
-                    } else {
-                        featuresModel.in_app_wishlist = true
-                        featuresModel.product_share = true
-                        featuresModel.multi_currency = true
-                        featuresModel.multi_language = true
-                        featuresModel.abandoned_cart_compaigns = true
-                        featuresModel.ardumented_reality = true
-                        featuresModel.ai_product_reccomendaton = true
-                        featuresModel.qr_code_search_scanner = true
                     }
 
-                }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.i("DBConnectionError", "" + databaseError.details)
-                    Log.i("DBConnectionError", "" + databaseError.message)
-                    Log.i("DBConnectionError", "" + databaseError.code)
-                }
-            })
+            MyApplication.dataBaseReference?.child("features")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        Log.d(TAG, "onDataChange: " + dataSnapshot.exists())
+                        if (dataSnapshot.value != null) {
+                            val featuresList = dataSnapshot.value as ArrayList<String>
+                            for (i in 0..featuresList.size - 1) {
+                                if (featuresList[i].equals("in-app-whislist", true)) {
+                                    featuresModel.in_app_wishlist = true //Implemented
+                                } else if (featuresList[i].equals("product-share", true)) {
+                                    featuresModel.product_share = true //Implemented
+                                } else if (featuresList[i].equals("multi-currency", true)) {
+                                    featuresModel.multi_currency = true //Implemented
+                                } else if (featuresList[i].equals("multi-language", true)) {
+                                    featuresModel.multi_language = true
+                                } else if (featuresList[i].equals(
+                                        "abandoned-cart-campaigns",
+                                        true
+                                    )
+                                ) {
+                                    featuresModel.abandoned_cart_compaigns = true //Implemented
+                                    notification_compaign.value = true //Implemented
+                                } else if (featuresList[i].equals("augmented-reality", true)) {
+                                    featuresModel.ardumented_reality = true //Implemented
+                                } else if (featuresList[i].equals(
+                                        "ai-product-reccomendation",
+                                        true
+                                    )
+                                ) {
+                                    featuresModel.ai_product_reccomendaton = true //Implemented
+                                } else if (featuresList[i].equals("qr-code-search-scanner", true)) {
+                                    featuresModel.qr_code_search_scanner = true //Implemented
+                                }
+                            }
+                        } else {
+                            featuresModel.in_app_wishlist = true
+                            featuresModel.product_share = true
+                            featuresModel.multi_currency = true
+                            featuresModel.multi_language = true
+                            featuresModel.abandoned_cart_compaigns = true
+                            featuresModel.ardumented_reality = true
+                            featuresModel.ai_product_reccomendaton = true
+                            featuresModel.qr_code_search_scanner = true
+                        }
+
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -378,7 +434,10 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 var expiretime: Date? = null
                 try {
-                    expiretime = sdf.parse(repository.accessToken[0].expireTime!!.split("t".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
+                    expiretime = sdf.parse(
+                        repository.accessToken[0].expireTime!!.split("t".toRegex())
+                            .dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+                    )
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }
@@ -400,8 +459,13 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     private fun renewToken(customerAccessToken: String?) {
         try {
-            val call = repository.graphClient.mutateGraph(MutationQuery.renewToken(customerAccessToken))
-            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> -> this.invoke(graphCallResult) }
+            val call =
+                repository.graphClient.mutateGraph(MutationQuery.renewToken(customerAccessToken))
+            call.enqueue(Handler(Looper.getMainLooper())) { graphCallResult: GraphCallResult<Storefront.Mutation> ->
+                this.invoke(
+                    graphCallResult
+                )
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -463,22 +527,32 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
 
     fun sendTokenToServer(unique_id: String) {
         FirebaseInstanceId.getInstance().instanceId
-                .addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        Log.i("MageNative", "token_error : " + task.exception!!)
-                        return@OnCompleteListener
-                    }
-                    val token = task.result!!.token
-                    Log.i("MageNative", "token$token")
-                    FirebaseMessaging.getInstance().subscribeToTopic("magenativeANDROID")
-                    disposables.add(repository.setDevice(Urls(MyApplication.context)!!.mid, token, " ", "android", unique_id)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    { result -> apiresponseLiveData.setValue(ApiResponse.success(result)) },
-                                    { throwable -> apiresponseLiveData.setValue(ApiResponse.error(throwable)) }
-                            ))
-                })
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.i("MageNative", "token_error : " + task.exception!!)
+                    return@OnCompleteListener
+                }
+                val token = task.result!!.token
+                val params = Bundle()
+                params.putString("device_token", token)
+                firebaseAnalytics.logEvent("android_custom_log", params)
+
+                Log.i("MageNative", "token$token")
+                FirebaseMessaging.getInstance().subscribeToTopic("magenativeANDROID")
+                disposables.add(repository.setDevice(
+                    Urls(MyApplication.context)!!.mid,
+                    token,
+                    " ",
+                    "android",
+                    unique_id
+                )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { result -> apiresponseLiveData.setValue(ApiResponse.success(result)) },
+                        { throwable -> apiresponseLiveData.setValue(ApiResponse.error(throwable)) }
+                    ))
+            })
     }
 }
 
