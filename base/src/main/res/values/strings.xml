@@ -230,4 +230,11 @@
     <string name="tell_your_friends">Tell Your Friends</string>
     <string name="mail_sent">Mail Sent</string>
     <string name="order_note_title">SPECIAL INSTRUCTIONS FOR SELLER</string>
+    <string name="pick_up_in_store">Pick up in store</string>
+    <string name="please_enter_your_postal_code_to_find_out_if_we_deliver_to_this_area">Please enter your postal code to find out if we deliver to this area</string>
+    <string name="click_here_to_select_delivery_date">Click here to select delivery date</string>
+    <string name="order_note_hint">Please enter order note</string>
+    <string name="withdrawal_day_and_time">Select a withdrawal day and time</string>
+    <string name="note">NOTE</string>
+    <string name="local_delivery">Local Delivery</string>
 </resources>

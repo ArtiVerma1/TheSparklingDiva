@@ -192,4 +192,11 @@
     <string name="close">Close</string>
     <string name="choose_language">Choose Language</string>
     <string name="select_language">Select Language</string>
+    <string name="pick_up_in_store">Pick up in store</string>
+    <string name="please_enter_your_postal_code_to_find_out_if_we_deliver_to_this_area">Please enter your postal code to find out if we deliver to this area</string>
+    <string name="click_here_to_select_delivery_date">Click here to select delivery date</string>
+    <string name="order_note_hint">Please enter order note</string>
+    <string name="withdrawal_day_and_time">Select a withdrawal day and time</string>
+    <string name="note">NOTE</string>
+    <string name="local_delivery">Local Delivery</string>
 </resources>

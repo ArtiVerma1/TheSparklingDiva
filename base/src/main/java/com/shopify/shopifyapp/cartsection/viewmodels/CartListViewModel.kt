@@ -1,8 +1,11 @@
 package com.shopify.shopifyapp.cartsection.viewmodels
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import android.util.Log
+import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shopify.buy3.GraphCallResult
@@ -48,6 +51,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val api = MutableLiveData<ApiResponse>()
     private val youmayapi = MutableLiveData<ApiResponse>()
     private val disposables = CompositeDisposable()
+    private val validate_delivery = MutableLiveData<ApiResponse>()
+    private val local_delivery = MutableLiveData<ApiResponse>()
+    private val store_delivery = MutableLiveData<ApiResponse>()
     lateinit var context: Context
     private val TAG = "CartListViewModel"
     private val responsedata = MutableLiveData<Storefront.Checkout>()
@@ -629,6 +635,52 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             }
         }
     }
+    fun validateDelivery(param: HashMap<String, String>): MutableLiveData<ApiResponse> {
+        disposables.add(repository.validateDelivery(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> validate_delivery.setValue(ApiResponse.success(result)) },
+                { throwable -> validate_delivery.setValue(ApiResponse.error(throwable)) }
+            ))
+        return validate_delivery
+    }
+
+    fun localDelivery(param: HashMap<String, String>): MutableLiveData<ApiResponse> {
+        disposables.add(repository.localDelivery(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> local_delivery.setValue(ApiResponse.success(result)) },
+                { throwable -> local_delivery.setValue(ApiResponse.error(throwable)) }
+            ))
+        return local_delivery
+    }
+
+    fun localDeliveryy(param: HashMap<String, String>): MutableLiveData<ApiResponse> {
+        disposables.add(repository.localDeliveryy(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> local_delivery.setValue(ApiResponse.success(result)) },
+                { throwable -> local_delivery.setValue(ApiResponse.error(throwable)) }
+            ))
+        return local_delivery
+    }
+
+
+
+
+    fun storeDelivery(param: HashMap<String, String>): MutableLiveData<ApiResponse> {
+        disposables.add(repository.storeDelivery(param)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> store_delivery.setValue(ApiResponse.success(result)) },
+                { throwable -> store_delivery.setValue(ApiResponse.error(throwable)) }
+            ))
+        return store_delivery
+    }
 
     fun removeGiftCard(giftcardID: ID?, checkoutId: ID?) {
         doGraphQLMutateGraph(
@@ -741,6 +793,85 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             }
         }
     }
+    fun fillDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
+        var param = HashMap<String, String>()
+        for (i in 0..edges.size - 1) {
+            param.put("cart[$i][product_id]", String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
+            param.put("cart[$i][variant_id]", String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
+            param.put("cart[$i][quantity]", edges[i].node.quantity.toString())
+            Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
+            Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
+        }
+        param.put("shop", "maison-ferreira.myshopify.com")
+        param.put("type", "pickup")
+        return param
+    }
 
+    fun fillLocalDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
+        var param = HashMap<String, String>()
+        for (i in 0..edges.size - 1) {
+            param.put("cart[$i][product_id]", String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
+            param.put("cart[$i][variant_id]", String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
+            param.put("cart[$i][quantity]", edges[i].node.quantity.toString())
+            Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
+            Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
+        }
+        param.put("shop", "maison-ferreira.myshopify.com")
+        param.put("type", "delivery")
+        param.put("zipcode", "95880")
+        return param
+    }
+
+    fun fillStoreDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
+        var param = HashMap<String, String>()
+        for (i in 0..edges.size - 1) {
+            param.put("cart[$i][product_id]", String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
+            param.put("cart[$i][variant_id]", String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
+            param.put("cart[$i][quantity]", edges[i].node.quantity.toString())
+            Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
+            Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
+        }
+        param.put("shop", "maison-ferreira.myshopify.com")
+        param.put("type", "pickup")
+        param.put("zipcode", "95880")
+        return param
+    }
+
+    fun prepareCartwithAttribute(attributeInputs: MutableList<Storefront.AttributeInput>, order_note: String) {
+        try {
+            val runnable = object : Runnable {
+                override fun run() {
+                    val input = Storefront.CheckoutCreateInput()
+                    input.setCustomAttributes(attributeInputs)
+                    input.lineItems = lineItems
+                    try {
+                        var currency_list = ArrayList<Storefront.CurrencyCode>()
+                        if (presentCurrency != "nopresentmentcurrency") {
+                            val currencyCode = Storefront.CurrencyCode.valueOf(presentCurrency)
+                            input.presentmentCurrencyCode = currencyCode
+                            currency_list.add(Storefront.CurrencyCode.valueOf(presentCurrency))
+                        }
+                        input.note = order_note
+                        val call = repository.graphClient.mutateGraph(Mutation.createCheckout(input,currency_list))
+                        call.enqueue(Handler(Looper.getMainLooper())) { result: GraphCallResult<Storefront.Mutation> -> this.invoke(result) }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                private operator fun invoke(result: GraphCallResult<Storefront.Mutation>): Unit {
+                    if (result is GraphCallResult.Success<*>) {
+                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+                    } else {
+                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure))
+                    }
+                    return Unit
+                }
+            }
+            Thread(runnable).start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
 }

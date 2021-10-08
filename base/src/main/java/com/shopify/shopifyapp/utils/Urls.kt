@@ -48,6 +48,9 @@ class Urls {
         const val SENDREFERRAL = YOTPOBASE_URL + "referral/share"
         const val XGUID = "oyeoRDurwhul3WK-zN5ScA"
         const val X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
+        const val VALIDATE_DELIVERY: String = "shopifymobile/zapietstorepickupapi/validatedeliverynpickup"
+        const val LOCAL_DELIVERY: String = "shopifymobile/zapietstorepickupapi/getdeliverynpickup"
+        const val LOCAL_DELIVERYY: String = "shopifymobilenew/zapietstorepickupapi/getdeliverynpickup"
     }
 
     val shopdomain: String

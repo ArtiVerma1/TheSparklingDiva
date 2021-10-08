@@ -92,4 +92,15 @@ interface ApiCallInterface {
     @POST(SENDREFERRAL)
     fun referfriend(@Header("x-guid") xguid: String, @Header("x-api-key") xapikey: String, @Query("customer_id") customer_id: String,
                     @Query("emails") emails: String): Single<JsonElement>
+    @POST(Urls.VALIDATE_DELIVERY)
+    fun validateDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+
+    @POST(Urls.LOCAL_DELIVERY)
+    fun localDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+
+    @POST(Urls.LOCAL_DELIVERYY)
+    fun localDeliveryy(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+
+    @POST(Urls.LOCAL_DELIVERY)
+    fun storeDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>
 }

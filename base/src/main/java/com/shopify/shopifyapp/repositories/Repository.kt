@@ -347,5 +347,19 @@ class Repository {
     fun referfriend(x_guid: String, x_api_key: String, customer_id: String, emails: String): Single<JsonElement> {
         return apiCallInterface.referfriend(x_guid, x_api_key, customer_id, emails)
     }
+    fun validateDelivery(jsonObject: HashMap<String, String>): Single<JsonObject> {
+        return apiCallInterface.validateDelivery(jsonObject)
+    }
 
+    fun localDelivery(jsonObject: HashMap<String, String>): Single<JsonObject> {
+        return apiCallInterface.localDelivery(jsonObject)
+    }
+
+    fun localDeliveryy(jsonObject: HashMap<String, String>): Single<JsonObject> {
+        return apiCallInterface.localDeliveryy(jsonObject)
+    }
+
+    fun storeDelivery(jsonObject: HashMap<String, String>): Single<JsonObject> {
+        return apiCallInterface.localDelivery(jsonObject)
+    }
 }
