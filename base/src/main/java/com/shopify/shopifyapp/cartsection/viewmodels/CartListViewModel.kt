@@ -818,7 +818,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         }
         param.put("shop", "magenative.myshopify.com")
         param.put("type", "delivery")
-        param.put("zipcode", "95880")
+//        param.put("zipcode", "95880")
         return param
     }
 
