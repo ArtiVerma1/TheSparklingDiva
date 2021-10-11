@@ -802,7 +802,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "maison-ferreira.myshopify.com")
+        param.put("shop", "magenative.myshopify.com")
         param.put("type", "pickup")
         return param
     }
@@ -816,7 +816,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "maison-ferreira.myshopify.com")
+        param.put("shop", "magenative.myshopify.com")
         param.put("type", "delivery")
         param.put("zipcode", "95880")
         return param
@@ -831,9 +831,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "maison-ferreira.myshopify.com")
+        param.put("shop", "magenative.myshopify.com")
         param.put("type", "pickup")
-        param.put("zipcode", "95880")
+//        param.put("zipcode", "95880")
         return param
     }
 

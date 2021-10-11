@@ -138,6 +138,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         model!!.getDiscount()
             .observe(this, Observer<Storefront.Mutation> { this.consumeResponseDiscount(it) })
 
+
         binding!!.subtotaltext.textSize = 12f
         binding!!.subtotal.textSize = 12f
         binding!!.taxtext.textSize = 12f
@@ -279,6 +280,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             setBottomData(reponse)
             delivery_param = model!!.fillDeliveryParam(reponse.lineItems.edges)
             response_data = reponse
+            model!!.validateDelivery(delivery_param).observe(this@CartList, Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
             invalidateOptionsMenu()
         } else {
             showToast(resources.getString(R.string.emptycart))
