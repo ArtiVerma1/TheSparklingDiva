@@ -280,7 +280,10 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             setBottomData(reponse)
             delivery_param = model!!.fillDeliveryParam(reponse.lineItems.edges)
             response_data = reponse
-            model!!.validateDelivery(delivery_param).observe(this@CartList, Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+            if (SplashViewModel.featuresModel.zapietEnable) {
+                model!!.validateDelivery(delivery_param).observe(this@CartList, Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+            }
+
             invalidateOptionsMenu()
         } else {
             showToast(resources.getString(R.string.emptycart))

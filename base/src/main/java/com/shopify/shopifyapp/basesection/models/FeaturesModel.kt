@@ -5,6 +5,12 @@ import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 
 class FeaturesModel : BaseObservable() {
+    @Bindable
+    var zapietEnable: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.zapietEnable)
+        }
 
     @Bindable
     var yoptoLoyalty: Boolean = false
