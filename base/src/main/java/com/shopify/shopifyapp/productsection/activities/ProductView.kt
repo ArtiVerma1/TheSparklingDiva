@@ -532,7 +532,18 @@ class ProductView : NewBaseActivity() {
             productName = productedge.title
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
-            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
+//            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
+
+            val pish =
+                "<head><style>@font-face {font-family: 'arial';src: url('file:///android_asset/fonts/cairobold.ttf');}</style></head>"
+            var desc="<html>"+pish +"<body style='font-family: arial'>"+productedge.descriptionHtml +"</body></html>"
+            binding?.description?.loadDataWithBaseURL(
+                null,
+                desc,
+                "text/html",
+                "utf-8",
+                null
+            )
             binding?.description?.getSettings()?.setJavaScriptEnabled(true)
             if (model?.isInwishList(model?.id!!)!!) {
                 data!!.addtowish = resources.getString(R.string.alreadyinwish)

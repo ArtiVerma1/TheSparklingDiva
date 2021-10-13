@@ -100,7 +100,7 @@ constructor() : RecyclerView.Adapter<CollectionItem>() {
             var background = JSONObject(jsonObject.getString("cell_background_color"))
             binding.name.setBackgroundColor(Color.parseColor(background.getString("color")))
             if (jsonObject.getString("item_font_weight").equals("bold")) {
-                val face = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+                val face = Typeface.createFromAsset(activity!!.assets, "fonts/cairobold.ttf");
                 binding.name.setTypeface(face)
             }
             if (jsonObject.getString("item_font_style").equals("italic")) {

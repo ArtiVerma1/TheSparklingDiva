@@ -30,11 +30,12 @@ class MageNativeEditText : AppCompatEditText {
             try {
                 if (type != null && type == "white") {
                     var typeface: Typeface? = null
-                    typeface = Typeface.createFromAsset(context.assets, "fonts/normal.ttf")
+                    typeface = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                     setTypeface(typeface)
                 } else {
                     if (type != null) {
-                        val typeface = Typeface.createFromAsset(context.assets, "fonts/$type.ttf")
+//                        val typeface = Typeface.createFromAsset(context.assets, "fonts/$type.ttf")
+                        val typeface = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         setTypeface(typeface)
                     }
                 }

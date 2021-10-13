@@ -22,7 +22,7 @@
             android:id="@+id/currency_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/cairoregular"
             android:onClick="@{view->handler.setCurrency(view,listdata)}"
             android:padding="8dp"
             android:text="@{listdata.textdata}"

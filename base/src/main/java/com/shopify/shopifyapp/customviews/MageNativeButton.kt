@@ -38,13 +38,14 @@ class MageNativeButton : AppCompatButton {
             try {
                 if (type != null && type == "white" ||type =="round") {
                     var typeface: Typeface? = null
-                    typeface = Typeface.createFromAsset(context.assets, "fonts/normal.ttf")
+                    typeface = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                     setTypeface(typeface)
                 } else {
                     if (type != null) {
                         var typeface: Typeface? = null
                         if (typeface == null) {
-                            typeface = Typeface.createFromAsset(context.assets, "fonts/$type.ttf")
+                         typeface = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
+//                            typeface = Typeface.createFromAsset(context.assets, "fonts/$type.ttf")
                         }
                         setTypeface(typeface)
                     }

@@ -692,10 +692,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("header_title_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                     }
                 }
                 binding.headertext.setTypeface(face)
@@ -720,10 +720,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                         }
                     }
                     binding.subheadertext.setTypeface(face)
@@ -791,10 +791,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                         }
                     }
                     binding.actiontext.setTypeface(face)
@@ -854,10 +854,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("header_title_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                     }
                 }
                 binding.headertext.setTypeface(face)
@@ -880,10 +880,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                         }
                     }
                     binding.subheadertext.setTypeface(face)
@@ -951,10 +951,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("header_title_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                     }
                 }
                 binding.headertext.setTypeface(face)
@@ -977,10 +977,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                         }
                     }
                     binding.subheadertext.setTypeface(face)
@@ -1041,10 +1041,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                         }
                     }
                     binding.actiontext.setTypeface(face)
@@ -1153,10 +1153,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             val face: Typeface
             when (jsonObject.getString("item_title_font_weight")) {
                 "bold" -> {
-                    face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                 }
                 else -> {
-                    face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                    face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                 }
             }
             binding.hvnameone.setTypeface(face)
@@ -1238,7 +1238,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 binding.buttonOne.setTextColor(Color.parseColor(button_text_color.getString("color")))
                 binding.buttonTwo.setTextColor(Color.parseColor(button_text_color.getString("color")))
                 if (jsonObject.getString("item_font_weight").equals("bold")) {
-                    val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    val face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                     binding.buttonOne.setTypeface(face)
                     binding.buttonTwo.setTypeface(face)
                 }
@@ -1339,14 +1339,14 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
             binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
             if (jsonObject.getString("item_font_weight").equals("bold")) {
-                val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                val face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                 binding.catTextOne.setTypeface(face)
                 binding.catTextTwo.setTypeface(face)
                 binding.catTextThree.setTypeface(face)
                 binding.catTextFour.setTypeface(face)
                 binding.catTextFive.setTypeface(face)
             } else {
-                val face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                val face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                 binding.catTextOne.setTypeface(face)
                 binding.catTextTwo.setTypeface(face)
                 binding.catTextThree.setTypeface(face)
@@ -1462,10 +1462,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("item_header_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                     }
 
                 }
@@ -1499,10 +1499,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                         }
                     }
                     binding.actiontext.setTypeface(face)
@@ -1529,10 +1529,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf");
                         }
 
                     }
@@ -1985,7 +1985,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
             binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
             if (jsonObject.getString("item_font_weight").equals("bold")) {
-                val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                val face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf");
                 binding.catTextOne.setTypeface(face)
                 binding.catTextTwo.setTypeface(face)
                 binding.catTextThree.setTypeface(face)

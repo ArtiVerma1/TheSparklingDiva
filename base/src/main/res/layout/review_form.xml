@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:fontFamily="@font/roboto_medium"
+                android:fontFamily="@font/cairoregular"
                 android:text="@string/please_select_rating"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
