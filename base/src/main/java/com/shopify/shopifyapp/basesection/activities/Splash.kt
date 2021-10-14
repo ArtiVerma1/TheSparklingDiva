@@ -91,7 +91,7 @@ class Splash : AppCompatActivity() {
                         product_id = appLinkIntent.data!!.getQueryParameters("pid")[0]
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        var link_array =
+                        val link_array =
                             appLinkIntent.data!!.toString().replace("https://", "").split("/")
                         productTitle = link_array.get(link_array.size - 1)
                         splashmodel?.getProductsByKeywords(productTitle!!)
@@ -124,7 +124,7 @@ class Splash : AppCompatActivity() {
     }
 
     private fun initializeFirebase() {
-        auth = Firebase.auth(firebaseapp!!)
+        auth = Firebase.auth(firebaseapp)
         auth.signInWithEmailAndPassword("sudhanshshah@magenative.com", "asdcxzasd")
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

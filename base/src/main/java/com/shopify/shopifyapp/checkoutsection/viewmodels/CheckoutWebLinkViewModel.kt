@@ -27,7 +27,7 @@ class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel()
     lateinit var context: Context
     var customeraccessToken: CustomerTokenData
         get() {
-            var customerToken = runBlocking(Dispatchers.IO) {
+            val customerToken = runBlocking(Dispatchers.IO) {
                 return@runBlocking repository.accessToken[0]
             }
             return customerToken
@@ -35,7 +35,7 @@ class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel()
         set(value) {}
     val isLoggedIn: Boolean
         get() {
-            var loggedin = runBlocking(Dispatchers.IO) {
+            val loggedin = runBlocking(Dispatchers.IO) {
                 return@runBlocking repository.isLogin
             }
             return loggedin
@@ -61,7 +61,7 @@ class CheckoutWebLinkViewModel(private val repository: Repository) : ViewModel()
 
     fun setOrder(mid: String, checkout_token: String?) {
         try {
-            var postData = repository.setOrder(mid, checkout_token)
+            val postData = repository.setOrder(mid, checkout_token)
 //            doRetrofitCall(postData, disposables, customResponse = object : CustomResponse {
 //                override fun onSuccessRetrofit(result: JsonElement) {
 //                    responseLiveData.setValue(ApiResponse.success(result))

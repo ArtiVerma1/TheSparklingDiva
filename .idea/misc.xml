@@ -12,6 +12,7 @@
         <entry key="base/src/main/res/drawable/blackborder_selector.xml" value="0.16574074074074074" />
         <entry key="base/src/main/res/drawable/button_shape.xml" value="0.16574074074074074" />
         <entry key="base/src/main/res/layout/activity_collection_list_menu.xml" value="0.11930091185410334" />
+        <entry key="base/src/main/res/layout/activity_custom_loader.xml" value="0.1" />
         <entry key="base/src/main/res/layout/activity_earn_rewards.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_faqs.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_get_rewards.xml" value="0.17135416666666667" />

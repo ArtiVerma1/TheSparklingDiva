@@ -111,11 +111,11 @@ open class AddressList : NewBaseActivity() {
             if (mailingAddressEdges.size > 0) {
                 if (this.mailingAddressEdges == null) {
                     this.mailingAddressEdges = mailingAddressEdges
-                    adapter!!.setData(mailingAddressEdges, model)
+                    adapter.setData(mailingAddressEdges, model)
                     addresslist!!.adapter = adapter
                 } else {
                     this.mailingAddressEdges!!.addAll(mailingAddressEdges)
-                    adapter!!.notifyDataSetChanged()
+                    adapter.notifyDataSetChanged()
                 }
                 cursor = this.mailingAddressEdges!![this.mailingAddressEdges!!.size - 1].cursor
                 Log.i("MageNative", "Cursor : " + cursor!!)
