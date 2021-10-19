@@ -1938,17 +1938,18 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     )
                 )
                 binding!!.indicator.setViewPager(binding!!.banners)
-                var i = 0
-                val timer = Timer()
-                timer.scheduleAtFixedRate(timerTask {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        binding.banners.setCurrentItem(i++);
-                        if (i == jsonObject.getJSONArray("items").length()) {
-                            i = 0
-                        }
-                    }
-                }, 3000, 3000)
+
             }
+            var i = 0
+            val timer = Timer()
+            timer.scheduleAtFixedRate(timerTask {
+                GlobalScope.launch(Dispatchers.Main) {
+                    binding.banners.setCurrentItem(i++);
+                    if (i == jsonObject.getJSONArray("items").length()) {
+                        i = 0
+                    }
+                }
+            }, 3000, 3000)
             homepagedata.setValue(hashMapOf("banner-slider_" to binding.root))
         } catch (ex: Exception) {
             ex.printStackTrace()

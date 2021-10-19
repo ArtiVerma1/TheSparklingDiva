@@ -23,9 +23,15 @@ class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
     private val TAG = "VariantAdapter"
     private var outofStockList: MutableList<String>? = null
     private var selectedPosition = -1
+    private var optionName: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VariantItem {
-        val binding = DataBindingUtil.inflate<SwatchesListItemBinding>(LayoutInflater.from(parent.context), R.layout.swatches_list_item, parent, false)
+        val binding = DataBindingUtil.inflate<SwatchesListItemBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.swatches_list_item,
+            parent,
+            false
+        )
         binding.variantName.textSize = 14f
         return VariantItem(binding)
     }
@@ -35,34 +41,10 @@ class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
     }
 
     interface VariantCallback {
-        fun clickVariant(variantName: String)
+        fun clickVariant(variantName: String, optionName: String)
     }
 
     override fun onBindViewHolder(holder: VariantItem, position: Int) {
-//        val model = CommanModel()
-//        model.imageurl = variants?.get(position)?.node?.image?.originalSrc
-//        val data = VariantData()
-//        data.position = position
-//        data.variant_id = variants!![position].node.id.toString()
-//        data.variantimage = variants!![position]?.node?.image?.transformedSrc
-//        data.data = this.data
-//        data.model = this.model
-//        holder.binding.variantName.text = variant_data?.get(position)
-//        Log.d(TAG, "onBindViewHolder: " + variant_data?.get(position))
-//        if (position == selectedPosition) {
-//            holder.binding.variantCard.setCardBackgroundColor(Color.parseColor(themeColor))
-//            holder.binding.variantName.setTextColor(Color.WHITE)
-//        } else {
-//            holder.binding.variantCard.setCardBackgroundColor(Color.WHITE)
-//            holder.binding.variantName.setTextColor(Color.BLACK)
-//        }
-//        holder.binding.variantCard.setOnClickListener {
-//            selectedPosition = position
-//            variantCallback?.clickVariant(variants?.get(position)!!, variant_title!!)
-//            notifyDataSetChanged()
-//        }
-
-
         try {
             holder.binding.variantName.text = variants?.get(position)
             if (selectedPosition == position) {
@@ -87,7 +69,7 @@ class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
             holder.binding.variantName.setOnClickListener {
                 if (it.tag.equals("unselected")) {
                     selectedPosition = position
-                    variantCallback?.clickVariant(variants?.get(position) ?: "")
+                    variantCallback?.clickVariant(variants?.get(position) ?: "", optionName ?: "")
                     notifyDataSetChanged()
                 }
             }
@@ -102,7 +84,14 @@ class VariantAdapter : RecyclerView.Adapter<VariantItem>() {
         return variants?.size!!
     }
 
-    fun setData(variants: MutableList<String>, outofStockList: MutableList<String>, context: Context, variantCallback_: VariantCallback) {
+    fun setData(
+        optionName: String,
+        variants: MutableList<String>,
+        outofStockList: MutableList<String>,
+        context: Context,
+        variantCallback_: VariantCallback
+    ) {
+        this.optionName = optionName
         this.variants = variants
         this.outofStockList = outofStockList
         variantCallback = variantCallback_

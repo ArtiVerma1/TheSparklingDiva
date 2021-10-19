@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +20,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.google.gson.JsonElement
 import com.google.zxing.integration.android.IntentIntegrator
 import com.mindorks.paracamera.Camera
@@ -210,10 +212,16 @@ class LeftMenu : BaseFragment() {
             val linearLayoutCompat = constraintLayout.getChildAt(2) as LinearLayoutCompat
             if (open) {
                 linearLayoutCompat.visibility = View.GONE
+                Glide.with(view)
+                    .load(R.drawable.add)
+                    .into(view as ImageView)
                 open = false
             } else {
                 linearLayoutCompat.visibility = View.VISIBLE
                 linearLayoutCompat.requestFocus()
+                Glide.with(view)
+                    .load(R.drawable.minus_icon)
+                    .into(view as ImageView)
                 open = true
             }
         }

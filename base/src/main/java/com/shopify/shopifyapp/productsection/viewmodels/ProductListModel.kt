@@ -60,9 +60,8 @@ class ProductListModel(var repository: Repository) : ViewModel() {
             Response()
         }
     var isDirection = false
-    var sortKeys: Storefront.ProductCollectionSortKeys =
-        Storefront.ProductCollectionSortKeys.BEST_SELLING
-    var keys: Storefront.ProductSortKeys = Storefront.ProductSortKeys.BEST_SELLING
+    var sortKeys: Storefront.ProductCollectionSortKeys? = null
+    var keys: Storefront.ProductSortKeys? = null
     var number = 10
     private val disposables = CompositeDisposable()
     val message = MutableLiveData<String>()
