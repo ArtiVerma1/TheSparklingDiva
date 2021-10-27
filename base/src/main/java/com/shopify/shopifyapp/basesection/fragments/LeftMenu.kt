@@ -312,7 +312,7 @@ class LeftMenu : BaseFragment() {
                 "smilereward" -> {
                     if (leftmenu.isLoggedIn) {
                         val intent = Intent(context, Weblink::class.java)
-                        intent.putExtra("name", "REWARDS")
+                        intent.putExtra("name", "My Rewards")
                         intent.putExtra(
                             "link",
                             "https://shopifymobileapp.cedcommerce.com/shopifymobile/smilerewardapi/generateview?mid=18&cid=" +MagePrefs.getCustomerID())

@@ -425,7 +425,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                 if (view.itemDecorationCount == 0) {
                     view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(1), true))
                 }
-
             }
             "vertical" -> {
                 manager.orientation = RecyclerView.VERTICAL
@@ -433,21 +432,18 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                 if (view.itemDecorationCount == 0) {
                     view.addItemDecoration(GridSpacingItemDecoration(1, dpToPx(2), true))
                 }
-
             }
             "grid" -> {
                 view.layoutManager = GridLayoutManager(this, 2)
                 if (view.itemDecorationCount == 0) {
                     view.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(0), true))
                 }
-
             }
             "3grid" -> {
                 view.layoutManager = GridLayoutManager(this, 3)
                 if (view.itemDecorationCount == 0) {
                     view.addItemDecoration(GridSpacingItemDecoration(3, dpToPx(4), true))
                 }
-
             }
             "4grid" -> {
                 view.layoutManager = GridLayoutManager(this, 4)
@@ -599,7 +595,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
             if (result.contents == null) {

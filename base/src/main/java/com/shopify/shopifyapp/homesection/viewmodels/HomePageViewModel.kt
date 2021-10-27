@@ -545,7 +545,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                     )
                                 )
                             }
-
                         }
                     }
                     "full-width-search" -> {
