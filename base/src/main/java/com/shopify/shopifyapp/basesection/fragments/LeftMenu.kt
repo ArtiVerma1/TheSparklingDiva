@@ -173,7 +173,6 @@ class LeftMenu : BaseFragment() {
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-
                     }
                     productintent.putExtra("tittle", menudata.title)
                     context!!.startActivity(productintent)
@@ -297,6 +296,31 @@ class LeftMenu : BaseFragment() {
                         Constant.activityTransition(context!!)
                     } else {
                         val rewards = Intent(context, RewardsPointActivity::class.java)
+                        context!!.startActivity(rewards)
+                        Constant.activityTransition(context!!)
+                    }
+                }
+                "chats" -> {
+                    val chats = Intent(context, Weblink::class.java)
+                    chats.putExtra("name", "Chat With Us")
+                    chats.putExtra(
+                        "link",
+                        "https://shopifymobileapp.cedcommerce.com/shopifymobile/tidiolivechatapi/chatpanel?shop=magenative.myshopify.com")
+                    context!!.startActivity(chats)
+                    Constant.activityTransition(context!!)
+                }
+                "smilereward" -> {
+                    if (leftmenu.isLoggedIn) {
+                        val intent = Intent(context, Weblink::class.java)
+                        intent.putExtra("name", "REWARDS")
+                        intent.putExtra(
+                            "link",
+                            "https://shopifymobileapp.cedcommerce.com/shopifymobile/smilerewardapi/generateview?mid=18&cid=" +MagePrefs.getCustomerID())
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        context!!.startActivity(intent)
+                        Constant.activityTransition(context!!)
+                    } else {
+                        val rewards = Intent(context, LoginActivity::class.java)
                         context!!.startActivity(rewards)
                         Constant.activityTransition(context!!)
                     }
@@ -483,7 +507,6 @@ class LeftMenu : BaseFragment() {
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
-
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
@@ -494,5 +517,4 @@ class LeftMenu : BaseFragment() {
             Thread(runnable).start()
         }
     }
-
 }

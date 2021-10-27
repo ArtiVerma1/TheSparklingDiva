@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -65,6 +66,9 @@ import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import info.androidhive.fontawesome.FontTextView
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
 import org.json.JSONObject
+import zendesk.chat.ChatEngine
+import zendesk.messaging.Engine
+import zendesk.messaging.MessagingActivity
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashMap
@@ -114,6 +118,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     lateinit var wishitem: MenuItem
     lateinit var cartitem: MenuItem
     private var languages: HashMap<String, String>? = null
+    private var toNumber = "+916393417500"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +147,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         } else {
             nav_view.visibility = View.GONE
         }
-
         nav_view.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home_bottom -> {
@@ -185,7 +189,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                 .inflate(R.layout.cart_count_bottom,
                         mbottomNavigationMenuView, false)
 
-
         val wish_badge: View = LayoutInflater.from(this)
                 .inflate(R.layout.wish_count_bottom,
                         mbottomNavigationMenuView, false)
@@ -225,10 +228,8 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
                             Color.parseColor("#000000"),
                             Color.parseColor(value)
                     ))
-
                     nav_view.setItemIconTintList(iconColorStates)
                     nav_view.setItemTextColor(iconColorStates)
-
                     //   nav_view.menu.findItem(R.id.home_bottom).iconTintList = ColorStateList.valueOf(Color.parseColor(value))
                 }
 
@@ -241,6 +242,31 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        /********************************* Chat Options **************************************/
+
+        val chatEngine: Engine? = ChatEngine.engine()
+        chat_but.setOnClickListener {
+            MessagingActivity.builder()
+                .withEngines(chatEngine)
+                .show(this@NewBaseActivity)
+        }
+
+        whatsappchat.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("http://api.whatsapp.com/send?phone=$toNumber")
+            startActivity(intent)
+        }
+
+        messengerchat.setOnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_VIEW
+            intent.setPackage("com.facebook.orca")
+            intent.data = Uri.parse("https://m.me/MageNative")
+            startActivity(intent)
+        }
+
+        /******************************************************************************/
     }
 
     fun consumeWishCount(it: List<ItemData>?) {

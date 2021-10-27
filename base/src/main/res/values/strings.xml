@@ -230,4 +230,6 @@
     <string name="tell_your_friends">Tell Your Friends</string>
     <string name="mail_sent">Mail Sent</string>
     <string name="order_note_title">SPECIAL INSTRUCTIONS FOR SELLER</string>
+    <string name="chat">Chat With Us</string>
+    <string name="smilereward">My Rewards</string>
 </resources>
