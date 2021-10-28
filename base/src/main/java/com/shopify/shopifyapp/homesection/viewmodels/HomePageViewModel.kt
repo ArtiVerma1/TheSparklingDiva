@@ -48,6 +48,7 @@ import com.shopify.shopifyapp.homesection.models.StandAloneBanner
 import com.shopify.shopifyapp.loader_section.CustomLoader
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.shopifyqueries.Query
@@ -83,6 +84,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     val hasFullSearchOnTop = MutableLiveData<Boolean>()
     private val TAG = "HomePageViewModel"
     private var customLoader: CustomLoader? = null
+    var getyotpoauthenticate = MutableLiveData<ApiResponse>()
 
     companion object {
         var count_color: String? = null
@@ -2133,6 +2135,23 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun NResponse(client_id: String, client_secret: String, grant_type: String): MutableLiveData<ApiResponse> {
+        yotpoauthenticateapi(client_id, client_secret, grant_type)
+        return getyotpoauthenticate
+    }
+
+    fun yotpoauthenticateapi(client_id: String, client_secret: String, grant_type: String) {
+        doRetrofitCall(repository.yotpoauthentiate(client_id, client_secret, grant_type), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getyotpoauthenticate.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getyotpoauthenticate.value = ApiResponse.error(error)
+            }
+        }, context = context)
     }
 
     override fun onCleared() {

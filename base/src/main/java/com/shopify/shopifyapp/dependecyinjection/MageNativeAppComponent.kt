@@ -45,6 +45,7 @@ interface MageNativeAppComponent {
     fun doCollectionInjection(collectionList: CollectionListMenu)
     fun doProductViewInjection(product: ProductView)
     fun doJudgeMeReviewInjection(judgeMeCreateReview: JudgeMeCreateReview)
+    fun doYotpoReviewInjection(WriteAReview: WriteAReview)
     fun doReviewListInjection(reviewListActivity: AllReviewListActivity)
     fun doAllJudgeMeReviewListInjection(judgeMeReviews: AllJudgeMeReviews)
     fun doAllAliReviewListInjection(aliReviews: AllAliReviewsListActivity)

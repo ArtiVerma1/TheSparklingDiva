@@ -100,6 +100,8 @@ class LoginActivity : NewBaseActivity() {
         model!!.saveUser(customer.firstName, customer.lastName)
         MagePrefs.setCustomerEmail(customer.email)
         MagePrefs.setCustomerId(getBase64Decode(customer.id.toString())!!)
+        MagePrefs.setCustomerFirstName(customer.firstName)
+        MagePrefs.setCustomerLastName(customer.lastName)
         if (intent.getStringExtra("checkout_id") != null) {
             val intent = Intent(this@LoginActivity, CartList::class.java)
             intent.putExtra("checkout_id", getIntent().getStringExtra("checkout_id"))

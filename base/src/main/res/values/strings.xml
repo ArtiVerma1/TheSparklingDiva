@@ -232,4 +232,6 @@
     <string name="order_note_title">SPECIAL INSTRUCTIONS FOR SELLER</string>
     <string name="chat">Chat With Us</string>
     <string name="smilereward">My Rewards</string>
+    <string name="yotpo_rate_product">+Write Yotpo Review</string>
+    <string name="reviewpost">Your review has been successfully submitted.</string>
 </resources>

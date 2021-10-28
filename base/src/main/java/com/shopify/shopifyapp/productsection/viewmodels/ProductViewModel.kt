@@ -58,6 +58,7 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     var getAlireviewProduct = MutableLiveData<ApiResponse>()
     var sizeChartVisibility = MutableLiveData<Boolean>()
     var sizeChartUrl = MutableLiveData<String>()
+    var getyotpocreate = MutableLiveData<ApiResponse>()
     lateinit var context: Context
     private val TAG = "ProductViewModel"
     val filteredlist = MutableLiveData<List<Storefront.ProductVariantEdge>>()
@@ -525,5 +526,22 @@ class ProductViewModel(private val repository: Repository) : ViewModel() {
     fun isValidEmail(target: String): Boolean {
         val emailPattern = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE)
         return emailPattern.matcher(target).matches()
+    }
+
+    fun NResponse(appkey: String, sku: String, product_title: String, product_url: String, display_name: String, email: String, review_content: String, review_title: String, review_score: String): MutableLiveData<ApiResponse> {
+        yotpocretereview(appkey, sku, product_title,product_url,display_name,email,review_content,review_title,review_score)
+        return getyotpocreate
+    }
+
+    fun yotpocretereview(appkey: String, sku: String, product_title: String, product_url: String, display_name: String, email: String, review_content: String, review_title: String, review_score: String) {
+        doRetrofitCall(repository.yotpocretereview(appkey, sku, product_title,product_url,display_name,email,review_content,review_title,review_score), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getyotpocreate.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getyotpocreate.value = ApiResponse.error(error)
+            }
+        }, context = context)
     }
 }

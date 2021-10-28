@@ -16,7 +16,10 @@ object MagePrefs {
     private val CART_AMOUNT = "cart_amount"
     private val APPCURRENCY = "currency"
     private const val CUSTOMERID = "customerId"
+    private const val ACCESSTOKEN = "accesstoken"
     private const val CUSTOMEREMAIL = "customerEmail"
+    private const val FIRSTNAME = "firstname"
+    private const val LASTNAME = "lastname"
 
     fun getInstance(context: Context) {
         this.context = context
@@ -75,8 +78,35 @@ object MagePrefs {
         return sharedPreference?.getString(CUSTOMERID, null)
     }
 
+    fun setCustomerFirstName(firstname: String) {
+        editor?.putString(FIRSTNAME, firstname)
+        editor?.commit()
+    }
+
+    fun getCustomerFirstName(): String? {
+        return sharedPreference?.getString(FIRSTNAME, null)
+    }
+
+    fun setCustomerLastName(lastname: String) {
+        editor?.putString(LASTNAME, lastname)
+        editor?.commit()
+    }
+
+    fun getCustomerLastName(): String? {
+        return sharedPreference?.getString(LASTNAME, null)
+    }
+
     fun setCustomerEmail(customerEmail: String) {
         editor?.putString(CUSTOMEREMAIL, customerEmail)
+        editor?.commit()
+    }
+
+    fun getaccessToken(): String? {
+        return sharedPreference?.getString(ACCESSTOKEN, null)
+    }
+
+    fun saveaccessToken(accesstoken: String) {
+        editor?.putString(ACCESSTOKEN, accesstoken)
         editor?.commit()
     }
 
