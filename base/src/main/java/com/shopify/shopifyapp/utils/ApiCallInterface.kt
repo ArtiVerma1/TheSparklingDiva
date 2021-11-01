@@ -110,4 +110,7 @@ interface ApiCallInterface {
                          @Query("review_content") review_content: String,
                          @Query("review_title") review_title: String,
                          @Query("review_score") review_score: String): Single<JsonElement>
+
+    @GET(Urls.DISCOUNTCODEAPPLY)
+    fun discountcodeapply(@Query("mid") mid: String?, @Query("customer_code") customer_code: String?): Single<JsonElement>
 }

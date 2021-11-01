@@ -48,11 +48,15 @@ class Urls {
         const val SENDREFERRAL = YOTPOBASE_URL + "referral/share"
         const val XGUID = "oyeoRDurwhul3WK-zN5ScA"
         const val X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
-
         /************************** Yotpo Rewards Integration ***************************/
 
         const val YOTPOAUTHENTICATE = "https://api.yotpo.com/oauth/token"
         const val YOTPOCREATEREVIEW = "https://api.yotpo.com/v1/widget/reviews"
+
+        /********************************************************************************/
+        /********************************** DICOUNTCODE *********************************/
+
+        const val DISCOUNTCODEAPPLY: String = "https://shopifymobileapp.cedcommerce.com/shopifymobilenew/discountpaneldataapi/getdiscountcodes/"
 
         /********************************************************************************/
     }

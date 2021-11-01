@@ -356,4 +356,9 @@ class Repository {
         return apiCallInterface.yotpocretereview(appkey,sku,product_title,product_url,display_name,email,review_content,review_title,review_score)
     }
 
+    fun discountcodeapply(mid: String, customer_code: String): Single<JsonElement> {
+        return apiCallInterface.discountcodeapply(mid, customer_code)
+    }
+
+
 }

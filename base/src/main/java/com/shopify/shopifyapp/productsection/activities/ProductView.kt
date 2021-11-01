@@ -134,7 +134,7 @@ class ProductView : NewBaseActivity() {
             productID = model!!.id
         }
         Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)
-        Log.i("PID",""+getBase64Decode(productID))
+        Log.i("PID",""+productID)
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(
                 Urls(application as MyApplication).mid,
@@ -246,7 +246,6 @@ class ProductView : NewBaseActivity() {
                 )
                 reviewList?.add(review_model)
             }
-
             if (reviewList?.size!! > 0) {
                 binding?.aliNoReviews?.visibility = View.GONE
                 binding?.aliReviewList?.visibility = View.VISIBLE
@@ -1327,10 +1326,12 @@ class ProductView : NewBaseActivity() {
             yotpo_rating_bar.rating.toString()
         )?.observe(this, Observer { this.showData(it) })
     }
+
     private fun showData(response: ApiResponse?) {
         Log.i("RESPONSEGET", "" + response?.data)
         receiveReview(response?.data)
     }
+
     private fun receiveReview(data: JsonElement?) {
         val jsondata = JSONObject(data.toString())
         Log.i("messagereview", "" +jsondata)

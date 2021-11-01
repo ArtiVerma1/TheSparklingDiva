@@ -433,6 +433,7 @@
 
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:visibility="gone"
                 android:id="@+id/yotpo_write_review_but"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
