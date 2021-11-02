@@ -468,10 +468,18 @@ class CartList : NewBaseActivity() {
                     discountCodeLayoutBinding.discountCodeEdt.error =
                         getString(R.string.discount_validation)
                 } else {
-                    model?.NResponse(
-                        Urls(application as MyApplication).mid,
-                        discountCodeLayoutBinding.discountCodeEdt.text.toString()
-                    )?.observe(this@CartList, Observer { this.showData(it, data) })
+                    if (SplashViewModel.featuresModel.appOnlyDiscount) {
+                        model?.NResponse(
+                            Urls(application as MyApplication).mid,
+                            discountCodeLayoutBinding.discountCodeEdt.text.toString()
+                        )?.observe(this@CartList, Observer { this.showData(it, data) })
+                    }else{
+                        model!!.applyDiscount(
+                            data.checkoutId,
+                            discountCodeLayoutBinding.discountCodeEdt.text.toString()
+                        )
+                    }
+
                     listdialog.dismiss()
                 }
             }
