@@ -623,7 +623,8 @@ class ProductView : NewBaseActivity() {
             data!!.textdata = productedge.title
             productName = productedge.title
             showTittle(productName!!)
-            Log.i("here", productedge.descriptionHtml)
+            // Log.i("here", productedge.descriptionHtml)
+            Log.d(TAG, "setProductData: " + productedge.descriptionHtml)
             binding?.description?.loadDataWithBaseURL(
                 null,
                 productedge.descriptionHtml,

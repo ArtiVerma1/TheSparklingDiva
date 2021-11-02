@@ -236,69 +236,49 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
             MyApplication.dataBaseReference?.child("additional_info")?.child("validity")
                 ?.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val value = dataSnapshot.getValue(Boolean::class.java)!!
-                        val runnable = Runnable {
-                            Log.i("MageNative:", "TrialExpired$value")
-                            Log.i("MageNative:", "LocalData" + repository.localData)
+                        try {
+                            val value = dataSnapshot.getValue(Boolean::class.java)!!
+                            val runnable = Runnable {
+                                Log.i("MageNative:", "TrialExpired$value")
+                                Log.i("MageNative:", "LocalData" + repository.localData)
 
-                            if (repository.localData.size == 0) {
-                                appLocalData?.isIstrialexpire = value
-                                getCurrency()
-                            } else {
-                                appLocalData = repository.localData[0]
-                                appLocalData!!.isIstrialexpire = value
-                                MagePrefs.setCurrency(appLocalData.currencycode ?: "")
-                                repository.updateData(appLocalData)
+                                if (repository.localData.size == 0) {
+                                    appLocalData?.isIstrialexpire = value
+                                    getCurrency()
+                                } else {
+                                    appLocalData = repository.localData[0]
+                                    appLocalData!!.isIstrialexpire = value
+                                    MagePrefs.setCurrency(appLocalData.currencycode ?: "")
+                                    repository.updateData(appLocalData)
+                                }
+                                Log.i(
+                                    "MageNative:", "Currency" +
+                                            appLocalData.currencycode
+                                )
+                                disposables.add(repository.getSingle(appLocalData)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(
+                                        { result ->
+                                            responseLiveData.setValue(
+                                                LocalDbResponse.success(
+                                                    result
+                                                )
+                                            )
+                                        },
+                                        { throwable ->
+                                            responseLiveData.setValue(
+                                                LocalDbResponse.error(
+                                                    throwable
+                                                )
+                                            )
+                                        }
+                                    ))
                             }
-                            Log.i(
-                                "MageNative:", "Currency" +
-                                        appLocalData.currencycode
-                            )
-                            disposables.add(repository.getSingle(appLocalData)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(
-                                    { result ->
-                                        responseLiveData.setValue(
-                                            LocalDbResponse.success(
-                                                result
-                                            )
-                                        )
-                                    },
-                                    { throwable ->
-                                        responseLiveData.setValue(
-                                            LocalDbResponse.error(
-                                                throwable
-                                            )
-                                        )
-                                    }
-                                ))
+                            Thread(runnable).start()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                        Thread(runnable).start()
-
-//                    GlobalScope.launch(Dispatchers.IO) {
-//                        Log.i("MageNative:", "TrialExpired$value")
-//                        Log.i("MageNative:", "LocalData" + repository.localData)
-//
-//                        if (repository.localData.size == 0) {
-//                            appLocalData?.isIstrialexpire = value
-//                            getCurrency()
-//                        } else {
-//                            appLocalData = repository.localData[0]
-//                            appLocalData!!.isIstrialexpire = value
-//                            MagePrefs.setCurrency(appLocalData.currencycode ?: "")
-//                            repository.updateData(appLocalData)
-//                        }
-//                        Log.i("MageNative:", "Currency" +
-//                                appLocalData.currencycode)
-//
-//                        var data = async {
-//                            repository.getSingle(appLocalData)
-//                        }
-//                        responseLiveData.postValue(LocalDbResponse.success(data.await()))
-//                    }
-
-
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {

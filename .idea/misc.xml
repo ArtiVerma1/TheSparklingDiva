@@ -30,6 +30,8 @@
         <entry key="base/src/main/res/layout/m_dynamicmenu.xml" value="0.11930091185410334" />
         <entry key="base/src/main/res/layout/m_homepage_modified.xml" value="0.1" />
         <entry key="base/src/main/res/layout/m_leftmenufragment.xml" value="0.25" />
+        <entry key="base/src/main/res/layout/m_newbaseactivity.xml" value="0.11144883485309018" />
+        <entry key="base/src/main/res/layout/m_productitem.xml" value="0.1" />
         <entry key="base/src/main/res/layout/myreward_item.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/redeem_point_item.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/redeemdialog.xml" value="0.196875" />

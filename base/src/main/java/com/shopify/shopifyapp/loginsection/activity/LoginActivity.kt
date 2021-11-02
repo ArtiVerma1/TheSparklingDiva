@@ -148,7 +148,7 @@ class LoginActivity : NewBaseActivity() {
                         model!!.getUser(binding!!.includedlogin.username.text!!.toString(), binding!!.includedlogin.password.text!!.toString())
                         val params = Bundle()
                         params.putString("user_email", binding!!.includedlogin.username.text!!.toString())
-                        firebaseAnalytics.logEvent("android_custom_log", params)
+                        firebaseAnalytics.logEvent("android_email_log", params)
                     }
                 }
             }

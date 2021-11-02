@@ -129,7 +129,6 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
                     data.regularprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
                     data.specialprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
                     data.offertext = getDiscount(special, regular).toString() + "%off"
-
                 } else {
                     data.regularprice = CurrencyFormatter.setsymbol(edge.node.price.amount, edge.node.price.currencyCode.toString())
                     data.specialprice = CurrencyFormatter.setsymbol(edge.node.compareAtPrice.amount, edge.node.compareAtPrice.currencyCode.toString())
