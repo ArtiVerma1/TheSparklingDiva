@@ -20,7 +20,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var forceUpdate: Boolean = false
+    var forceUpdate: Boolean = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.forceUpdate)

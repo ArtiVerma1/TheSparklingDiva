@@ -17,6 +17,7 @@ object MagePrefs {
     private val APPCURRENCY = "currency"
     private const val CUSTOMERID = "customerId"
     private const val CUSTOMEREMAIL = "customerEmail"
+    private const val MAINTENANCE = "maintenancemode"
 
     fun getInstance(context: Context) {
         this.context = context
@@ -88,6 +89,15 @@ object MagePrefs {
         editor?.remove(CUSTOMERID)
         editor?.remove(CUSTOMEREMAIL)
         editor?.commit()
+    }
+
+    fun setMaintenanceMode(maintenance: Boolean) {
+        editor?.putBoolean(MAINTENANCE, maintenance)
+        editor?.commit()
+    }
+
+    fun getMaintenanceMode(): Boolean? {
+        return sharedPreference?.getBoolean(MAINTENANCE, false)
     }
 
 }

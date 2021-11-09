@@ -35,8 +35,10 @@ import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.f
 import com.shopify.shopifyapp.databinding.MSplashBinding
 import com.shopify.shopifyapp.dbconnection.entities.AppLocalData
 import com.shopify.shopifyapp.homesection.activities.HomePage
+import com.shopify.shopifyapp.maintenence_section.MaintenenceActivity
 import com.shopify.shopifyapp.productsection.activities.ProductList
 import com.shopify.shopifyapp.productsection.activities.ProductView
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.trialsection.activities.TrialExpired
 import com.shopify.shopifyapp.utils.*
 import java.math.BigInteger
@@ -199,6 +201,9 @@ class Splash : AppCompatActivity() {
         if (!data.isIstrialexpire) {
             intent = arrayOfNulls(1)
             intent[0] = Intent(this@Splash, TrialExpired::class.java)
+        } else if (MagePrefs.getMaintenanceMode() ?: false) {
+            intent = arrayOfNulls(1)
+            intent[0] = Intent(this@Splash, MaintenenceActivity::class.java)
         } else {
             if (getIntent().hasExtra("type")) {
                 if (getIntent().getStringExtra("type").equals("product")) {

@@ -110,6 +110,7 @@ class HomePage : NewBaseActivity() {
             ?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
         homemodel!!.hasBannerOnTop.observe(this, Observer { this.ConsumeBanner(it) })
         homemodel!!.hasFullSearchOnTop.observe(this, Observer { this.consumeFullSearch(it) })
+        homemodel?.notifyPersonalised?.observe(this, Observer { this.loadPersonalised(it) })
         scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
             if (scrollY > oldScrollY) {
                 Log.i(TAG, "Scroll DOWN")
@@ -173,6 +174,15 @@ class HomePage : NewBaseActivity() {
         }
         if (featuresModel.forceUpdate) {
             forceUpdate()
+        }
+    }
+
+    private fun loadPersonalised(it: Boolean?) {
+        if (it ?: false) {
+            homemodel!!.getApiResponse()
+                .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            homemodel!!.getBestApiResponse()
+                .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
         }
     }
 
@@ -516,14 +526,6 @@ class HomePage : NewBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (featuresModel.ai_product_reccomendaton) {
-            if (Constant.ispersonalisedEnable) {
-                homemodel!!.getApiResponse()
-                    .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-                homemodel!!.getBestApiResponse()
-                    .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-            }
-        }
         if (homepage.childCount > 0) {
             if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
                 var home_toolbar =

@@ -27,9 +27,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
+        <activity
+            android:name=".maintenence_section.MaintenenceActivity"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
             android:name=".productsection.activities.AllAliReviewsListActivity"
             android:screenOrientation="portrait" />
@@ -65,7 +71,6 @@
         <activity
             android:name=".checkoutsection.activities.OrderSuccessActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".yotporewards.earnrewards.FaqsActivity"
             android:screenOrientation="portrait" />

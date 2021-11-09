@@ -50,6 +50,7 @@ import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.*
+import com.shopify.shopifyapp.utils.Constant.ispersonalisedEnable
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -81,6 +82,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     val hasFullSearchOnTop = MutableLiveData<Boolean>()
     private val TAG = "HomePageViewModel"
     private var customLoader: CustomLoader? = null
+    val notifyPersonalised: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
     companion object {
         var count_color: String? = null
@@ -160,9 +162,13 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             MyApplication.dataBaseReference?.child("enabled_integrations")
                 ?.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val downloadlink = dataSnapshot.getValue(String::class.java)!!
-                        Log.i("MageNative", "DownloadLink " + downloadlink)
-                        downloadIntegrationJson(downloadlink, context)
+                        try {
+                            val downloadlink = dataSnapshot.getValue(String::class.java)!!
+                            Log.i("MageNative", "DownloadLink " + downloadlink)
+                            downloadIntegrationJson(downloadlink, context)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -189,8 +195,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     fun downloadIntegrationJson(downloadlink: String, context: HomePage) {
         GlobalScope.launch(Dispatchers.Main) {
-//            customLoader = CustomLoader(context)
-//            customLoader?.show()
             var result = async(Dispatchers.IO) {
                 URL(downloadlink).readText()
             }
@@ -199,19 +203,15 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     fun parseFeaturesResponse(apiResponse: String, context: HomePage) {
-
         try {
-            var obj = JSONArray(apiResponse)
-
+            val obj = JSONArray(apiResponse)
             for (i in 0 until obj.length()) {
-
-                var ids = obj.getJSONObject(i).getString("id")
+                val ids = obj.getJSONObject(i).getString("id")
                 when (ids) {
                     "I01" -> {
                         SplashViewModel.featuresModel.productReview = true
                     }
                     "I02" -> {
-
                         //Yotpo Product Reviews & Photos
                     }
                     "I03" -> {
@@ -225,7 +225,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         }
                     }
                     "I04" -> {
-
                         SplashViewModel.featuresModel.sizeChartVisibility = true
                     }
                     "I05" -> {
@@ -237,31 +236,26 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         //tdio chat
                     }
                     "I07" -> {
-
                         SplashViewModel.featuresModel.zapietEnable = true
-
                     }
                     "I12" -> {
-
                         SplashViewModel.featuresModel.yoptoLoyalty = true
                         if (obj.getJSONObject(i).has("inputs")) {
                             if (obj.getJSONObject(i).getJSONObject("inputs").has("apiKey"))
-
                                 Urls.X_API_KEY =
                                     obj.getJSONObject(i).getJSONObject("inputs").getString("apiKey")
                             Urls.XGUID =
                                 obj.getJSONObject(i).getJSONObject("inputs").getString("guid")
                         }
-
-
                     }
                     "I13" -> {
-
                         SplashViewModel.featuresModel.aliReviews = true
-
                     }
-
-
+                    "I14" -> {
+                        notifyPersonalised.value = true
+                        SplashViewModel.featuresModel.ai_product_reccomendaton = true
+                        ispersonalisedEnable = true
+                    }
                 }
 
             }
