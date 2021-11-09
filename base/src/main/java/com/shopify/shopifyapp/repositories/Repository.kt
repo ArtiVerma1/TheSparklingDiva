@@ -355,6 +355,19 @@ class Repository {
         return apiCallInterface.localDelivery(jsonObject)
     }
 
+    fun yotpoauthentiate(client_id: String, client_secret: String, grant_type: String): Single<JsonElement> {
+        return apiCallInterface.yotpoauthentiate(client_id,client_secret,grant_type)
+    }
+
+    fun yotpocretereview(appkey: String, sku: String, product_title: String, product_url: String, display_name: String, email: String, review_content: String, review_title: String, review_score: String): Single<JsonElement> {
+        return apiCallInterface.yotpocretereview(appkey,sku,product_title,product_url,display_name,email,review_content,review_title,review_score)
+    }
+
+    fun discountcodeapply(mid: String, customer_code: String): Single<JsonElement> {
+        return apiCallInterface.discountcodeapply(mid, customer_code)
+    }
+
+
     fun localDeliveryy(jsonObject: HashMap<String, String>): Single<JsonObject> {
         return apiCallInterface.localDeliveryy(jsonObject)
     }

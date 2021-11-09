@@ -134,6 +134,7 @@ object Query {
                                                             }).originalSrc()
                                                         })
                                                         .availableForSale()
+                                                        .sku()
                                                 }
                                                 )
                                         }
@@ -248,6 +249,7 @@ object Query {
                                             it.originalSrc().transformedSrc()
                                         })
                                         .availableForSale()
+                                        .sku()
                                 }
                                 )
                         }
@@ -267,19 +269,32 @@ object Query {
     fun getProductsById(
         cat_id: String?,
         cursor: String,
-        sortby_key: Storefront.ProductCollectionSortKeys,
+        sortby_key: Storefront.ProductCollectionSortKeys?,
         direction: Boolean,
         number: Int,
         list_currency: List<Storefront.CurrencyCode>
     ): QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
-            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
-                args.first(number).sortKey(sortby_key).reverse(direction)
+            if (sortby_key != null) {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).sortKey(sortby_key).reverse(direction)
+                }
+            } else {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).reverse(direction)
+                }
             }
+
         } else {
-            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
-                args.first(number).after(cursor).sortKey(sortby_key).reverse(direction)
+            if (sortby_key != null) {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).after(cursor).sortKey(sortby_key).reverse(direction)
+                }
+            } else {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).after(cursor).reverse(direction)
+                }
             }
         }
         return Storefront.query { root ->
@@ -429,6 +444,7 @@ object Query {
                                                         }).originalSrc()
                                                     })
                                                     .availableForSale()
+                                                    .sku()
                                             }
                                     }
                             }
@@ -440,19 +456,32 @@ object Query {
     fun getProductsByHandle(
         handle: String,
         cursor: String,
-        sortby_key: Storefront.ProductCollectionSortKeys,
+        sortby_key: Storefront.ProductCollectionSortKeys?,
         direction: Boolean,
         number: Int,
         list_currency: List<Storefront.CurrencyCode>
     ): QueryRootQuery {
         val definition: Storefront.CollectionQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
-            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
-                args.first(number).sortKey(sortby_key).reverse(direction)
+            if (sortby_key != null) {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).sortKey(sortby_key).reverse(direction)
+                }
+            } else {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).reverse(direction)
+                }
             }
+
         } else {
-            definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
-                args.first(number).after(cursor).sortKey(sortby_key).reverse(direction)
+            if (sortby_key != null) {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).after(cursor).sortKey(sortby_key).reverse(direction)
+                }
+            } else {
+                definition = Storefront.CollectionQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).after(cursor).reverse(direction)
+                }
             }
         }
         return Storefront.query { root ->
@@ -467,22 +496,39 @@ object Query {
 
     fun getAllProducts(
         cursor: String,
-        sortby_key: Storefront.ProductSortKeys,
+        sortby_key: Storefront.ProductSortKeys?,
         direction: Boolean,
         number: Int,
         list_currency: List<Storefront.CurrencyCode>
     ): QueryRootQuery {
         val shoppro: QueryRootQuery.ProductsArgumentsDefinition
         if (cursor == "nocursor") {
-            shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
-                args.first(number).sortKey(sortby_key).reverse(direction)
+            if (sortby_key != null) {
+                shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).sortKey(sortby_key).reverse(direction)
+                }
+            } else {
+                shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).reverse(direction)
+                }
             }
         } else {
-            shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
-                args.first(number).after(cursor).sortKey(sortby_key).reverse(direction)
+            if (sortby_key != null) {
+                shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).after(cursor).sortKey(sortby_key).reverse(direction)
+                }
+            } else {
+                shoppro = QueryRootQuery.ProductsArgumentsDefinition { args ->
+                    args.first(number).after(cursor).reverse(direction)
+                }
             }
         }
-        return Storefront.query { root -> root.products(shoppro, productDefinition(list_currency)) }
+        return Storefront.query { root ->
+            root.products(
+                shoppro,
+                productDefinition(list_currency)
+            )
+        }
     }
 
     fun getCollections(cursor: String): QueryRootQuery {
@@ -620,7 +666,8 @@ object Query {
                                                 }
                                                 .shippingAddress { _queryBuilder ->
                                                     _queryBuilder.address1().address2().city()
-                                                        .company().country().firstName().lastName()
+                                                        .company().country().firstName()
+                                                        .lastName()
                                                         .phone().zip().latitude().longitude()
                                                 }.totalShippingPriceV2 { _queryBuilder ->
                                                     _queryBuilder.currencyCode().amount()
@@ -644,15 +691,18 @@ object Query {
                                                                                 p.amount()
                                                                                     .currencyCode()
                                                                             })
-                                                                                .selectedOptions({ select ->
-                                                                                    select.name()
-                                                                                        .value()
-                                                                                })
-                                                                                .compareAtPriceV2({ c ->
-                                                                                    c.amount()
-                                                                                        .currencyCode()
-                                                                                })
-                                                                                .image(Storefront.ImageQueryDefinition { it.originalSrc() })
+                                                                                .selectedOptions(
+                                                                                    { select ->
+                                                                                        select.name()
+                                                                                            .value()
+                                                                                    })
+                                                                                .compareAtPriceV2(
+                                                                                    { c ->
+                                                                                        c.amount()
+                                                                                            .currencyCode()
+                                                                                    })
+                                                                                .image(
+                                                                                    Storefront.ImageQueryDefinition { it.originalSrc() })
                                                                         })
                                                                 }
                                                                 )
@@ -660,13 +710,17 @@ object Query {
                                                         )
                                                 }
                                                 )
-                                                .totalTaxV2({ tt -> tt.amount().currencyCode() })
+                                                .totalTaxV2({ tt ->
+                                                    tt.amount().currencyCode()
+                                                })
                                                 .shippingAddress({ ship ->
                                                     ship.address1().address2().firstName()
                                                         .lastName().country().city().phone()
                                                         .province().zip()
                                                 })
-                                                .totalPriceV2({ tp -> tp.amount().currencyCode() })
+                                                .totalPriceV2({ tp ->
+                                                    tp.amount().currencyCode()
+                                                })
                                                 .subtotalPriceV2({ st ->
                                                     st.amount().currencyCode()
                                                 })
@@ -745,7 +799,8 @@ object Query {
                     QueryRootQuery.ProductsArgumentsDefinition { args ->
                         args.query(
                             barcode
-                        ).first(1).sortKey(Storefront.ProductSortKeys.BEST_SELLING).reverse(false)
+                        ).first(1).sortKey(Storefront.ProductSortKeys.BEST_SELLING)
+                            .reverse(false)
                     }, productDefinition(list_currency)
                 )
         }

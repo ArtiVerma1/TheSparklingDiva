@@ -5,7 +5,6 @@ import android.app.AlertDialog
 
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Build
@@ -108,6 +107,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
     @Inject
     lateinit var padapter: PersonalisedAdapter
     private var binding: MCartlistBinding? = null
+    var discountcode: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)
@@ -152,27 +152,27 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         Log.d(TAG, "consumeResponseDiscount: " + it!!.checkoutDiscountCodeApplyV2)
         try {
             val bottomData = CartBottomData()
-            bottomData.checkoutId = it!!.checkoutDiscountCodeApplyV2.checkout.id
+            bottomData.checkoutId = it.checkoutDiscountCodeApplyV2.checkout.id
             Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
             bottomData.subtotaltext =
                 resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
             bottomData.subtotal = CurrencyFormatter.setsymbol(
-                it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.amount,
-                it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.currencyCode.toString()
+                it.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.amount,
+                it.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.currencyCode.toString()
             )
-            if (it!!.checkoutDiscountCodeApplyV2.checkout.taxExempt!!) {
+            if (it.checkoutDiscountCodeApplyV2.checkout.taxExempt!!) {
                 binding!!.taxtext.visibility = View.VISIBLE
                 binding!!.tax.visibility = View.VISIBLE
                 bottomData.tax = CurrencyFormatter.setsymbol(
-                    it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.amount,
-                    it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.currencyCode.toString()
+                    it.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.amount,
+                    it.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.currencyCode.toString()
                 )
             }
             bottomData.grandtotal = CurrencyFormatter.setsymbol(
-                it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.amount,
-                it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.currencyCode.toString()
+                it.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.amount,
+                it.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.currencyCode.toString()
             )
-            bottomData.checkouturl = it!!.checkoutDiscountCodeApplyV2.checkout.webUrl
+            bottomData.checkouturl = it.checkoutDiscountCodeApplyV2.checkout.webUrl
             binding!!.bottomdata = bottomData
             binding!!.root.visibility = View.VISIBLE
             try {
@@ -181,7 +181,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     Log.i("herer", "token : " + model?.customeraccessToken?.customerAccessToken)
                     model?.associatecheckout(
                         bottomData.checkoutId,
-                        model!!.customeraccessToken?.customerAccessToken
+                        model!!.customeraccessToken.customerAccessToken
                     )
                     model?.getassociatecheckoutResponse()
                         ?.observe(this@CartList, Observer { ClickHandler().getResonse(it) })
@@ -204,22 +204,22 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         bottomData.subtotaltext =
             resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
         bottomData.subtotal = CurrencyFormatter.setsymbol(
-            it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.amount,
-            it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.currencyCode.toString()
+            it.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.amount,
+            it.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.currencyCode.toString()
         )
-        if (it!!.checkoutGiftCardRemoveV2.checkout.taxExempt!!) {
+        if (it.checkoutGiftCardRemoveV2.checkout.taxExempt!!) {
             binding!!.taxtext.visibility = View.VISIBLE
             binding!!.tax.visibility = View.VISIBLE
             bottomData.tax = CurrencyFormatter.setsymbol(
-                it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.amount,
-                it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.currencyCode.toString()
+                it.checkoutGiftCardRemoveV2.checkout.totalTaxV2.amount,
+                it.checkoutGiftCardRemoveV2.checkout.totalTaxV2.currencyCode.toString()
             )
         }
         bottomData.grandtotal = CurrencyFormatter.setsymbol(
-            it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.amount,
-            it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.currencyCode.toString()
+            it.checkoutGiftCardRemoveV2.checkout.totalPriceV2.amount,
+            it.checkoutGiftCardRemoveV2.checkout.totalPriceV2.currencyCode.toString()
         )
-        bottomData.checkouturl = it!!.checkoutGiftCardRemoveV2.checkout.webUrl
+        bottomData.checkouturl = it.checkoutGiftCardRemoveV2.checkout.webUrl
         binding!!.bottomdata = bottomData
         binding!!.root.visibility = View.VISIBLE
         showToast(getString(R.string.gift_remove))
@@ -229,27 +229,27 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         binding!!.applyGiftBut.text = getString(R.string.remove)
         val bottomData = CartBottomData()
         bottomData.giftcardID = it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].id
-        bottomData.checkoutId = it!!.checkoutGiftCardsAppend.checkout.id
+        bottomData.checkoutId = it.checkoutGiftCardsAppend.checkout.id
         Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
         bottomData.subtotaltext =
             resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
         bottomData.subtotal = CurrencyFormatter.setsymbol(
-            (it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
-            it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.currencyCode.toString()
+            (it.checkoutGiftCardsAppend.checkout.subtotalPriceV2.amount.toDouble() - it.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
+            it.checkoutGiftCardsAppend.checkout.subtotalPriceV2.currencyCode.toString()
         )
-        if (it!!.checkoutGiftCardsAppend.checkout.taxExempt!!) {
+        if (it.checkoutGiftCardsAppend.checkout.taxExempt!!) {
             binding!!.taxtext.visibility = View.VISIBLE
             binding!!.tax.visibility = View.VISIBLE
             bottomData.tax = CurrencyFormatter.setsymbol(
-                it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.amount,
-                it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.currencyCode.toString()
+                it.checkoutGiftCardsAppend.checkout.totalTaxV2.amount,
+                it.checkoutGiftCardsAppend.checkout.totalTaxV2.currencyCode.toString()
             )
         }
         bottomData.grandtotal = CurrencyFormatter.setsymbol(
-            (it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
-            it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.currencyCode.toString()
+            (it.checkoutGiftCardsAppend.checkout.totalPriceV2.amount.toDouble() - it.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
+            it.checkoutGiftCardsAppend.checkout.totalPriceV2.currencyCode.toString()
         )
-        bottomData.checkouturl = it!!.checkoutGiftCardsAppend.checkout.webUrl
+        bottomData.checkouturl = it.checkoutGiftCardsAppend.checkout.webUrl
         binding!!.bottomdata = bottomData
         binding!!.root.visibility = View.VISIBLE
         showToast(getString(R.string.gift_success))
@@ -262,11 +262,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
     private fun consumeResponse(reponse: Storefront.Checkout) {
         if (reponse.lineItems.edges.size > 0) {
             showTittle(resources.getString(R.string.yourcart) + " ( " + reponse.lineItems.edges.size + " items )")
-            if (adapter!!.data != null) {
-                adapter!!.data = reponse.lineItems.edges
-                adapter!!.notifyDataSetChanged()
+            if (adapter.data != null) {
+                adapter.data = reponse.lineItems.edges
+                adapter.notifyDataSetChanged()
             } else {
-                adapter!!.setData(
+                adapter.setData(
                     reponse.lineItems.edges,
                     model,
                     this,
@@ -555,7 +555,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                 personamodel!!.setPersonalisedData(
                     jsondata.getJSONObject("query1").getJSONArray("products"),
                     personalisedadapter,
-                    model!!.presentCurrency!!,
+                    model!!.presentCurrency,
                     binding!!.personalised
                 )
             }
@@ -648,9 +648,9 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             Log.d(TAG, "loadCheckout: " + cartWarning?.values)
             if (cartWarning?.values?.contains(true) == true) {
                 var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
-                alertDialog.setTitleText(view.context?.getString(R.string.warning_message))
-                alertDialog.setContentText(view?.context?.getString(R.string.cart_warning))
-                alertDialog.setConfirmText(view?.context?.getString(R.string.dialog_ok))
+                alertDialog.titleText = view.context?.getString(R.string.warning_message)
+                alertDialog.contentText = view.context?.getString(R.string.cart_warning)
+                alertDialog.confirmText = view.context?.getString(R.string.dialog_ok)
                 alertDialog.setConfirmClickListener { sweetAlertDialog ->
                     sweetAlertDialog.dismissWithAnimation()
                 }
@@ -662,17 +662,18 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
 
         fun payWithGpay(view: View, data: CartBottomData) {
             val idempotencyKey = UUID.randomUUID().toString()
-            val billingAddressInput: Storefront.MailingAddressInput = Storefront.MailingAddressInput()
-            billingAddressInput.address1= "3/446 Gomti Nagar Vishvash Khand Lucknow"
-            billingAddressInput.address2="3/446 Gomti Nagar Vishvash Khand Lucknow"
-            billingAddressInput.city="Lucknow"
-            billingAddressInput.company=""
-            billingAddressInput.country="India"
-            billingAddressInput.firstName="Abhishek"
-            billingAddressInput.lastName="Dubey"
-            billingAddressInput.zip="226010"
+            val billingAddressInput: Storefront.MailingAddressInput =
+                Storefront.MailingAddressInput()
+            billingAddressInput.address1 = "3/446 Gomti Nagar Vishvash Khand Lucknow"
+            billingAddressInput.address2 = "3/446 Gomti Nagar Vishvash Khand Lucknow"
+            billingAddressInput.city = "Lucknow"
+            billingAddressInput.company = ""
+            billingAddressInput.country = "India"
+            billingAddressInput.firstName = "Abhishek"
+            billingAddressInput.lastName = "Dubey"
+            billingAddressInput.zip = "226010"
 
-            model?.doGooglePay(data.checkoutId,  "100", idempotencyKey,billingAddressInput)
+            model?.doGooglePay(data.checkoutId, "100", idempotencyKey, billingAddressInput)
         }
 
         fun applyGiftCard(view: View, bottomData: CartBottomData) {
@@ -685,17 +686,17 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         bottomData.checkoutId
                     )
                 }
-            } else if ((view as MageNativeButton).text == getString(R.string.remove)) {
+            } else if (view.text == getString(R.string.remove)) {
                 model!!.removeGiftCard(bottomData.giftcardID, bottomData.checkoutId)
             }
         }
 
         fun clearCart(view: View) {
             var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
-            alertDialog.setTitleText(getString(R.string.warning_message))
-            alertDialog.setContentText(getString(R.string.delete_cart_warning))
-            alertDialog.setConfirmText(getString(R.string.yes_delete))
-            alertDialog.setCancelText(getString(R.string.no))
+            alertDialog.titleText = getString(R.string.warning_message)
+            alertDialog.contentText = getString(R.string.delete_cart_warning)
+            alertDialog.confirmText = getString(R.string.yes_delete)
+            alertDialog.cancelText = getString(R.string.no)
             alertDialog.setConfirmClickListener { sweetAlertDialog ->
                 sweetAlertDialog.setTitleText(getString(R.string.deleted))
                     .setContentText(getString(R.string.cart_deleted_message))
@@ -710,8 +711,8 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
 
         private fun showApplyCouponDialog(data: CartBottomData) {
             var listdialog = Dialog(this@CartList, R.style.WideDialog)
-            listdialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)
-            listdialog.getWindow()!!.setLayout(
+            listdialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+            listdialog.window!!.setLayout(
                 Constraints.LayoutParams.MATCH_PARENT,
                 Constraints.LayoutParams.MATCH_PARENT
             )
@@ -760,6 +761,12 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         }
                         /*model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
                         model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })*/
+                        model?.associatecheckout(
+                            data.checkoutId,
+                            model!!.customeraccessToken.customerAccessToken
+                        )
+                        model?.getassociatecheckoutResponse()
+                            ?.observe(this@CartList, Observer { this.getResonse(it) })
                     } else {
                         Log.d(TAG, "loadCheckout: 2" + custom_attribute)
                         val iter: Iterator<String> = custom_attribute.keys()
@@ -778,7 +785,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                             model!!.prepareCartwithAttribute(attributeInputs, "")
                         }
                         val intent = Intent(this@CartList, CheckoutWeblink::class.java)
-                        intent.putExtra("link", data?.checkouturl)
+                        intent.putExtra("link", data.checkouturl)
                         intent.putExtra("id", data.checkoutId)
                         startActivity(intent)
                         Constant.activityTransition(this@CartList)
@@ -795,15 +802,45 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     discountCodeLayoutBinding.discountCodeEdt.error =
                         getString(R.string.discount_validation)
                 } else {
-                    model!!.applyDiscount(
-                        data.checkoutId,
-                        discountCodeLayoutBinding.discountCodeEdt.text.toString()
-                    )
+                    if (SplashViewModel.featuresModel.appOnlyDiscount) {
+                        model?.NResponse(
+                            Urls(application as MyApplication).mid,
+                            discountCodeLayoutBinding.discountCodeEdt.text.toString()
+                        )?.observe(this@CartList, Observer { this.showData(it, data) })
+                    }else{
+                        model!!.applyDiscount(
+                            data.checkoutId,
+                            discountCodeLayoutBinding.discountCodeEdt.text.toString()
+                        )
+                    }
+
                     listdialog.dismiss()
                 }
             }
             listdialog.show()
         }
+
+        /******************************** DICOUNTCODE SECTION ***************************************/
+
+        private fun showData(response: ApiResponse?, data: CartBottomData) {
+            Log.i("COUPPNCODERESPONSE", "" + response?.data)
+            couponCodeData(response?.data, data)
+        }
+
+        private fun couponCodeData(data: JsonElement?, data1: CartBottomData) {
+            val jsondata = JSONObject(data.toString())
+            if (jsondata.has("discount_code")) {
+                discountcode = jsondata.getString("discount_code")
+                Log.i("DICOUNTCODE", "" + discountcode)
+                Log.i("CHECKOUTID", "" + data1.checkoutId)
+                model!!.applyDiscount(
+                    data1.checkoutId,
+                    discountcode.toString()
+                )
+            }
+        }
+
+        /***********************************************************************************/
 
         fun getResonse(it: Storefront.Checkout?) {
             if (count == 1) {

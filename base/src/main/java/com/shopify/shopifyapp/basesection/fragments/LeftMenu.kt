@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +20,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.google.gson.JsonElement
 import com.google.zxing.integration.android.IntentIntegrator
 import com.mindorks.paracamera.Camera
@@ -171,7 +173,6 @@ class LeftMenu : BaseFragment() {
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-
                     }
                     productintent.putExtra("tittle", menudata.title)
                     context!!.startActivity(productintent)
@@ -210,10 +211,16 @@ class LeftMenu : BaseFragment() {
             val linearLayoutCompat = constraintLayout.getChildAt(2) as LinearLayoutCompat
             if (open) {
                 linearLayoutCompat.visibility = View.GONE
+                Glide.with(view)
+                    .load(R.drawable.add)
+                    .into(view as ImageView)
                 open = false
             } else {
                 linearLayoutCompat.visibility = View.VISIBLE
                 linearLayoutCompat.requestFocus()
+                Glide.with(view)
+                    .load(R.drawable.minus_icon)
+                    .into(view as ImageView)
                 open = true
             }
         }
@@ -289,6 +296,31 @@ class LeftMenu : BaseFragment() {
                         Constant.activityTransition(context!!)
                     } else {
                         val rewards = Intent(context, RewardsPointActivity::class.java)
+                        context!!.startActivity(rewards)
+                        Constant.activityTransition(context!!)
+                    }
+                }
+                "chats" -> {
+                    val chats = Intent(context, Weblink::class.java)
+                    chats.putExtra("name", "Chat With Us")
+                    chats.putExtra(
+                        "link",
+                        "https://shopifymobileapp.cedcommerce.com/shopifymobile/tidiolivechatapi/chatpanel?shop=magenative.myshopify.com")
+                    context!!.startActivity(chats)
+                    Constant.activityTransition(context!!)
+                }
+                "smilereward" -> {
+                    if (leftmenu.isLoggedIn) {
+                        val intent = Intent(context, Weblink::class.java)
+                        intent.putExtra("name", "My Rewards")
+                        intent.putExtra(
+                            "link",
+                            "https://shopifymobileapp.cedcommerce.com/shopifymobile/smilerewardapi/generateview?mid=18&cid=" +MagePrefs.getCustomerID())
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        context!!.startActivity(intent)
+                        Constant.activityTransition(context!!)
+                    } else {
+                        val rewards = Intent(context, LoginActivity::class.java)
                         context!!.startActivity(rewards)
                         Constant.activityTransition(context!!)
                     }
@@ -475,7 +507,6 @@ class LeftMenu : BaseFragment() {
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                 }
-
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
@@ -486,5 +517,4 @@ class LeftMenu : BaseFragment() {
             Thread(runnable).start()
         }
     }
-
 }

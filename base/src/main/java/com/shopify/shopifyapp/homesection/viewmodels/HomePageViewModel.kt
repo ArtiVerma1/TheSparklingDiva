@@ -46,6 +46,7 @@ import com.shopify.shopifyapp.homesection.models.StandAloneBanner
 import com.shopify.shopifyapp.loader_section.CustomLoader
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.shopifyqueries.Query
@@ -83,6 +84,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     private val TAG = "HomePageViewModel"
     private var customLoader: CustomLoader? = null
     val notifyPersonalised: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var getyotpoauthenticate = MutableLiveData<ApiResponse>()
 
     companion object {
         var count_color: String? = null
@@ -636,7 +638,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                     )
                                 )
                             }
-
                         }
                     }
                     "full-width-search" -> {
@@ -2035,19 +2036,20 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         )
                     )
                 )
-                binding.indicator.setViewPager(binding.banners)
-                var i = 0
-                val timer = Timer()
-                timer.scheduleAtFixedRate(timerTask {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        binding.banners.currentItem = i++
-                        if (i == jsonObject.getJSONArray("items").length()) {
-                            i = 0
-                        }
-                    }
-                }, 3000, 3000)
+                binding!!.indicator.setViewPager(binding!!.banners)
+
             }
-            homepagedata.value = hashMapOf("banner-slider_" to binding.root)
+            var i = 0
+            val timer = Timer()
+            timer.scheduleAtFixedRate(timerTask {
+                GlobalScope.launch(Dispatchers.Main) {
+                    binding.banners.setCurrentItem(i++);
+                    if (i == jsonObject.getJSONArray("items").length()) {
+                        i = 0
+                    }
+                }
+            }, 3000, 3000)
+            homepagedata.setValue(hashMapOf("banner-slider_" to binding.root))
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -2231,6 +2233,23 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun NResponse(client_id: String, client_secret: String, grant_type: String): MutableLiveData<ApiResponse> {
+        yotpoauthenticateapi(client_id, client_secret, grant_type)
+        return getyotpoauthenticate
+    }
+
+    fun yotpoauthenticateapi(client_id: String, client_secret: String, grant_type: String) {
+        doRetrofitCall(repository.yotpoauthentiate(client_id, client_secret, grant_type), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getyotpoauthenticate.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                getyotpoauthenticate.value = ApiResponse.error(error)
+            }
+        }, context = context)
     }
 
     override fun onCleared() {

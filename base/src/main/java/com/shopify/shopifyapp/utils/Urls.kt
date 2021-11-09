@@ -51,6 +51,19 @@ class Urls {
         const val VALIDATE_DELIVERY: String = "shopifymobile/zapietstorepickupapi/validatedeliverynpickup"
         const val LOCAL_DELIVERY: String = "shopifymobile/zapietstorepickupapi/getdeliverynpickup"
         const val LOCAL_DELIVERYY: String = "shopifymobilenew/zapietstorepickupapi/getdeliverynpickup"
+        const val XGUID = "oyeoRDurwhul3WK-zN5ScA"
+        const val X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
+        /************************** Yotpo Rewards Integration ***************************/
+
+        const val YOTPOAUTHENTICATE = "https://api.yotpo.com/oauth/token"
+        const val YOTPOCREATEREVIEW = "https://api.yotpo.com/v1/widget/reviews"
+
+        /********************************************************************************/
+        /********************************** DICOUNTCODE *********************************/
+
+        const val DISCOUNTCODEAPPLY: String = "https://shopifymobileapp.cedcommerce.com/shopifymobilenew/discountpaneldataapi/getdiscountcodes/"
+
+        /********************************************************************************/
     }
 
     val shopdomain: String

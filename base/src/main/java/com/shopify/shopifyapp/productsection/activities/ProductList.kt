@@ -249,11 +249,8 @@ class ProductList : NewBaseActivity() {
             } else {
                 showToast(resources.getString(R.string.noproducts))
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
-
 }

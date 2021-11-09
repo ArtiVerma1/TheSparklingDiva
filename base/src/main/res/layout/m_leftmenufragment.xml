@@ -309,6 +309,38 @@
                 app:texttype="normal" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
+                android:visibility="@{features.tidioChat ? View.VISIBLE : View.GONE}"
+                android:id="@+id/chat_but"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:onClick="@{(view) -> clickdata.navigationClicks(view)}"
+                android:tag="chats"
+                android:text="@string/chat"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                app:layout_constraintStart_toEndOf="@id/verticalguideline"
+                app:layout_constraintTop_toBottomOf="@id/rewards_but"
+                app:texttype="normal" />
+
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
+                android:visibility="@{features.smileIO ? View.VISIBLE : View.GONE}"
+                android:id="@+id/smilereward_but"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:onClick="@{(view) -> clickdata.navigationClicks(view)}"
+                android:tag="smilereward"
+                android:text="@string/smilereward"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                app:layout_constraintStart_toEndOf="@id/verticalguideline"
+                app:layout_constraintTop_toBottomOf="@id/chat_but"
+                app:texttype="normal" />
+
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/logout"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -320,7 +352,7 @@
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:visibility="@{menudata.visible}"
                 app:layout_constraintStart_toEndOf="@id/verticalguideline"
-                app:layout_constraintTop_toBottomOf="@id/rewards_but"
+                app:layout_constraintTop_toBottomOf="@id/smilereward_but"
                 app:texttype="bold" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView

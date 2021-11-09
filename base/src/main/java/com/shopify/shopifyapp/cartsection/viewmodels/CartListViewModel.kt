@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonElement
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
@@ -41,6 +42,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
 import com.shopify.buy3.Storefront.Payment
 import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
 import com.shopify.buy3.Storefront.Checkout
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 
 
 class CartListViewModel(private val repository: Repository) : ViewModel() {
@@ -57,6 +59,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     lateinit var context: Context
     private val TAG = "CartListViewModel"
     private val responsedata = MutableLiveData<Storefront.Checkout>()
+    var getdiscountcodeapplyapi = MutableLiveData<ApiResponse>()
     var customeraccessToken: CustomerTokenData
         get() {
             var customerToken = runBlocking(Dispatchers.IO) {
@@ -793,6 +796,15 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             }
         }
     }
+    fun NResponse(mid: String, customer_code: String): MutableLiveData<ApiResponse> {
+        discountcodeapplyapi(mid, customer_code)
+        return getdiscountcodeapplyapi
+    }
+    fun discountcodeapplyapi(mid: String, customer_code: String) {
+        doRetrofitCall(repository.discountcodeapply(mid, customer_code), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                getdiscountcodeapplyapi.value = ApiResponse.success(result)
+            }
     fun fillDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
         var param = HashMap<String, String>()
         for (i in 0..edges.size - 1) {
@@ -822,6 +834,11 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         return param
     }
 
+            override fun onErrorRetrofit(error: Throwable) {
+                getdiscountcodeapplyapi.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
     fun fillStoreDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
         var param = HashMap<String, String>()
         for (i in 0..edges.size - 1) {

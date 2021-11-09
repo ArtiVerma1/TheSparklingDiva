@@ -20,7 +20,7 @@
                 android:id="@+id/homecontainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"></androidx.appcompat.widget.LinearLayoutCompat>
+                android:orientation="vertical"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/personalisedsection"
@@ -52,7 +52,7 @@
                     android:layoutAnimation="@anim/layout_animation"
                     bind:layout_behavior="@string/appbar_scrolling_view_behavior"
                     bind:layout_constraintBottom_toBottomOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@id/personalisedyext"></androidx.recyclerview.widget.RecyclerView>
+                    bind:layout_constraintTop_toBottomOf="@id/personalisedyext"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,7 +84,7 @@
                     android:layoutAnimation="@anim/layout_animation"
                     bind:layout_behavior="@string/appbar_scrolling_view_behavior"
                     bind:layout_constraintBottom_toBottomOf="parent"
-                    bind:layout_constraintTop_toBottomOf="@id/bestpersonalisedyext"></androidx.recyclerview.widget.RecyclerView>
+                    bind:layout_constraintTop_toBottomOf="@id/bestpersonalisedyext"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>

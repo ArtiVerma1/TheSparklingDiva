@@ -199,4 +199,9 @@
     <string name="withdrawal_day_and_time">Select a withdrawal day and time</string>
     <string name="note">NOTE</string>
     <string name="local_delivery">Local Delivery</string>
+    <string name="chat">Chat With Us</string>
+    <string name="smilereward">My Rewards</string>
+    <string name="yotpo_rate_product">+Write Yotpo Review</string>
+    <string name="reviewpost">Your review has been successfully submitted.</string>
+    <string name="help">Help</string>
 </resources>
