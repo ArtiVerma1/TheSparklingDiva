@@ -217,7 +217,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         //Yotpo Product Reviews & Photos
                     }
                     "I03" -> {
-
                         SplashViewModel.featuresModel.judgemeProductReview = true
                         if (obj.getJSONObject(i).has("inputs")) {
                             if (obj.getJSONObject(i).getJSONObject("inputs").has("apiKey"))
@@ -230,11 +229,11 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         SplashViewModel.featuresModel.sizeChartVisibility = true
                     }
                     "I05" -> {
-
+                        SplashViewModel.featuresModel.zenDeskChat = true
                         //zendesk
                     }
                     "I06" -> {
-
+                        SplashViewModel.featuresModel.tidioChat = true
                         //tdio chat
                     }
                     "I07" -> {
@@ -2235,21 +2234,30 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
     }
 
-    fun NResponse(client_id: String, client_secret: String, grant_type: String): MutableLiveData<ApiResponse> {
+    fun NResponse(
+        client_id: String,
+        client_secret: String,
+        grant_type: String
+    ): MutableLiveData<ApiResponse> {
         yotpoauthenticateapi(client_id, client_secret, grant_type)
         return getyotpoauthenticate
     }
 
     fun yotpoauthenticateapi(client_id: String, client_secret: String, grant_type: String) {
-        doRetrofitCall(repository.yotpoauthentiate(client_id, client_secret, grant_type), disposables, customResponse = object : CustomResponse {
-            override fun onSuccessRetrofit(result: JsonElement) {
-                getyotpoauthenticate.value = ApiResponse.success(result)
-            }
+        doRetrofitCall(
+            repository.yotpoauthentiate(client_id, client_secret, grant_type),
+            disposables,
+            customResponse = object : CustomResponse {
+                override fun onSuccessRetrofit(result: JsonElement) {
+                    getyotpoauthenticate.value = ApiResponse.success(result)
+                }
 
-            override fun onErrorRetrofit(error: Throwable) {
-                getyotpoauthenticate.value = ApiResponse.error(error)
-            }
-        }, context = context)
+                override fun onErrorRetrofit(error: Throwable) {
+                    getyotpoauthenticate.value = ApiResponse.error(error)
+                }
+            },
+            context = context
+        )
     }
 
     override fun onCleared() {

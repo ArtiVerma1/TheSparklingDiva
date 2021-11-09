@@ -46,13 +46,11 @@ class Urls {
         const val EARNREWARD = YOTPOBASE_URL + "campaigns"
         const val MYREWARDS = YOTPOBASE_URL + "customers"
         const val SENDREFERRAL = YOTPOBASE_URL + "referral/share"
-        var XGUID = "oyeoRDurwhul3WK-zN5ScA"
-        var X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
         const val VALIDATE_DELIVERY: String = "shopifymobile/zapietstorepickupapi/validatedeliverynpickup"
         const val LOCAL_DELIVERY: String = "shopifymobile/zapietstorepickupapi/getdeliverynpickup"
         const val LOCAL_DELIVERYY: String = "shopifymobilenew/zapietstorepickupapi/getdeliverynpickup"
-        const val XGUID = "oyeoRDurwhul3WK-zN5ScA"
-        const val X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
+        var XGUID = "oyeoRDurwhul3WK-zN5ScA"
+        var X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
         /************************** Yotpo Rewards Integration ***************************/
 
         const val YOTPOAUTHENTICATE = "https://api.yotpo.com/oauth/token"

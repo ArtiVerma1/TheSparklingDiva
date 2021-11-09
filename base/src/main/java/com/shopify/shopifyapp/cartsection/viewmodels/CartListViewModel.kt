@@ -805,6 +805,11 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             override fun onSuccessRetrofit(result: JsonElement) {
                 getdiscountcodeapplyapi.value = ApiResponse.success(result)
             }
+            override fun onErrorRetrofit(error: Throwable) {
+                getdiscountcodeapplyapi.value = ApiResponse.error(error)
+            }
+        }, context = context)
+    }
     fun fillDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
         var param = HashMap<String, String>()
         for (i in 0..edges.size - 1) {
@@ -832,12 +837,6 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         param.put("type", "delivery")
 //        param.put("zipcode", "95880")
         return param
-    }
-
-            override fun onErrorRetrofit(error: Throwable) {
-                getdiscountcodeapplyapi.value = ApiResponse.error(error)
-            }
-        }, context = context)
     }
     fun fillStoreDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
         var param = HashMap<String, String>()
