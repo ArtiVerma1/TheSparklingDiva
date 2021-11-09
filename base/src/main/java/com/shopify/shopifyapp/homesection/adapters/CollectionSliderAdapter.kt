@@ -71,7 +71,7 @@ constructor() : RecyclerView.Adapter<CollectionItem>() {
                 }
             }
             if (jsonObject.getString("item_title_font_weight").equals("bold")) {
-                val face = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+                val face = Typeface.createFromAsset(activity!!.assets, "fonts/Cairobold.ttf");
                 binding.name.setTypeface(face)
             }
             if (jsonObject.getString("item_title_font_style").equals("italic")) {

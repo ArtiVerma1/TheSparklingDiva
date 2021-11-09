@@ -5,6 +5,54 @@ import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 
 class FeaturesModel : BaseObservable() {
+    @Bindable
+    var zapietEnable: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.zapietEnable)
+        }
+
+    @Bindable
+    var smileIO: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.smileIO)
+        }
+
+    @Bindable
+    var appOnlyDiscount: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.appOnlyDiscount)
+        }
+
+    @Bindable
+    var whatsappChat: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.whatsappChat)
+        }
+
+    @Bindable
+    var zenDeskChat: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.zenDeskChat)
+        }
+
+    @Bindable
+    var fbMessenger: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.fbMessenger)
+        }
+
+    @Bindable
+    var tidioChat: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.tidioChat)
+        }
 
     @Bindable
     var yoptoLoyalty: Boolean = false
@@ -14,7 +62,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var forceUpdate: Boolean = false
+    var forceUpdate: Boolean = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.forceUpdate)

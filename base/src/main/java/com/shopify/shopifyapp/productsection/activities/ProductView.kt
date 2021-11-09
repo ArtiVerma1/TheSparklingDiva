@@ -1,7 +1,9 @@
 package com.shopify.shopifyapp.productsection.activities
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -9,6 +11,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.util.Base64
 import android.util.Log
@@ -34,6 +37,7 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.models.ListData
+import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
@@ -48,7 +52,10 @@ import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.productsection.models.Review
 import com.shopify.shopifyapp.productsection.models.ReviewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.*
+import kotlinx.android.synthetic.main.m_newbaseactivity.*
+import kotlinx.android.synthetic.main.m_productview.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -59,9 +66,11 @@ import java.math.BigDecimal
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
+
 class ProductView : NewBaseActivity() {
     private var product_handle: String? = null
     private var productName: String? = null
+    private var productsku: String? = null
     private var binding: MProductviewBinding? = null
 
     @Inject
@@ -93,6 +102,7 @@ class ProductView : NewBaseActivity() {
     private var AliShopId: String? = null
     private var reviewList: ArrayList<Review>? = null
     private var mediaList = mutableListOf<MediaModel>()
+    protected lateinit var leftmenu: LeftMenuViewModel
 
     @Inject
     lateinit var arImagesAdapter: ArImagesAdapter
@@ -108,6 +118,7 @@ class ProductView : NewBaseActivity() {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.m_productview, group, true)
         binding?.features = featuresModel
         showBackButton()
+        leftmenu = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
         (application as MyApplication).mageNativeAppComponent!!.doProductViewInjection(this)
         model = ViewModelProvider(this, factory).get(ProductViewModel::class.java)
         model!!.context = this
@@ -123,7 +134,7 @@ class ProductView : NewBaseActivity() {
             productID = model!!.id
         }
         Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)
-        Log.d(TAG, "onCreate: " + productID!!)
+        Log.i("PID",""+productID)
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(
                 Urls(application as MyApplication).mid,
@@ -176,8 +187,41 @@ class ProductView : NewBaseActivity() {
         }
         binding?.variantAvailableQty?.textSize = 14f
         binding?.qtyTitleTxt?.textSize = 14f
+        binding?.yotpoWriteReviewBut?.setOnClickListener {
+            if(yotporeviewsection.getVisibility() == View.VISIBLE){
+                yotporeviewsection.setVisibility(View.GONE);
+            }
+            else{
+                yotporeviewsection.setVisibility(View.VISIBLE);
+            }
+        }
+        binding?.yotpoSubmitreview?.setOnClickListener {
+            if (binding!!.yotpoName.text!!.toString().isEmpty()) {
+                binding!!.yotpoName.error = resources.getString(R.string.empty)
+                binding!!.yotpoName.requestFocus()
+            }else if(binding!!.yotpoEmail.text!!.toString().isEmpty()){
+                binding!!.yotpoEmail.error = resources.getString(R.string.empty)
+                binding!!.yotpoEmail.requestFocus()
+            }else if(binding!!.yotpoReviewtitle.text!!.toString().isEmpty()){
+                binding!!.yotpoReviewtitle.error = resources.getString(R.string.empty)
+                binding!!.yotpoReviewtitle.requestFocus()
+            }else if(binding!!.yotpoReviewbody.text!!.toString().isEmpty()){
+               binding!!.yotpoReviewbody.error = resources.getString(R.string.empty)
+                binding!!.yotpoReviewbody.requestFocus()
+            }else{
+                if(leftmenu.isLoggedIn){
+                    submityptporeview()
+                }else{
+                    val alertDialog: AlertDialog = AlertDialog.Builder(this@ProductView).create()
+                    alertDialog.setTitle("NOTE!")
+                    alertDialog.setMessage("Please create an account in the app to leave a review.")
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                    alertDialog.show()
+                }
+            }
+        }
     }
-
     private fun consumeAliReviews(response: ApiResponse?) {
         Log.d(TAG, "consumeAliReviews: " + response?.data)
         var responseData = JSONObject(response?.data.toString())
@@ -202,7 +246,6 @@ class ProductView : NewBaseActivity() {
                 )
                 reviewList?.add(review_model)
             }
-
             if (reviewList?.size!! > 0) {
                 binding?.aliNoReviews?.visibility = View.GONE
                 binding?.aliReviewList?.visibility = View.VISIBLE
@@ -240,7 +283,6 @@ class ProductView : NewBaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     private fun consumeJudgeMeReview(response: ApiResponse?) {
@@ -278,7 +320,6 @@ class ProductView : NewBaseActivity() {
             binding?.judgemeReviewIndecator?.visibility = View.GONE
             binding?.judgemeViewAllBut?.visibility = View.GONE
         }
-
     }
 
     private fun consumeJudgeMeReviewCount(response: ApiResponse?) {
@@ -622,12 +663,19 @@ class ProductView : NewBaseActivity() {
             binding!!.indicator.setViewPager(binding!!.images)
             data!!.textdata = productedge.title
             productName = productedge.title
+            productsku = productedge.variants.edges[0].node.sku
+            Log.i("ALLSHUUUUUUU",""+productsku)
             showTittle(productName!!)
-            // Log.i("here", productedge.descriptionHtml)
-            Log.d(TAG, "setProductData: " + productedge.descriptionHtml)
+            Log.i("here", productedge.descriptionHtml)
+//            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
+
+            val pish =
+                "<head><style>@font-face {font-family: 'arial';src: url('file:///android_asset/fonts/cairobold.ttf');}</style></head>"
+            var desc =
+                "<html>" + pish + "<body style='font-family: arial'>" + productedge.descriptionHtml + "</body></html>"
             binding?.description?.loadDataWithBaseURL(
                 null,
-                productedge.descriptionHtml,
+                desc,
                 "text/html",
                 "utf-8",
                 null
@@ -1132,6 +1180,7 @@ class ProductView : NewBaseActivity() {
             Constant.activityTransition(view.context)
         }
 
+
         fun showAR(view: View, data: ListData) {
             try {
                 Log.d(TAG, "showAR: " + mediaList)
@@ -1276,6 +1325,36 @@ class ProductView : NewBaseActivity() {
             Constant.activityTransition(this)
         }
         return true
+    }
+
+    private fun submityptporeview() {
+        model?.NResponse("VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC", productsku.toString(), productName.toString(),data?.product!!.onlineStoreUrl,MagePrefs.getCustomerFirstName().toString(),MagePrefs.getCustomerEmail().toString(),yotpo_reviewbody.text.toString(),yotpo_reviewtitle.text.toString(),
+            yotpo_rating_bar.rating.toString()
+        )?.observe(this, Observer { this.showData(it) })
+    }
+
+    private fun showData(response: ApiResponse?) {
+        Log.i("RESPONSEGET", "" + response?.data)
+        receiveReview(response?.data)
+    }
+
+    private fun receiveReview(data: JsonElement?) {
+        val jsondata = JSONObject(data.toString())
+        Log.i("messagereview", "" +jsondata)
+        try{
+            if (jsondata.getString("message").equals("ok")) {
+                val alertDialog: AlertDialog = AlertDialog.Builder(this@ProductView).create()
+                alertDialog.setTitle("Thank You")
+                alertDialog.setMessage("Your review has been submitted successfully.")
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                alertDialog.show()
+            }
+            Handler().postDelayed({ finish() }, 2000)
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     override fun onResume() {

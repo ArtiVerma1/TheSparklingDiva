@@ -36,7 +36,7 @@ class Urls {
         const val JUDGEME_REVIEWINDEX: String = JUDGEME_BASEURL + "reviews"
         const val JUDGEME_REVIEWCREATE: String = JUDGEME_BASEURL + "reviews"
         const val JUDGEME_GETPRODUCTID: String = JUDGEME_BASEURL + "products/"
-        const val JUDGEME_APITOKEN: String = "R8kqByFI_qHiHHQj6ZV1yWCYveQ"
+        var JUDGEME_APITOKEN: String = "R8kqByFI_qHiHHQj6ZV1yWCYveQ"
         const val ALIREVIEW_BASEURL: String = "https://alireviews.fireapps.io/"
         const val ALIREVIEW_INSTALLSTATUS: String = ALIREVIEW_BASEURL + "api/shops/magenative.myshopify.com"
         const val ALIREVIEW_PRODUCT: String = ALIREVIEW_BASEURL + "comment/get_review"
@@ -46,8 +46,22 @@ class Urls {
         const val EARNREWARD = YOTPOBASE_URL + "campaigns"
         const val MYREWARDS = YOTPOBASE_URL + "customers"
         const val SENDREFERRAL = YOTPOBASE_URL + "referral/share"
-        const val XGUID = "oyeoRDurwhul3WK-zN5ScA"
-        const val X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
+        const val VALIDATE_DELIVERY: String = "shopifymobile/zapietstorepickupapi/validatedeliverynpickup"
+        const val LOCAL_DELIVERY: String = "shopifymobile/zapietstorepickupapi/getdeliverynpickup"
+        const val LOCAL_DELIVERYY: String = "shopifymobilenew/zapietstorepickupapi/getdeliverynpickup"
+        var XGUID = "oyeoRDurwhul3WK-zN5ScA"
+        var X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
+        /************************** Yotpo Rewards Integration ***************************/
+
+        const val YOTPOAUTHENTICATE = "https://api.yotpo.com/oauth/token"
+        const val YOTPOCREATEREVIEW = "https://api.yotpo.com/v1/widget/reviews"
+
+        /********************************************************************************/
+        /********************************** DICOUNTCODE *********************************/
+
+        const val DISCOUNTCODEAPPLY: String = "https://shopifymobileapp.cedcommerce.com/shopifymobilenew/discountpaneldataapi/getdiscountcodes/"
+
+        /********************************************************************************/
     }
 
     val shopdomain: String

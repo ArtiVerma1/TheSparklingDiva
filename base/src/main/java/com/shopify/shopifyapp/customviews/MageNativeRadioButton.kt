@@ -32,7 +32,8 @@ class MageNativeRadioButton : AppCompatRadioButton {
                 if (type != null) {
                     var typeface: Typeface? = null
                     if (typeface == null) {
-                        typeface = Typeface.createFromAsset(context.assets, "fonts/$type.ttf")
+//                        typeface = Typeface.createFromAsset(context.assets, "fonts/$type.ttf")
+                      typeface = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                     }
                     setTypeface(typeface)
                 }

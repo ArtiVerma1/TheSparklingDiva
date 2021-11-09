@@ -116,10 +116,10 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         val face: Typeface
         when (jsonObject!!.getString("item_title_font_weight")) {
             "bold" -> {
-                face = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+                face = Typeface.createFromAsset(activity!!.assets, "fonts/cairobold.ttf");
             }
             else -> {
-                face = Typeface.createFromAsset(activity!!.assets, "fonts/normal.ttf");
+                face = Typeface.createFromAsset(activity!!.assets, "fonts/cairoregular.ttf");
             }
         }
         binding.name.setTypeface(face)
@@ -129,10 +129,10 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         val priceface: Typeface
         when (jsonObject!!.getString("header_subtitle_font_weight")) {
             "bold" -> {
-                priceface = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+                priceface = Typeface.createFromAsset(activity!!.assets, "fonts/cairobold.ttf");
             }
             else -> {
-                priceface = Typeface.createFromAsset(activity!!.assets, "fonts/normal.ttf");
+                priceface = Typeface.createFromAsset(activity!!.assets, "fonts/cairoregular.ttf");
             }
         }
         binding.regularprice.setTypeface(priceface)
@@ -142,10 +142,10 @@ constructor() : RecyclerView.Adapter<SliderItemTypeOne>() {
         val specialpriceface: Typeface
         when (jsonObject!!.getString("item_compare_at_price_font_weight")) {
             "bold" -> {
-                specialpriceface = Typeface.createFromAsset(activity!!.assets, "fonts/bold.ttf");
+                specialpriceface = Typeface.createFromAsset(activity!!.assets, "fonts/cairobold.ttf");
             }
             else -> {
-                specialpriceface = Typeface.createFromAsset(activity!!.assets, "fonts/normal.ttf");
+                specialpriceface = Typeface.createFromAsset(activity!!.assets, "fonts/cairoregular.ttf");
             }
         }
         binding.specialprice.setTypeface(specialpriceface)

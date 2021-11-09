@@ -187,10 +187,10 @@ class CheckoutWeblink : NewBaseActivity() {
                     "javascript: document.getElementsByClassName('section__header')[0].style.display = 'none' "
                 val javascript1 =
                     "javascript: document.getElementsByClassName('logged-in-customer-information')[0].style.display = 'none' "
-//                 val javascript2 = "var length = document.querySelectorAll(\".reduction-code__text\").length;\n" +
-//                         "for(var i=0; i<length; i++){\n" +
-//                         "    (document.querySelectorAll(\".reduction-code__text\")[i]).innerHTML = \"ABCD\";\n" +
-//                         "}"
+                 val javascript2 = "var length = document.querySelectorAll(\".reduction-code__text\").length;\n" +
+                         "for(var i=0; i<length; i++){\n" +
+                        "    (document.querySelectorAll(\".reduction-code__text\")[i]).innerHTML = \"ABCD\";\n" +
+                         "}"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     webView.evaluateJavascript(javascript) { value ->
                         Log.i(
@@ -204,16 +204,16 @@ class CheckoutWeblink : NewBaseActivity() {
                             "" + value
                         )
                     }
-//                    webView.evaluateJavascript(javascript2) { value ->
-//                        Log.i(
-//                            "pageVALUE1",
-//                            "" + value
-//                        )
-//                    }
+                   webView.evaluateJavascript(javascript2) { value ->
+                        Log.i(
+                            "pageVALUE1",
+                            "" + value
+                        )
+                   }
                 } else {
                     webView.loadUrl(javascript)
                     webView.loadUrl(javascript1)
-                    //   webView.loadUrl(javascript2)
+                    webView.loadUrl(javascript2)
                 }
             }
 

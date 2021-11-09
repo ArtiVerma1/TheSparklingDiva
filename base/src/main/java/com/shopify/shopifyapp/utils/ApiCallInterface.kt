@@ -14,6 +14,8 @@ import com.shopify.shopifyapp.utils.Urls.Data.MYREWARDS
 import com.shopify.shopifyapp.utils.Urls.Data.REDEEMPOINTS
 import com.shopify.shopifyapp.utils.Urls.Data.SENDREFERRAL
 import com.shopify.shopifyapp.utils.Urls.Data.SIZECHART
+import com.shopify.shopifyapp.utils.Urls.Data.YOTPOAUTHENTICATE
+import com.shopify.shopifyapp.utils.Urls.Data.YOTPOCREATEREVIEW
 import io.reactivex.Single
 import org.json.JSONObject
 import retrofit2.http.*
@@ -92,4 +94,34 @@ interface ApiCallInterface {
     @POST(SENDREFERRAL)
     fun referfriend(@Header("x-guid") xguid: String, @Header("x-api-key") xapikey: String, @Query("customer_id") customer_id: String,
                     @Query("emails") emails: String): Single<JsonElement>
+
+    @POST(YOTPOAUTHENTICATE)
+    fun yotpoauthentiate(@Query("client_id") client_id: String,
+                    @Query("client_secret") client_secret: String,
+                    @Query("grant_type") grant_type: String): Single<JsonElement>
+
+    @POST(YOTPOCREATEREVIEW)
+    fun yotpocretereview(@Query("appkey") appkey: String,
+                         @Query("sku") sku: String,
+                         @Query("product_title") product_title: String,
+                         @Query("product_url") product_url: String,
+                         @Query("display_name") display_name: String,
+                         @Query("email") email: String,
+                         @Query("review_content") review_content: String,
+                         @Query("review_title") review_title: String,
+                         @Query("review_score") review_score: String): Single<JsonElement>
+
+    @GET(Urls.DISCOUNTCODEAPPLY)
+    fun discountcodeapply(@Query("mid") mid: String?, @Query("customer_code") customer_code: String?): Single<JsonElement>
+    @POST(Urls.VALIDATE_DELIVERY)
+    fun validateDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+
+    @POST(Urls.LOCAL_DELIVERY)
+    fun localDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+
+    @POST(Urls.LOCAL_DELIVERYY)
+    fun localDeliveryy(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+
+    @POST(Urls.LOCAL_DELIVERY)
+    fun storeDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>
 }

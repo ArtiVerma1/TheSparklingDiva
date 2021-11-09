@@ -25,7 +25,7 @@
             android:id="@+id/catname"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/cairoregular"
             android:gravity="center_vertical"
             android:onClick="@{(view) -> clickdata.getMenu(view, menudata)}"
             android:text="@{menudata.title}"

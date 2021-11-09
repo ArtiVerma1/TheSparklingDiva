@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
-            android:fontFamily="@font/roboto_bold"
+            android:fontFamily="@font/cairoregular"
             android:gravity="center"
             android:text="@string/thank_you"
             android:textSize="22sp"
@@ -39,7 +39,7 @@
             android:gravity="center"
             android:text="@string/thank_you_order_has_been_placed_successfully"
             android:textSize="14sp"
-            app:fontFamily="@font/roboto_medium"
+            app:fontFamily="@font/cairoregular"
             app:layout_constraintTop_toBottomOf="@+id/order_placed" />
 
         <com.shopify.shopifyapp.customviews.MageNativeButton

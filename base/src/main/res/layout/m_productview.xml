@@ -394,7 +394,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/rect_drawable"
-                android:fontFamily="@font/normal"
+                android:fontFamily="@font/cairoregular"
                 android:gravity="center"
                 android:onClick="@{view->clickhandlers.shareProduct(view,productdata)}"
                 android:padding="4dp"
@@ -432,6 +432,118 @@
                 bind:texttype="normal" />
 
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:visibility="gone"
+                android:id="@+id/yotpo_write_review_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/roboto_bold"
+                android:padding="8dp"
+                android:text="@string/yotpo_rate_product"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="14sp"
+                bind:layout_constraintStart_toStartOf="parent"
+                bind:layout_constraintTop_toBottomOf="@+id/description" />
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/yotporeviewsection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                bind:layout_constraintTop_toBottomOf="@id/yotpo_write_review_but">
+
+
+                <TextView
+                    android:id="@+id/yotpo_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/please_select_rating"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/black"/>
+
+                <RatingBar
+                    android:id="@+id/yotpo_rating_bar"
+                    style="@style/Widget.AppCompat.RatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:progressBackgroundTint="@color/gray_color"
+                    android:layout_below="@id/yotpo_title"
+                    android:layout_centerHorizontal="true"
+                    android:progressTint="@color/appTheme" />
+
+                <EditText
+                    android:id="@+id/yotpo_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/yotpo_rating_bar"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:hint="Name"
+                    android:padding="5dp"
+                    android:background="@drawable/edit_border"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/yotpo_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/yotpo_name"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:hint="Email"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edit_border"
+                    android:textColorHint="@color/black"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/yotpo_reviewtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/yotpo_email"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:hint="Review Title"
+                    android:padding="5dp"
+                    android:background="@drawable/edit_border"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/yotpo_reviewbody"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_below="@id/yotpo_reviewtitle"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/edit_border"
+                    android:gravity="top|start"
+                    android:hint="Your Review"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/yotpo_submitreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/yotpo_reviewbody"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/buy_border1"
+                    android:text="Submit Review"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
             <ImageView
                 android:id="@+id/addtowish"
                 android:layout_width="50dp"
@@ -457,7 +569,7 @@
                 android:background="@color/white"
                 android:padding="10dp"
                 android:visibility="@{features.productReview ? View.VISIBLE : View.GONE}"
-                bind:layout_constraintTop_toBottomOf="@+id/description">
+                bind:layout_constraintTop_toBottomOf="@+id/yotporeviewsection">
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
                     android:id="@+id/ratting_review_title"
@@ -475,7 +587,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/roboto_bold"
+                    android:fontFamily="@font/cairobold"
                     android:onClick="@{view->clickhandlers.viewAllReview(view)}"
                     android:text="@string/view_all"
                     android:textColor="@android:color/holo_blue_dark"
@@ -510,7 +622,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:fontFamily="@font/roboto_bold"
+                    android:fontFamily="@font/cairobold"
                     android:onClick="@{(view) -> clickhandlers.rateProduct(view,productdata)}"
                     android:padding="8dp"
                     android:text="@string/rate_product"
@@ -525,7 +637,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:fontFamily="@font/roboto_light"
+                    android:fontFamily="@font/cairobold"
                     android:text="@string/sorry_this_product_does_not_have_any_reviews"
                     android:textSize="12sp"
                     bind:layout_constraintEnd_toEndOf="parent"
@@ -561,7 +673,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/roboto_bold"
+                    android:fontFamily="@font/cairobold"
                     android:onClick="@{view->clickhandlers.viewAllJudgeMeReview(view)}"
                     android:text="@string/view_all"
                     android:textColor="@android:color/holo_blue_dark"
@@ -596,7 +708,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:fontFamily="@font/roboto_bold"
+                    android:fontFamily="@font/cairobold"
                     android:onClick="@{(view) -> clickhandlers.rateProductJudgeMe(view,productdata)}"
                     android:padding="8dp"
                     android:text="@string/rate_product"
@@ -611,7 +723,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:fontFamily="@font/roboto_light"
+                    android:fontFamily="@font/cairoregular"
                     android:text="@string/sorry_this_product_does_not_have_any_reviews"
                     android:textSize="12sp"
                     bind:layout_constraintEnd_toEndOf="parent"
@@ -648,7 +760,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/roboto_bold"
+                    android:fontFamily="@font/cairobold"
                     android:onClick="@{view->clickhandlers.viewAllAliReview(view)}"
                     android:text="@string/view_all"
                     android:textColor="@android:color/holo_blue_dark"
@@ -683,7 +795,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:fontFamily="@font/roboto_bold"
+                    android:fontFamily="@font/cairobold"
                     android:onClick="@{(view) -> clickhandlers.rateProductJudgeMe(view,productdata)}"
                     android:padding="8dp"
                     android:text="@string/rate_product"
@@ -699,7 +811,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:fontFamily="@font/roboto_light"
+                    android:fontFamily="@font/cairoregular"
                     android:text="@string/sorry_this_product_does_not_have_any_reviews"
                     android:textSize="12sp"
                     bind:layout_constraintEnd_toEndOf="parent"

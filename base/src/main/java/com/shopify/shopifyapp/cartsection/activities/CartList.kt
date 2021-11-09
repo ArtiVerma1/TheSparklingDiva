@@ -2,50 +2,68 @@ package com.shopify.shopifyapp.cartsection.activities
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
-import android.widget.RadioButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.constraintlayout.widget.Constraints
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
+
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.adapters.CartListAdapter
+import com.shopify.shopifyapp.cartsection.adapters.LocationListAdapter
 import com.shopify.shopifyapp.cartsection.models.CartBottomData
 import com.shopify.shopifyapp.cartsection.viewmodels.CartListViewModel
 import com.shopify.shopifyapp.checkoutsection.activities.CheckoutWeblink
 import com.shopify.shopifyapp.customviews.MageNativeButton
 import com.shopify.shopifyapp.databinding.DiscountCodeLayoutBinding
 import com.shopify.shopifyapp.databinding.MCartlistBinding
+import com.shopify.shopifyapp.loader_section.CustomLoader
 import com.shopify.shopifyapp.loginsection.activity.LoginActivity
+import com.shopify.shopifyapp.network_transaction.customLoader
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.*
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
+import org.json.JSONArray
 import org.json.JSONObject
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashMap
 
-class CartList : NewBaseActivity() {
+class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapReadyCallback {
     @Inject
     lateinit var factory: ViewModelFactory
     private var cartlist: RecyclerView? = null
@@ -53,8 +71,32 @@ class CartList : NewBaseActivity() {
     private var personamodel: PersonalisedViewModel? = null
     private var count: Int = 1
     private val TAG = "CartList"
+    lateinit var delivery_param: HashMap<String, String>
+    lateinit var response_data: Storefront.Checkout
+    private var marker: Marker? = null
+    val mincalender = Calendar.getInstance()
+    val maxcalender = Calendar.getInstance()
+    var calender = Calendar.getInstance()
+    val year = calender.get(Calendar.YEAR)
+    val month = calender.get(Calendar.MONTH)
+    val day = calender.get(Calendar.DAY_OF_MONTH)
+    lateinit var dpd: DatePickerDialog
+    var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+    var dayFormat: SimpleDateFormat = SimpleDateFormat("EEEE", Locale.ENGLISH);
+    var disabledates: ArrayList<Calendar>? = null
+    lateinit var slots: JsonArray
+    lateinit var locations: JsonArray
+    lateinit var daysOfWeek: JsonObject
+    lateinit var localdelivery_slots: ArrayList<String>
+    var interval: Int = 0
+    var selected_delivery: String = "delivery"
+    var selected_slot: String? = null
+    private lateinit var mMap: GoogleMap
+    private var custom_attribute: JSONObject = JSONObject()
     private var grandTotal: String? = null
     private var cartWarning: HashMap<String, Boolean>? = hashMapOf()
+    @Inject
+    lateinit var locationAdapter: LocationListAdapter
 
     @Inject
     lateinit var adapter: CartListAdapter
@@ -65,6 +107,7 @@ class CartList : NewBaseActivity() {
     @Inject
     lateinit var padapter: PersonalisedAdapter
     private var binding: MCartlistBinding? = null
+    var discountcode: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)
@@ -95,6 +138,7 @@ class CartList : NewBaseActivity() {
         model!!.getDiscount()
             .observe(this, Observer<Storefront.Mutation> { this.consumeResponseDiscount(it) })
 
+
         binding!!.subtotaltext.textSize = 12f
         binding!!.subtotal.textSize = 12f
         binding!!.taxtext.textSize = 12f
@@ -108,27 +152,27 @@ class CartList : NewBaseActivity() {
         Log.d(TAG, "consumeResponseDiscount: " + it!!.checkoutDiscountCodeApplyV2)
         try {
             val bottomData = CartBottomData()
-            bottomData.checkoutId = it!!.checkoutDiscountCodeApplyV2.checkout.id
+            bottomData.checkoutId = it.checkoutDiscountCodeApplyV2.checkout.id
             Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
             bottomData.subtotaltext =
                 resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
             bottomData.subtotal = CurrencyFormatter.setsymbol(
-                it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.amount,
-                it!!.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.currencyCode.toString()
+                it.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.amount,
+                it.checkoutDiscountCodeApplyV2.checkout.subtotalPriceV2.currencyCode.toString()
             )
-            if (it!!.checkoutDiscountCodeApplyV2.checkout.taxExempt!!) {
+            if (it.checkoutDiscountCodeApplyV2.checkout.taxExempt!!) {
                 binding!!.taxtext.visibility = View.VISIBLE
                 binding!!.tax.visibility = View.VISIBLE
                 bottomData.tax = CurrencyFormatter.setsymbol(
-                    it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.amount,
-                    it!!.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.currencyCode.toString()
+                    it.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.amount,
+                    it.checkoutDiscountCodeApplyV2.checkout.totalTaxV2.currencyCode.toString()
                 )
             }
             bottomData.grandtotal = CurrencyFormatter.setsymbol(
-                it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.amount,
-                it!!.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.currencyCode.toString()
+                it.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.amount,
+                it.checkoutDiscountCodeApplyV2.checkout.totalPriceV2.currencyCode.toString()
             )
-            bottomData.checkouturl = it!!.checkoutDiscountCodeApplyV2.checkout.webUrl
+            bottomData.checkouturl = it.checkoutDiscountCodeApplyV2.checkout.webUrl
             binding!!.bottomdata = bottomData
             binding!!.root.visibility = View.VISIBLE
             try {
@@ -137,7 +181,7 @@ class CartList : NewBaseActivity() {
                     Log.i("herer", "token : " + model?.customeraccessToken?.customerAccessToken)
                     model?.associatecheckout(
                         bottomData.checkoutId,
-                        model!!.customeraccessToken?.customerAccessToken
+                        model!!.customeraccessToken.customerAccessToken
                     )
                     model?.getassociatecheckoutResponse()
                         ?.observe(this@CartList, Observer { ClickHandler().getResonse(it) })
@@ -160,22 +204,22 @@ class CartList : NewBaseActivity() {
         bottomData.subtotaltext =
             resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
         bottomData.subtotal = CurrencyFormatter.setsymbol(
-            it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.amount,
-            it!!.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.currencyCode.toString()
+            it.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.amount,
+            it.checkoutGiftCardRemoveV2.checkout.subtotalPriceV2.currencyCode.toString()
         )
-        if (it!!.checkoutGiftCardRemoveV2.checkout.taxExempt!!) {
+        if (it.checkoutGiftCardRemoveV2.checkout.taxExempt!!) {
             binding!!.taxtext.visibility = View.VISIBLE
             binding!!.tax.visibility = View.VISIBLE
             bottomData.tax = CurrencyFormatter.setsymbol(
-                it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.amount,
-                it!!.checkoutGiftCardRemoveV2.checkout.totalTaxV2.currencyCode.toString()
+                it.checkoutGiftCardRemoveV2.checkout.totalTaxV2.amount,
+                it.checkoutGiftCardRemoveV2.checkout.totalTaxV2.currencyCode.toString()
             )
         }
         bottomData.grandtotal = CurrencyFormatter.setsymbol(
-            it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.amount,
-            it!!.checkoutGiftCardRemoveV2.checkout.totalPriceV2.currencyCode.toString()
+            it.checkoutGiftCardRemoveV2.checkout.totalPriceV2.amount,
+            it.checkoutGiftCardRemoveV2.checkout.totalPriceV2.currencyCode.toString()
         )
-        bottomData.checkouturl = it!!.checkoutGiftCardRemoveV2.checkout.webUrl
+        bottomData.checkouturl = it.checkoutGiftCardRemoveV2.checkout.webUrl
         binding!!.bottomdata = bottomData
         binding!!.root.visibility = View.VISIBLE
         showToast(getString(R.string.gift_remove))
@@ -185,27 +229,27 @@ class CartList : NewBaseActivity() {
         binding!!.applyGiftBut.text = getString(R.string.remove)
         val bottomData = CartBottomData()
         bottomData.giftcardID = it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].id
-        bottomData.checkoutId = it!!.checkoutGiftCardsAppend.checkout.id
+        bottomData.checkoutId = it.checkoutGiftCardsAppend.checkout.id
         Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
         bottomData.subtotaltext =
             resources.getString(R.string.subtotaltext) + " ( " + model!!.cartCount + " items )"
         bottomData.subtotal = CurrencyFormatter.setsymbol(
-            (it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
-            it!!.checkoutGiftCardsAppend.checkout.subtotalPriceV2.currencyCode.toString()
+            (it.checkoutGiftCardsAppend.checkout.subtotalPriceV2.amount.toDouble() - it.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
+            it.checkoutGiftCardsAppend.checkout.subtotalPriceV2.currencyCode.toString()
         )
-        if (it!!.checkoutGiftCardsAppend.checkout.taxExempt!!) {
+        if (it.checkoutGiftCardsAppend.checkout.taxExempt!!) {
             binding!!.taxtext.visibility = View.VISIBLE
             binding!!.tax.visibility = View.VISIBLE
             bottomData.tax = CurrencyFormatter.setsymbol(
-                it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.amount,
-                it!!.checkoutGiftCardsAppend.checkout.totalTaxV2.currencyCode.toString()
+                it.checkoutGiftCardsAppend.checkout.totalTaxV2.amount,
+                it.checkoutGiftCardsAppend.checkout.totalTaxV2.currencyCode.toString()
             )
         }
         bottomData.grandtotal = CurrencyFormatter.setsymbol(
-            (it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.amount.toDouble() - it!!.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
-            it!!.checkoutGiftCardsAppend.checkout.totalPriceV2.currencyCode.toString()
+            (it.checkoutGiftCardsAppend.checkout.totalPriceV2.amount.toDouble() - it.checkoutGiftCardsAppend.checkout.appliedGiftCards[0].amountUsedV2.amount.toDouble()).toString(),
+            it.checkoutGiftCardsAppend.checkout.totalPriceV2.currencyCode.toString()
         )
-        bottomData.checkouturl = it!!.checkoutGiftCardsAppend.checkout.webUrl
+        bottomData.checkouturl = it.checkoutGiftCardsAppend.checkout.webUrl
         binding!!.bottomdata = bottomData
         binding!!.root.visibility = View.VISIBLE
         showToast(getString(R.string.gift_success))
@@ -218,11 +262,11 @@ class CartList : NewBaseActivity() {
     private fun consumeResponse(reponse: Storefront.Checkout) {
         if (reponse.lineItems.edges.size > 0) {
             showTittle(resources.getString(R.string.yourcart) + " ( " + reponse.lineItems.edges.size + " items )")
-            if (adapter!!.data != null) {
-                adapter!!.data = reponse.lineItems.edges
-                adapter!!.notifyDataSetChanged()
+            if (adapter.data != null) {
+                adapter.data = reponse.lineItems.edges
+                adapter.notifyDataSetChanged()
             } else {
-                adapter!!.setData(
+                adapter.setData(
                     reponse.lineItems.edges,
                     model,
                     this,
@@ -234,13 +278,254 @@ class CartList : NewBaseActivity() {
                 cartlist!!.adapter = adapter
             }
             setBottomData(reponse)
+            delivery_param = model!!.fillDeliveryParam(reponse.lineItems.edges)
+            response_data = reponse
+            if (SplashViewModel.featuresModel.zapietEnable) {
+                model!!.validateDelivery(delivery_param).observe(this@CartList, Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+            }
+
             invalidateOptionsMenu()
         } else {
             showToast(resources.getString(R.string.emptycart))
             finish()
         }
     }
+    private fun validate_delivery(response: ApiResponse?, edges: List<Storefront.CheckoutLineItemEdge>) {
+        try {
+            Log.d(TAG, "validate_delivery: " + response!!.data)
+            if (response!!.data != null) {
+                var res = response!!.data
+                if (res!!.asJsonObject.get("success").asBoolean && res!!.asJsonObject.get("productsEligible").asBoolean) {
+                    binding!!.zepietSection.visibility = View.VISIBLE
+                    var local_delivery_param = model!!.fillLocalDeliveryParam(edges)
+                    Log.d(TAG, "validate_delivery: " + local_delivery_param)
+                    model!!.localDelivery(local_delivery_param).observe(this, Observer { this.localDelivery(it) })
+                } else {
+                    binding!!.zepietSection.visibility = View.GONE
+                    binding!!.bottomsection.visibility = View.VISIBLE
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
+    private fun storeDelivery(it: ApiResponse?) {
+        Log.d(TAG, "storeDelivery: " + it!!.data)
+        if (customLoader!!.isShowing) {
+            customLoader!!.dismiss()
+        }
+
+        try {
+            if (it!!.data != null) {
+                var res = it!!.data
+                if (res!!.asJsonObject.get("success").asBoolean == true) {
+                    var calendar = res.asJsonObject.getAsJsonObject("calendar")
+                    var disabled = calendar.getAsJsonArray("disabled")
+                    locations = res.asJsonObject.getAsJsonArray("locations")
+                    if (locations.size() > 0) {
+
+
+                        custom_attribute.put("Pickup-Location-Id", locations.get(0).asJsonObject.get("id").asString)
+                        custom_attribute.put("Pickup-Location-Company", locations.get(0).asJsonObject.get("company_name").asString)
+                        custom_attribute.put("Pickup-Location-Address-Line-1", locations.get(0).asJsonObject.get("address_line_1").asString)
+                        custom_attribute.put("Pickup-Location-Address-Line-2", locations.get(0).asJsonObject.get("address_line_2").asString)
+                        custom_attribute.put("Pickup-Location-City", locations.get(0).asJsonObject.get("city").asString)
+                        custom_attribute.put("Pickup-Location-Region", locations.get(0).asJsonObject.get("region").asString)
+                        custom_attribute.put("Pickup-Location-Postal-Code", locations.get(0).asJsonObject.get("postal_code").asString)
+                        custom_attribute.put("Pickup-Location-Country", locations.get(0).asJsonObject.get("country").asString)
+
+                        locationAdapter.setData(locations, itemClick = object : LocationListAdapter.ItemClick {
+                            override fun selectLocation(location_item: JsonObject) {
+                                custom_attribute.put("Pickup-Location-Id", location_item.get("id").asString)
+                                custom_attribute.put("Pickup-Location-Company", location_item.get("company_name").asString)
+                                custom_attribute.put("Pickup-Location-Address-Line-1", location_item.get("address_line_1").asString)
+                                custom_attribute.put("Pickup-Location-Address-Line-2", location_item.get("address_line_2").asString)
+                                custom_attribute.put("Pickup-Location-City", location_item.get("city").asString)
+                                custom_attribute.put("Pickup-Location-Region", location_item.get("region").asString)
+                                custom_attribute.put("Pickup-Location-Postal-Code", location_item.get("postal_code").asString)
+                                custom_attribute.put("Pickup-Location-Country", location_item.get("country").asString)
+
+                                val sydney = LatLng(location_item.get("latitude").asDouble, location_item.get("longitude").asDouble)
+                                if (marker == null) {
+                                    var markerOptions = MarkerOptions().position(sydney)
+                                        .title("I am here!")
+                                        .icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                BitmapDescriptorFactory.HUE_MAGENTA));
+                                    marker = mMap.addMarker(markerOptions);
+                                } else {
+                                    marker!!.setPosition(sydney);
+                                }
+                                mMap.animateCamera(CameraUpdateFactory.newLatLng(sydney))
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 18f))
+                            }
+                        })
+                        binding!!.locationList.adapter = locationAdapter
+                    }
+                    daysOfWeek = calendar.getAsJsonObject("daysOfWeek")
+                    interval = calendar.get("interval").asInt
+                    loadCalendar(calendar, disabled)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun localDelivery(it: ApiResponse?) {
+        try {
+            if (customLoader!!.isShowing) {
+                customLoader!!.dismiss()
+            }
+
+            Log.d(TAG, "localDelivery: " + it!!.data)
+            if (it!!.data != null) {
+                binding!!.deliveryDateTxt.visibility = View.VISIBLE
+                var res = it!!.data
+                if (res!!.asJsonObject.get("success").asBoolean == true) {
+                    var calendar = res.asJsonObject.getAsJsonObject("calendar")
+                    var disabled = calendar.getAsJsonArray("disabled")
+                    slots = calendar.getAsJsonArray("slots")
+                    loadCalendar(calendar, disabled)
+                }
+                binding!!.deliveryOption.visibility = View.VISIBLE
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+
+    private fun loadCalendar(calendar: JsonObject?, disabled: JsonArray?) {
+        disabledates = ArrayList<Calendar>()
+        dpd =DatePickerDialog.newInstance(
+            this,
+            year, // Initial year selection
+            month, // Initial month selection
+            day
+        );
+        dpd.locale = Locale.getDefault()
+        dpd.setThemeDark(false);
+        dpd.showYearPickerFirst(false);
+        dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+        var new_calendar: Calendar? = null
+//        val weeks = 5
+//        var i = 0
+        for (j in 0..disabled!!.size() - 1) {
+            if (disabled.isJsonArray) {
+                if (disabled[j].toString().equals("2")) {
+//                    new_calendar = Calendar.getInstance()
+//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+//                    disabledates.add(new_calendar!!)
+                    val weeks = 5
+                    var i = 0
+                    while (i < weeks * 7) {
+                        new_calendar = Calendar.getInstance();
+                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.MONDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        disabledates?.add(new_calendar)
+                        i = i + 7
+                    }
+
+                } else if (disabled[j].toString().equals("3")) {
+//                    new_calendar = Calendar.getInstance()
+//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+//                    disabledates.add(new_calendar!!)
+
+                    val weeks = 5
+                    var i = 0
+                    while (i < weeks * 7) {
+                        new_calendar = Calendar.getInstance();
+                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.TUESDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        disabledates?.add(new_calendar)
+                        i = i + 7
+                    }
+                } else if (disabled[j].toString().equals("4")) {
+//                    new_calendar = Calendar.getInstance()
+//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+//                    disabledates.add(new_calendar!!)
+
+                    val weeks = 5
+                    var i = 0
+                    while (i < weeks * 7) {
+                        new_calendar = Calendar.getInstance();
+                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.WEDNESDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        disabledates?.add(new_calendar)
+                        i = i + 7
+                    }
+                } else if (disabled[j].toString().equals("5")) {
+//                    new_calendar = Calendar.getInstance()
+//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+//                    disabledates.add(new_calendar!!)
+
+                    val weeks = 5
+                    var i = 0
+                    while (i < weeks * 7) {
+                        new_calendar = Calendar.getInstance();
+                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.THURSDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        disabledates?.add(new_calendar)
+                        i = i + 7
+                    }
+                } else if (disabled[j].toString().equals("6")) {
+//                    new_calendar = Calendar.getInstance()
+//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+//                    disabledates.add(new_calendar!!)
+
+                    val weeks = 5
+                    var i = 0
+                    while (i < weeks * 7) {
+                        new_calendar = Calendar.getInstance();
+                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.FRIDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        disabledates?.add(new_calendar)
+                        i = i + 7
+                    }
+                } else if (disabled[j].toString().equals("7")) {
+//                    new_calendar = Calendar.getInstance()
+//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+//                    disabledates.add(new_calendar!!)
+
+                    val weeks = 5
+                    var i = 0
+                    while (i < weeks * 7) {
+                        new_calendar = Calendar.getInstance();
+                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        disabledates?.add(new_calendar)
+                        i = i + 7
+                    }
+                } else if (disabled[j].toString().equals("1")) {
+//                    new_calendar = Calendar.getInstance()
+//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+//                    disabledates.add(new_calendar!!)
+
+                    val weeks = 5
+                    var i = 0
+                    while (i < weeks * 7) {
+                        new_calendar = Calendar.getInstance()
+                        new_calendar.add(Calendar.DAY_OF_YEAR, Calendar.SUNDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + 7 + i)
+                        // saturday = Calendar.getInstance();
+                        // saturday.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - saturday.get(Calendar.DAY_OF_WEEK) + i));
+                        // weekends.add(saturday);
+                        disabledates?.add(new_calendar)
+                        i = i + 7
+                    }
+                }
+            }
+        }
+        var maxDate = calendar!!.get("maxDate").asString.split("-")
+        var minDate = calendar.get("minDate").asString.split("-")
+        val disabledDays1: Array<Calendar> = disabledates?.toArray(arrayOfNulls<Calendar>(disabledates?.size!!)) as Array<Calendar>
+        dpd.disabledDays = disabledDays1
+        mincalender.set(Calendar.YEAR, minDate[0].toInt())
+        mincalender.set(Calendar.MONTH, minDate[1].toInt() - 1)
+        mincalender.set(Calendar.DAY_OF_MONTH, minDate[2].toInt())
+        dpd.minDate = mincalender
+
+        maxcalender.set(Calendar.YEAR, maxDate[0].toInt())
+        maxcalender.set(Calendar.MONTH, maxDate[1].toInt() - 1)
+        maxcalender.set(Calendar.DAY_OF_MONTH, maxDate[2].toInt())
+        dpd.maxDate = maxcalender
+
+    }
     private fun consumeResponse(reponse: ApiResponse) {
         when (reponse.status) {
             Status.SUCCESS -> setPersonalisedData(reponse.data!!)
@@ -270,7 +555,7 @@ class CartList : NewBaseActivity() {
                 personamodel!!.setPersonalisedData(
                     jsondata.getJSONObject("query1").getJSONArray("products"),
                     personalisedadapter,
-                    model!!.presentCurrency!!,
+                    model!!.presentCurrency,
                     binding!!.personalised
                 )
             }
@@ -363,9 +648,9 @@ class CartList : NewBaseActivity() {
             Log.d(TAG, "loadCheckout: " + cartWarning?.values)
             if (cartWarning?.values?.contains(true) == true) {
                 var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
-                alertDialog.setTitleText(view.context?.getString(R.string.warning_message))
-                alertDialog.setContentText(view?.context?.getString(R.string.cart_warning))
-                alertDialog.setConfirmText(view?.context?.getString(R.string.dialog_ok))
+                alertDialog.titleText = view.context?.getString(R.string.warning_message)
+                alertDialog.contentText = view.context?.getString(R.string.cart_warning)
+                alertDialog.confirmText = view.context?.getString(R.string.dialog_ok)
                 alertDialog.setConfirmClickListener { sweetAlertDialog ->
                     sweetAlertDialog.dismissWithAnimation()
                 }
@@ -377,17 +662,18 @@ class CartList : NewBaseActivity() {
 
         fun payWithGpay(view: View, data: CartBottomData) {
             val idempotencyKey = UUID.randomUUID().toString()
-            val billingAddressInput: Storefront.MailingAddressInput = Storefront.MailingAddressInput()
-            billingAddressInput.address1= "3/446 Gomti Nagar Vishvash Khand Lucknow"
-            billingAddressInput.address2="3/446 Gomti Nagar Vishvash Khand Lucknow"
-            billingAddressInput.city="Lucknow"
-            billingAddressInput.company=""
-            billingAddressInput.country="India"
-            billingAddressInput.firstName="Abhishek"
-            billingAddressInput.lastName="Dubey"
-            billingAddressInput.zip="226010"
+            val billingAddressInput: Storefront.MailingAddressInput =
+                Storefront.MailingAddressInput()
+            billingAddressInput.address1 = "3/446 Gomti Nagar Vishvash Khand Lucknow"
+            billingAddressInput.address2 = "3/446 Gomti Nagar Vishvash Khand Lucknow"
+            billingAddressInput.city = "Lucknow"
+            billingAddressInput.company = ""
+            billingAddressInput.country = "India"
+            billingAddressInput.firstName = "Abhishek"
+            billingAddressInput.lastName = "Dubey"
+            billingAddressInput.zip = "226010"
 
-            model?.doGooglePay(data.checkoutId,  "100", idempotencyKey,billingAddressInput)
+            model?.doGooglePay(data.checkoutId, "100", idempotencyKey, billingAddressInput)
         }
 
         fun applyGiftCard(view: View, bottomData: CartBottomData) {
@@ -400,17 +686,17 @@ class CartList : NewBaseActivity() {
                         bottomData.checkoutId
                     )
                 }
-            } else if ((view as MageNativeButton).text == getString(R.string.remove)) {
+            } else if (view.text == getString(R.string.remove)) {
                 model!!.removeGiftCard(bottomData.giftcardID, bottomData.checkoutId)
             }
         }
 
         fun clearCart(view: View) {
             var alertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.WARNING_TYPE)
-            alertDialog.setTitleText(getString(R.string.warning_message))
-            alertDialog.setContentText(getString(R.string.delete_cart_warning))
-            alertDialog.setConfirmText(getString(R.string.yes_delete))
-            alertDialog.setCancelText(getString(R.string.no))
+            alertDialog.titleText = getString(R.string.warning_message)
+            alertDialog.contentText = getString(R.string.delete_cart_warning)
+            alertDialog.confirmText = getString(R.string.yes_delete)
+            alertDialog.cancelText = getString(R.string.no)
             alertDialog.setConfirmClickListener { sweetAlertDialog ->
                 sweetAlertDialog.setTitleText(getString(R.string.deleted))
                     .setContentText(getString(R.string.cart_deleted_message))
@@ -425,8 +711,8 @@ class CartList : NewBaseActivity() {
 
         private fun showApplyCouponDialog(data: CartBottomData) {
             var listdialog = Dialog(this@CartList, R.style.WideDialog)
-            listdialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)
-            listdialog.getWindow()!!.setLayout(
+            listdialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+            listdialog.window!!.setLayout(
                 Constraints.LayoutParams.MATCH_PARENT,
                 Constraints.LayoutParams.MATCH_PARENT
             )
@@ -441,17 +727,65 @@ class CartList : NewBaseActivity() {
                 try {
                     listdialog.dismiss()
                     if (model!!.isLoggedIn) {
+                        Log.d(TAG, "loadCheckout: 1" + custom_attribute)
                         Log.i("herer", " " + data.checkoutId)
                         Log.i("herer", "token : " + model?.customeraccessToken?.customerAccessToken)
+                        Log.i("attributeInputs", "obj " + custom_attribute)
+                        val iter: Iterator<String> = custom_attribute.keys()
+                        var itemInput: Storefront.AttributeInput? = null
+                        val attributeInputs: MutableList<Storefront.AttributeInput> = java.util.ArrayList()
+                        while (iter.hasNext()) {
+                            val key = iter.next()
+                            val value: String = custom_attribute.getString(key)
+                            itemInput = Storefront.AttributeInput(key, value)
+                            attributeInputs.add(itemInput)
+                        }
+                        Log.i("attributeInputs", "cart $attributeInputs")
+                        if (!TextUtils.isEmpty(binding!!.orderNoteEdt.text.toString().trim())) {
+                            model!!.prepareCartwithAttribute(attributeInputs, binding!!.orderNoteEdt.text.toString())
+                        } else {
+                            model!!.prepareCartwithAttribute(attributeInputs, "")
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            var loader = CustomLoader(this@CartList)
+                            loader.show()
+                            Handler().postDelayed(Runnable {
+                                Log.i("herer", " " + data.checkoutId)
+                                Log.i("herer", "token : " + model?.customeraccessToken?.customerAccessToken)
+                                Log.i("attributeInputs", "obj " + custom_attribute)
+                                model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
+                                model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })
+                                Log.d(TAG, "loadCheckout: " + data.checkoutId)
+                                loader.dismiss()
+                            }, 4000, 4000)
+                        }
+                        /*model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
+                        model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })*/
                         model?.associatecheckout(
                             data.checkoutId,
-                            model!!.customeraccessToken?.customerAccessToken
+                            model!!.customeraccessToken.customerAccessToken
                         )
                         model?.getassociatecheckoutResponse()
                             ?.observe(this@CartList, Observer { this.getResonse(it) })
                     } else {
+                        Log.d(TAG, "loadCheckout: 2" + custom_attribute)
+                        val iter: Iterator<String> = custom_attribute.keys()
+                        var itemInput: Storefront.AttributeInput? = null
+                        val attributeInputs: MutableList<Storefront.AttributeInput> = java.util.ArrayList()
+                        while (iter.hasNext()) {
+                            val key = iter.next()
+                            val value: String = custom_attribute.getString(key)
+                            itemInput = Storefront.AttributeInput(key, value)
+                            attributeInputs.add(itemInput)
+                        }
+                        Log.i("attributeInputs", "cart $attributeInputs")
+                        if (!TextUtils.isEmpty(binding!!.orderNoteEdt.text.toString().trim())) {
+                            model!!.prepareCartwithAttribute(attributeInputs, binding!!.orderNoteEdt.text.toString())
+                        } else {
+                            model!!.prepareCartwithAttribute(attributeInputs, "")
+                        }
                         val intent = Intent(this@CartList, CheckoutWeblink::class.java)
-                        intent.putExtra("link", data?.checkouturl)
+                        intent.putExtra("link", data.checkouturl)
                         intent.putExtra("id", data.checkoutId)
                         startActivity(intent)
                         Constant.activityTransition(this@CartList)
@@ -468,15 +802,45 @@ class CartList : NewBaseActivity() {
                     discountCodeLayoutBinding.discountCodeEdt.error =
                         getString(R.string.discount_validation)
                 } else {
-                    model!!.applyDiscount(
-                        data.checkoutId,
-                        discountCodeLayoutBinding.discountCodeEdt.text.toString()
-                    )
+                    if (SplashViewModel.featuresModel.appOnlyDiscount) {
+                        model?.NResponse(
+                            Urls(application as MyApplication).mid,
+                            discountCodeLayoutBinding.discountCodeEdt.text.toString()
+                        )?.observe(this@CartList, Observer { this.showData(it, data) })
+                    }else{
+                        model!!.applyDiscount(
+                            data.checkoutId,
+                            discountCodeLayoutBinding.discountCodeEdt.text.toString()
+                        )
+                    }
+
                     listdialog.dismiss()
                 }
             }
             listdialog.show()
         }
+
+        /******************************** DICOUNTCODE SECTION ***************************************/
+
+        private fun showData(response: ApiResponse?, data: CartBottomData) {
+            Log.i("COUPPNCODERESPONSE", "" + response?.data)
+            couponCodeData(response?.data, data)
+        }
+
+        private fun couponCodeData(data: JsonElement?, data1: CartBottomData) {
+            val jsondata = JSONObject(data.toString())
+            if (jsondata.has("discount_code")) {
+                discountcode = jsondata.getString("discount_code")
+                Log.i("DICOUNTCODE", "" + discountcode)
+                Log.i("CHECKOUTID", "" + data1.checkoutId)
+                model!!.applyDiscount(
+                    data1.checkoutId,
+                    discountcode.toString()
+                )
+            }
+        }
+
+        /***********************************************************************************/
 
         fun getResonse(it: Storefront.Checkout?) {
             if (count == 1) {
@@ -533,5 +897,157 @@ class CartList : NewBaseActivity() {
                 e.printStackTrace()
             }
         }
+        var sdk = android.os.Build.VERSION.SDK_INT
+        fun storeDeliveryClick(view: View) {
+            if (!customLoader!!.isShowing) {
+                customLoader!!.show()
+            }
+
+            custom_attribute = JSONObject()
+            binding!!.deliveryDateTxt.text = resources.getString(R.string.click_here_to_select_delivery_date)
+            binding!!.orderNoteEdt.hint = resources.getString(R.string.order_note_hint)
+            binding!!.deliveryTimeSpn.visibility = View.GONE
+            var store_delivery_param = model!!.fillStoreDeliveryParam(response_data.lineItems.edges)
+            model!!.storeDelivery(store_delivery_param).observe(this@CartList, Observer { this@CartList.storeDelivery(it) })
+            binding!!.deliverAreaTxt.text = resources.getString(R.string.withdrawal_day_and_time)
+            binding!!.mapContainer.visibility = View.GONE
+            binding!!.locationList.visibility = View.VISIBLE
+            selected_delivery = "pickup"
+            if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                view.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
+                binding!!.localContainer.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+            } else {
+                view.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
+                binding!!.localContainer.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+            }
+            custom_attribute.put("Checkout-Method", selected_delivery)
+        }
+
+        fun localDeliveryClick(view: View) {
+            if (!customLoader!!.isShowing) {
+                customLoader!!.show()
+            }
+
+            custom_attribute = JSONObject()
+            binding!!.deliveryDateTxt.text = resources.getString(R.string.click_here_to_select_delivery_date)
+            binding!!.orderNoteEdt.hint = resources.getString(R.string.order_note_hint)
+            binding!!.deliveryTimeSpn.visibility = View.GONE
+            model!!.validateDelivery(delivery_param).observe(this@CartList, Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+            binding!!.mapContainer.visibility = View.GONE
+            binding!!.locationList.visibility = View.GONE
+            binding!!.deliverAreaTxt.text = resources.getString(R.string.please_enter_your_postal_code_to_find_out_if_we_deliver_to_this_area)
+            selected_delivery = "delivery"
+            if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                view.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
+                binding!!.storeContainer.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+
+            } else {
+                view.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
+                binding!!.storeContainer.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+            }
+            custom_attribute.put("Checkout-Method", selected_delivery)
+        }
+
+        fun deliveryDatePicker() {
+            dpd.show(supportFragmentManager, "Datepickerdialog");
+        }
     }
+
+
+
+override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+    var date = "" + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year
+    var new_date = simpleDateFormat.parse(date)
+    var dayOfTheWeek = dayFormat.format(new_date);
+    binding!!.deliveryDateTxt.text = date
+    if (selected_delivery == "pickup") {
+        custom_attribute.put("Pickup-Date", date.toString())
+    } else {
+        custom_attribute.put("Delivery-Date", date.toString())
+    }
+    localdelivery_slots = ArrayList()
+    binding!!.deliveryTimeSpn.visibility = View.VISIBLE
+    //   binding!!.orderNoteEdt.visibility = View.VISIBLE
+    if (selected_delivery.equals("delivery")) {
+        for (i in 0..slots.size() - 1) {
+            if (slots[i].asJsonObject.get("day_of_week").asString.equals(dayOfTheWeek, true)) {
+                localdelivery_slots.add(slots[i].asJsonObject.get("available_from").asString + " - " + slots[i].asJsonObject.get("available_until").asString)
+            }
+        }
+        binding!!.deliveryTimeSpn.adapter = ArrayAdapter<String>(this, R.layout.spinner_item_layout, localdelivery_slots)
+    } else if (selected_delivery.equals("pickup")) {
+        val week_object: JsonObject = daysOfWeek.getAsJsonObject(dayOfTheWeek.toLowerCase())
+        val array = JSONArray()
+        val min = week_object.getAsJsonObject("min")
+        val min_hour = min.get("hour").asString
+        val min_minute = min.get("minute").asString
+        array.put(min_hour + ":" + min_minute)
+        val max = week_object.getAsJsonObject("max")
+        val max_hour = max.get("hour").asString
+        val max_minute = max.get("minute").asString
+        Log.i("THESETIMESLOTS", "1 $array")
+        val df = SimpleDateFormat("HH:mm")
+        val cal = Calendar.getInstance()
+        var myTime = min_hour + ":" + min_minute
+        while (true) {
+            val d = df.parse(myTime)
+            cal.time = d
+            cal.add(Calendar.MINUTE, interval)
+            myTime = df.format(cal.time)
+            if (myTime != max_hour + ":" + interval) {
+                Log.i("THESETIMESLOTS", "loop $array")
+                array.put(myTime)
+            } else {
+                break
+            }
+        }
+        array.put(max_hour + ":" + max_minute)
+        val array_display_slots: ArrayList<String> = ArrayList()
+        for (x in 0 until array.length()) {
+            array_display_slots.add(convert(array.get(x).toString()))
+        }
+        binding!!.deliveryTimeSpn.adapter = ArrayAdapter<String>(this, R.layout.spinner_item_layout, array_display_slots)
+    }
+    binding!!.deliveryTimeSpn.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            binding!!.bottomsection.visibility = View.VISIBLE
+            Log.d(TAG, "onItemSelected: " + parent?.selectedItem.toString())
+            selected_slot = parent?.selectedItem.toString()
+            if (selected_delivery == "pickup") {
+                custom_attribute.put("Pickup-Time", selected_slot)
+            } else {
+                custom_attribute.put("Delivery-Time", selected_slot)
+            }
+        }
+    }
+
+
+}
+
+fun convert(time: String): String {
+    var convertedTime = ""
+    try {
+        val displayFormat = SimpleDateFormat("hh:mm")
+        val parseFormat = SimpleDateFormat("HH:mm")
+        val date = parseFormat.parse(time)
+        convertedTime = displayFormat.format(date)
+        println("convertedTime : $convertedTime")
+    } catch (e: ParseException) {
+        e.printStackTrace()
+    }
+    return convertedTime
+}
+
+override fun onMapReady(googleMap: GoogleMap) {
+    mMap = googleMap
+
+    // Add a marker in Sydney and move the camera
+    val sydney = LatLng(-34.0, 151.0)
+    mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+}
 }

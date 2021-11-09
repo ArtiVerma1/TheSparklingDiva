@@ -14,7 +14,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -23,7 +22,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -48,10 +46,12 @@ import com.shopify.shopifyapp.homesection.models.StandAloneBanner
 import com.shopify.shopifyapp.loader_section.CustomLoader
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.shopifyqueries.Query
 import com.shopify.shopifyapp.utils.*
+import com.shopify.shopifyapp.utils.Constant.ispersonalisedEnable
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -83,6 +83,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     val hasFullSearchOnTop = MutableLiveData<Boolean>()
     private val TAG = "HomePageViewModel"
     private var customLoader: CustomLoader? = null
+    val notifyPersonalised: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var getyotpoauthenticate = MutableLiveData<ApiResponse>()
 
     companion object {
         var count_color: String? = null
@@ -117,7 +119,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     fun getToastMessage(): MutableLiveData<String> {
-        return message;
+        return message
     }
 
     fun setPresentmentCurrencyForModel() {
@@ -159,6 +161,24 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         Log.i("DBConnectionError", "" + databaseError.code)
                     }
                 })
+            MyApplication.dataBaseReference?.child("enabled_integrations")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        try {
+                            val downloadlink = dataSnapshot.getValue(String::class.java)!!
+                            Log.i("MageNative", "DownloadLink " + downloadlink)
+                            downloadIntegrationJson(downloadlink, context)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -173,6 +193,78 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             }
             parseResponse(result.await(), context)
         }
+    }
+
+    fun downloadIntegrationJson(downloadlink: String, context: HomePage) {
+        GlobalScope.launch(Dispatchers.Main) {
+            var result = async(Dispatchers.IO) {
+                URL(downloadlink).readText()
+            }
+            parseFeaturesResponse(result.await(), context)
+        }
+    }
+
+    fun parseFeaturesResponse(apiResponse: String, context: HomePage) {
+        try {
+            val obj = JSONArray(apiResponse)
+            for (i in 0 until obj.length()) {
+                val ids = obj.getJSONObject(i).getString("id")
+                when (ids) {
+                    "I01" -> {
+                        SplashViewModel.featuresModel.productReview = true
+                    }
+                    "I02" -> {
+                        //Yotpo Product Reviews & Photos
+                    }
+                    "I03" -> {
+                        SplashViewModel.featuresModel.judgemeProductReview = true
+                        if (obj.getJSONObject(i).has("inputs")) {
+                            if (obj.getJSONObject(i).getJSONObject("inputs").has("apiKey"))
+
+                                Urls.JUDGEME_APITOKEN =
+                                    obj.getJSONObject(i).getJSONObject("inputs").getString("apiKey")
+                        }
+                    }
+                    "I04" -> {
+                        SplashViewModel.featuresModel.sizeChartVisibility = true
+                    }
+                    "I05" -> {
+                        SplashViewModel.featuresModel.zenDeskChat = true
+                        //zendesk
+                    }
+                    "I06" -> {
+                        SplashViewModel.featuresModel.tidioChat = true
+                        //tdio chat
+                    }
+                    "I07" -> {
+                        SplashViewModel.featuresModel.zapietEnable = true
+                    }
+                    "I12" -> {
+                        SplashViewModel.featuresModel.yoptoLoyalty = true
+                        if (obj.getJSONObject(i).has("inputs")) {
+                            if (obj.getJSONObject(i).getJSONObject("inputs").has("apiKey"))
+                                Urls.X_API_KEY =
+                                    obj.getJSONObject(i).getJSONObject("inputs").getString("apiKey")
+                            Urls.XGUID =
+                                obj.getJSONObject(i).getJSONObject("inputs").getString("guid")
+                        }
+                    }
+                    "I13" -> {
+                        SplashViewModel.featuresModel.aliReviews = true
+                    }
+                    "I14" -> {
+                        notifyPersonalised.value = true
+                        SplashViewModel.featuresModel.ai_product_reccomendaton = true
+                        ispersonalisedEnable = true
+                    }
+                }
+
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     fun parseResponse(apiResponse: String, context: HomePage) {
@@ -224,14 +316,14 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
             if (names.length() == context.homepage.childCount) {
                 //   Toast.makeText(context, "complete", Toast.LENGTH_SHORT).show()
-                if (customLoader != null && customLoader?.isShowing ?: false) {
+                if (customLoader != null && customLoader?.isShowing == true) {
                     customLoader?.dismiss()
                 }
                 context.main_container.visibility = View.VISIBLE
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            if (customLoader != null && customLoader?.isShowing ?: false) {
+            if (customLoader != null && customLoader?.isShowing == true) {
                 customLoader?.dismiss()
             }
         }
@@ -268,7 +360,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     context,
                     jsonObject.getJSONArray("items")
                 )
-                binding!!.bannerss.adapter = adp
+                binding.bannerss.adapter = adp
                 adp.notifyDataSetChanged()
                 context.toolbar.visibility = View.GONE
                 binding.homeToolbar.visibility = View.VISIBLE
@@ -378,7 +470,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             Color.parseColor(
                                 JSONObject(jsonObject.getString("search_border_color")).getString("color")
                             )
-                        );
+                        )
 
 
                         context.fullsearch_container.setBackgroundColor(
@@ -429,14 +521,14 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             Color.parseColor(
                                 JSONObject(jsonObject.getString("search_border_color")).getString("color")
                             )
-                        );
+                        )
                         //context.fullsearch.background = draw1
                     }
                 }
 
 
                 //  binding.bannersection.backgroundTintList = ColorStateList.valueOf(Color.parseColor(JSONObject(jsonObject.getString("panel_background_color")).getString("color")))
-                binding!!.bannerss.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                binding.bannerss.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                     override fun onPageScrollStateChanged(state: Int) {
 
                     }
@@ -466,26 +558,26 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 if (jsonObject.getString("item_dots").equals("1")) {
                     var background = JSONObject(jsonObject.getString("active_dot_color"))
                     var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
-                    binding!!.indicators.visibility = View.VISIBLE
-                    binding!!.indicators.setDotIndicatorColor(
+                    binding.indicators.visibility = View.VISIBLE
+                    binding.indicators.setDotIndicatorColor(
                         Color.parseColor(
                             background.getString(
                                 "color"
                             )
                         )
                     )
-                    binding!!.indicators.setStrokeDotsIndicatorColor(
+                    binding.indicators.setStrokeDotsIndicatorColor(
                         Color.parseColor(
                             strokebackground.getString("color")
                         )
                     )
-                    binding!!.indicators.setViewPager(binding!!.bannerss)
+                    binding.indicators.setViewPager(binding.bannerss)
 
                     var i = 0
                     val timer = Timer()
                     timer.scheduleAtFixedRate(timerTask {
                         GlobalScope.launch(Dispatchers.Main) {
-                            binding.bannerss.setCurrentItem(i++);
+                            binding.bannerss.currentItem = i++
                             if (i == jsonObject.getJSONArray("items").length()) {
                                 i = 0
                             }
@@ -545,7 +637,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                     )
                                 )
                             }
-
                         }
                     }
                     "full-width-search" -> {
@@ -589,7 +680,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             Color.parseColor(
                                 JSONObject(jsonObject.getString("search_border_color")).getString("color")
                             )
-                        );
+                        )
 
                         context.fullsearch_container.setBackgroundColor(
                             Color.parseColor(
@@ -638,12 +729,12 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                             Color.parseColor(
                                 JSONObject(jsonObject.getString("search_border_color")).getString("color")
                             )
-                        );
+                        )
                         //  context.fullsearch.background = draw1
                     }
                 }
             }
-            homepagedata.setValue(hashMapOf("top-bar_" to binding.root))
+            homepagedata.value = hashMapOf("top-bar_" to binding.root)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -692,18 +783,18 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("header_title_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                     }
                 }
-                binding.headertext.setTypeface(face)
+                binding.headertext.typeface = face
                 if (jsonObject.getString("item_header_font_style").equals("italic")) {
                     binding.headertext.setTypeface(
-                        binding.headertext.getTypeface(),
+                        binding.headertext.typeface,
                         Typeface.ITALIC
-                    );
+                    )
                 }
                 if (jsonObject.getString("header_subtitle").equals("1")) {
                     productSlider.subheadertextvisibity = View.VISIBLE
@@ -720,18 +811,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face =
+                                Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                         }
                     }
-                    binding.subheadertext.setTypeface(face)
+                    binding.subheadertext.typeface = face
                     if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
                         binding.subheadertext.setTypeface(
-                            binding.subheadertext.getTypeface(),
+                            binding.subheadertext.typeface,
                             Typeface.ITALIC
-                        );
+                        )
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -743,9 +835,9 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     binding.timerMessage.setTextColor(Color.parseColor(header_deal_color.getString("color")))
                     binding.timericon.setTextColor(Color.parseColor(header_deal_color.getString("color")))
                     productSlider.timertextmessage = jsonObject.getString("item_deal_message")
-                    var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
-                    var sdf = SimpleDateFormat(DATE_FORMAT);
-                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
+                    var sdf = SimpleDateFormat(DATE_FORMAT)
+                    sdf.timeZone = TimeZone.getTimeZone("UTC")
                     var item_deal_start_date = sdf.format(Date())
                     Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
                     var item_deal_end_date = jsonObject.getString("item_deal_end_date")
@@ -755,19 +847,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     try {
                         startdate = sdf.parse(item_deal_start_date)
                         enddate = sdf.parse(item_deal_end_date)
-                        var oldLong = startdate.getTime()
-                        var NewLong = enddate.getTime()
+                        var oldLong = startdate.time
+                        var NewLong = enddate.time
                         var diff = NewLong - oldLong
                         Log.i("MageNative", "Long" + diff)
                         if (diff > 0) {
                             // var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                            var counter = MyCount(diff, 1000, productSlider, ":");
+                            var counter = MyCount(diff, 1000, productSlider, ":")
                             counter.start()
                         } else {
                             productSlider.timericon = View.GONE
                         }
                     } catch (ex: ParseException) {
-                        ex.printStackTrace();
+                        ex.printStackTrace()
                     }
                 } else {
                     productSlider.timericon = View.GONE
@@ -791,18 +883,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face =
+                                Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                         }
                     }
-                    binding.actiontext.setTypeface(face)
+                    binding.actiontext.typeface = face
                     if (jsonObject.getString("header_action_title_font_style").equals("italic")) {
                         binding.actiontext.setTypeface(
-                            binding.actiontext.getTypeface(),
+                            binding.actiontext.typeface,
                             Typeface.ITALIC
-                        );
+                        )
                     }
 
                 } else {
@@ -812,7 +905,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 productSlider.headertextvisibility = View.GONE
             }
             binding.productslider = productSlider
-            homepagedata.setValue(hashMapOf("fixed-customisable-layout_" to binding.root))
+            homepagedata.value = hashMapOf("fixed-customisable-layout_" to binding.root)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -854,18 +947,18 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("header_title_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                     }
                 }
-                binding.headertext.setTypeface(face)
+                binding.headertext.typeface = face
                 if (jsonObject.getString("header_title_font_style").equals("italic")) {
                     binding.headertext.setTypeface(
-                        binding.headertext.getTypeface(),
+                        binding.headertext.typeface,
                         Typeface.ITALIC
-                    );
+                    )
                 }
                 if (jsonObject.getString("header_subtitle").equals("1")) {
                     productSlider.subheadertextvisibity = View.VISIBLE
@@ -880,18 +973,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face =
+                                Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                         }
                     }
-                    binding.subheadertext.setTypeface(face)
+                    binding.subheadertext.typeface = face
                     if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
                         binding.subheadertext.setTypeface(
-                            binding.subheadertext.getTypeface(),
+                            binding.subheadertext.typeface,
                             Typeface.ITALIC
-                        );
+                        )
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -899,13 +993,13 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             } else {
                 productSlider.headertextvisibility = View.GONE
             }
-            context.setLayout(binding!!.productdata, "horizontal")
+            context.setLayout(binding.productdata, "horizontal")
             slideradapter = CollectionSliderAdapter()
-            slideradapter!!.setData(jsonObject!!.getJSONArray("items"), context, jsonObject!!)
-            binding!!.productdata.adapter = slideradapter
-            slideradapter!!.notifyDataSetChanged()
+            slideradapter.setData(jsonObject.getJSONArray("items"), context, jsonObject)
+            binding.productdata.adapter = slideradapter
+            slideradapter.notifyDataSetChanged()
             binding.productslider = productSlider
-            homepagedata.setValue(hashMapOf("collection-list-slider_" to binding.root))
+            homepagedata.value = hashMapOf("collection-list-slider_" to binding.root)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -951,18 +1045,18 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("header_title_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                     }
                 }
-                binding.headertext.setTypeface(face)
+                binding.headertext.typeface = face
                 if (jsonObject.getString("header_title_font_style").equals("italic")) {
                     binding.headertext.setTypeface(
-                        binding.headertext.getTypeface(),
+                        binding.headertext.typeface,
                         Typeface.ITALIC
-                    );
+                    )
                 }
                 if (jsonObject.getString("header_subtitle").equals("1")) {
                     productSlider.subheadertextvisibity = View.VISIBLE
@@ -977,18 +1071,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face =
+                                Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                         }
                     }
-                    binding.subheadertext.setTypeface(face)
+                    binding.subheadertext.typeface = face
                     if (jsonObject.getString("header_subtitle_font_style").equals("italic")) {
                         binding.subheadertext.setTypeface(
-                            binding.subheadertext.getTypeface(),
+                            binding.subheadertext.typeface,
                             Typeface.ITALIC
-                        );
+                        )
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -1001,7 +1096,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     productSlider.timertextmessage = jsonObject.getString("item_deal_message")
                     var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
                     var sdf = SimpleDateFormat(DATE_FORMAT)
-                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    sdf.timeZone = TimeZone.getTimeZone("UTC")
                     var item_deal_start_date = sdf.format(Date())
                     Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
                     var item_deal_end_date = jsonObject.getString("item_deal_end_date")
@@ -1011,19 +1106,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     try {
                         startdate = sdf.parse(item_deal_start_date)
                         enddate = sdf.parse(item_deal_end_date)
-                        var oldLong = startdate.getTime()
-                        var NewLong = enddate.getTime()
+                        var oldLong = startdate.time
+                        var NewLong = enddate.time
                         var diff = NewLong - oldLong
                         Log.i("MageNative", "Long" + diff)
                         if (diff > 0) {
                             //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                            var counter = MyCount(diff, 1000, productSlider, ":");
+                            var counter = MyCount(diff, 1000, productSlider, ":")
                             counter.start()
                         } else {
                             productSlider.timericon = View.GONE
                         }
                     } catch (ex: ParseException) {
-                        ex.printStackTrace();
+                        ex.printStackTrace()
                     }
                 } else {
                     productSlider.timericon = View.GONE
@@ -1041,18 +1136,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face =
+                                Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                         }
                     }
-                    binding.actiontext.setTypeface(face)
+                    binding.actiontext.typeface = face
                     if (jsonObject.getString("header_action_font_style").equals("italic")) {
                         binding.actiontext.setTypeface(
-                            binding.actiontext.getTypeface(),
+                            binding.actiontext.typeface,
                             Typeface.ITALIC
-                        );
+                        )
                     }
 
                 } else {
@@ -1153,22 +1249,22 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             val face: Typeface
             when (jsonObject.getString("item_title_font_weight")) {
                 "bold" -> {
-                    face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                    face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                 }
                 else -> {
-                    face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                    face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                 }
             }
-            binding.hvnameone.setTypeface(face)
-            binding.hvnametwo.setTypeface(face)
-            binding.hvnamethree.setTypeface(face)
+            binding.hvnameone.typeface = face
+            binding.hvnametwo.typeface = face
+            binding.hvnamethree.typeface = face
             if (jsonObject.getString("item_title_font_style").equals("italic")) {
-                binding.hvnameone.setTypeface(binding.hvnameone.getTypeface(), Typeface.ITALIC);
-                binding.hvnametwo.setTypeface(binding.hvnametwo.getTypeface(), Typeface.ITALIC);
-                binding.hvnamethree.setTypeface(binding.hvnamethree.getTypeface(), Typeface.ITALIC);
+                binding.hvnameone.setTypeface(binding.hvnameone.typeface, Typeface.ITALIC)
+                binding.hvnametwo.setTypeface(binding.hvnametwo.typeface, Typeface.ITALIC)
+                binding.hvnamethree.setTypeface(binding.hvnamethree.typeface, Typeface.ITALIC)
             }
             binding.productslider = productSlider
-            homepagedata.setValue(hashMapOf("three-product-hv-layout_" to binding.root))
+            homepagedata.value = hashMapOf("three-product-hv-layout_" to binding.root)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -1238,13 +1334,13 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 binding.buttonOne.setTextColor(Color.parseColor(button_text_color.getString("color")))
                 binding.buttonTwo.setTextColor(Color.parseColor(button_text_color.getString("color")))
                 if (jsonObject.getString("item_font_weight").equals("bold")) {
-                    val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                    binding.buttonOne.setTypeface(face)
-                    binding.buttonTwo.setTypeface(face)
+                    val face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
+                    binding.buttonOne.typeface = face
+                    binding.buttonTwo.typeface = face
                 }
                 if (jsonObject.getString("item_font_style").equals("italic")) {
-                    binding.buttonOne.setTypeface(binding.buttonOne.getTypeface(), Typeface.ITALIC);
-                    binding.buttonTwo.setTypeface(binding.buttonTwo.getTypeface(), Typeface.ITALIC);
+                    binding.buttonOne.setTypeface(binding.buttonOne.typeface, Typeface.ITALIC)
+                    binding.buttonTwo.setTypeface(binding.buttonTwo.typeface, Typeface.ITALIC)
                 }
                 if (jsonObject.has("banner_link_value")) {
                     stand.bannerlink = jsonObject.getString("banner_link_value")
@@ -1256,7 +1352,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             }
         }
         binding.stand = stand
-        homepagedata.setValue(hashMapOf("standalone-banner_" to binding.root))
+        homepagedata.value = hashMapOf("standalone-banner_" to binding.root)
     }
 
     private fun createCollectionGrid(jsonObject: JSONObject) {
@@ -1266,9 +1362,9 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             null,
             false
         )
-        context.setLayout(binding!!.categorylist, "3grid")
+        context.setLayout(binding.categorylist, "3grid")
         try {
-            repository.getJSonArray(JsonParser().parse(jsonObject!!.getString("items")).asJsonArray)
+            repository.getJSonArray(JsonParser().parse(jsonObject.getString("items")).asJsonArray)
                 .subscribeOn(Schedulers.io())
                 .filter { x -> x.asJsonObject.get("link_type").asString.isNotEmpty() }
                 .toList()
@@ -1280,8 +1376,8 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
                     override fun onSuccess(list: List<JsonElement>) {
                         adapter = CollectionGridAdapter()
-                        adapter!!.setData(list, context, jsonObject!!)
-                        binding!!.categorylist.adapter = adapter
+                        adapter.setData(list, context, jsonObject)
+                        binding.categorylist.adapter = adapter
                     }
 
                     override fun onError(e: Throwable) {
@@ -1293,7 +1389,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
         var background = JSONObject(jsonObject.getString("panel_background_color"))
         binding.categorylist.setBackgroundColor(Color.parseColor(background.getString("color")))
-        homepagedata.setValue(hashMapOf("collection-grid-layout_" to binding.root))
+        homepagedata.value = hashMapOf("collection-grid-layout_" to binding.root)
     }
 
     private fun createCategorySquare(jsonObject: JSONObject) {
@@ -1339,29 +1435,29 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
             binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
             if (jsonObject.getString("item_font_weight").equals("bold")) {
-                val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                binding.catTextOne.setTypeface(face)
-                binding.catTextTwo.setTypeface(face)
-                binding.catTextThree.setTypeface(face)
-                binding.catTextFour.setTypeface(face)
-                binding.catTextFive.setTypeface(face)
+                val face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
+                binding.catTextOne.typeface = face
+                binding.catTextTwo.typeface = face
+                binding.catTextThree.typeface = face
+                binding.catTextFour.typeface = face
+                binding.catTextFive.typeface = face
             } else {
-                val face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
-                binding.catTextOne.setTypeface(face)
-                binding.catTextTwo.setTypeface(face)
-                binding.catTextThree.setTypeface(face)
-                binding.catTextFour.setTypeface(face)
-                binding.catTextFive.setTypeface(face)
+                val face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
+                binding.catTextOne.typeface = face
+                binding.catTextTwo.typeface = face
+                binding.catTextThree.typeface = face
+                binding.catTextFour.typeface = face
+                binding.catTextFive.typeface = face
             }
             if (jsonObject.getString("item_font_style").equals("italic")) {
-                binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
-                binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
+                binding.catTextOne.setTypeface(binding.catTextOne.typeface, Typeface.ITALIC)
+                binding.catTextTwo.setTypeface(binding.catTextTwo.typeface, Typeface.ITALIC)
                 binding.catTextThree.setTypeface(
-                    binding.catTextThree.getTypeface(),
+                    binding.catTextThree.typeface,
                     Typeface.ITALIC
-                );
-                binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
-                binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
+                )
+                binding.catTextFour.setTypeface(binding.catTextFour.typeface, Typeface.ITALIC)
+                binding.catTextFive.setTypeface(binding.catTextFive.typeface, Typeface.ITALIC)
             }
         }
         if (jsonObject.getString("item_border").equals("1")) {
@@ -1413,7 +1509,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
         category.cat_link_five =
             jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
-        homepagedata.setValue(hashMapOf("category-square_" to binding.root))
+        homepagedata.value = hashMapOf("category-square_" to binding.root)
     }
 
     private fun createProductSlider(jsonObject: JSONObject) {
@@ -1462,19 +1558,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 val face: Typeface
                 when (jsonObject.getString("item_header_font_weight")) {
                     "bold" -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                     }
                     else -> {
-                        face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                        face = Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                     }
 
                 }
-                binding.headertext.setTypeface(face)
+                binding.headertext.typeface = face
                 if (jsonObject.getString("item_header_font_style").equals("italic")) {
                     binding.headertext.setTypeface(
-                        binding.headertext.getTypeface(),
+                        binding.headertext.typeface,
                         Typeface.ITALIC
-                    );
+                    )
                 }
                 if (jsonObject.getString("header_action").equals("1")) {
                     productSlider.actiontextvisibity = View.VISIBLE
@@ -1499,18 +1595,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_action_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face =
+                                Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                         }
                     }
-                    binding.actiontext.setTypeface(face)
+                    binding.actiontext.typeface = face
                     if (jsonObject.getString("header_action_font_style").equals("italic")) {
                         binding.actiontext.setTypeface(
-                            binding.actiontext.getTypeface(),
+                            binding.actiontext.typeface,
                             Typeface.ITALIC
-                        );
+                        )
                     }
 
                 } else {
@@ -1529,19 +1626,20 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     val face: Typeface
                     when (jsonObject.getString("header_subtitle_font_weight")) {
                         "bold" -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
+                            face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
                         }
                         else -> {
-                            face = Typeface.createFromAsset(context.assets, "fonts/normal.ttf");
+                            face =
+                                Typeface.createFromAsset(context.assets, "fonts/cairoregular.ttf")
                         }
 
                     }
-                    binding.subheadertext.setTypeface(face)
+                    binding.subheadertext.typeface = face
                     if (jsonObject.getString("header_subtitle_title_font_style").equals("italic")) {
                         binding.subheadertext.setTypeface(
-                            binding.subheadertext.getTypeface(),
+                            binding.subheadertext.typeface,
                             Typeface.ITALIC
-                        );
+                        )
                     }
                 } else {
                     productSlider.subheadertextvisibity = View.GONE
@@ -1562,7 +1660,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 //                    }
                     var DATE_FORMAT = "MM/dd/yyyy HH:mm:ss"
                     var sdf = SimpleDateFormat(DATE_FORMAT)
-                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
+                    sdf.timeZone = TimeZone.getTimeZone("UTC")
                     var item_deal_start_date = sdf.format(Date())
                     Log.i("MageNative", "item_deal_start_date " + item_deal_start_date)
                     var item_deal_end_date = jsonObject.getString("item_deal_end_date")
@@ -1572,19 +1670,19 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     try {
                         startdate = sdf.parse(item_deal_start_date)
                         enddate = sdf.parse(item_deal_end_date)
-                        var oldLong = startdate.getTime()
-                        var NewLong = enddate.getTime()
+                        var oldLong = startdate.time
+                        var NewLong = enddate.time
                         var diff = NewLong - oldLong
                         Log.i("MageNative", "Long" + diff)
                         if (diff > 0) {
                             //var counter = MyCount(diff, 1000, productSlider, jsonObject.getString("item_deal_format"))
-                            var counter = MyCount(diff, 1000, productSlider, ":");
+                            var counter = MyCount(diff, 1000, productSlider, ":")
                             counter.start()
                         } else {
                             productSlider.timericon = View.GONE
                         }
                     } catch (ex: ParseException) {
-                        ex.printStackTrace();
+                        ex.printStackTrace()
                     }
                 } else {
                     productSlider.timericon = View.GONE
@@ -1593,7 +1691,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 productSlider.headertextvisibility = View.GONE
             }
             binding.productslider = productSlider
-            homepagedata.setValue(hashMapOf("product-list-slider_" to binding.root))
+            homepagedata.value = hashMapOf("product-list-slider_" to binding.root)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -1728,7 +1826,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     try {
                         for (i in 0..result.data!!.nodes.size - 1) {
                             if (result.data!!.nodes[i] != null) {
-                                edges.add(result?.data?.nodes?.get(i)!! as Storefront.Product)
+                                edges.add(result.data?.nodes?.get(i)!! as Storefront.Product)
                             }
                         }
                         //if (edges.size == jsonArray.length()) {
@@ -1737,7 +1835,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         //}
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        when (context!!.getPackageName()) {
+                        when (context.packageName) {
                             "com.shopify.shopifyapp" -> {
                                 //    Toast.makeText(context, "Please Provide Visibility to Products and Collections", Toast.LENGTH_LONG).show()
                             }
@@ -1747,7 +1845,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             }
             Status.ERROR -> {
                 Log.i("MageNatyive", "ERROR-1" + reponse.error!!.error.message)
-                message.setValue(reponse.error!!.error.message)
+                message.setValue(reponse.error.error.message)
             }
         }
     }
@@ -1775,33 +1873,33 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                 "fixed-customisable-layout" -> {
                                     if (jsonObject.getString("item_layout_type").equals("list")) {
                                         productListAdapter = ProductListSliderAdapter()
-                                        productListAdapter!!.presentmentcurrency =
+                                        productListAdapter.presentmentcurrency =
                                             presentmentCurrency
                                         context.setLayout(productdata!!, "vertical")
-                                        productListAdapter!!.setData(list, context, jsonObject)
-                                        productdata!!.adapter = productListAdapter
+                                        productListAdapter.setData(list, context, jsonObject)
+                                        productdata.adapter = productListAdapter
                                     } else {
                                         when (jsonObject.getString("item_in_a_row")) {
                                             "2" -> {
                                                 var productTwoGridAdapter = ProductTwoGridAdapter()
-                                                productTwoGridAdapter!!.presentmentcurrency =
+                                                productTwoGridAdapter.presentmentcurrency =
                                                     presentmentCurrency
                                                 context.setLayout(productdata!!, "grid")
-                                                productTwoGridAdapter!!.setData(
+                                                productTwoGridAdapter.setData(
                                                     list,
                                                     context,
                                                     jsonObject,
                                                     repository
                                                 )
-                                                productdata!!.adapter = productTwoGridAdapter
+                                                productdata.adapter = productTwoGridAdapter
                                             }
                                             "3" -> {
                                                 gridAdapter = ProductSliderGridAdapter()
-                                                gridAdapter!!.presentmentcurrency =
+                                                gridAdapter.presentmentcurrency =
                                                     presentmentCurrency
                                                 context.setLayout(productdata!!, "customisablegrid")
-                                                gridAdapter!!.setData(list, context, jsonObject)
-                                                productdata!!.adapter = gridAdapter
+                                                gridAdapter.setData(list, context, jsonObject)
+                                                productdata.adapter = gridAdapter
                                             }
                                         }
                                     }
@@ -1809,10 +1907,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                 else -> {
                                     Log.i("MageNatyive", "Data" + list.size)
                                     homeadapter = ProductSliderListAdapter()
-                                    homeadapter!!.presentmentcurrency = presentmentCurrency
+                                    homeadapter.presentmentcurrency = presentmentCurrency
                                     context.setLayout(productdata!!, "horizontal")
-                                    homeadapter!!.setData(list, context, jsonObject, repository)
-                                    productdata!!.adapter = homeadapter
+                                    homeadapter.setData(list, context, jsonObject, repository)
+                                    productdata.adapter = homeadapter
                                 }
                             }
                         }
@@ -1837,33 +1935,33 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                 "fixed-customisable-layout" -> {
                                     if (jsonObject.getString("item_layout_type").equals("list")) {
                                         productListAdapter = ProductListSliderAdapter()
-                                        productListAdapter!!.presentmentcurrency =
+                                        productListAdapter.presentmentcurrency =
                                             presentmentCurrency
                                         context.setLayout(productdata!!, "vertical")
-                                        productListAdapter!!.setData(list, context, jsonObject)
-                                        productdata!!.adapter = productListAdapter
+                                        productListAdapter.setData(list, context, jsonObject)
+                                        productdata.adapter = productListAdapter
                                     } else {
                                         when (jsonObject.getString("item_in_a_row")) {
                                             "2" -> {
                                                 var productTwoGridAdapter = ProductTwoGridAdapter()
-                                                productTwoGridAdapter!!.presentmentcurrency =
+                                                productTwoGridAdapter.presentmentcurrency =
                                                     presentmentCurrency
                                                 context.setLayout(productdata!!, "grid")
-                                                productTwoGridAdapter!!.setData(
+                                                productTwoGridAdapter.setData(
                                                     list,
                                                     context,
                                                     jsonObject,
                                                     repository
                                                 )
-                                                productdata!!.adapter = productTwoGridAdapter
+                                                productdata.adapter = productTwoGridAdapter
                                             }
                                             "3" -> {
                                                 gridAdapter = ProductSliderGridAdapter()
-                                                gridAdapter!!.presentmentcurrency =
+                                                gridAdapter.presentmentcurrency =
                                                     presentmentCurrency
                                                 context.setLayout(productdata!!, "customisablegrid")
-                                                gridAdapter!!.setData(list, context, jsonObject)
-                                                productdata!!.adapter = gridAdapter
+                                                gridAdapter.setData(list, context, jsonObject)
+                                                productdata.adapter = gridAdapter
                                             }
                                         }
                                     }
@@ -1871,10 +1969,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                 else -> {
                                     Log.i("MageNatyive", "Data" + list.size)
                                     homeadapter = ProductSliderListAdapter()
-                                    homeadapter!!.presentmentcurrency = presentmentCurrency
+                                    homeadapter.presentmentcurrency = presentmentCurrency
                                     context.setLayout(productdata!!, "horizontal")
-                                    homeadapter!!.setData(list, context, jsonObject, repository)
-                                    productdata!!.adapter = homeadapter
+                                    homeadapter.setData(list, context, jsonObject, repository)
+                                    productdata.adapter = homeadapter
                                 }
                             }
                         }
@@ -1920,17 +2018,17 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 null,
                 false
             )
-            binding!!.banners.adapter = HomePageBanner(
+            binding.banners.adapter = HomePageBanner(
                 context.supportFragmentManager,
                 context,
                 jsonObject.getJSONArray("items")
             )
             if (jsonObject.getString("item_dots").equals("1")) {
-                binding!!.indicator.visibility = View.VISIBLE
+                binding.indicator.visibility = View.VISIBLE
                 var background = JSONObject(jsonObject.getString("active_dot_color"))
                 var strokebackground = JSONObject(jsonObject.getString("inactive_dot_color"))
-                binding!!.indicator.setDotIndicatorColor(Color.parseColor(background.getString("color")))
-                binding!!.indicator.setStrokeDotsIndicatorColor(
+                binding.indicator.setDotIndicatorColor(Color.parseColor(background.getString("color")))
+                binding.indicator.setStrokeDotsIndicatorColor(
                     Color.parseColor(
                         strokebackground.getString(
                             "color"
@@ -1986,22 +2084,22 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             binding.catTextFour.setTextColor(Color.parseColor(item_color.getString("color")))
             binding.catTextFive.setTextColor(Color.parseColor(item_color.getString("color")))
             if (jsonObject.getString("item_font_weight").equals("bold")) {
-                val face = Typeface.createFromAsset(context.assets, "fonts/bold.ttf");
-                binding.catTextOne.setTypeface(face)
-                binding.catTextTwo.setTypeface(face)
-                binding.catTextThree.setTypeface(face)
-                binding.catTextFour.setTypeface(face)
-                binding.catTextFive.setTypeface(face)
+                val face = Typeface.createFromAsset(context.assets, "fonts/cairobold.ttf")
+                binding.catTextOne.typeface = face
+                binding.catTextTwo.typeface = face
+                binding.catTextThree.typeface = face
+                binding.catTextFour.typeface = face
+                binding.catTextFive.typeface = face
             }
             if (jsonObject.getString("item_font_style").equals("italic")) {
-                binding.catTextOne.setTypeface(binding.catTextOne.getTypeface(), Typeface.ITALIC);
-                binding.catTextTwo.setTypeface(binding.catTextTwo.getTypeface(), Typeface.ITALIC);
+                binding.catTextOne.setTypeface(binding.catTextOne.typeface, Typeface.ITALIC)
+                binding.catTextTwo.setTypeface(binding.catTextTwo.typeface, Typeface.ITALIC)
                 binding.catTextThree.setTypeface(
-                    binding.catTextThree.getTypeface(),
+                    binding.catTextThree.typeface,
                     Typeface.ITALIC
-                );
-                binding.catTextFour.setTypeface(binding.catTextFour.getTypeface(), Typeface.ITALIC);
-                binding.catTextFive.setTypeface(binding.catTextFive.getTypeface(), Typeface.ITALIC);
+                )
+                binding.catTextFour.setTypeface(binding.catTextFour.typeface, Typeface.ITALIC)
+                binding.catTextFive.setTypeface(binding.catTextFive.typeface, Typeface.ITALIC)
             }
         }
         if (jsonObject.getString("item_border").equals("1")) {
@@ -2052,7 +2150,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
         category.cat_link_five =
             jsonObject.getJSONArray("items").getJSONObject(4).getString("link_type")
-        homepagedata.setValue(hashMapOf("category-circle_" to binding.root))
+        homepagedata.value = hashMapOf("category-circle_" to binding.root)
     }
 
     class MyCount : CountDownTimer {
@@ -2074,7 +2172,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         }
 
         override fun onTick(millisUntilFinished: Long) {
-            var millis = millisUntilFinished;
+            var millis = millisUntilFinished
             var hms =
                 " " + (TimeUnit.MILLISECONDS.toDays(millis)) + " Day $format " + (TimeUnit.MILLISECONDS.toHours(
                     millis
@@ -2100,7 +2198,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     }
 
     fun getRecommendations(recommendationType: String, api: MutableLiveData<ApiResponse>) {
-        RetrofitUrlManager.getInstance().putDomain("douban", Urls.PERSONALISED);
+        RetrofitUrlManager.getInstance().putDomain("douban", Urls.PERSONALISED)
         try {
             var query = InnerData()
             query.id = recommendationType
@@ -2134,6 +2232,32 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun NResponse(
+        client_id: String,
+        client_secret: String,
+        grant_type: String
+    ): MutableLiveData<ApiResponse> {
+        yotpoauthenticateapi(client_id, client_secret, grant_type)
+        return getyotpoauthenticate
+    }
+
+    fun yotpoauthenticateapi(client_id: String, client_secret: String, grant_type: String) {
+        doRetrofitCall(
+            repository.yotpoauthentiate(client_id, client_secret, grant_type),
+            disposables,
+            customResponse = object : CustomResponse {
+                override fun onSuccessRetrofit(result: JsonElement) {
+                    getyotpoauthenticate.value = ApiResponse.success(result)
+                }
+
+                override fun onErrorRetrofit(error: Throwable) {
+                    getyotpoauthenticate.value = ApiResponse.error(error)
+                }
+            },
+            context = context
+        )
     }
 
     override fun onCleared() {

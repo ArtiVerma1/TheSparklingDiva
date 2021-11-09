@@ -74,6 +74,7 @@ object MutationQuery {
                                             .firstName()
                                             .lastName()
                                             .email()
+                                        .id()
                                 }
                                 .customerAccessToken { access ->
                                     access

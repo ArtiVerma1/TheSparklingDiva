@@ -134,6 +134,7 @@ object Query {
                                                             }).originalSrc()
                                                         })
                                                         .availableForSale()
+                                                        .sku()
                                                 }
                                                 )
                                         }
@@ -248,6 +249,7 @@ object Query {
                                             it.originalSrc().transformedSrc()
                                         })
                                         .availableForSale()
+                                        .sku()
                                 }
                                 )
                         }
@@ -442,6 +444,7 @@ object Query {
                                                         }).originalSrc()
                                                     })
                                                     .availableForSale()
+                                                    .sku()
                                             }
                                     }
                             }

@@ -62,7 +62,10 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.tasks.Task
 import android.content.IntentSender
 import android.content.IntentSender.SendIntentException
+import com.shopify.shopifyapp.basesection.fragments.LeftMenu
+import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 
 
 class HomePage : NewBaseActivity() {
@@ -71,6 +74,7 @@ class HomePage : NewBaseActivity() {
     @Inject
     lateinit var factory: ViewModelFactory
     private var homemodel: HomePageViewModel? = null
+    protected lateinit var leftmenu: LeftMenuViewModel
     lateinit var homepage: LinearLayoutCompat
     private var personamodel: PersonalisedViewModel? = null
     private var hasBanner: Boolean? = null
@@ -97,6 +101,7 @@ class HomePage : NewBaseActivity() {
         (application as MyApplication).mageNativeAppComponent!!.doHomePageInjection(this)
         MyApplication.dataBaseReference = MyApplication.getmFirebaseSecondanyInstance()
             .getReference(Urls(MyApplication.context).shopdomain.replace(".myshopify.com", ""))
+        leftmenu = ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
         appUpdateManager = AppUpdateManagerFactory.create(this)
         homemodel = ViewModelProvider(this, factory).get(HomePageViewModel::class.java)
         homemodel!!.context = this
@@ -110,6 +115,7 @@ class HomePage : NewBaseActivity() {
             ?.observe(this@HomePage, Observer<HashMap<String, View>> { consumeResponse(it) })
         homemodel!!.hasBannerOnTop.observe(this, Observer { this.ConsumeBanner(it) })
         homemodel!!.hasFullSearchOnTop.observe(this, Observer { this.consumeFullSearch(it) })
+        homemodel?.notifyPersonalised?.observe(this, Observer { this.loadPersonalised(it) })
         scrollview.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
             if (scrollY > oldScrollY) {
                 Log.i(TAG, "Scroll DOWN")
@@ -173,6 +179,35 @@ class HomePage : NewBaseActivity() {
         }
         if (featuresModel.forceUpdate) {
             forceUpdate()
+        }
+        if(leftmenu.isLoggedIn) {
+            homemodel?.NResponse("VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC", "zjCB8AXxljZ0a1WnIe91QtQjzmt9xzbi2CqLp8tg", "client_credentials")?.observe(this, Observer { this.showData(it) })
+        }
+    }
+
+    private fun showData(response: ApiResponse?) {
+        Log.i("RESPONSEGET", "" + response?.data)
+        receiveToken(response?.data)
+    }
+
+    private fun receiveToken(data: JsonElement?) {
+        val jsondata = JSONObject(data.toString())
+        try{
+                if(jsondata.has("access_token")){
+                    MagePrefs.saveaccessToken(jsondata.getString("access_token"))
+                }
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    private fun loadPersonalised(it: Boolean?) {
+        if (it ?: false) {
+            homemodel!!.getApiResponse()
+                .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+            homemodel!!.getBestApiResponse()
+                .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
         }
     }
 
@@ -516,14 +551,6 @@ class HomePage : NewBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (featuresModel.ai_product_reccomendaton) {
-            if (Constant.ispersonalisedEnable) {
-                homemodel!!.getApiResponse()
-                    .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-                homemodel!!.getBestApiResponse()
-                    .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-            }
-        }
         if (homepage.childCount > 0) {
             if ((homepage.getChildAt(0) as ViewGroup).getChildAt(2) is androidx.appcompat.widget.Toolbar) {
                 var home_toolbar =

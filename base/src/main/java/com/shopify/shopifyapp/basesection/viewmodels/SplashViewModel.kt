@@ -236,49 +236,45 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
             MyApplication.dataBaseReference?.child("additional_info")?.child("validity")
                 ?.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        try {
-                            val value = dataSnapshot.getValue(Boolean::class.java)!!
-                            val runnable = Runnable {
-                                Log.i("MageNative:", "TrialExpired$value")
-                                Log.i("MageNative:", "LocalData" + repository.localData)
+                        val value = dataSnapshot.getValue(Boolean::class.java)!!
+                        val runnable = Runnable {
+                            Log.i("MageNative:", "TrialExpired$value")
+                            Log.i("MageNative:", "LocalData" + repository.localData)
 
-                                if (repository.localData.size == 0) {
-                                    appLocalData?.isIstrialexpire = value
-                                    getCurrency()
-                                } else {
-                                    appLocalData = repository.localData[0]
-                                    appLocalData!!.isIstrialexpire = value
-                                    MagePrefs.setCurrency(appLocalData.currencycode ?: "")
-                                    repository.updateData(appLocalData)
-                                }
-                                Log.i(
-                                    "MageNative:", "Currency" +
-                                            appLocalData.currencycode
-                                )
-                                disposables.add(repository.getSingle(appLocalData)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(
-                                        { result ->
-                                            responseLiveData.setValue(
-                                                LocalDbResponse.success(
-                                                    result
-                                                )
-                                            )
-                                        },
-                                        { throwable ->
-                                            responseLiveData.setValue(
-                                                LocalDbResponse.error(
-                                                    throwable
-                                                )
-                                            )
-                                        }
-                                    ))
+                            if (repository.localData.size == 0) {
+                                appLocalData?.isIstrialexpire = value
+                                getCurrency()
+                            } else {
+                                appLocalData = repository.localData[0]
+                                appLocalData!!.isIstrialexpire = value
+                                MagePrefs.setCurrency(appLocalData.currencycode ?: "")
+                                repository.updateData(appLocalData)
                             }
-                            Thread(runnable).start()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                            Log.i(
+                                "MageNative:", "Currency" +
+                                        appLocalData.currencycode
+                            )
+                            disposables.add(repository.getSingle(appLocalData)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                    { result ->
+                                        responseLiveData.setValue(
+                                            LocalDbResponse.success(
+                                                result
+                                            )
+                                        )
+                                    },
+                                    { throwable ->
+                                        responseLiveData.setValue(
+                                            LocalDbResponse.error(
+                                                throwable
+                                            )
+                                        )
+                                    }
+                                ))
                         }
+                        Thread(runnable).start()
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -287,18 +283,18 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                         Log.i("DBConnectionError", "" + databaseError.code)
                     }
                 })
-            MyApplication.dataBaseReference?.child("additional_info")?.child("personalise")
-                ?.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        Constant.ispersonalisedEnable = dataSnapshot.getValue(Boolean::class.java)!!
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        Log.i("DBConnectionError", "" + databaseError.details)
-                        Log.i("DBConnectionError", "" + databaseError.message)
-                        Log.i("DBConnectionError", "" + databaseError.code)
-                    }
-                })
+//            MyApplication.dataBaseReference?.child("additional_info")?.child("personalise")
+//                ?.addValueEventListener(object : ValueEventListener {
+//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        Constant.ispersonalisedEnable = dataSnapshot.getValue(Boolean::class.java)!!
+//                    }
+//
+//                    override fun onCancelled(databaseError: DatabaseError) {
+//                        Log.i("DBConnectionError", "" + databaseError.details)
+//                        Log.i("DBConnectionError", "" + databaseError.message)
+//                        Log.i("DBConnectionError", "" + databaseError.code)
+//                    }
+//                })
             MyApplication.dataBaseReference?.child("additional_info")?.child("locale")
                 ?.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -328,13 +324,44 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                                 dataSnapshot
                             )
                         )
-//                    disposables.add(Single.just(dataSnapshot)
-//                            .subscribeOn(Schedulers.io())
-//                            .observeOn(AndroidSchedulers.mainThread())
-//                            .subscribe(
-//                                    { result -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.success(result)) },
-//                                    { throwable -> fireBaseResponseMutableLiveData.setValue(FireBaseResponse.error(throwable)) }
-//                            ))
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.i("DBConnectionError", "" + databaseError.details)
+                        Log.i("DBConnectionError", "" + databaseError.message)
+                        Log.i("DBConnectionError", "" + databaseError.code)
+                    }
+                })
+
+//            MyApplication.dataBaseReference?.child("additional_info")?.child("force_update")
+//                ?.addValueEventListener(object : ValueEventListener {
+//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        try {
+//                            Log.d(TAG, "onDataChange: " + dataSnapshot)
+//                            val fource_update = dataSnapshot.value as Boolean
+//                            featuresModel.forceUpdate = fource_update
+//                        } catch (e: Exception) {
+//                            e.printStackTrace()
+//                        }
+//                    }
+//
+//                    override fun onCancelled(databaseError: DatabaseError) {
+//                        Log.i("DBConnectionError", "" + databaseError.details)
+//                        Log.i("DBConnectionError", "" + databaseError.message)
+//                        Log.i("DBConnectionError", "" + databaseError.code)
+//                    }
+//                })
+
+            MyApplication.dataBaseReference?.child("additional_info")?.child("maintenance_mode")
+                ?.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        try {
+                            Log.d(TAG, "onDataChange: " + dataSnapshot)
+                            val maintenance = dataSnapshot.value as Boolean
+                            MagePrefs.setMaintenanceMode(maintenance)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -359,34 +386,27 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                                     featuresModel.multi_currency = true //Implemented
                                 } else if (featuresList[i].equals("multi-language", true)) {
                                     featuresModel.multi_language = true
-                                } else if (featuresList[i].equals(
-                                        "abandoned-cart-campaigns",
-                                        true
-                                    )
-                                ) {
+                                } else if (featuresList[i].equals("abandoned-cart-campaigns", true)) {
                                     featuresModel.abandoned_cart_compaigns = true //Implemented
                                     notification_compaign.value = true //Implemented
                                 } else if (featuresList[i].equals("augmented-reality", true)) {
                                     featuresModel.ardumented_reality = true //Implemented
-                                } else if (featuresList[i].equals(
-                                        "ai-product-reccomendation",
-                                        true
-                                    )
-                                ) {
-                                    featuresModel.ai_product_reccomendaton = true //Implemented
                                 } else if (featuresList[i].equals("qr-code-search-scanner", true)) {
                                     featuresModel.qr_code_search_scanner = true //Implemented
+                                } else if (featuresList[i].equals("native_order_view", true)) {
+                                    featuresModel.nativeOrderView = true
+                                } else if (featuresList[i].equals("out_of_stock", true)) {
+                                    featuresModel.outOfStock = true
+                                } else if (featuresList[i].equals("reorder", true)) {
+                                    featuresModel.reOrderEnabled = true
+                                } else if (featuresList[i].equals("recommended_products", true)) {
+                                    featuresModel.recommendedProducts = true
+                                } else if (featuresList[i].equals("show_bottom_navigation", true)) {
+                                    featuresModel.showBottomNavigation = true
+                                }else if (featuresList[i].equals("add_to_cart", true)) {
+                                    featuresModel.addCartEnabled = true
                                 }
                             }
-                        } else {
-                            featuresModel.in_app_wishlist = true
-                            featuresModel.product_share = true
-                            featuresModel.multi_currency = true
-                            featuresModel.multi_language = true
-                            featuresModel.abandoned_cart_compaigns = true
-                            featuresModel.ardumented_reality = true
-                            featuresModel.ai_product_reccomendaton = true
-                            featuresModel.qr_code_search_scanner = true
                         }
 
                     }

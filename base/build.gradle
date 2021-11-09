@@ -25,8 +25,8 @@ android {
         applicationId "com.shopify.shopifyapp"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 48
-        versionName "3.3"
+        versionCode 53
+        versionName "3.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,7 +45,14 @@ android {
         noCompress "tflite"
     }
 }
+repositories {
+    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+}
 dependencies {
+    api group: 'com.zendesk', name: 'messaging', version: '5.1.0'
+    api group: 'com.zendesk', name: 'support', version: '5.0.2'
+    api group: 'com.zendesk', name: 'answerbot', version: '3.0.1'
+    api group: 'com.zendesk', name: 'chat', version: '3.1.0'
     implementation platform('com.google.firebase:firebase-bom:28.2.0')
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     implementation 'com.google.firebase:firebase-analytics-ktx'
@@ -139,5 +146,9 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
     //  testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
     testImplementation 'org.mockito:mockito-inline:3.11.2'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
 }
 apply plugin: 'com.google.gms.google-services'

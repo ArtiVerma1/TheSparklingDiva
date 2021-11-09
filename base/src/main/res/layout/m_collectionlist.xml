@@ -27,6 +27,7 @@
             android:drawableTint="@color/main_color_gray_lt"
             android:gravity="center|start"
             android:hint="@string/search"
+            android:fontFamily="@font/cairoregular"
             android:onClick="@{view->clickHandler.clickSearch(view)}"
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
