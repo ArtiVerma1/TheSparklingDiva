@@ -12,10 +12,10 @@
         <entry key="base/src/main/res/drawable/blackborder_selector.xml" value="0.16574074074074074" />
         <entry key="base/src/main/res/drawable/button_shape.xml" value="0.16574074074074074" />
         <entry key="base/src/main/res/layout/activity_collection_list_menu.xml" value="0.11930091185410334" />
-        <entry key="base/src/main/res/layout/activity_custom_loader.xml" value="0.1" />
         <entry key="base/src/main/res/layout/activity_earn_rewards.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_faqs.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_get_rewards.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/activity_maintenence.xml" value="0.1" />
         <entry key="base/src/main/res/layout/activity_my_rewards.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_order_success.xml" value="0.1" />
         <entry key="base/src/main/res/layout/activity_refer_friend.xml" value="0.12" />
@@ -27,11 +27,11 @@
         <entry key="base/src/main/res/layout/googlepay_button.xml" value="0.20969202898550723" />
         <entry key="base/src/main/res/layout/m_cartlist.xml" value="0.15" />
         <entry key="base/src/main/res/layout/m_collectionlist.xml" value="0.11930091185410334" />
-        <entry key="base/src/main/res/layout/m_dynamicmenu.xml" value="0.11930091185410334" />
         <entry key="base/src/main/res/layout/m_homepage_modified.xml" value="0.1" />
         <entry key="base/src/main/res/layout/m_leftmenufragment.xml" value="0.25" />
-        <entry key="base/src/main/res/layout/m_newbaseactivity.xml" value="0.11144883485309018" />
-        <entry key="base/src/main/res/layout/m_productitem.xml" value="0.1" />
+        <entry key="base/src/main/res/layout/m_newbaseactivity.xml" value="0.2" />
+        <entry key="base/src/main/res/layout/m_productview.xml" value="0.1" />
+        <entry key="base/src/main/res/layout/m_trial.xml" value="0.1" />
         <entry key="base/src/main/res/layout/myreward_item.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/redeem_point_item.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/redeemdialog.xml" value="0.196875" />

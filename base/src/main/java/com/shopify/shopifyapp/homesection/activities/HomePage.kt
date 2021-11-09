@@ -185,6 +185,8 @@ class HomePage : NewBaseActivity() {
         }
     }
 
+
+
     private fun showData(response: ApiResponse?) {
         Log.i("RESPONSEGET", "" + response?.data)
         receiveToken(response?.data)
