@@ -20,7 +20,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var appOnlyDiscount: Boolean = false
+    var appOnlyDiscount: Boolean = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.appOnlyDiscount)

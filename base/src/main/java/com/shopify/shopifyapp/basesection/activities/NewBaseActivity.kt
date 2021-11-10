@@ -268,13 +268,25 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         /********************************* Chat Options **************************************/
 
         if (featuresModel.zenDeskChat) {
-            chat_but.visibility = View.VISIBLE
+            if (this@NewBaseActivity is HomePage) {
+                chat_but.visibility = View.VISIBLE
+            } else {
+                chat_but.visibility = View.GONE
+            }
         }
         if (featuresModel.whatsappChat) {
-            whatsappchat.visibility = View.VISIBLE
+            if (this@NewBaseActivity is HomePage) {
+                whatsappchat.visibility = View.VISIBLE
+            } else {
+                whatsappchat.visibility = View.GONE
+            }
         }
         if (featuresModel.fbMessenger) {
-            messengerchat.visibility = View.VISIBLE
+            if (this@NewBaseActivity is HomePage) {
+                messengerchat.visibility = View.VISIBLE
+            } else {
+                messengerchat.visibility = View.GONE
+            }
         }
 
         val chatEngine: Engine? = ChatEngine.engine()

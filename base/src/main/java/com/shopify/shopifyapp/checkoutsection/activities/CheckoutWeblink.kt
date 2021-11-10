@@ -19,6 +19,7 @@ import com.shopify.shopifyapp.checkoutsection.viewmodels.CheckoutWebLinkViewMode
 import com.shopify.shopifyapp.databinding.MWebpageBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
 import com.shopify.shopifyapp.loader_section.CustomLoader
+import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.utils.ViewModelFactory
@@ -190,7 +191,7 @@ class CheckoutWeblink : NewBaseActivity() {
                 val javascript2 =
                     "var length = document.querySelectorAll(\".reduction-code__text\").length;\n" +
                             "for(var i=0; i<length; i++){\n" +
-                            "    (document.querySelectorAll(\".reduction-code__text\")[i]).innerHTML = \"ABCD\";\n" +
+                            "    (document.querySelectorAll(\".reduction-code__text\")[i]).innerHTML = \"${MagePrefs.getCouponCode()}\";\n" +
                             "}"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     webView.evaluateJavascript(javascript) { value ->
@@ -238,6 +239,7 @@ class CheckoutWeblink : NewBaseActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             Constant.activityTransition(this)
+            MagePrefs.clearCouponCode()
         } else {
             super.onBackPressed()
         }

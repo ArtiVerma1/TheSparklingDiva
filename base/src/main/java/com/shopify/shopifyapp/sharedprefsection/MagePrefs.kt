@@ -21,6 +21,7 @@ object MagePrefs {
     private const val MAINTENANCE = "maintenancemode"
     private const val FIRSTNAME = "firstname"
     private const val LASTNAME = "lastname"
+    private const val COUPONCODE = "coupon_code"
 
     fun getInstance(context: Context) {
         this.context = context
@@ -130,4 +131,17 @@ object MagePrefs {
         return sharedPreference?.getBoolean(MAINTENANCE, false)
     }
 
+    fun setCouponCode(couponCode: String) {
+        editor?.putString(COUPONCODE, couponCode)
+        editor?.commit()
+    }
+
+    fun getCouponCode(): String? {
+        return sharedPreference?.getString(COUPONCODE, null)
+    }
+
+    fun clearCouponCode() {
+        editor?.remove(COUPONCODE)
+        editor?.commit()
+    }
 }
