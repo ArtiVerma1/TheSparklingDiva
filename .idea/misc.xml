@@ -30,9 +30,11 @@
         <entry key="base/src/main/res/layout/m_homepage_modified.xml" value="0.1" />
         <entry key="base/src/main/res/layout/m_leftmenufragment.xml" value="0.25" />
         <entry key="base/src/main/res/layout/m_newbaseactivity.xml" value="0.2" />
+        <entry key="base/src/main/res/layout/m_productlistitem.xml" value="0.16822916666666668" />
         <entry key="base/src/main/res/layout/m_productview.xml" value="0.1" />
         <entry key="base/src/main/res/layout/m_trial.xml" value="0.1" />
         <entry key="base/src/main/res/layout/myreward_item.xml" value="0.17135416666666667" />
+        <entry key="base/src/main/res/layout/product_list_item.xml" value="0.1" />
         <entry key="base/src/main/res/layout/redeem_point_item.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/redeemdialog.xml" value="0.196875" />
         <entry key="base/src/main/res/layout/referfriend_dialog.xml" value="0.196875" />
