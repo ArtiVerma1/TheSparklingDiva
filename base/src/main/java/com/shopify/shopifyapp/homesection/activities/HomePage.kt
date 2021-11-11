@@ -180,11 +180,25 @@ class HomePage : NewBaseActivity() {
         if (featuresModel.forceUpdate) {
             forceUpdate()
         }
-        if(leftmenu.isLoggedIn) {
-            homemodel?.NResponse("VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC", "zjCB8AXxljZ0a1WnIe91QtQjzmt9xzbi2CqLp8tg", "client_credentials")?.observe(this, Observer { this.showData(it) })
+        if (leftmenu.isLoggedIn) {
+            homemodel?.NResponse(
+                "VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC",
+                "zjCB8AXxljZ0a1WnIe91QtQjzmt9xzbi2CqLp8tg",
+                "client_credentials"
+            )?.observe(this, Observer { this.showData(it) })
         }
-    }
 
+        homemodel?.notifyZendesk?.observe(this, Observer {
+            if (it) {
+                chat_but.visibility = View.VISIBLE
+            } else {
+                chat_but.visibility = View.GONE
+            }
+
+            leftMenuViewModel!!.Response()
+                .observe(this, Observer<ApiResponse> { this.leftmenuconsumeResponse(it) })
+        })
+    }
 
 
     private fun showData(response: ApiResponse?) {
@@ -194,12 +208,11 @@ class HomePage : NewBaseActivity() {
 
     private fun receiveToken(data: JsonElement?) {
         val jsondata = JSONObject(data.toString())
-        try{
-                if(jsondata.has("access_token")){
-                    MagePrefs.saveaccessToken(jsondata.getString("access_token"))
-                }
-        }
-        catch (e:Exception){
+        try {
+            if (jsondata.has("access_token")) {
+                MagePrefs.saveaccessToken(jsondata.getString("access_token"))
+            }
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -581,6 +594,24 @@ class HomePage : NewBaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        featuresModel.tidioChat = false
+        featuresModel.zenDeskChat = false
+        featuresModel.yoptoLoyalty = false
+        featuresModel.smileIO = false
+        featuresModel.multi_currency = false
+        featuresModel.multi_language = false
+    }
+
+    private fun leftmenuconsumeResponse(reponse: ApiResponse) {
+        when (reponse.status) {
+            Status.SUCCESS -> LeftMenu.renderSuccessResponse(reponse.data!!)
+            Status.ERROR -> {
+                reponse.error!!.printStackTrace()
+                //  showToast(resources.getString(R.string.errorString))
+            }
+            else -> {
+            }
+        }
     }
 
     private fun consumeResponse(reponse: ApiResponse) {

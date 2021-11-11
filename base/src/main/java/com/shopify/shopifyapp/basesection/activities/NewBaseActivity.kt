@@ -128,10 +128,10 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
         leftMenuViewModel =
             ViewModelProvider(this, viewModelFactory).get(LeftMenuViewModel::class.java)
         leftMenuViewModel!!.context = this
-        if (this@NewBaseActivity is HomePage) {
-            leftMenuViewModel!!.Response()
-                .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
-        }
+//        if (this@NewBaseActivity is HomePage) {
+//            leftMenuViewModel!!.Response()
+//                .observe(this, Observer<ApiResponse> { this.consumeResponse(it) })
+//        }
         leftMenuViewModel!!.repository.allCartItemsCount.observe(
             this,
             Observer { this.consumeCartCount(it) })
@@ -267,13 +267,11 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
         /********************************* Chat Options **************************************/
 
-        if (featuresModel.zenDeskChat) {
-            if (this@NewBaseActivity is HomePage) {
-                chat_but.visibility = View.VISIBLE
-            } else {
-                chat_but.visibility = View.GONE
-            }
+
+        if (this@NewBaseActivity !is HomePage) {
+            chat_but.visibility = View.GONE
         }
+
         if (featuresModel.whatsappChat) {
             if (this@NewBaseActivity is HomePage) {
                 whatsappchat.visibility = View.VISIBLE
@@ -385,17 +383,17 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
     }
 
     override fun onFragmentInteraction(view: View) {}
-    private fun consumeResponse(reponse: ApiResponse) {
-        when (reponse.status) {
-            Status.SUCCESS -> LeftMenu.renderSuccessResponse(reponse.data!!)
-            Status.ERROR -> {
-                reponse.error!!.printStackTrace()
-                //  showToast(resources.getString(R.string.errorString))
-            }
-            else -> {
-            }
-        }
-    }
+//    private fun consumeResponse(reponse: ApiResponse) {
+//        when (reponse.status) {
+//            Status.SUCCESS -> LeftMenu.renderSuccessResponse(reponse.data!!)
+//            Status.ERROR -> {
+//                reponse.error!!.printStackTrace()
+//                //  showToast(resources.getString(R.string.errorString))
+//            }
+//            else -> {
+//            }
+//        }
+//    }
 
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

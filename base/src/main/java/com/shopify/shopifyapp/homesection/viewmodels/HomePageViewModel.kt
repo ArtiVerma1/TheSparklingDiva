@@ -85,6 +85,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     private var customLoader: CustomLoader? = null
     val notifyPersonalised: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var getyotpoauthenticate = MutableLiveData<ApiResponse>()
+    var notifyZendesk = MutableLiveData<Boolean>()
 
     companion object {
         var count_color: String? = null
@@ -230,6 +231,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                     "I05" -> {
                         SplashViewModel.featuresModel.zenDeskChat = true
+                        notifyZendesk.value = true
                         //zendesk
                     }
                     "I06" -> {

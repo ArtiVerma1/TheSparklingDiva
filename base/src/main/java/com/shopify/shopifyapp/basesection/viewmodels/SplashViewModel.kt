@@ -386,7 +386,11 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                                     featuresModel.multi_currency = true //Implemented
                                 } else if (featuresList[i].equals("multi-language", true)) {
                                     featuresModel.multi_language = true
-                                } else if (featuresList[i].equals("abandoned-cart-campaigns", true)) {
+                                } else if (featuresList[i].equals(
+                                        "abandoned-cart-campaigns",
+                                        true
+                                    )
+                                ) {
                                     featuresModel.abandoned_cart_compaigns = true //Implemented
                                     notification_compaign.value = true //Implemented
                                 } else if (featuresList[i].equals("augmented-reality", true)) {
@@ -403,7 +407,7 @@ class SplashViewModel(private val repository: Repository) : ViewModel() {
                                     featuresModel.recommendedProducts = true
                                 } else if (featuresList[i].equals("show_bottom_navigation", true)) {
                                     featuresModel.showBottomNavigation = true
-                                }else if (featuresList[i].equals("add_to_cart", true)) {
+                                } else if (featuresList[i].equals("add_to_cart", true)) {
                                     featuresModel.addCartEnabled = true
                                 }
                             }
