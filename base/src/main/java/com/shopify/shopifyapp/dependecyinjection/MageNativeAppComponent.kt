@@ -40,6 +40,7 @@ import dagger.Component
 interface MageNativeAppComponent {
 
     fun doSplashInjection(splash: Splash)
+    fun doFilterInjection(product: FilterActivity)
     fun doProductListInjection(product: ProductList)
     fun doCollectionInjection(collectionList: CollectionList)
     fun doCollectionInjection(collectionList: CollectionListMenu)

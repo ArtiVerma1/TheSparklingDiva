@@ -7,20 +7,25 @@ import android.util.Log
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonElement
 
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.GraphResponse
 import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel.Companion.featuresModel
 import com.shopify.shopifyapp.dbconnection.entities.ItemData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.Query
+import com.shopify.shopifyapp.utils.ApiResponse
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
+import com.shopify.shopifyapp.utils.Urls
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -31,6 +36,7 @@ import java.util.concurrent.Executors
 class ProductListModel(var repository: Repository) : ViewModel() {
     private var categoryID = ""
     var shopID = ""
+    var tags_ =""
     val presentmentCurrency: String
         get() {
             val currency = arrayOf("nopresentmentcurrency")
@@ -53,7 +59,7 @@ class ProductListModel(var repository: Repository) : ViewModel() {
         }
     var collectionData: MutableLiveData<Storefront.Collection> =
         MutableLiveData<Storefront.Collection>()
-    private var categoryHandle = ""
+    var categoryHandle = ""
     var cursor = "nocursor"
         set(cursor) {
             field = cursor
@@ -67,6 +73,8 @@ class ProductListModel(var repository: Repository) : ViewModel() {
     val message = MutableLiveData<String>()
     val filteredproducts = MutableLiveData<MutableList<Storefront.ProductEdge>>()
     lateinit var context: Context
+    var collectionTags: MutableLiveData<ApiResponse> = MutableLiveData<ApiResponse>()
+    private val filerapiResponseData = MutableLiveData<ApiResponse>()
     fun getcategoryID(): String {
         return categoryID
     }
@@ -114,6 +122,7 @@ class ProductListModel(var repository: Repository) : ViewModel() {
         if (!shopID.isEmpty()) {
             getAllProducts()
         }
+        getCollectionTags()
     }
 
     private fun getAllProducts() {
@@ -332,5 +341,31 @@ class ProductListModel(var repository: Repository) : ViewModel() {
 
     override fun onCleared() {
         disposables.clear()
+    }
+    private fun getCollectionTags() {
+        doRetrofitCall(repository.menuCollection(Urls(MyApplication.context)!!.mid,"tags"), disposables, customResponse = object : CustomResponse {
+            override fun onSuccessRetrofit(result: JsonElement) {
+                collectionTags.value = ApiResponse.success(result)
+            }
+
+            override fun onErrorRetrofit(error: Throwable) {
+                collectionTags.value = ApiResponse.error(error)
+            }
+        }, context = context!!)
+    }
+    fun getFilterProducts(){
+        disposables.add(repository.getCcollectionProductsbyTags(Urls(MyApplication.context)!!.mid
+            , categoryHandle, "best-selling"
+            ,"1", tags_)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> filerapiResponseData.setValue(ApiResponse.success(result)) },
+                { throwable -> filerapiResponseData.setValue(ApiResponse.error(throwable)) }
+            ))
+    }
+    fun ResponseApiFilterProducts(): MutableLiveData<ApiResponse> {
+        getFilterProducts()
+        return filerapiResponseData
     }
 }

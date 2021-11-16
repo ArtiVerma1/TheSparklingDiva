@@ -20,10 +20,26 @@
             android:background="@drawable/black_border_shape"
             android:gravity="center"
             android:text="@string/sort"
-            app:layout_constraintEnd_toStartOf="@+id/grid_but"
+            app:layout_constraintEnd_toStartOf="@+id/filter_but"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:texttype="normal" />
+        <com.shopify.shopifyapp.customviews.MageNativeTextView
+            android:id="@+id/filter_but"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/black_border_shape"
+            android:gravity="center"
+            android:text="@string/filter"
+            app:layout_constraintEnd_toStartOf="@+id/grid_but"
+            app:layout_constraintStart_toEndOf="@+id/sort_but"
+            app:layout_constraintTop_toTopOf="parent"
+            app:texttype="normal"
+            android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/grid_but"
@@ -33,7 +49,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/sort_but"
             app:layout_constraintEnd_toStartOf="@+id/list_but"
-            app:layout_constraintStart_toEndOf="@+id/sort_but"
+            app:layout_constraintStart_toEndOf="@+id/filter_but"
             app:layout_constraintTop_toTopOf="@+id/sort_but"
             app:srcCompat="@drawable/grid_icon" />
 

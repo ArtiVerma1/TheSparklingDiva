@@ -124,4 +124,11 @@ interface ApiCallInterface {
 
     @POST(Urls.LOCAL_DELIVERY)
     fun storeDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+
+    @GET(Urls.MENUCOLLECTION)
+    fun getMenuCollection(@Query("mid") mid: String?,@Query("prop") prop: String?): Single<JsonElement>
+
+    @GET(Urls.FILTERTAGPRO)
+    fun getCollectionProductsbyTags(@Query("mid") mid: String?,@Query("handle") handle: String?,@Query("sort") sort: String?,
+                                    @Query("page") page: String?,@Query("tags") tags: String?): Single<JsonElement>
 }

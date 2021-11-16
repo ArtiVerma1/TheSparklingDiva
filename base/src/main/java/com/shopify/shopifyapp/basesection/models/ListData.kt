@@ -10,6 +10,7 @@ class ListData : BaseObservable() {
 
     var textdata: String? = null
     var product: Storefront.Product? = null
+    var id: String? = null
     @Bindable
     var image_url:String?=null
     set(value) {

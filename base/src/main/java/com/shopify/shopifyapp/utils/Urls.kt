@@ -51,6 +51,8 @@ class Urls {
         const val LOCAL_DELIVERYY: String = "shopifymobilenew/zapietstorepickupapi/getdeliverynpickup"
         var XGUID = "oyeoRDurwhul3WK-zN5ScA"
         var X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
+        const val MENUCOLLECTION: String = "http://shopifymobileapp.cedcommerce.com/shopifymobile/shopifyapi/getcollectionproperties"
+        const val FILTERTAGPRO: String ="https://shopifymobileapp.cedcommerce.com/shopifymobile/shopifyapi/getcollectionproductsbytags"
         /************************** Yotpo Rewards Integration ***************************/
 
         const val YOTPOAUTHENTICATE = "https://api.yotpo.com/oauth/token"

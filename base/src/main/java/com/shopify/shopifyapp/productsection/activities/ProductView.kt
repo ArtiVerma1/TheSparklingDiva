@@ -714,7 +714,6 @@ class ProductView : NewBaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     private fun filterOptionList(

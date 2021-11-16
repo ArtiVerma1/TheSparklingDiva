@@ -375,4 +375,12 @@ class Repository {
     fun storeDelivery(jsonObject: HashMap<String, String>): Single<JsonObject> {
         return apiCallInterface.localDelivery(jsonObject)
     }
+    fun menuCollection(mid: String, tags: String): Single<JsonElement> {
+        return apiCallInterface.getMenuCollection(mid, tags)
+
+    }
+    fun getCcollectionProductsbyTags(mid: String, handle: String,sort:String,page:String,tags:String): Single<JsonElement> {
+        return apiCallInterface.getCollectionProductsbyTags(mid, handle,sort,page,tags)
+
+    }
 }

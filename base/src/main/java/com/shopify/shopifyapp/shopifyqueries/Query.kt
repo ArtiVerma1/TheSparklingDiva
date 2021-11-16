@@ -29,6 +29,7 @@ object Query {
                         .cursor()
                         .node({ node ->
                             node
+                                .handle()
                                 .title()
                                 .images({ img -> img.first(10) }, { imag ->
                                     imag.edges({ imgedge ->
@@ -96,6 +97,18 @@ object Query {
                                                         .priceV2({ price ->
                                                             price.amount().currencyCode()
                                                         })
+                                                        /*.storeAvailability({args -> args.first(1) },{
+                                                            storeAvail ->
+                                                            storeAvail.edges({
+                                                                storeAvailEdges ->
+                                                                storeAvailEdges.node({
+                                                                    it.available()
+                                                                    it.pickUpTime()
+                                                                    it.location { it.name() }
+
+                                                                })
+                                                            })
+                                                        })*/
                                                         .price()
                                                         .title()
                                                         .quantityAvailable()
@@ -225,6 +238,17 @@ object Query {
                                 .node({ productVariantQuery ->
                                     productVariantQuery
                                         .title()
+                                        /*.storeAvailability({args -> args.first(1) },{
+                                                storeAvail ->
+                                            storeAvail.edges({
+                                                    storeAvailEdges ->
+                                                storeAvailEdges.node({
+                                                    it.available()
+                                                    it.pickUpTime()
+                                                    it.location { it.name() }
+                                                })
+                                            })
+                                        })*/
                                         .priceV2({ p -> p.amount().currencyCode() })
                                         .quantityAvailable()
                                         .currentlyNotInStock()
@@ -304,6 +328,7 @@ object Query {
                 ) { rootnode ->
                     rootnode.onCollection { oncollection ->
                         oncollection
+                            .handle()
                             .image { image ->
                                 image
                                     .originalSrc()

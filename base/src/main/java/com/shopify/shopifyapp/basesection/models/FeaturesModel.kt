@@ -13,6 +13,13 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
+    var filterEnable: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.filterEnable)
+        }
+
+    @Bindable
     var smileIO: Boolean = false
         set(value) {
             field = value
