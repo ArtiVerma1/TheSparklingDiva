@@ -242,4 +242,6 @@
     <string name="yotpo_rate_product">+Write Yotpo Review</string>
     <string name="reviewpost">Your review has been successfully submitted.</string>
     <string name="help">Help</string>
+    <string name="loadings">Loading...Please Wait.</string>
+    <string name="delivery_true">Good news! We can deliver to you..</string>
 </resources>

@@ -824,7 +824,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         return param
     }
 
-    fun fillLocalDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
+    fun fillLocalDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>,zipcodes: EditText): HashMap<String, String> {
         var param = HashMap<String, String>()
         for (i in 0..edges.size - 1) {
             param.put("cart[$i][product_id]", String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
@@ -835,10 +835,10 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         }
         param.put("shop", "magenative.myshopify.com")
         param.put("type", "delivery")
-//        param.put("zipcode", "95880")
+        param.put("zipcode",zipcodes.text.toString())
         return param
     }
-    fun fillStoreDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
+    fun fillStoreDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>,zipcodes: EditText): HashMap<String, String> {
         var param = HashMap<String, String>()
         for (i in 0..edges.size - 1) {
             param.put("cart[$i][product_id]", String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
@@ -849,7 +849,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         }
         param.put("shop", "magenative.myshopify.com")
         param.put("type", "pickup")
-//        param.put("zipcode", "95880")
+        param.put("zipcode",zipcodes.text.toString())
         return param
     }
 
