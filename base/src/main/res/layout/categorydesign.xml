@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+
+        android:id="@+id/rpickupsection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="@drawable/pickupborder">
+
+        <ImageView
+            android:id="@+id/checks"
+            android:layout_width="30dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_height="30dp"
+            android:src="@drawable/checkmark"/>
+
+        <TextView
+            android:id="@+id/rheading"
+            android:layout_toRightOf="@+id/checks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/pickupavailable"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/raddfirst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rheading"
+            android:text="address1"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/black"
+            android:padding="5dp"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/raddsecond"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/raddfirst"
+            android:layout_marginTop="3dp"
+            android:padding="5dp"
+            android:text="address2"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="pickup available"
+            android:layout_below="@id/raddsecond"
+            android:id="@+id/rpickuptime"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="phone number"
+            android:layout_below="@id/rpickuptime"
+            android:id="@+id/rphonenumber"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:padding="5dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

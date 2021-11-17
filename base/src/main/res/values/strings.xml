@@ -245,4 +245,8 @@
     <string name="filter">Filter</string>
     <string name="apply_filter">Apply Filter</string>
     <string name="clear_filter">Clear Filter</string>
+    <string name="pickupavailable">Available for pickup at..</string>
+    <string name="checkstores">
+        <u>Check availability at other stores.</u>.
+    </string>
 </resources>

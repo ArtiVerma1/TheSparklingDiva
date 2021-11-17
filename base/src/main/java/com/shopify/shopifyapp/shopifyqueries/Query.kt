@@ -97,18 +97,29 @@ object Query {
                                                         .priceV2({ price ->
                                                             price.amount().currencyCode()
                                                         })
-                                                        /*.storeAvailability({args -> args.first(1) },{
-                                                            storeAvail ->
-                                                            storeAvail.edges({
-                                                                storeAvailEdges ->
-                                                                storeAvailEdges.node({
-                                                                    it.available()
-                                                                    it.pickUpTime()
-                                                                    it.location { it.name() }
-
+                                                        .storeAvailability({ args -> args.first(10) },
+                                                            { storeAvail ->
+                                                                storeAvail.edges({ storeAvailEdges ->
+                                                                    storeAvailEdges.node({
+                                                                        it.available()
+                                                                        it.pickUpTime()
+                                                                        it.location {
+                                                                            it.name()
+                                                                            it.address {
+                                                                                it.address1()
+                                                                                it.address2()
+                                                                                it.city()
+                                                                                it.country()
+                                                                                it.latitude()
+                                                                                it.province()
+                                                                                it.zip()
+                                                                                it.phone()
+                                                                                it.longitude()
+                                                                            }
+                                                                        }
+                                                                    })
                                                                 })
                                                             })
-                                                        })*/
                                                         .price()
                                                         .title()
                                                         .quantityAvailable()
@@ -238,17 +249,30 @@ object Query {
                                 .node({ productVariantQuery ->
                                     productVariantQuery
                                         .title()
-                                        /*.storeAvailability({args -> args.first(1) },{
-                                                storeAvail ->
-                                            storeAvail.edges({
-                                                    storeAvailEdges ->
-                                                storeAvailEdges.node({
-                                                    it.available()
-                                                    it.pickUpTime()
-                                                    it.location { it.name() }
+                                        .storeAvailability({ args -> args.first(10) },
+                                            { storeAvail ->
+                                                storeAvail.edges({ storeAvailEdges ->
+                                                    storeAvailEdges.node({
+                                                        it.available()
+                                                        it.pickUpTime()
+                                                        it.location {
+                                                            it.name()
+                                                            it.address {
+                                                                it.address1()
+                                                                it.address2()
+                                                                it.city()
+                                                                it.country()
+                                                                it.latitude()
+                                                                it.province()
+                                                                it.zip()
+                                                                it.phone()
+                                                                it.longitude()
+                                                            }
+                                                        }
+
+                                                    })
                                                 })
                                             })
-                                        })*/
                                         .priceV2({ p -> p.amount().currencyCode() })
                                         .quantityAvailable()
                                         .currentlyNotInStock()
@@ -288,7 +312,6 @@ object Query {
                 )
         }
     }
-
 
     fun getProductsById(
         cat_id: String?,
@@ -769,9 +792,9 @@ object Query {
     ): Storefront.CustomerQuery.OrdersArguments {
         val definition: Storefront.CustomerQuery.OrdersArguments
         if (cursor == "nocursor") {
-            definition = arg!!.first(10).reverse(true)
+            definition = arg.first(10).reverse(true)
         } else {
-            definition = arg!!.first(10).after(cursor).reverse(true)
+            definition = arg.first(10).after(cursor).reverse(true)
         }
         return definition
     }
@@ -807,9 +830,9 @@ object Query {
     ): Storefront.CustomerQuery.AddressesArguments {
         val definitions: Storefront.CustomerQuery.AddressesArguments
         if (cursor == "nocursor")
-            definitions = arg!!.first(10)
+            definitions = arg.first(10)
         else
-            definitions = arg!!.first(10).after(cursor)
+            definitions = arg.first(10).after(cursor)
 
         return definitions
     }

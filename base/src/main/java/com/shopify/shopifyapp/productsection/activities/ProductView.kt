@@ -1,5 +1,6 @@
 package com.shopify.shopifyapp.productsection.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -22,6 +23,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -44,10 +47,7 @@ import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.*
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
-import com.shopify.shopifyapp.productsection.adapters.ArImagesAdapter
-import com.shopify.shopifyapp.productsection.adapters.ImagSlider
-import com.shopify.shopifyapp.productsection.adapters.ReviewListAdapter
-import com.shopify.shopifyapp.productsection.adapters.VariantAdapter
+import com.shopify.shopifyapp.productsection.adapters.*
 import com.shopify.shopifyapp.productsection.models.MediaModel
 import com.shopify.shopifyapp.productsection.models.Review
 import com.shopify.shopifyapp.productsection.models.ReviewModel
@@ -106,6 +106,8 @@ class ProductView : NewBaseActivity() {
 
     @Inject
     lateinit var arImagesAdapter: ArImagesAdapter
+    @Inject
+    lateinit var customadapter: CustomAdapters
 
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
@@ -541,6 +543,7 @@ class ProductView : NewBaseActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setProductData(productedge: Storefront.Product?) {
         try {
             var mediaModel: MediaModel? = null
@@ -654,6 +657,31 @@ class ProductView : NewBaseActivity() {
             binding?.availableQty?.text =
                 getString(R.string.avaibale_qty) + " " + productedge.totalInventory
             val variant = productedge!!.variants.edges[0].node
+            val alledges = variant.storeAvailability.edges
+            if(variant.storeAvailability.edges[0].node.available.toString().equals("true")){
+               binding?.pickupsection?.visibility = View.VISIBLE
+                binding?.addfirst?.text = variant.storeAvailability.edges[0].node.location.address.city
+                binding?.addsecond?.text = variant.storeAvailability.edges[0].node.location.address.address2 +" "+ variant.storeAvailability.edges[0].node.location.address.address1 +" "+
+                        variant.storeAvailability.edges[0].node.location.address.province +" "+ variant.storeAvailability.edges[0].node.location.address.city +" "+ variant.storeAvailability.edges[0].node.location.address.zip
+                binding?.pickuptime?.text = variant.storeAvailability.edges[0].node.pickUpTime
+                binding?.phonenumber?.text = variant.storeAvailability.edges[0].node.location.address.phone
+            }else{
+                binding?.pickupsection?.visibility = View.GONE
+            }
+            binding?.storerecycler?.setHasFixedSize(true)
+            binding?.storerecycler?. setLayoutManager(LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false))
+            binding?.storerecycler?.setNestedScrollingEnabled(false)
+            Log.d("alledgesv",alledges.size.toString())
+            customadapter.setData(alledges,this)
+            binding?.storerecycler!!.adapter = customadapter
+            binding?.checkstoretext?.setOnClickListener {
+                if(storerecycler.getVisibility() == View.VISIBLE){
+                    storerecycler.setVisibility(View.GONE)
+                }
+                else{
+                    storerecycler.setVisibility(View.VISIBLE)
+                }
+            }
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
             if (mediaList.size > 0) {
                 slider.setData(mediaList)
@@ -668,7 +696,6 @@ class ProductView : NewBaseActivity() {
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
 //            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
-
             val pish =
                 "<head><style>@font-face {font-family: 'arial';src: url('file:///android_asset/fonts/cairobold.ttf');}</style></head>"
             var desc =
@@ -708,7 +735,7 @@ class ProductView : NewBaseActivity() {
             setProductPrice(variant)
             binding?.regularprice?.textSize = 15f
             //  model!!.filterList(productedge.variants.edges)
-            filterOptionList(productedge.options, productedge.variants.edges)
+            filterOptionList(productedge.options, productedge.variants.edges,productedge)
             binding!!.productdata = data
             binding!!.clickhandlers = ClickHandlers()
         } catch (e: Exception) {
@@ -718,7 +745,8 @@ class ProductView : NewBaseActivity() {
 
     private fun filterOptionList(
         options: List<Storefront.ProductOption>,
-        edges: MutableList<Storefront.ProductVariantEdge>
+        edges: MutableList<Storefront.ProductVariantEdge>,
+        productedge: Storefront.Product
     ) {
         Log.d(TAG, "filterOptionList: " + options)
         var swatechView: SwatchesListBinding? = null
@@ -760,6 +788,7 @@ class ProductView : NewBaseActivity() {
                         if (totalVariant == variant_pair.size) {
                             variantFilter(variant_pair.values.toList(), edges)
                         }
+                        //val variant = productedge!!.variants.edges[0].node
                         variantValidation.accumulate(variantName, options.get(j).id)
                     }
                 })

@@ -103,10 +103,10 @@ dependencies {
     //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //shopify sdk
-    implementation 'com.shopify.mobilebuysdk:buy3:9.0.1'
-    /*implementation ('com.shopify.mobilebuysdk:buy3:11.0.0'){
+    //implementation 'com.shopify.mobilebuysdk:buy3:9.0.1'
+    implementation ('com.shopify.mobilebuysdk:buy3:11.0.0'){
         exclude group: "com.shopify.graphql.support"
-    }*/
+    }
     //timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
     //imageslider
