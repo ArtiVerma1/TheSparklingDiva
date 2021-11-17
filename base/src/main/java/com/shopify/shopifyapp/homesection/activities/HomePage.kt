@@ -601,6 +601,7 @@ class HomePage : NewBaseActivity() {
         featuresModel.multi_currency = false
         featuresModel.multi_language = false
         featuresModel.showBottomNavigation=false
+        featuresModel.reOrderEnabled = false
     }
 
     private fun leftmenuconsumeResponse(reponse: ApiResponse) {

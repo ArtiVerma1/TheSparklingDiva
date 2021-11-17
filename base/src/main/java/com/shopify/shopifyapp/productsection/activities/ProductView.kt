@@ -134,7 +134,7 @@ class ProductView : NewBaseActivity() {
             productID = model!!.id
         }
         Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)
-        Log.i("PID",""+productID)
+        Log.i("PID", "" + productID)
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(
                 Urls(application as MyApplication).mid,
@@ -188,10 +188,9 @@ class ProductView : NewBaseActivity() {
         binding?.variantAvailableQty?.textSize = 14f
         binding?.qtyTitleTxt?.textSize = 14f
         binding?.yotpoWriteReviewBut?.setOnClickListener {
-            if(yotporeviewsection.getVisibility() == View.VISIBLE){
+            if (yotporeviewsection.getVisibility() == View.VISIBLE) {
                 yotporeviewsection.setVisibility(View.GONE);
-            }
-            else{
+            } else {
                 yotporeviewsection.setVisibility(View.VISIBLE);
             }
         }
@@ -199,19 +198,19 @@ class ProductView : NewBaseActivity() {
             if (binding!!.yotpoName.text!!.toString().isEmpty()) {
                 binding!!.yotpoName.error = resources.getString(R.string.empty)
                 binding!!.yotpoName.requestFocus()
-            }else if(binding!!.yotpoEmail.text!!.toString().isEmpty()){
+            } else if (binding!!.yotpoEmail.text!!.toString().isEmpty()) {
                 binding!!.yotpoEmail.error = resources.getString(R.string.empty)
                 binding!!.yotpoEmail.requestFocus()
-            }else if(binding!!.yotpoReviewtitle.text!!.toString().isEmpty()){
+            } else if (binding!!.yotpoReviewtitle.text!!.toString().isEmpty()) {
                 binding!!.yotpoReviewtitle.error = resources.getString(R.string.empty)
                 binding!!.yotpoReviewtitle.requestFocus()
-            }else if(binding!!.yotpoReviewbody.text!!.toString().isEmpty()){
-               binding!!.yotpoReviewbody.error = resources.getString(R.string.empty)
+            } else if (binding!!.yotpoReviewbody.text!!.toString().isEmpty()) {
+                binding!!.yotpoReviewbody.error = resources.getString(R.string.empty)
                 binding!!.yotpoReviewbody.requestFocus()
-            }else{
-                if(leftmenu.isLoggedIn){
+            } else {
+                if (leftmenu.isLoggedIn) {
                     submityptporeview()
-                }else{
+                } else {
                     val alertDialog: AlertDialog = AlertDialog.Builder(this@ProductView).create()
                     alertDialog.setTitle("NOTE!")
                     alertDialog.setMessage("Please create an account in the app to leave a review.")
@@ -222,6 +221,7 @@ class ProductView : NewBaseActivity() {
             }
         }
     }
+
     private fun consumeAliReviews(response: ApiResponse?) {
         Log.d(TAG, "consumeAliReviews: " + response?.data)
         var responseData = JSONObject(response?.data.toString())
@@ -664,22 +664,34 @@ class ProductView : NewBaseActivity() {
             data!!.textdata = productedge.title
             productName = productedge.title
             productsku = productedge.variants.edges[0].node.sku
-            Log.i("ALLSHUUUUUUU",""+productsku)
+            Log.i("ALLSHUUUUUUU", "" + productsku)
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
-//            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
-
-            val pish =
-                "<head><style>@font-face {font-family: 'arial';src: url('file:///android_asset/fonts/cairobold.ttf');}</style></head>"
-            var desc =
-                "<html>" + pish + "<body style='font-family: arial'>" + productedge.descriptionHtml + "</body></html>"
-            binding?.description?.loadDataWithBaseURL(
-                null,
-                desc,
-                "text/html",
-                "utf-8",
-                null
-            )
+            if (MagePrefs.getLanguage() == "ar") {
+                val pish =
+                    "<head><style>@font-face {font-family: 'arial';src: url('file:///android_asset/fonts/cairobold.ttf');}</style></head>"
+                var desc =
+                    "<html>" + pish + "<body style='font-family: arial'> <div dir='rtl'>" + productedge.descriptionHtml + "</div></body></html>"
+                binding?.description?.loadDataWithBaseURL(
+                    null,
+                    desc,
+                    "text/html",
+                    "utf-8",
+                    null
+                )
+            } else {
+                val pish =
+                    "<head><style>@font-face {font-family: 'arial';src: url('file:///android_asset/fonts/cairobold.ttf');}</style></head>"
+                var desc =
+                    "<html>" + pish + "<body style='font-family: arial'>" + productedge.descriptionHtml + "</body></html>"
+                binding?.description?.loadDataWithBaseURL(
+                    null,
+                    desc,
+                    "text/html",
+                    "utf-8",
+                    null
+                )
+            }
             binding?.description?.getSettings()?.setJavaScriptEnabled(true)
             if (model?.isInwishList(model?.id!!)!!) {
                 data!!.addtowish = resources.getString(R.string.alreadyinwish)
@@ -1328,7 +1340,15 @@ class ProductView : NewBaseActivity() {
     }
 
     private fun submityptporeview() {
-        model?.NResponse("VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC", productsku.toString(), productName.toString(),data?.product!!.onlineStoreUrl,MagePrefs.getCustomerFirstName().toString(),MagePrefs.getCustomerEmail().toString(),yotpo_reviewbody.text.toString(),yotpo_reviewtitle.text.toString(),
+        model?.NResponse(
+            "VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC",
+            productsku.toString(),
+            productName.toString(),
+            data?.product!!.onlineStoreUrl,
+            MagePrefs.getCustomerFirstName().toString(),
+            MagePrefs.getCustomerEmail().toString(),
+            yotpo_reviewbody.text.toString(),
+            yotpo_reviewtitle.text.toString(),
             yotpo_rating_bar.rating.toString()
         )?.observe(this, Observer { this.showData(it) })
     }
@@ -1340,8 +1360,8 @@ class ProductView : NewBaseActivity() {
 
     private fun receiveReview(data: JsonElement?) {
         val jsondata = JSONObject(data.toString())
-        Log.i("messagereview", "" +jsondata)
-        try{
+        Log.i("messagereview", "" + jsondata)
+        try {
             if (jsondata.getString("message").equals("ok")) {
                 val alertDialog: AlertDialog = AlertDialog.Builder(this@ProductView).create()
                 alertDialog.setTitle("Thank You")
@@ -1351,8 +1371,7 @@ class ProductView : NewBaseActivity() {
                 alertDialog.show()
             }
             Handler().postDelayed({ finish() }, 2000)
-        }
-        catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
