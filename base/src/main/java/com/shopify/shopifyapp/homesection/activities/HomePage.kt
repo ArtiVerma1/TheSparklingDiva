@@ -600,6 +600,7 @@ class HomePage : NewBaseActivity() {
         featuresModel.smileIO = false
         featuresModel.multi_currency = false
         featuresModel.multi_language = false
+        featuresModel.showBottomNavigation=false
     }
 
     private fun leftmenuconsumeResponse(reponse: ApiResponse) {
