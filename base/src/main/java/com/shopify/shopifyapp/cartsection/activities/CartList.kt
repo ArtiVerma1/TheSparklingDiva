@@ -288,11 +288,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             setBottomData(reponse)
             delivery_param = model!!.fillDeliveryParam(reponse.lineItems.edges)
             response_data = reponse
-//            if (SplashViewModel.featuresModel.zapietEnable) {
-//                model!!.validateDelivery(delivery_param).observe(
-//                    this@CartList,
-//                    Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
-//            }
+            if (SplashViewModel.featuresModel.zapietEnable) {
+                model!!.validateDelivery(delivery_param).observe(
+                    this@CartList,
+                    Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+            }
 
             invalidateOptionsMenu()
         } else {
@@ -329,14 +329,21 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             Log.d(TAG, "validate_delivery: " + response!!.data)
             if (response!!.data != null) {
                 var res = response!!.data
-                if (res!!.asJsonObject.get("success").asBoolean && res!!.asJsonObject.get("productsEligible").asBoolean) {
-                    binding!!.zepietSection.visibility = View.VISIBLE
-                    var local_delivery_param = model!!.fillLocalDeliveryParam(edges,binding!!.zipcodes)
-                    Log.d(TAG, "validate_delivery: " + local_delivery_param)
-                    model!!.localDeliveryy(local_delivery_param).observe(this, Observer { this.localDelivery(it) })
-                } else {
-                    binding!!.zepietSection.visibility = View.GONE
-                    binding!!.bottomsection.visibility = View.VISIBLE
+                if(res?.asJsonObject!!.has("productsEligible")) {
+                    if (res!!.asJsonObject.get("success").asBoolean && res!!.asJsonObject.get("productsEligible").asBoolean) {
+                        binding!!.zepietSection.visibility = View.VISIBLE
+                        var local_delivery_param =
+                            model!!.fillLocalDeliveryParam(edges, binding!!.zipcodes)
+                        Log.d(TAG, "validate_delivery: " + local_delivery_param)
+                        model!!.localDeliveryy(local_delivery_param)
+                            .observe(this, Observer { this.localDelivery(it) })
+                    } else {
+                        binding!!.zepietSection.visibility = View.GONE
+                        binding!!.bottomsection.visibility = View.VISIBLE
+                    }
+                }
+                else{
+                    showToast("This product is not eligible for delivery")
                 }
             }
         } catch (e: Exception) {
@@ -397,6 +404,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     daysOfWeek = calendar.getAsJsonObject("daysOfWeek")
                     interval = calendar.get("interval").asInt
                     loadCalendar(calendar, disabled)
+                }
+                else
+                {
+                    Toast.makeText(this,res!!.asJsonObject.get("err_msg").asString,Toast.LENGTH_SHORT).show()
+                    binding?.deliveryOption?.visibility=View.GONE
                 }
             }
         } catch (e: Exception) {
