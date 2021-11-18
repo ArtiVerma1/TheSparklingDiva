@@ -20,6 +20,13 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
+    var localpickupEnable: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.localpickupEnable)
+        }
+
+    @Bindable
     var smileIO: Boolean = false
         set(value) {
             field = value
@@ -223,5 +230,4 @@ class FeaturesModel : BaseObservable() {
             field = value
             notifyPropertyChanged(BR.ardumented_reality)
         }
-
 }

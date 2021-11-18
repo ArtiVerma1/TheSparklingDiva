@@ -97,7 +97,7 @@ object Query {
                                                         .priceV2({ price ->
                                                             price.amount().currencyCode()
                                                         })
-                                                        .storeAvailability({ args -> args.first(10) },
+                                                        .storeAvailability({ args -> args.first(20) },
                                                             { storeAvail ->
                                                                 storeAvail.edges({ storeAvailEdges ->
                                                                     storeAvailEdges.node({
@@ -110,11 +110,9 @@ object Query {
                                                                                 it.address2()
                                                                                 it.city()
                                                                                 it.country()
-                                                                                it.latitude()
                                                                                 it.province()
                                                                                 it.zip()
                                                                                 it.phone()
-                                                                                it.longitude()
                                                                             }
                                                                         }
                                                                     })
@@ -249,7 +247,7 @@ object Query {
                                 .node({ productVariantQuery ->
                                     productVariantQuery
                                         .title()
-                                        .storeAvailability({ args -> args.first(10) },
+                                        .storeAvailability({ args -> args.first(20) },
                                             { storeAvail ->
                                                 storeAvail.edges({ storeAvailEdges ->
                                                     storeAvailEdges.node({
@@ -262,14 +260,11 @@ object Query {
                                                                 it.address2()
                                                                 it.city()
                                                                 it.country()
-                                                                it.latitude()
                                                                 it.province()
                                                                 it.zip()
                                                                 it.phone()
-                                                                it.longitude()
                                                             }
                                                         }
-
                                                     })
                                                 })
                                             })
@@ -650,7 +645,6 @@ object Query {
                     }, productDefinition(list_currency)
                 )
         }
-
     }
 
     private fun product_list(

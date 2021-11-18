@@ -121,12 +121,10 @@ class AutoSearch : NewBaseActivity() {
                     model!!.setSearchData(search_string)
                 }
             }
-
             override fun afterTextChanged(s: Editable) {
                 Log.d(TAG, "afterTextChanged: " + s.toString())
             }
         })
-
         binding?.searchtext?.requestFocus()
     }
 
@@ -165,11 +163,9 @@ class AutoSearch : NewBaseActivity() {
             } else {
                 showToast(resources.getString(R.string.noproducts))
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -225,7 +221,6 @@ class AutoSearch : NewBaseActivity() {
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
-
     }
 
     fun takePicture() {

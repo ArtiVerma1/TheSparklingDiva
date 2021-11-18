@@ -54,6 +54,7 @@ import com.shopify.shopifyapp.productsection.models.ReviewModel
 import com.shopify.shopifyapp.productsection.viewmodels.ProductViewModel
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.*
+import kotlinx.android.synthetic.main.m_addressitem.*
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
 import kotlinx.android.synthetic.main.m_productview.*
 import kotlinx.coroutines.Dispatchers
@@ -543,7 +544,7 @@ class ProductView : NewBaseActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "LogNotTimber")
     private fun setProductData(productedge: Storefront.Product?) {
         try {
             var mediaModel: MediaModel? = null
@@ -657,21 +658,31 @@ class ProductView : NewBaseActivity() {
             binding?.availableQty?.text =
                 getString(R.string.avaibale_qty) + " " + productedge.totalInventory
             val variant = productedge!!.variants.edges[0].node
+
+            /******************************** Local delivery and pickup work **************************************/
+
             val alledges = variant.storeAvailability.edges
-            if(variant.storeAvailability.edges[0].node.available.toString().equals("true")){
-               binding?.pickupsection?.visibility = View.VISIBLE
-                binding?.addfirst?.text = variant.storeAvailability.edges[0].node.location.address.city
-                binding?.addsecond?.text = variant.storeAvailability.edges[0].node.location.address.address2 +" "+ variant.storeAvailability.edges[0].node.location.address.address1 +" "+
-                        variant.storeAvailability.edges[0].node.location.address.province +" "+ variant.storeAvailability.edges[0].node.location.address.city +" "+ variant.storeAvailability.edges[0].node.location.address.zip
-                binding?.pickuptime?.text = variant.storeAvailability.edges[0].node.pickUpTime
-                binding?.phonenumber?.text = variant.storeAvailability.edges[0].node.location.address.phone
+            Log.d(TAG,alledges.size.toString())
+            if(featuresModel.localpickupEnable){
+                if(alledges.size > 1){
+                    binding?.checkstoretext?.visibility = View.VISIBLE
+                }else{
+                    binding?.checkstoretext?.visibility = View.GONE
+                }
+                if(variant.storeAvailability.edges[0].node.available.toString().equals("true")){
+                    binding?.card?.visibility = View.VISIBLE
+                    binding?.addfirst?.text = variant.storeAvailability.edges[0].node.location.address.city
+                    binding?.addsecond?.text = variant.storeAvailability.edges[0].node.location.address.address2 +" "+ variant.storeAvailability.edges[0].node.location.address.address1 +" "+
+                            variant.storeAvailability.edges[0].node.location.address.province +" "+ variant.storeAvailability.edges[0].node.location.address.city +" "+ variant.storeAvailability.edges[0].node.location.address.zip
+                    binding?.pickuptime?.text = variant.storeAvailability.edges[0].node.pickUpTime
+                    binding?.phonenumber?.text = variant.storeAvailability.edges[0].node.location.address.phone
+                }
             }else{
-                binding?.pickupsection?.visibility = View.GONE
+                binding?.card?.visibility = View.GONE
             }
             binding?.storerecycler?.setHasFixedSize(true)
             binding?.storerecycler?. setLayoutManager(LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false))
             binding?.storerecycler?.setNestedScrollingEnabled(false)
-            Log.d("alledgesv",alledges.size.toString())
             customadapter.setData(alledges,this)
             binding?.storerecycler!!.adapter = customadapter
             binding?.checkstoretext?.setOnClickListener {
@@ -682,6 +693,9 @@ class ProductView : NewBaseActivity() {
                     storerecycler.setVisibility(View.VISIBLE)
                 }
             }
+
+            /***************************************************************************************************/
+
             val slider = ImagSlider(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
             if (mediaList.size > 0) {
                 slider.setData(mediaList)
