@@ -188,6 +188,8 @@ class HomePage : NewBaseActivity() {
             )?.observe(this, Observer { this.showData(it) })
         }
 
+
+
         homemodel?.notifyZendesk?.observe(this, Observer {
             if (it) {
                 chat_but.visibility = View.VISIBLE

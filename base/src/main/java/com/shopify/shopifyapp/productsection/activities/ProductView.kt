@@ -94,7 +94,7 @@ class ProductView : NewBaseActivity() {
     private var personamodel: PersonalisedViewModel? = null
     private var inStock: Boolean = true
     private var totalVariant: Int? = null
-    private var variantValidation: JSONObject = JSONObject()
+    private var variantValidation: MutableMap<String, String> = mutableMapOf()
     var reviewModel: ReviewModel? = null
     private var external_id: String? = null
     private var judgeme_productid: String? = null
@@ -745,7 +745,7 @@ class ProductView : NewBaseActivity() {
             binding?.variantAvailableQty?.visibility = View.GONE
             singleVariant = true
             variantId = edges.get(0).node.id
-            variantValidation.accumulate("title", variantId)
+            variantValidation.put("title", variantId.toString())
             binding?.variantAvailableQty?.text =
                 edges.get(0).node.quantityAvailable.toString() + " " + resources.getString(R.string.avaibale_qty_variant)
             setProductPrice(edges.get(0).node)
@@ -771,9 +771,9 @@ class ProductView : NewBaseActivity() {
                     override fun clickVariant(variantName: String, optionName: String) {
                         variant_pair.put(optionName, variantName)
                         if (totalVariant == variant_pair.size) {
-                            variantFilter(variant_pair.values.toList(), edges)
+                            variantFilter(variant_pair.values.toList(), edges,variant_pair)
                         }
-                        variantValidation.accumulate(variantName, options.get(j).id)
+                        //variantValidation.put(variantName, options.get(j).id.toString())
                     }
                 })
             swatechView.variantList.adapter = adapter
@@ -783,7 +783,8 @@ class ProductView : NewBaseActivity() {
 
     private fun variantFilter(
         variantPair: List<String>,
-        edges: MutableList<Storefront.ProductVariantEdge>
+        edges: MutableList<Storefront.ProductVariantEdge>,
+        variantList:MutableMap<String,String>
     ) {
         val new_pair = StringBuilder()
         for (i in 0 until variantPair.size) {
@@ -823,6 +824,7 @@ class ProductView : NewBaseActivity() {
                     binding?.addtocart?.text = getString(R.string.addtocart)
                 }
                 Log.d(TAG, "variantFilter: " + variantId)
+                variantValidation=variantList
                 return
             } else {
                 binding?.addtocart?.text = getString(R.string.out_of_stock)
@@ -960,8 +962,8 @@ class ProductView : NewBaseActivity() {
     inner class ClickHandlers {
         fun addtoCart(view: View, data: ListData) {
             if (inStock) {
-                if (variantValidation.names() != null) {
-                    if (variantValidation.names().length() >= totalVariant!! || singleVariant) {
+                if (variantValidation.values != null) {
+                    if (variantValidation.size >= totalVariant!! || singleVariant) {
                         model!!.addToCart(
                             variantId.toString(),
                             binding?.quantity?.text.toString().toInt()
@@ -1130,8 +1132,8 @@ class ProductView : NewBaseActivity() {
         }
 
         fun increase(view: View) {
-            if (variantValidation.names() != null) {
-                if (variantValidation.names().length() >= totalVariant!!) {
+            if (variantValidation.values != null) {
+                if (variantValidation.size >= totalVariant!!) {
                     Log.d(TAG, "increase: " + model?.getQtyInCart(variantId.toString()))
                     var total = binding!!.quantity.text.toString().toInt() + model?.getQtyInCart(
                         variantId.toString()
