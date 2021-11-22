@@ -249,4 +249,5 @@
     <string name="checkstores">
         <u>Check availability at other stores.</u>.
     </string>
+    <string name="pickupavailablenot">Not available for pickup at..</string>
 </resources>

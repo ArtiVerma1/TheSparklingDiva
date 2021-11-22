@@ -671,14 +671,23 @@ class ProductView : NewBaseActivity() {
                 }
                 if(variant.storeAvailability.edges[0].node.available.toString().equals("true")){
                     binding?.card?.visibility = View.VISIBLE
+                    binding?.heading?.text = getString(R.string.pickupavailable)
+                    binding?.checks?.setImageResource(R.drawable.checkmark)
                     binding?.addfirst?.text = variant.storeAvailability.edges[0].node.location.address.city
                     binding?.addsecond?.text = variant.storeAvailability.edges[0].node.location.address.address2 +" "+ variant.storeAvailability.edges[0].node.location.address.address1 +" "+
                             variant.storeAvailability.edges[0].node.location.address.province +" "+ variant.storeAvailability.edges[0].node.location.address.city +" "+ variant.storeAvailability.edges[0].node.location.address.zip
                     binding?.pickuptime?.text = variant.storeAvailability.edges[0].node.pickUpTime
                     binding?.phonenumber?.text = variant.storeAvailability.edges[0].node.location.address.phone
                 }
-            }else{
-                binding?.card?.visibility = View.GONE
+            }else if(variant.storeAvailability.edges[0].node.available.toString().equals("false")){
+                binding?.card?.visibility = View.VISIBLE
+                binding?.heading?.text = getString(R.string.pickupavailablenot)
+                binding?.checks?.setImageResource(R.drawable.cross)
+                binding?.addfirst?.text = variant.storeAvailability.edges[0].node.location.address.city
+                binding?.addsecond?.text = variant.storeAvailability.edges[0].node.location.address.address2 +" "+ variant.storeAvailability.edges[0].node.location.address.address1 +" "+
+                        variant.storeAvailability.edges[0].node.location.address.province +" "+ variant.storeAvailability.edges[0].node.location.address.city +" "+ variant.storeAvailability.edges[0].node.location.address.zip
+                binding?.pickuptime?.text = variant.storeAvailability.edges[0].node.pickUpTime
+                binding?.phonenumber?.text = variant.storeAvailability.edges[0].node.location.address.phone
             }
             binding?.storerecycler?.setHasFixedSize(true)
             binding?.storerecycler?. setLayoutManager(LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false))

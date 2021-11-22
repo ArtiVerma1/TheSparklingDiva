@@ -20,7 +20,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var localpickupEnable: Boolean = false
+    var localpickupEnable: Boolean = true
         set(value) {
             field = value
             notifyPropertyChanged(BR.localpickupEnable)

@@ -338,8 +338,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/checkmark" />
+                        android:layout_marginTop="5dp" />
 
                     <TextView
                         android:id="@+id/heading"
@@ -349,7 +348,6 @@
                         android:layout_toEndOf="@+id/checks"
                         android:paddingStart="3dp"
                         android:paddingEnd="3dp"
-                        android:text="@string/pickupavailable"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
