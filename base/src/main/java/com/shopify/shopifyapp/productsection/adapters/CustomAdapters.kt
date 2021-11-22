@@ -28,24 +28,25 @@ class CustomAdapters @Inject constructor() : RecyclerView.Adapter<CategoryHolder
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CategoryHolders, position: Int) {
-        if(alledges[position].node.available.toString().equals("true")){
+        if (alledges[position].node.available.toString().equals("true")) {
             holder.checks.setImageResource(R.drawable.checkmark)
-            holder.rheading.text = "Available for pickup at.."
+            holder.rheading.text = "Pickup available at.."
             holder.raddfirst.text = alledges[position].node.location.address.city
             holder.raddsecond.text =
                 alledges[position].node.location.address.address2 + " " + alledges[position].node.location.address.address1 + " " +
                         alledges[position].node.location.address.province + " " + alledges[position].node.location.address.city + " " + alledges[position].node.location.address.zip
             holder.rpickuptime.text = alledges[position].node.pickUpTime
             holder.rphonenumber.text = alledges[position].node.location.address.phone
-        }else if(alledges[position].node.available.toString().equals("false"))
+        } else if (alledges[position].node.available.toString().equals("false")) {
             holder.checks.setImageResource(R.drawable.cross)
-        holder.rheading.text = "Not available for pickup at.."
-        holder.raddfirst.text = alledges[position].node.location.address.city
-        holder.raddsecond.text =
-            alledges[position].node.location.address.address2 + " " + alledges[position].node.location.address.address1 + " " +
-                    alledges[position].node.location.address.province + " " + alledges[position].node.location.address.city + " " + alledges[position].node.location.address.zip
-        holder.rpickuptime.text = alledges[position].node.pickUpTime
-        holder.rphonenumber.text = alledges[position].node.location.address.phone
+            holder.rheading.text = "Pickup not available at.."
+            holder.raddfirst.text = alledges[position].node.location.address.city
+            holder.raddsecond.text =
+                alledges[position].node.location.address.address2 + " " + alledges[position].node.location.address.address1 + " " +
+                        alledges[position].node.location.address.province + " " + alledges[position].node.location.address.city + " " + alledges[position].node.location.address.zip
+            holder.rpickuptime.text = alledges[position].node.pickUpTime
+            holder.rphonenumber.text = alledges[position].node.location.address.phone
+        }
     }
 
     override fun getItemCount(): Int {
