@@ -23,7 +23,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -660,7 +659,6 @@ class ProductView : NewBaseActivity() {
             val variant = productedge!!.variants.edges[0].node
 
             /******************************** Local delivery and pickup work **************************************/
-
             val alledges = variant.storeAvailability.edges
             Log.d(TAG,alledges.size.toString())
             if(featuresModel.localpickupEnable){
@@ -715,7 +713,7 @@ class ProductView : NewBaseActivity() {
             data!!.textdata = productedge.title
             productName = productedge.title
             productsku = productedge.variants.edges[0].node.sku
-            Log.i("ALLSHUUUUUUU",""+productsku)
+            Log.i("ALLSKU",""+productsku)
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
 //            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
@@ -973,7 +971,6 @@ class ProductView : NewBaseActivity() {
                     binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }
-
     }
 
     fun getDiscount(regular: Double, special: Double): Int {

@@ -139,14 +139,12 @@ class CartListAdapter @Inject constructor() : RecyclerView.Adapter<CartItem>() {
                 holder.binding.decrese.visibility = View.GONE
                 warningList.put(data?.get(position)?.node?.variant?.id.toString(), true)
                 stockCallback?.cartWarning(warningList)
-
             } else {
                 holder.binding.notinstock.visibility = View.GONE
                 holder.binding.increase.visibility = View.VISIBLE
                 holder.binding.decrese.visibility = View.VISIBLE
                 warningList.put(data?.get(position)?.node?.variant?.id.toString(), false)
                 stockCallback?.cartWarning(warningList)
-
             }
         } else {
             holder.binding.notinstock.visibility = View.GONE
