@@ -31,7 +31,7 @@ class CustomAdapters @Inject constructor() : RecyclerView.Adapter<CategoryHolder
     override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
         if (alledges[position].node.available.toString().equals("true")) {
             holder.binding.checks.setImageResource(R.drawable.checkmark)
-            holder.binding.rheading.text = "Pickup available at.."
+            holder.binding.rheading.text = holder.binding.rheading.resources?.getString(R.string.pickupavailable)
             holder.binding.raddfirst.text = alledges[position].node.location.address.city
             holder.binding.raddsecond.text =
                 alledges[position].node.location.address.address2 + " " + alledges[position].node.location.address.address1 + " " +
@@ -40,7 +40,7 @@ class CustomAdapters @Inject constructor() : RecyclerView.Adapter<CategoryHolder
             holder.binding.rphonenumber.text = alledges[position].node.location.address.phone
         } else if (alledges[position].node.available.toString().equals("false")) {
             holder.binding.checks.setImageResource(R.drawable.cross)
-            holder.binding.rheading.text = "Pickup not available at.."
+            holder.binding.rheading.text = holder.binding.rheading.resources?.getString(R.string.pickupavailablenot)
             holder.binding.raddfirst.text = alledges[position].node.location.address.city
             holder.binding.raddsecond.text =
                 alledges[position].node.location.address.address2 + " " + alledges[position].node.location.address.address1 + " " +

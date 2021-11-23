@@ -989,7 +989,6 @@ class ProductView : NewBaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         return pairEdge
     }
 
@@ -1113,7 +1112,6 @@ class ProductView : NewBaseActivity() {
                             param(FirebaseAnalytics.Param.QUANTITY, 1)
                         }
                     }
-
                 } else {
                     model!!.deleteData(data.product?.id.toString())
                     data!!.addtowish = resources.getString(R.string.addtowish)
@@ -1228,7 +1226,6 @@ class ProductView : NewBaseActivity() {
             Constant.activityTransition(view.context)
         }
 
-
         fun showAR(view: View, data: ListData) {
             try {
                 Log.d(TAG, "showAR: " + mediaList)
@@ -1270,7 +1267,6 @@ class ProductView : NewBaseActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-
                     } else {
                         dialog.show()
                     }
@@ -1315,8 +1311,7 @@ class ProductView : NewBaseActivity() {
                     reviewFormBinding.emailEdt.error = getString(R.string.email_validation)
                     reviewFormBinding.emailEdt.requestFocus()
                 } else if (!model?.isValidEmail(
-                        reviewFormBinding.emailEdt.text.toString().trim()
-                    )!!
+                        reviewFormBinding.emailEdt.text.toString().trim())!!
                 ) {
                     reviewFormBinding.emailEdt.error = resources.getString(R.string.invalidemail)
                     reviewFormBinding.emailEdt.requestFocus()
@@ -1331,8 +1326,7 @@ class ProductView : NewBaseActivity() {
                         reviewFormBinding.bodyEdt.text.toString().trim()
                     )
                     bottomsheet.dismiss()
-                }
-            }
+                }}
             bottomsheet.show()
         }
 

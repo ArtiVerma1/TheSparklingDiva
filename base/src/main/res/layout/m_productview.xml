@@ -335,75 +335,80 @@
 
                     <ImageView
                         android:id="@+id/checks"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp" />
+                        android:layout_marginTop="7dp" />
 
-                    <TextView
+
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/heading"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:layout_marginTop="5dp"
                         android:layout_toEndOf="@+id/checks"
                         android:paddingStart="3dp"
                         android:paddingEnd="3dp"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        bind:texttype="bold" />
 
-                    <TextView
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/addfirst"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/heading"
                         android:layout_marginTop="3dp"
-                        android:padding="3dp"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        bind:texttype="bold"/>
 
-                    <TextView
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/addsecond"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/addfirst"
                         android:layout_marginTop="3dp"
-                        android:padding="3dp"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        bind:texttype="bold"/>
 
-                    <TextView
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/pickuptime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/addsecond"
                         android:layout_marginTop="3dp"
-                        android:padding="3dp"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        bind:texttype="bold"/>
 
-                    <TextView
+                    <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/phonenumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/pickuptime"
                         android:layout_marginTop="3dp"
-                        android:padding="3dp"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        bind:texttype="bold"/>
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/checkstoretext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="3dp"
                 android:text="@string/checkstores"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                bind:texttype="bold"
                 android:visibility="gone"
                 bind:layout_constraintTop_toBottomOf="@id/card" />
 

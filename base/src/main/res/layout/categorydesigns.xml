@@ -17,62 +17,68 @@
 
             <ImageView
                 android:id="@+id/checks"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="7dp" />
 
-            <TextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/rheading"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_toEndOf="@+id/checks"
                 android:paddingStart="3dp"
                 android:paddingEnd="3dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                app:texttype="bold" />
 
-            <TextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/raddfirst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rheading"
                 android:layout_marginTop="3dp"
-                android:padding="3dp"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                app:texttype="bold"/>
 
-            <TextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/raddsecond"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/raddfirst"
                 android:layout_marginTop="3dp"
-                android:padding="3dp"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                app:texttype="bold"/>
 
-            <TextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/rpickuptime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/raddsecond"
                 android:layout_marginTop="3dp"
-                android:padding="3dp"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                app:texttype="bold"/>
 
-            <TextView
+            <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/rphonenumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rpickuptime"
                 android:layout_marginTop="3dp"
-                android:padding="3dp"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                app:texttype="bold"/>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
