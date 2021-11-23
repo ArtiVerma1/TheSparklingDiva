@@ -73,7 +73,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/clearcart_section"
                     bind:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    bind:listitem="@layout/m_cartitem"/>
+                    bind:listitem="@layout/m_cartitem" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/zepiet_section"
@@ -85,11 +85,11 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/local_container"
-                        android:onClick="@{(view)->handler.localDeliveryClick(view)}"
                         android:layout_width="0dp"
                         android:layout_height="80dp"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/black_border"
+                        android:onClick="@{(view)->handler.localDeliveryClick(view)}"
                         app:layout_constraintEnd_toStartOf="@+id/store_container"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -121,10 +121,10 @@
                         android:id="@+id/store_container"
                         android:layout_width="0dp"
                         android:layout_height="80dp"
-                        android:onClick="@{(view)->handler.storeDeliveryClick(view)}"
                         android:layout_marginStart="5dp"
                         android:background="@drawable/black_border"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:onClick="@{(view)->handler.storeDeliveryClick(view)}"
+                        app:layout_constraintEnd_toStartOf="@+id/shipping_container"
                         app:layout_constraintStart_toEndOf="@+id/local_container"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -151,6 +151,39 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/shipping_container"
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/black_border"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/store_container"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/ship_icon"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/earth" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/ship_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/ship"
+                            android:textAlignment="center"
+                            android:textSize="10sp"
+                            app:layout_constraintTop_toBottomOf="@+id/ship_icon" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/delivery_option"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -170,24 +203,24 @@
 
                         <LinearLayout
                             android:id="@+id/zipcode"
-                            android:layout_marginTop="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
                             android:background="@drawable/border2"
-                            app:layout_constraintTop_toBottomOf="@id/deliver_area_txt"
                             android:orientation="horizontal"
-                            android:weightSum="10">
+                            android:weightSum="10"
+                            app:layout_constraintTop_toBottomOf="@id/deliver_area_txt">
 
                             <EditText
                                 android:id="@+id/zipcodes"
-                                android:hint="Enter postal code here"
-                                android:textSize="14sp"
-                                android:textStyle="italic"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="9"
                                 android:background="@drawable/border1"
-                                android:paddingStart="10dp" />
+                                android:hint="Enter postal code here"
+                                android:paddingStart="10dp"
+                                android:textSize="14sp"
+                                android:textStyle="italic" />
 
                             <ImageView
                                 android:id="@+id/searchpostalcode"
@@ -198,31 +231,40 @@
                                 android:src="@drawable/search"
                                 app:tint="@color/main_color_gray_lt" />
                         </LinearLayout>
-                        <TextView
-                            android:textSize="15sp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintTop_toBottomOf="@id/zipcode"
-                            android:id="@+id/pintext"
-                            android:text="Sorry, delivery is not available in your area at the moment."
-                            android:textColor="@color/red"
-                            android:visibility="gone"
-                            android:layout_marginStart="5dp"/>
 
                         <TextView
-                            android:textSize="15sp"
+                            android:id="@+id/pintext"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:layout_constraintTop_toBottomOf="@id/pintext"
+                            android:layout_marginStart="5dp"
+                            android:text="Sorry, delivery is not available in your area at the moment."
+                            android:textColor="@color/red"
+                            android:textSize="15sp"
+                            android:visibility="gone"
+                            app:layout_constraintTop_toBottomOf="@id/zipcode" />
+
+                        <TextView
                             android:id="@+id/pintextrue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
                             android:text="Good news! We can deliver to you.."
                             android:textColor="@color/black"
+                            android:textSize="15sp"
                             android:visibility="gone"
-                            android:layout_marginStart="5dp"/>
+                            app:layout_constraintTop_toBottomOf="@id/pintext" />
+                        <TextView
+                            android:id="@+id/shipnote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:visibility="gone"
+                            app:layout_constraintTop_toBottomOf="@id/pintext" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:visibility="gone"
                             android:id="@+id/delivery_date_txt"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
@@ -233,6 +275,7 @@
                             android:padding="8dp"
                             android:text="@string/click_here_to_select_delivery_date"
                             android:textSize="15sp"
+                            android:visibility="gone"
                             app:layout_constraintTop_toBottomOf="@+id/pintextrue" />
 
                         <androidx.appcompat.widget.AppCompatSpinner
@@ -551,8 +594,8 @@
                     layout="@layout/buy_with_googlepay_button"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:visibility="visible"
                     android:onClick="@{view->handler.payWithGpay(view,bottomdata)}"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

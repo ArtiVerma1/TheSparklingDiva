@@ -19,6 +19,7 @@ import com.shopify.shopifyapp.utils.Urls.Data.YOTPOCREATEREVIEW
 import io.reactivex.Single
 import org.json.JSONObject
 import retrofit2.http.*
+import zendesk.chat.DeliveryStatus
 
 
 interface ApiCallInterface {
@@ -121,6 +122,8 @@ interface ApiCallInterface {
 
     @POST(Urls.LOCAL_DELIVERYY)
     fun localDeliveryy(@QueryMap params: HashMap<String, String>): Single<JsonObject>
+    @GET(Urls.DeliveryStatus)
+    fun DeliveryStatus(@Query("mid") mid: String?): Single<JsonObject>
 
     @POST(Urls.LOCAL_DELIVERY)
     fun storeDelivery(@QueryMap params: HashMap<String, String>): Single<JsonObject>

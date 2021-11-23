@@ -55,8 +55,10 @@ class LocationListAdapter @Inject constructor() : RecyclerView.Adapter<LocationL
     }
 
     override fun onBindViewHolder(holder: LocationListViewHolder, position: Int) {
-        holder.locationListItemBinding!!.locationChk.text = location_list?.get(position)?.asJsonObject?.get("address_line_1")?.asString + ", " + location_list?.get(position)?.asJsonObject?.get("city")?.asString
-        if (selectedPosition == position) {
+        holder.locationListItemBinding!!.locationChk.text = location_list?.get(position)?.asJsonObject?.get("company_name")?.asString+"\n"+location_list?.get(position)?.asJsonObject?.get("address_line_1")?.asString + "\n"+ location_list?.get(position)?.asJsonObject?.get("city")?.asString+"," +location_list?.get(position)?.asJsonObject?.get("postal_code")?.asString
+
+        if (selectedPosition == position)
+        {
             holder.locationListItemBinding!!.locationChk.isChecked = true
         } else {
             holder.locationListItemBinding!!.locationChk.isChecked = false

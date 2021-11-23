@@ -1,16 +1,10 @@
 package com.shopify.shopifyapp.cartsection.activities
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
@@ -20,12 +14,12 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -35,7 +29,6 @@ import com.google.gson.JsonObject
 import com.shopify.buy3.Storefront
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
-
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.adapters.CartListAdapter
@@ -47,8 +40,6 @@ import com.shopify.shopifyapp.customviews.MageNativeButton
 import com.shopify.shopifyapp.databinding.DiscountCodeLayoutBinding
 import com.shopify.shopifyapp.databinding.MCartlistBinding
 import com.shopify.shopifyapp.loader_section.CustomLoader
-import com.shopify.shopifyapp.loginsection.activity.LoginActivity
-import com.shopify.shopifyapp.network_transaction.customLoader
 import com.shopify.shopifyapp.personalised.adapters.PersonalisedAdapter
 import com.shopify.shopifyapp.personalised.viewmodels.PersonalisedViewModel
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
@@ -62,7 +53,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapReadyCallback {
     @Inject
@@ -82,8 +72,8 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
     val month = calender.get(Calendar.MONTH)
     val day = calender.get(Calendar.DAY_OF_MONTH)
     lateinit var dpd: DatePickerDialog
-    var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-    var dayFormat: SimpleDateFormat = SimpleDateFormat("EEEE", Locale.ENGLISH);
+    var simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+    var dayFormat: SimpleDateFormat = SimpleDateFormat("EEEE", Locale.ENGLISH)
     var disabledates: ArrayList<Calendar>? = null
     lateinit var slots: JsonArray
     lateinit var locations: JsonArray
@@ -124,6 +114,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         personamodel = ViewModelProvider(this, factory).get(PersonalisedViewModel::class.java)
         personamodel?.activity = this
         model!!.Response().observe(this, Observer<Storefront.Checkout> { this.consumeResponse(it) })
+        binding!!.locationList.layoutManager = LinearLayoutManager(this)
         if (SplashViewModel.featuresModel.ai_product_reccomendaton) {
             if (Constant.ispersonalisedEnable) {
                 model!!.getApiResponse()
@@ -132,6 +123,8 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     .observe(this, Observer<ApiResponse> { this.Response(it) })
             }
         }
+        model!!.DeliveryStatus(Urls(application as MyApplication).mid)
+            .observe(this, Observer { this.DeliveryStatus(it) })
         model!!.message.observe(this, Observer<String> { this.showToast(it) })
         model!!.getGiftCard()
             .observe(this, Observer<Storefront.Mutation> { this.consumeResponseGift(it) })
@@ -289,9 +282,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             delivery_param = model!!.fillDeliveryParam(reponse.lineItems.edges)
             response_data = reponse
             if (SplashViewModel.featuresModel.zapietEnable) {
-                model!!.validateDelivery(delivery_param).observe(
-                    this@CartList,
-                    Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+
+                binding!!.zepietSection.visibility = View.VISIBLE
+
+            } else {
+                binding!!.zepietSection.visibility = View.GONE
             }
 
             invalidateOptionsMenu()
@@ -309,40 +304,44 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
 
     private fun showload(view: View) {
         var pinalertDialog = SweetAlertDialog(this@CartList, SweetAlertDialog.NORMAL_TYPE)
-        pinalertDialog.setTitleText(view.context?.getString(R.string.note))
-        pinalertDialog.setContentText(view?.context?.getString(R.string.loadings))
+        pinalertDialog.titleText = view.context?.getString(R.string.note)
+        pinalertDialog.contentText = view.context?.getString(R.string.loadings)
         pinalertDialog.show()
         hideload(pinalertDialog)
     }
+
     private fun checkzip() {
-        if(!zipcodes.text.toString().isEmpty()) {
-            if (SplashViewModel.featuresModel.zapietEnable) {
-                model!!.validateDelivery(delivery_param).observe(
-                    this@CartList,
-                    Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
-            }
+        if (!zipcodes.text.toString().isEmpty()) {
+
+            model!!.validateDelivery(delivery_param).observe(
+                this@CartList,
+                Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+
         }
     }
 
-    private fun validate_delivery(response: ApiResponse?, edges: List<Storefront.CheckoutLineItemEdge>) {
+    private fun validate_delivery(
+        response: ApiResponse?,
+        edges: List<Storefront.CheckoutLineItemEdge>
+    ) {
         try {
             Log.d(TAG, "validate_delivery: " + response!!.data)
-            if (response!!.data != null) {
-                var res = response!!.data
-                if(res?.asJsonObject!!.has("productsEligible")) {
-                    if (res!!.asJsonObject.get("success").asBoolean && res!!.asJsonObject.get("productsEligible").asBoolean) {
+            if (response.data != null) {
+                var res = response.data
+                if (res?.asJsonObject!!.has("productsEligible")) {
+                    if (res.asJsonObject.get("success").asBoolean && res.asJsonObject.get("productsEligible").asBoolean) {
                         binding!!.zepietSection.visibility = View.VISIBLE
                         var local_delivery_param =
                             model!!.fillLocalDeliveryParam(edges, binding!!.zipcodes)
                         Log.d(TAG, "validate_delivery: " + local_delivery_param)
+
                         model!!.localDeliveryy(local_delivery_param)
                             .observe(this, Observer { this.localDelivery(it) })
                     } else {
                         binding!!.zepietSection.visibility = View.GONE
                         binding!!.bottomsection.visibility = View.VISIBLE
                     }
-                }
-                else{
+                } else {
                     showToast("This product is not eligible for delivery")
                 }
             }
@@ -359,56 +358,108 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         try {
             if (it!!.data != null) {
                 binding!!.deliveryDateTxt.visibility = View.VISIBLE
-                var res = it!!.data
+                var res = it.data
                 if (res!!.asJsonObject.get("success").asBoolean == true) {
                     var calendar = res.asJsonObject.getAsJsonObject("calendar")
                     var disabled = calendar.getAsJsonArray("disabled")
                     locations = res.asJsonObject.getAsJsonArray("locations")
                     if (locations.size() > 0) {
-                        custom_attribute.put("Pickup-Location-Id", locations.get(0).asJsonObject.get("id").asString)
-                        custom_attribute.put("Pickup-Location-Company", locations.get(0).asJsonObject.get("company_name").asString)
-                        custom_attribute.put("Pickup-Location-Address-Line-1", locations.get(0).asJsonObject.get("address_line_1").asString)
-                        custom_attribute.put("Pickup-Location-Address-Line-2", locations.get(0).asJsonObject.get("address_line_2").asString)
-                        custom_attribute.put("Pickup-Location-City", locations.get(0).asJsonObject.get("city").asString)
-                        custom_attribute.put("Pickup-Location-Region", locations.get(0).asJsonObject.get("region").asString)
-                        custom_attribute.put("Pickup-Location-Postal-Code", locations.get(0).asJsonObject.get("postal_code").asString)
-                        custom_attribute.put("Pickup-Location-Country", locations.get(0).asJsonObject.get("country").asString)
+                        custom_attribute.put(
+                            "Pickup-Location-Id",
+                            locations.get(0).asJsonObject.get("id").asString
+                        )
+                        custom_attribute.put(
+                            "Pickup-Location-Company",
+                            locations.get(0).asJsonObject.get("company_name").asString
+                        )
+                        custom_attribute.put(
+                            "Pickup-Location-Address-Line-1",
+                            locations.get(0).asJsonObject.get("address_line_1").asString
+                        )
+                        custom_attribute.put(
+                            "Pickup-Location-Address-Line-2",
+                            locations.get(0).asJsonObject.get("address_line_2").asString
+                        )
+                        custom_attribute.put(
+                            "Pickup-Location-City",
+                            locations.get(0).asJsonObject.get("city").asString
+                        )
+                        custom_attribute.put(
+                            "Pickup-Location-Region",
+                            locations.get(0).asJsonObject.get("region").asString
+                        )
+                        custom_attribute.put(
+                            "Pickup-Location-Postal-Code",
+                            locations.get(0).asJsonObject.get("postal_code").asString
+                        )
+                        custom_attribute.put(
+                            "Pickup-Location-Country",
+                            locations.get(0).asJsonObject.get("country").asString
+                        )
 
-                        locationAdapter.setData(locations, itemClick = object : LocationListAdapter.ItemClick {
-                            override fun selectLocation(location_item: JsonObject) {
-                                custom_attribute.put("Pickup-Location-Id", location_item.get("id").asString)
-                                custom_attribute.put("Pickup-Location-Company", location_item.get("company_name").asString)
-                                custom_attribute.put("Pickup-Location-Address-Line-1", location_item.get("address_line_1").asString)
-                                custom_attribute.put("Pickup-Location-Address-Line-2", location_item.get("address_line_2").asString)
-                                custom_attribute.put("Pickup-Location-City", location_item.get("city").asString)
-                                custom_attribute.put("Pickup-Location-Region", location_item.get("region").asString)
-                                custom_attribute.put("Pickup-Location-Postal-Code", location_item.get("postal_code").asString)
-                                custom_attribute.put("Pickup-Location-Country", location_item.get("country").asString)
-                                //val sydney = LatLng(location_item.get("latitude").asDouble, location_item.get("longitude").asDouble)
-                                /*if (marker == null) {
-                                    var markerOptions = MarkerOptions().position(sydney)
-                                        .title("I am here!")
-                                        .icon(
-                                            BitmapDescriptorFactory.defaultMarker(
-                                                BitmapDescriptorFactory.HUE_MAGENTA));
-                                    //marker = mMap.addMarker(markerOptions);
-                                } else {
-                                    marker!!.setPosition(sydney);
+                        locationAdapter.setData(
+                            locations,
+                            itemClick = object : LocationListAdapter.ItemClick {
+                                override fun selectLocation(location_item: JsonObject) {
+                                    custom_attribute.put(
+                                        "Pickup-Location-Id",
+                                        location_item.get("id").asString
+                                    )
+                                    custom_attribute.put(
+                                        "Pickup-Location-Company",
+                                        location_item.get("company_name").asString
+                                    )
+                                    custom_attribute.put(
+                                        "Pickup-Location-Address-Line-1",
+                                        location_item.get("address_line_1").asString
+                                    )
+                                    custom_attribute.put(
+                                        "Pickup-Location-Address-Line-2",
+                                        location_item.get("address_line_2").asString
+                                    )
+                                    custom_attribute.put(
+                                        "Pickup-Location-City",
+                                        location_item.get("city").asString
+                                    )
+//
+//                                    custom_attribute.put("Pickup-Location-Region", location_item.get("region").asString)
+//
+
+                                    custom_attribute.put(
+                                        "Pickup-Location-Postal-Code",
+                                        location_item.get("postal_code").asString
+                                    )
+                                    custom_attribute.put(
+                                        "Pickup-Location-Country",
+                                        location_item.get("country").asString
+                                    )
+                                    //val sydney = LatLng(location_item.get("latitude").asDouble, location_item.get("longitude").asDouble)
+                                    /*if (marker == null) {
+                                        var markerOptions = MarkerOptions().position(sydney)
+                                            .title("I am here!")
+                                            .icon(
+                                                BitmapDescriptorFactory.defaultMarker(
+                                                    BitmapDescriptorFactory.HUE_MAGENTA));
+                                        //marker = mMap.addMarker(markerOptions);
+                                    } else {
+                                        marker!!.setPosition(sydney);
+                                    }
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLng(sydney))
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 18f))*/
                                 }
-                                mMap.animateCamera(CameraUpdateFactory.newLatLng(sydney))
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 18f))*/
-                            }
-                        })
+                            })
                         binding!!.locationList.adapter = locationAdapter
                     }
                     daysOfWeek = calendar.getAsJsonObject("daysOfWeek")
                     interval = calendar.get("interval").asInt
                     loadCalendar(calendar, disabled)
-                }
-                else
-                {
-                    Toast.makeText(this,res!!.asJsonObject.get("err_msg").asString,Toast.LENGTH_SHORT).show()
-                    binding?.deliveryOption?.visibility=View.GONE
+                } else {
+                    Toast.makeText(
+                        this,
+                        res.asJsonObject.get("err_msg").asString,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    binding?.deliveryOption?.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
@@ -416,32 +467,65 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         }
     }
 
+    private fun DeliveryStatus(it: ApiResponse?) {
+
+        if (it!!.data != null) {
+            val res = it.data
+            if (res!!.asJsonObject.get("is_installed").asBoolean == true) {
+                val note =
+                    res.asJsonObject.get("data").asJsonObject.get("translations").asJsonObject.get(
+                        "shipping"
+                    ).asJsonObject.get("note").asString
+
+                binding?.shippingContainer?.setOnClickListener {
+                    binding?.shipnote?.text = note.toString()
+                    binding?.shipnote?.visibility = View.VISIBLE
+                    binding!!.deliveryTimeSpn.visibility = View.GONE
+                    binding!!.deliverAreaTxt.visibility = View.GONE
+                    binding!!.deliveryDateTxt.visibility = View.GONE
+                    binding!!.zipcode.visibility = View.GONE
+                    binding!!.locationList.visibility = View.GONE
+                    binding!!.pintext.visibility = View.GONE
+
+
+                }
+
+            }
+
+        }
+        else
+        {
+            showToast("Shipping not available")
+        }
+
+
+    }
+
     private fun localDelivery(it: ApiResponse?) {
         try {
             /* if (customLoader!!.isShowing) {
                  customLoader!!.dismiss()
              }*/
-            Log.i("ALLLLLDATAAAAA","" + it!!.data);
-            if (it!!.data != null) {
+            Log.i("ALLLLLDATAAAAA", "" + it!!.data)
+            if (it.data != null) {
                 binding!!.deliveryDateTxt.visibility = View.VISIBLE
                 //binding!!.deliveryDateTxt.visibility = View.VISIBLE
-                var res = it!!.data
+                val res = it.data
                 if (res!!.asJsonObject.get("success").asBoolean == true) {
                     binding!!.deliveryDateTxt.visibility = View.VISIBLE
                     binding!!.proceedtocheck.visibility = View.VISIBLE
                     binding!!.pintext.visibility = View.GONE
                     binding!!.pintextrue.visibility = View.VISIBLE
-                    var calendar = res.asJsonObject.getAsJsonObject("calendar")
-                    var disabled = calendar.getAsJsonArray("disabled")
+                    val calendar = res.asJsonObject.getAsJsonObject("calendar")
+                    val disabled = calendar.getAsJsonArray("disabled")
                     slots = calendar.getAsJsonArray("slots")
                     loadCalendar(calendar, disabled)
-                }
-                else if(res!!.asJsonObject.get("success").asBoolean == false){
+                } else if (res.asJsonObject.get("success").asBoolean == false) {
                     binding!!.deliveryDateTxt.visibility = View.GONE
                     binding!!.pintext.visibility = View.VISIBLE
                     binding!!.proceedtocheck.visibility = View.GONE
                     binding!!.pintextrue.visibility = View.GONE
-                    binding!!.deliveryTimeSpn.visibility=View.GONE
+                    binding!!.deliveryTimeSpn.visibility = View.GONE
                 }
             }
         } catch (e: Exception) {
@@ -457,11 +541,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             year, // Initial year selection
             month, // Initial month selection
             day
-        );
+        )
         dpd.locale = Locale.getDefault()
-        dpd.setThemeDark(false);
-        dpd.showYearPickerFirst(false);
-        dpd.setVersion(DatePickerDialog.Version.VERSION_2);
+        dpd.isThemeDark = false
+        dpd.showYearPickerFirst(false)
+        dpd.version = DatePickerDialog.Version.VERSION_2
         var new_calendar: Calendar? = null
 //        val weeks = 5
 //        var i = 0
@@ -474,8 +558,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
-                        new_calendar = Calendar.getInstance();
-                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.MONDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        new_calendar = Calendar.getInstance()
+                        new_calendar.add(
+                            Calendar.DAY_OF_YEAR,
+                            (Calendar.MONDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i)
+                        )
                         disabledates?.add(new_calendar)
                         i = i + 7
                     }
@@ -488,8 +575,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
-                        new_calendar = Calendar.getInstance();
-                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.TUESDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        new_calendar = Calendar.getInstance()
+                        new_calendar.add(
+                            Calendar.DAY_OF_YEAR,
+                            (Calendar.TUESDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i)
+                        )
                         disabledates?.add(new_calendar)
                         i = i + 7
                     }
@@ -501,8 +591,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
-                        new_calendar = Calendar.getInstance();
-                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.WEDNESDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        new_calendar = Calendar.getInstance()
+                        new_calendar.add(
+                            Calendar.DAY_OF_YEAR,
+                            (Calendar.WEDNESDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i)
+                        )
                         disabledates?.add(new_calendar)
                         i = i + 7
                     }
@@ -514,8 +607,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
-                        new_calendar = Calendar.getInstance();
-                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.THURSDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        new_calendar = Calendar.getInstance()
+                        new_calendar.add(
+                            Calendar.DAY_OF_YEAR,
+                            (Calendar.THURSDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i)
+                        )
                         disabledates?.add(new_calendar)
                         i = i + 7
                     }
@@ -527,8 +623,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
-                        new_calendar = Calendar.getInstance();
-                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.FRIDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        new_calendar = Calendar.getInstance()
+                        new_calendar.add(
+                            Calendar.DAY_OF_YEAR,
+                            (Calendar.FRIDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i)
+                        )
                         disabledates?.add(new_calendar)
                         i = i + 7
                     }
@@ -540,8 +639,11 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
-                        new_calendar = Calendar.getInstance();
-                        new_calendar.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i));
+                        new_calendar = Calendar.getInstance()
+                        new_calendar.add(
+                            Calendar.DAY_OF_YEAR,
+                            (Calendar.SATURDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + i)
+                        )
                         disabledates?.add(new_calendar)
                         i = i + 7
                     }
@@ -554,7 +656,10 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     var i = 0
                     while (i < weeks * 7) {
                         new_calendar = Calendar.getInstance()
-                        new_calendar.add(Calendar.DAY_OF_YEAR, Calendar.SUNDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + 7 + i)
+                        new_calendar.add(
+                            Calendar.DAY_OF_YEAR,
+                            Calendar.SUNDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + 7 + i
+                        )
                         // saturday = Calendar.getInstance();
                         // saturday.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - saturday.get(Calendar.DAY_OF_WEEK) + i));
                         // weekends.add(saturday);
@@ -564,9 +669,10 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                 }
             }
         }
-        var maxDate = ""
-        var minDate = calendar!!.get("minDate").asString?.split("-")
-        val disabledDays1: Array<Calendar> = disabledates?.toArray(arrayOfNulls<Calendar>(disabledates?.size!!)) as Array<Calendar>
+        val maxDate = ""
+        val minDate = calendar!!.get("minDate").asString?.split("-")
+        val disabledDays1: Array<Calendar> =
+            disabledates?.toArray(arrayOfNulls<Calendar>(disabledates?.size!!)) as Array<Calendar>
         dpd.disabledDays = disabledDays1
         mincalender.set(Calendar.YEAR, minDate!![0].toInt())
         mincalender.set(Calendar.MONTH, minDate[1].toInt() - 1)
@@ -627,7 +733,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                 personamodel!!.setPersonalisedData(
                     jsondata.getJSONObject("query1").getJSONArray("products"),
                     padapter,
-                    model!!.presentCurrency!!,
+                    model!!.presentCurrency,
                     binding!!.personalised2
                 )
             }
@@ -713,6 +819,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                 showApplyCouponDialog(data)
             }
         }
+
         fun loadpincode(view: View) {
             showload(view)
             checkzip()
@@ -820,7 +927,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                                 Log.i("attributeInputs", "obj " + custom_attribute)
                                 model?.associatecheckout(
                                     data.checkoutId,
-                                    model!!.customeraccessToken?.customerAccessToken
+                                    model!!.customeraccessToken.customerAccessToken
                                 )
                                 model?.getassociatecheckoutResponse()
                                     ?.observe(this@CartList, Observer { this.getResonse(it) })
@@ -951,16 +1058,20 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             }*/
             custom_attribute = JSONObject()
 
-            binding!!.deliveryDateTxt.text = resources.getString(R.string.click_here_to_select_delivery_date)
+            binding!!.deliveryDateTxt.text =
+                resources.getString(R.string.click_here_to_select_delivery_date)
             binding!!.orderNoteEdt.hint = resources.getString(R.string.order_note_hint)
-
             binding!!.deliveryTimeSpn.visibility = View.GONE
             binding!!.deliverAreaTxt.visibility = View.GONE
             binding!!.zipcode.visibility = View.GONE
             binding!!.pintext.visibility = View.GONE
+            binding!!.shipnote.visibility = View.GONE
+            binding!!.pintextrue.visibility = View.GONE
 
-            var store_delivery_param = model!!.fillStoreDeliveryParam(response_data.lineItems.edges,binding!!.zipcodes)
-            model!!.storeDelivery(store_delivery_param).observe(this@CartList, Observer { this@CartList.storeDelivery(it) })
+            var store_delivery_param =
+                model!!.fillStoreDeliveryParam(response_data.lineItems.edges, binding!!.zipcodes)
+            model!!.storeDelivery(store_delivery_param)
+                .observe(this@CartList, Observer { this@CartList.storeDelivery(it) })
 
             binding!!.deliverAreaTxt.text = resources.getString(R.string.withdrawal_day_and_time)
 
@@ -968,11 +1079,35 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             binding!!.locationList.visibility = View.VISIBLE
             selected_delivery = "pickup"
             if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                view.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
-                binding!!.localContainer.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+                view.setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                        this@CartList,
+                        R.drawable.grey_border
+                    )
+                )
+                binding!!.localContainer.setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                        this@CartList,
+                        R.drawable.black_border
+                    )
+                )
+                binding!!.shippingContainer.background = ContextCompat.getDrawable(
+                    this@CartList,
+                    R.drawable.black_border
+                )
             } else {
-                view.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
-                binding!!.localContainer.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+                view.background = ContextCompat.getDrawable(
+                    this@CartList,
+                    R.drawable.grey_border
+                )
+                binding!!.localContainer.background = ContextCompat.getDrawable(
+                    this@CartList,
+                    R.drawable.black_border
+                )
+                binding!!.shippingContainer.background = ContextCompat.getDrawable(
+                    this@CartList,
+                    R.drawable.black_border
+                )
             }
             custom_attribute.put("Checkout-Method", selected_delivery)
         }
@@ -983,7 +1118,8 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                 customLoader!!.show()
             }*/
             custom_attribute = JSONObject()
-            binding!!.deliveryDateTxt.text = resources.getString(R.string.click_here_to_select_delivery_date)
+            binding!!.deliveryDateTxt.text =
+                resources.getString(R.string.click_here_to_select_delivery_date)
             binding!!.orderNoteEdt.hint = resources.getString(R.string.order_note_hint)
             binding!!.deliveryTimeSpn.visibility = View.GONE
             binding!!.deliveryDateTxt.visibility = View.GONE
@@ -992,24 +1128,43 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
 //            model!!.storeDelivery(store_delivery_param).observe(this@CartList, Observer { this@CartList.storeDelivery(it) })
             //binding!!.mapContainer.visibility = View.GONE
 
-            model!!.validateDelivery(delivery_param).observe(this@CartList, Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
+//            model!!.validateDelivery(delivery_param).observe(this@CartList, Observer { this@CartList.validate_delivery(it, response_data.lineItems.edges) })
             binding!!.locationList.visibility = View.GONE
             binding!!.zipcode.visibility = View.VISIBLE
             binding!!.deliverAreaTxt.visibility = View.VISIBLE
-            binding!!.deliverAreaTxt.text = resources.getString(R.string.please_enter_your_postal_code_to_find_out_if_we_deliver_to_this_area)
+            binding!!.shipnote.visibility = View.GONE
+            binding!!.deliverAreaTxt.text =
+                resources.getString(R.string.please_enter_your_postal_code_to_find_out_if_we_deliver_to_this_area)
             selected_delivery = "delivery"
             if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                view.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
-                binding!!.storeContainer.setBackgroundDrawable(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+                view.setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                        this@CartList,
+                        R.drawable.grey_border
+                    )
+                )
+                binding!!.storeContainer.setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                        this@CartList,
+                        R.drawable.black_border
+                    )
+                )
 
             } else {
-                view.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.grey_border));
-                binding!!.storeContainer.setBackground(ContextCompat.getDrawable(this@CartList, R.drawable.black_border));
+                view.background = ContextCompat.getDrawable(
+                    this@CartList,
+                    R.drawable.grey_border
+                )
+                binding!!.storeContainer.background = ContextCompat.getDrawable(
+                    this@CartList,
+                    R.drawable.black_border
+                )
             }
             custom_attribute.put("Checkout-Method", selected_delivery)
         }
+
         fun deliveryDatePicker() {
-            dpd.show(supportFragmentManager, "Datepickerdialog");
+            dpd.show(supportFragmentManager, "Datepickerdialog")
         }
     }
 
@@ -1017,7 +1172,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
     override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
         var date = "" + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year
         var new_date = simpleDateFormat.parse(date)
-        var dayOfTheWeek = dayFormat.format(new_date);
+        var dayOfTheWeek = dayFormat.format(new_date)
         binding!!.deliveryDateTxt.text = date
         if (selected_delivery == "pickup") {
             custom_attribute.put("Pickup-Date", date.toString())
@@ -1039,9 +1194,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             }
             binding!!.deliveryTimeSpn.adapter =
                 ArrayAdapter<String>(this, R.layout.spinner_item_layout, localdelivery_slots)
-        }
-
-        else if (selected_delivery.equals("pickup")) {
+        } else if (selected_delivery.equals("pickup")) {
             val week_object: JsonObject = daysOfWeek.getAsJsonObject(dayOfTheWeek.toLowerCase())
             val array = JSONArray()
             val min = week_object.getAsJsonObject("min")

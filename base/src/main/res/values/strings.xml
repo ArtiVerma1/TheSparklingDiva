@@ -236,6 +236,7 @@
     <string name="order_note_hint">Please enter order note</string>
     <string name="withdrawal_day_and_time">Select a withdrawal day and time</string>
     <string name="note">NOTE</string>
+    <string name="ship">Shipping</string>
     <string name="local_delivery">Local Delivery</string>
     <string name="chat">Chat With Us</string>
     <string name="smilereward">My Rewards</string>

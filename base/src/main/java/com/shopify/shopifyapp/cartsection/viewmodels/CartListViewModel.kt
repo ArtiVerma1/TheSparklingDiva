@@ -43,6 +43,7 @@ import com.shopify.buy3.Storefront.Payment
 import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
 import com.shopify.buy3.Storefront.Checkout
 import com.shopify.shopifyapp.network_transaction.doRetrofitCall
+import zendesk.chat.DeliveryStatus
 
 
 class CartListViewModel(private val repository: Repository) : ViewModel() {
@@ -55,6 +56,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val disposables = CompositeDisposable()
     private val validate_delivery = MutableLiveData<ApiResponse>()
     private val local_delivery = MutableLiveData<ApiResponse>()
+    private val delivery_status = MutableLiveData<ApiResponse>()
     private val store_delivery = MutableLiveData<ApiResponse>()
     lateinit var context: Context
     private val TAG = "CartListViewModel"
@@ -670,6 +672,18 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             ))
         return local_delivery
     }
+
+    fun DeliveryStatus(mid:String): MutableLiveData<ApiResponse> {
+        disposables.add(repository.DeliveryStatus(mid)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> delivery_status.setValue(ApiResponse.success(result)) },
+                { throwable -> delivery_status.setValue(ApiResponse.error(throwable)) }
+            ))
+        return delivery_status
+    }
+
 
 
 
