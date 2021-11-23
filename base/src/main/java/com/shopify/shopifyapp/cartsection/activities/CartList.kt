@@ -342,7 +342,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         binding!!.bottomsection.visibility = View.VISIBLE
                     }
                 } else {
-                    showToast("This product is not eligible for delivery")
+                    showToast(resources.getString(R.string.noeligibility))
                 }
             }
         } catch (e: Exception) {
@@ -495,7 +495,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         }
         else
         {
-            showToast("Shipping not available")
+            showToast(resources.getString(R.string.noshipping))
         }
 
 
