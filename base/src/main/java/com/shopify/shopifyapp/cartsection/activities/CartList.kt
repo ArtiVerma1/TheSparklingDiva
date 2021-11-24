@@ -898,8 +898,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         Log.i("attributeInputs", "obj " + custom_attribute)
                         val iter: Iterator<String> = custom_attribute.keys()
                         var itemInput: Storefront.AttributeInput? = null
-                        val attributeInputs: MutableList<Storefront.AttributeInput> =
-                            java.util.ArrayList()
+                        val attributeInputs: MutableList<Storefront.AttributeInput> = ArrayList()
                         while (iter.hasNext()) {
                             val key = iter.next()
                             val value: String = custom_attribute.getString(key)
@@ -915,34 +914,20 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         } else {
                             model!!.prepareCartwithAttribute(attributeInputs, "")
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            var loader = CustomLoader(this@CartList)
-                            loader.show()
-                            Handler().postDelayed(Runnable {
-                                Log.i("herer", " " + data.checkoutId)
-                                Log.i(
-                                    "herer",
-                                    "token : " + model?.customeraccessToken?.customerAccessToken
-                                )
-                                Log.i("attributeInputs", "obj " + custom_attribute)
-                                model?.associatecheckout(
-                                    data.checkoutId,
-                                    model!!.customeraccessToken.customerAccessToken
-                                )
-                                model?.getassociatecheckoutResponse()
-                                    ?.observe(this@CartList, Observer { this.getResonse(it) })
-                                Log.d(TAG, "loadCheckout: " + data.checkoutId)
-                                loader.dismiss()
-                            }, 4000, 4000)
-                        }
-                        /*model?.associatecheckout(data.checkoutId, model!!.customeraccessToken?.customerAccessToken)
-                        model?.getassociatecheckoutResponse()?.observe(this@CartList, Observer { this.getResonse(it) })*/
-                        model?.associatecheckout(
-                            data.checkoutId,
-                            model!!.customeraccessToken.customerAccessToken
-                        )
-                        model?.getassociatecheckoutResponse()
-                            ?.observe(this@CartList, Observer { this.getResonse(it) })
+                        model!!.ResponseAtt().observe(this@CartList, Observer<Storefront.Checkout> {
+                            //consumeResponse(it)
+                            val bottomData = CartBottomData()
+                            bottomData.checkoutId = it.id
+                            Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
+                            bottomData.checkouturl = it.webUrl
+                            binding!!.bottomdata = bottomData
+                            val intent = Intent(this@CartList, CheckoutWeblink::class.java)
+                            intent.putExtra("link", bottomData.checkouturl)
+                            intent.putExtra("id", bottomData.checkoutId)
+                            startActivity(intent)
+                            Constant.activityTransition(this@CartList)
+                        })
+
                     } else {
                         Log.d(TAG, "loadCheckout: 2" + custom_attribute)
                         val iter: Iterator<String> = custom_attribute.keys()
@@ -964,11 +949,19 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         } else {
                             model!!.prepareCartwithAttribute(attributeInputs, "")
                         }
-                        val intent = Intent(this@CartList, CheckoutWeblink::class.java)
-                        intent.putExtra("link", data.checkouturl)
-                        intent.putExtra("id", data.checkoutId)
-                        startActivity(intent)
-                        Constant.activityTransition(this@CartList)
+                        model!!.ResponseAtt().observe(this@CartList, Observer<Storefront.Checkout> {
+                            //consumeResponse(it)
+                            val bottomData = CartBottomData()
+                            bottomData.checkoutId = it.id
+                            Log.d(TAG, "setBottomData: " + bottomData.checkoutId)
+                            bottomData.checkouturl = it.webUrl
+                            binding!!.bottomdata = bottomData
+                            val intent = Intent(this@CartList, CheckoutWeblink::class.java)
+                            intent.putExtra("link", bottomData.checkouturl)
+                            intent.putExtra("id", bottomData.checkoutId)
+                            startActivity(intent)
+                            Constant.activityTransition(this@CartList)
+                        })
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()

@@ -52,6 +52,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val giftcardRemove = MutableLiveData<Storefront.Mutation>()
     private val discount = MutableLiveData<Storefront.Mutation>()
     private val api = MutableLiveData<ApiResponse>()
+    private val dataAtt  = MutableLiveData<Storefront.Checkout>()
     private val youmayapi = MutableLiveData<ApiResponse>()
     private val disposables = CompositeDisposable()
     private val validate_delivery = MutableLiveData<ApiResponse>()
@@ -167,6 +168,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
 
     fun getDiscount(): MutableLiveData<Storefront.Mutation> {
         return discount
+    }
+    fun ResponseAtt(): MutableLiveData<Storefront.Checkout> {
+        return dataAtt
     }
 
     fun getGiftCardRemove(): MutableLiveData<Storefront.Mutation> {
@@ -342,7 +346,46 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
-
+    private fun consumeResponseAtt(response: GraphQLResponse) {
+        try {
+            when (response.status) {
+                Status.SUCCESS -> {
+                    val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                    if (result.hasErrors) {
+                        val errors = result.errors
+                        val iterator = errors.iterator()
+                        val errormessage = StringBuilder()
+                        var error: Error? = null
+                        while (iterator.hasNext()) {
+                            error = iterator.next()
+                            errormessage.append(error.message())
+                        }
+                        message.setValue(errormessage.toString())
+                    } else {
+                        val payload = result.data!!.checkoutCreate
+                        if (payload.checkoutUserErrors.size > 0) {
+                            val iterator = payload.checkoutUserErrors.iterator()
+                            var error: Storefront.CheckoutUserError? = null
+                            while (iterator.hasNext()) {
+                                error = iterator.next() as Storefront.CheckoutUserError
+                                message.setValue(error.message)
+                            }
+                        } else {
+                            val checkout = payload.checkout
+                            getRecommendations(checkout)
+                            getYouMayRecommendations(checkout)
+                            dataAtt.setValue(checkout)
+                        }
+                    }
+                }
+                Status.ERROR -> message.setValue(response.error!!.error.message)
+                else -> {
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
     private fun consumeResponse(response: GraphQLResponse) {
         try {
             when (response.status) {
@@ -891,9 +934,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
 
                 private operator fun invoke(result: GraphCallResult<Storefront.Mutation>): Unit {
                     if (result is GraphCallResult.Success<*>) {
-                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+                        consumeResponseAtt(GraphQLResponse.success(result as GraphCallResult.Success<*>))
                     } else {
-                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure))
+                        consumeResponseAtt(GraphQLResponse.error(result as GraphCallResult.Failure))
                     }
                     return Unit
                 }
