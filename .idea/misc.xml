@@ -32,7 +32,7 @@
         <entry key="base/src/main/res/layout/activity_rewards_point.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/activity_video_player.xml" value="0.12418906394810009" />
         <entry key="base/src/main/res/layout/categorydesign.xml" value="0.11" />
-        <entry key="base/src/main/res/layout/categorydesigns.xml" value="0.17391304347826086" />
+        <entry key="base/src/main/res/layout/categorydesigns.xml" value="0.11" />
         <entry key="base/src/main/res/layout/earnreward_item.xml" value="0.17135416666666667" />
         <entry key="base/src/main/res/layout/filter_item.xml" value="0.1875" />
         <entry key="base/src/main/res/layout/filterdata_layout.xml" value="0.1875" />
@@ -45,6 +45,8 @@
         <entry key="base/src/main/res/layout/m_collectionlist.xml" value="0.11930091185410334" />
         <entry key="base/src/main/res/layout/m_homepage_modified.xml" value="0.1" />
         <entry key="base/src/main/res/layout/m_leftmenufragment.xml" value="0.25" />
+        <entry key="base/src/main/res/layout/m_login.xml" value="0.17798913043478262" />
+        <entry key="base/src/main/res/layout/m_login_page.xml" value="0.17798913043478262" />
         <entry key="base/src/main/res/layout/m_newbaseactivity.xml" value="0.2" />
         <entry key="base/src/main/res/layout/m_productfilteritem.xml" value="0.1875" />
         <entry key="base/src/main/res/layout/m_productlistitem.xml" value="0.16822916666666668" />

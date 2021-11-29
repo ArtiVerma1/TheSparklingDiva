@@ -106,6 +106,7 @@ class ProductView : NewBaseActivity() {
 
     @Inject
     lateinit var arImagesAdapter: ArImagesAdapter
+
     @Inject
     lateinit var customadapter: CustomAdapters
 
@@ -136,7 +137,7 @@ class ProductView : NewBaseActivity() {
             productID = model!!.id
         }
         Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)
-        Log.i("PID",""+productID)
+        Log.i("PID", "" + productID)
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(
                 Urls(application as MyApplication).mid,
@@ -190,30 +191,29 @@ class ProductView : NewBaseActivity() {
         binding?.variantAvailableQty?.textSize = 14f
         binding?.qtyTitleTxt?.textSize = 14f
         binding?.yotpoWriteReviewBut?.setOnClickListener {
-            if(yotporeviewsection.getVisibility() == View.VISIBLE){
-                yotporeviewsection.setVisibility(View.GONE);
-            }
-            else{
-                yotporeviewsection.setVisibility(View.VISIBLE);
+            if (yotporeviewsection.visibility == View.VISIBLE) {
+                yotporeviewsection.visibility = View.GONE
+            } else {
+                yotporeviewsection.visibility = View.VISIBLE
             }
         }
         binding?.yotpoSubmitreview?.setOnClickListener {
             if (binding!!.yotpoName.text!!.toString().isEmpty()) {
                 binding!!.yotpoName.error = resources.getString(R.string.empty)
                 binding!!.yotpoName.requestFocus()
-            }else if(binding!!.yotpoEmail.text!!.toString().isEmpty()){
+            } else if (binding!!.yotpoEmail.text!!.toString().isEmpty()) {
                 binding!!.yotpoEmail.error = resources.getString(R.string.empty)
                 binding!!.yotpoEmail.requestFocus()
-            }else if(binding!!.yotpoReviewtitle.text!!.toString().isEmpty()){
+            } else if (binding!!.yotpoReviewtitle.text!!.toString().isEmpty()) {
                 binding!!.yotpoReviewtitle.error = resources.getString(R.string.empty)
                 binding!!.yotpoReviewtitle.requestFocus()
-            }else if(binding!!.yotpoReviewbody.text!!.toString().isEmpty()){
-               binding!!.yotpoReviewbody.error = resources.getString(R.string.empty)
+            } else if (binding!!.yotpoReviewbody.text!!.toString().isEmpty()) {
+                binding!!.yotpoReviewbody.error = resources.getString(R.string.empty)
                 binding!!.yotpoReviewbody.requestFocus()
-            }else{
-                if(leftmenu.isLoggedIn){
+            } else {
+                if (leftmenu.isLoggedIn) {
                     submityptporeview()
-                }else{
+                } else {
                     val alertDialog: AlertDialog = AlertDialog.Builder(this@ProductView).create()
                     alertDialog.setTitle("NOTE!")
                     alertDialog.setMessage("Please create an account in the app to leave a review.")
@@ -224,6 +224,7 @@ class ProductView : NewBaseActivity() {
             }
         }
     }
+
     private fun consumeAliReviews(response: ApiResponse?) {
         Log.d(TAG, "consumeAliReviews: " + response?.data)
         var responseData = JSONObject(response?.data.toString())
@@ -334,7 +335,7 @@ class ProductView : NewBaseActivity() {
     private fun consumeJudgeMeProductID(response: ApiResponse?) {
         Log.d(TAG, "consumeJudgeMeProductID: " + response?.data)
         if (response?.data != null) {
-            var responseData = JSONObject(response?.data.toString())
+            var responseData = JSONObject(response.data.toString())
             if (responseData.has("product")) {
                 var product = responseData.getJSONObject("product")
                 model?.judgemeReviewCount(
@@ -359,7 +360,7 @@ class ProductView : NewBaseActivity() {
         when (reponse?.status) {
             Status.SUCCESS -> {
                 val result =
-                    (reponse?.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                    (reponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -408,7 +409,7 @@ class ProductView : NewBaseActivity() {
 
     private fun createReview(response: ApiResponse?) {
         if (response?.data != null) {
-            var data = JSONObject(response?.data.toString())
+            var data = JSONObject(response.data.toString())
             if (data.getBoolean("success")) {
                 Toast.makeText(this, getString(R.string.review_submitted), Toast.LENGTH_SHORT)
                     .show()
@@ -430,7 +431,7 @@ class ProductView : NewBaseActivity() {
 
     private fun consumeBadges(response: ApiResponse?) {
         if (response?.data != null) {
-            var data = JSONObject(response?.data.toString()).getJSONObject("data")
+            var data = JSONObject(response.data.toString()).getJSONObject("data")
             binding?.ratingTxt?.text =
                 data.getJSONObject(getBase64Decode(productID)).getString("total-rating")
                     .substring(0, 3)
@@ -548,9 +549,9 @@ class ProductView : NewBaseActivity() {
         try {
             var mediaModel: MediaModel? = null
             for (i in 0..productedge!!.media.edges.size - 1) {
-                var a: String = productedge!!.media.edges.get(i).node.graphQlTypeName
+                var a: String = productedge.media.edges.get(i).node.graphQlTypeName
                 if (a.equals("Model3d")) {
-                    var d = productedge!!.media.edges.get(i).node as Storefront.Model3d
+                    var d = productedge.media.edges.get(i).node as Storefront.Model3d
                     if (d.sources.get(0).url.contains(".glb")) {
                         data!!.arimage = d.sources.get(0).url
                         mediaModel = MediaModel(
@@ -566,7 +567,7 @@ class ProductView : NewBaseActivity() {
                         }
                     }
                 } else if (a.equals("Video")) {
-                    val video = productedge!!.media.edges.get(i).node as Storefront.Video
+                    val video = productedge.media.edges.get(i).node as Storefront.Video
                     mediaModel = MediaModel(
                         video.graphQlTypeName,
                         video.previewImage.originalSrc,
@@ -575,7 +576,7 @@ class ProductView : NewBaseActivity() {
                     mediaList.add(mediaModel)
                 } else if (a.equals("ExternalVideo")) {
                     val externalVideo =
-                        productedge!!.media.edges.get(i).node as Storefront.ExternalVideo
+                        productedge.media.edges.get(i).node as Storefront.ExternalVideo
                     mediaModel = MediaModel(
                         externalVideo.graphQlTypeName,
                         externalVideo.previewImage.originalSrc,
@@ -583,7 +584,7 @@ class ProductView : NewBaseActivity() {
                     )
                     mediaList.add(mediaModel)
                 } else if (a.equals("MediaImage")) {
-                    var mediaImage = productedge!!.media.edges.get(i).node as Storefront.MediaImage
+                    var mediaImage = productedge.media.edges.get(i).node as Storefront.MediaImage
                     mediaModel = MediaModel(
                         mediaImage.graphQlTypeName,
                         mediaImage.previewImage.originalSrc,
@@ -595,7 +596,7 @@ class ProductView : NewBaseActivity() {
             Log.d(TAG, "setProductData: " + mediaList)
             Log.d(TAG, "setProductData: " + productedge.handle)
             product_handle = productedge.handle
-            if (featuresModel.judgemeProductReview!!) {
+            if (featuresModel.judgemeProductReview) {
                 model?.judgemeProductID(
                     Urls.JUDGEME_GETPRODUCTID + productedge.handle,
                     productedge.handle,
@@ -613,10 +614,10 @@ class ProductView : NewBaseActivity() {
             } else {
                 tags_data.append("")
             }
-            if (featuresModel.sizeChartVisibility!!) {
+            if (featuresModel.sizeChartVisibility) {
                 var collections: String? = null
-                if (productedge?.collections != null) {
-                    if (productedge?.collections?.edges?.size!! > 0) {
+                if (productedge.collections != null) {
+                    if (productedge.collections?.edges?.size!! > 0) {
                         var buffer = StringBuffer()
                         for (i in 0 until productedge.collections.edges.size) {
                             buffer.append(getBase64Decode(productedge.collections.edges.get(i).node.id.toString()))
@@ -639,7 +640,7 @@ class ProductView : NewBaseActivity() {
             }
 
             if (Constant.ispersonalisedEnable) {
-                model!!.getRecommendations(productedge!!.id.toString())
+                model!!.getRecommendations(productedge.id.toString())
             }
 
             if (featuresModel.outOfStock!!) {
@@ -656,48 +657,58 @@ class ProductView : NewBaseActivity() {
             binding?.availableQty?.textSize = 14f
             binding?.availableQty?.text =
                 getString(R.string.avaibale_qty) + " " + productedge.totalInventory
-            val variant = productedge!!.variants.edges[0].node
+            val variant = productedge.variants.edges[0].node
 
             /******************************** Local delivery and pickup work **************************************/
             val alledges = variant.storeAvailability.edges
-            Log.d(TAG,alledges.size.toString())
-            if(featuresModel.localpickupEnable){
-                if(alledges.size > 1){
+            Log.d(TAG, alledges.size.toString())
+            if (featuresModel.localpickupEnable) {
+                if (alledges.size > 1) {
                     binding?.checkstoretext?.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding?.checkstoretext?.visibility = View.GONE
                 }
-                if(variant.storeAvailability.edges[0].node.available.toString().equals("true")){
+                if (variant.storeAvailability.edges[0].node.available.toString().equals("true")) {
                     binding?.card?.visibility = View.VISIBLE
                     binding?.heading?.text = getString(R.string.pickupavailable)
                     binding?.checks?.setImageResource(R.drawable.checkmark)
-                    binding?.addfirst?.text = variant.storeAvailability.edges[0].node.location.address.city
-                    binding?.addsecond?.text = variant.storeAvailability.edges[0].node.location.address.address2 +" "+ variant.storeAvailability.edges[0].node.location.address.address1 +" "+
-                            variant.storeAvailability.edges[0].node.location.address.province +" "+ variant.storeAvailability.edges[0].node.location.address.city +" "+ variant.storeAvailability.edges[0].node.location.address.zip
+                    binding?.addfirst?.text =
+                        variant.storeAvailability.edges[0].node.location.address.city
+                    binding?.addsecond?.text =
+                        variant.storeAvailability.edges[0].node.location.address.address2 + " " + variant.storeAvailability.edges[0].node.location.address.address1 + " " +
+                                variant.storeAvailability.edges[0].node.location.address.province + " " + variant.storeAvailability.edges[0].node.location.address.city + " " + variant.storeAvailability.edges[0].node.location.address.zip
                     binding?.pickuptime?.text = variant.storeAvailability.edges[0].node.pickUpTime
-                    binding?.phonenumber?.text = variant.storeAvailability.edges[0].node.location.address.phone
-                }
-                else if(variant.storeAvailability.edges[0].node.available.toString().equals("false")){
+                    binding?.phonenumber?.text =
+                        variant.storeAvailability.edges[0].node.location.address.phone
+                } else if (variant.storeAvailability.edges[0].node.available.toString()
+                        .equals("false")
+                ) {
                     binding?.card?.visibility = View.VISIBLE
                     binding?.heading?.text = getString(R.string.pickupavailablenot)
                     binding?.checks?.setImageResource(R.drawable.cross)
-                    binding?.addfirst?.text = variant.storeAvailability.edges[0].node.location.address.city
-                    binding?.addsecond?.text = variant.storeAvailability.edges[0].node.location.address.address2 +" "+ variant.storeAvailability.edges[0].node.location.address.address1 +" "+
-                            variant.storeAvailability.edges[0].node.location.address.province +" "+ variant.storeAvailability.edges[0].node.location.address.city +" "+ variant.storeAvailability.edges[0].node.location.address.zip
+                    binding?.addfirst?.text =
+                        variant.storeAvailability.edges[0].node.location.address.city
+                    binding?.addsecond?.text =
+                        variant.storeAvailability.edges[0].node.location.address.address2 + " " + variant.storeAvailability.edges[0].node.location.address.address1 + " " +
+                                variant.storeAvailability.edges[0].node.location.address.province + " " + variant.storeAvailability.edges[0].node.location.address.city + " " + variant.storeAvailability.edges[0].node.location.address.zip
                     binding?.pickuptime?.text = variant.storeAvailability.edges[0].node.pickUpTime
-                    binding?.phonenumber?.text = variant.storeAvailability.edges[0].node.location.address.phone
+                    binding?.phonenumber?.text =
+                        variant.storeAvailability.edges[0].node.location.address.phone
                 }
                 binding?.storerecycler?.setHasFixedSize(true)
-                binding?.storerecycler?. setLayoutManager(LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false))
-                binding?.storerecycler?.setNestedScrollingEnabled(false)
-                customadapter.setData(alledges,this)
+                binding?.storerecycler?.layoutManager = LinearLayoutManager(
+                    this,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
+                binding?.storerecycler?.isNestedScrollingEnabled = false
+                customadapter.setData(alledges, this)
                 binding?.storerecycler!!.adapter = customadapter
                 binding?.checkstoretext?.setOnClickListener {
-                    if(storerecycler.getVisibility() == View.VISIBLE){
-                        storerecycler.setVisibility(View.GONE)
-                    }
-                    else{
-                        storerecycler.setVisibility(View.VISIBLE)
+                    if (storerecycler.visibility == View.VISIBLE) {
+                        storerecycler.visibility = View.GONE
+                    } else {
+                        storerecycler.visibility = View.VISIBLE
                     }
                 }
             }
@@ -713,7 +724,7 @@ class ProductView : NewBaseActivity() {
             data!!.textdata = productedge.title
             productName = productedge.title
             productsku = productedge.variants.edges[0].node.sku
-            Log.i("ALLSKU",""+productsku)
+            Log.i("ALLSKU", "" + productsku)
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
 //            binding?.description?.loadDataWithBaseURL(null, productedge.descriptionHtml, "text/html", "utf-8", null)
@@ -728,7 +739,7 @@ class ProductView : NewBaseActivity() {
                 "utf-8",
                 null
             )
-            binding?.description?.getSettings()?.setJavaScriptEnabled(true)
+            binding?.description?.settings?.javaScriptEnabled = true
             if (model?.isInwishList(model?.id!!)!!) {
                 data!!.addtowish = resources.getString(R.string.alreadyinwish)
                 Glide.with(this).load(R.drawable.wishlist_selected)
@@ -747,16 +758,14 @@ class ProductView : NewBaseActivity() {
                 "product",
                 contentViewArray.toString(),
                 productedge.id.toString(),
-                productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.currencyCode.toString()
-                    ?: "",
-                productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.amount.toDouble()
-                    ?: 0.0,
+                productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.currencyCode.toString(),
+                productedge.variants.edges.get(0).node.presentmentPrices.edges.get(0).node.price.amount.toDouble(),
                 this
             )
             setProductPrice(variant)
             binding?.regularprice?.textSize = 15f
             //  model!!.filterList(productedge.variants.edges)
-            filterOptionList(productedge.options, productedge.variants.edges,productedge)
+            filterOptionList(productedge.options, productedge.variants.edges, productedge)
             binding!!.productdata = data
             binding!!.clickhandlers = ClickHandlers()
         } catch (e: Exception) {
@@ -898,7 +907,7 @@ class ProductView : NewBaseActivity() {
                 binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
                 binding!!.specialprice.setTextColor(resources.getColor(R.color.price_red))
                 var typeface = Typeface.createFromAsset(assets, "fonts/normal.ttf")
-                binding!!.regularprice.setTypeface(typeface)
+                binding!!.regularprice.typeface = typeface
                 binding!!.regularprice.paintFlags =
                     binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 binding!!.specialprice.visibility = View.VISIBLE
@@ -907,7 +916,7 @@ class ProductView : NewBaseActivity() {
             } else {
                 data!!.regularprice = CurrencyFormatter.setsymbol(
                     variant?.priceV2?.amount!!,
-                    variant?.priceV2?.currencyCode.toString()
+                    variant.priceV2?.currencyCode.toString()
                 )
                 data!!.isStrike = false
                 binding!!.specialprice.visibility = View.GONE
@@ -915,7 +924,7 @@ class ProductView : NewBaseActivity() {
                 binding!!.regularprice.setTextColor(resources.getColor(R.color.price_red))
                 binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(assets, "fonts/bold.ttf")
-                binding!!.regularprice.setTypeface(typeface)
+                binding!!.regularprice.typeface = typeface
                 binding!!.regularprice.paintFlags =
                     binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
@@ -949,7 +958,7 @@ class ProductView : NewBaseActivity() {
                 binding!!.regularprice.setTextColor(resources.getColor(R.color.black))
                 binding!!.specialprice.setTextColor(resources.getColor(R.color.price_red))
                 var typeface = Typeface.createFromAsset(assets, "fonts/normal.ttf")
-                binding!!.regularprice.setTypeface(typeface)
+                binding!!.regularprice.typeface = typeface
                 binding!!.regularprice.paintFlags =
                     binding!!.regularprice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 binding!!.specialprice.visibility = View.VISIBLE
@@ -966,7 +975,7 @@ class ProductView : NewBaseActivity() {
                 binding!!.regularprice.setTextColor(resources.getColor(R.color.price_red))
                 binding!!.regularprice.textSize = 15f
                 var typeface = Typeface.createFromAsset(assets, "fonts/bold.ttf")
-                binding!!.regularprice.setTypeface(typeface)
+                binding!!.regularprice.typeface = typeface
                 binding!!.regularprice.paintFlags =
                     binding!!.regularprice.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
@@ -1022,7 +1031,7 @@ class ProductView : NewBaseActivity() {
                                 0
                             )?.node?.price?.amount?.toDouble()
                                 ?: 0.0,
-                            this@ProductView ?: Activity()
+                            this@ProductView
                         )
 
                         if (SplashViewModel.featuresModel.firebaseEvents) {
@@ -1104,7 +1113,7 @@ class ProductView : NewBaseActivity() {
                         data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.currencyCode?.toString(),
                         data.product?.variants?.edges?.get(0)?.node?.presentmentPrices?.edges?.get(0)?.node?.price?.amount?.toDouble()
                             ?: 0.0,
-                        this@ProductView ?: Activity()
+                        this@ProductView
                     )
                     if (SplashViewModel.featuresModel.firebaseEvents) {
                         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
@@ -1114,7 +1123,7 @@ class ProductView : NewBaseActivity() {
                     }
                 } else {
                     model!!.deleteData(data.product?.id.toString())
-                    data!!.addtowish = resources.getString(R.string.addtowish)
+                    data.addtowish = resources.getString(R.string.addtowish)
                     Glide.with(this@ProductView).load(R.drawable.wishlist_icon)
                         .into(binding?.addtowish!!)
                 }
@@ -1255,7 +1264,7 @@ class ProductView : NewBaseActivity() {
                                 Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
                                     .appendQueryParameter("file", data.arimage)
                                     .build()
-                            sceneViewerIntent.setData(intentUri)
+                            sceneViewerIntent.data = intentUri
                             sceneViewerIntent.setPackage("com.google.ar.core")
                             startActivity(sceneViewerIntent)
                             Constant.activityTransition(view.context)
@@ -1311,7 +1320,8 @@ class ProductView : NewBaseActivity() {
                     reviewFormBinding.emailEdt.error = getString(R.string.email_validation)
                     reviewFormBinding.emailEdt.requestFocus()
                 } else if (!model?.isValidEmail(
-                        reviewFormBinding.emailEdt.text.toString().trim())!!
+                        reviewFormBinding.emailEdt.text.toString().trim()
+                    )!!
                 ) {
                     reviewFormBinding.emailEdt.error = resources.getString(R.string.invalidemail)
                     reviewFormBinding.emailEdt.requestFocus()
@@ -1326,7 +1336,8 @@ class ProductView : NewBaseActivity() {
                         reviewFormBinding.bodyEdt.text.toString().trim()
                     )
                     bottomsheet.dismiss()
-                }}
+                }
+            }
             bottomsheet.show()
         }
 
@@ -1342,7 +1353,7 @@ class ProductView : NewBaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == 105) {
             if (featuresModel.judgemeProductReview) {
-                if (featuresModel.judgemeProductReview!!) {
+                if (featuresModel.judgemeProductReview) {
                     model?.judgemeProductID(
                         Urls.JUDGEME_GETPRODUCTID + product_handle,
                         product_handle!!,
@@ -1370,7 +1381,15 @@ class ProductView : NewBaseActivity() {
     }
 
     private fun submityptporeview() {
-        model?.NResponse("VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC", productsku.toString(), productName.toString(),data?.product!!.onlineStoreUrl,MagePrefs.getCustomerFirstName().toString(),MagePrefs.getCustomerEmail().toString(),yotpo_reviewbody.text.toString(),yotpo_reviewtitle.text.toString(),
+        model?.NResponse(
+            "VuCs0uv4gPpRuMAMYS0msr1XozTDZunonCRRh6fC",
+            productsku.toString(),
+            productName.toString(),
+            data?.product!!.onlineStoreUrl,
+            MagePrefs.getCustomerFirstName().toString(),
+            MagePrefs.getCustomerEmail().toString(),
+            yotpo_reviewbody.text.toString(),
+            yotpo_reviewtitle.text.toString(),
             yotpo_rating_bar.rating.toString()
         )?.observe(this, Observer { this.showData(it) })
     }
@@ -1382,8 +1401,8 @@ class ProductView : NewBaseActivity() {
 
     private fun receiveReview(data: JsonElement?) {
         val jsondata = JSONObject(data.toString())
-        Log.i("messagereview", "" +jsondata)
-        try{
+        Log.i("messagereview", "" + jsondata)
+        try {
             if (jsondata.getString("message").equals("ok")) {
                 val alertDialog: AlertDialog = AlertDialog.Builder(this@ProductView).create()
                 alertDialog.setTitle("Thank You")
@@ -1393,8 +1412,7 @@ class ProductView : NewBaseActivity() {
                 alertDialog.show()
             }
             Handler().postDelayed({ finish() }, 2000)
-        }
-        catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }

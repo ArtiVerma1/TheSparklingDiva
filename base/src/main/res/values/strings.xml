@@ -250,4 +250,6 @@
         <u>Check availability at other stores.</u>.
     </string>
     <string name="pickupavailablenot">Pickup not available at..</string>
+    <string name="OR">Or</string>
+    <string name="loginfailed">Login failed</string>
 </resources>

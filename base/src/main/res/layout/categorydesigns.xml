@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/review_card_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,10 +39,10 @@
                 android:layout_below="@id/rheading"
                 android:layout_marginTop="3dp"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:paddingTop="3dp"
+                android:paddingEnd="10dp"
                 android:paddingBottom="3dp"
-                app:texttype="bold"/>
+                app:texttype="bold" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/raddsecond"
@@ -51,10 +51,10 @@
                 android:layout_below="@id/raddfirst"
                 android:layout_marginTop="3dp"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:paddingTop="3dp"
+                android:paddingEnd="10dp"
                 android:paddingBottom="3dp"
-                app:texttype="bold"/>
+                app:texttype="bold" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/rpickuptime"
@@ -63,10 +63,10 @@
                 android:layout_below="@id/raddsecond"
                 android:layout_marginTop="3dp"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:paddingTop="3dp"
+                android:paddingEnd="10dp"
                 android:paddingBottom="3dp"
-                app:texttype="bold"/>
+                app:texttype="bold" />
 
             <com.shopify.shopifyapp.customviews.MageNativeTextView
                 android:id="@+id/rphonenumber"
@@ -75,10 +75,10 @@
                 android:layout_below="@id/rpickuptime"
                 android:layout_marginTop="3dp"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:paddingTop="3dp"
+                android:paddingEnd="10dp"
                 android:paddingBottom="3dp"
-                app:texttype="bold"/>
+                app:texttype="bold" />
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

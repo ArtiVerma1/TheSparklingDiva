@@ -358,10 +358,10 @@
                         android:layout_below="@id/heading"
                         android:layout_marginTop="3dp"
                         android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
                         android:paddingTop="3dp"
+                        android:paddingEnd="10dp"
                         android:paddingBottom="3dp"
-                        bind:texttype="bold"/>
+                        bind:texttype="bold" />
 
                     <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/addsecond"
@@ -370,10 +370,10 @@
                         android:layout_below="@id/addfirst"
                         android:layout_marginTop="3dp"
                         android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
                         android:paddingTop="3dp"
+                        android:paddingEnd="10dp"
                         android:paddingBottom="3dp"
-                        bind:texttype="bold"/>
+                        bind:texttype="bold" />
 
                     <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/pickuptime"
@@ -382,10 +382,10 @@
                         android:layout_below="@id/addsecond"
                         android:layout_marginTop="3dp"
                         android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
                         android:paddingTop="3dp"
+                        android:paddingEnd="10dp"
                         android:paddingBottom="3dp"
-                        bind:texttype="bold"/>
+                        bind:texttype="bold" />
 
                     <com.shopify.shopifyapp.customviews.MageNativeTextView
                         android:id="@+id/phonenumber"
@@ -394,10 +394,10 @@
                         android:layout_below="@id/pickuptime"
                         android:layout_marginTop="3dp"
                         android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
                         android:paddingTop="3dp"
+                        android:paddingEnd="10dp"
                         android:paddingBottom="3dp"
-                        bind:texttype="bold"/>
+                        bind:texttype="bold" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -408,9 +408,9 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="3dp"
                 android:text="@string/checkstores"
-                bind:texttype="bold"
                 android:visibility="gone"
-                bind:layout_constraintTop_toBottomOf="@id/card" />
+                bind:layout_constraintTop_toBottomOf="@id/card"
+                bind:texttype="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/storerecycler"
@@ -882,8 +882,8 @@
                     android:orientation="horizontal"
                     android:visibility="gone"
                     bind:layout_constraintTop_toBottomOf="@+id/ali_view_all_but"
-                    tools:listitem="@layout/review_list_item"
-                    tools:ignore="TooManyViews" />
+                    tools:ignore="TooManyViews"
+                    tools:listitem="@layout/review_list_item" />
 
                 <me.relex.circleindicator.CircleIndicator3
                     android:id="@+id/ali_review_indecator"

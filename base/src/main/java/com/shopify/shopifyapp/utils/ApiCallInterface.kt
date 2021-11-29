@@ -131,4 +131,11 @@ interface ApiCallInterface {
     @GET(Urls.FILTERTAGPRO)
     fun getCollectionProductsbyTags(@Query("mid") mid: String?,@Query("handle") handle: String?,@Query("sort") sort: String?,
                                     @Query("page") page: String?,@Query("tags") tags: String?): Single<JsonElement>
+
+    @GET("shopifymobile/shopifyapi/sociologincustomer")
+    fun getuserLogin(
+        @Query("mid") mid: String?,
+        @Query("email") email: String?
+    ): Single<JsonElement>
 }
+

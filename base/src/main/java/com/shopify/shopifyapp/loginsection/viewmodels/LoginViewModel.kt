@@ -1,13 +1,16 @@
 package com.shopify.shopifyapp.loginsection.viewmodels
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
@@ -17,15 +20,19 @@ import com.shopify.shopifyapp.dbconnection.entities.UserLocalData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
 import com.shopify.shopifyapp.network_transaction.doGraphQLMutateGraph
 import com.shopify.shopifyapp.network_transaction.doGraphQLQueryGraph
+import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.shopifyqueries.MutationQuery
 import com.shopify.shopifyapp.shopifyqueries.Query
+import com.shopify.shopifyapp.utils.Constant
 import com.shopify.shopifyapp.utils.GraphQLResponse
 import com.shopify.shopifyapp.utils.Status
 import com.shopify.shopifyapp.utils.Urls.Data.MulipassSecret
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -46,6 +53,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     private var username = ""
     private var password = ""
     lateinit var context: Context
+    private val disposables = CompositeDisposable()
     fun getResponsedata_(): MutableLiveData<Storefront.Customer> {
         return response
     }
@@ -373,5 +381,110 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     fun isValidEmail(target: String): Boolean {
         val emailPattern = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE)
         return emailPattern.matcher(target).matches()
+    }
+    fun socialLogin(
+        mid: String,
+        firstname: String,
+        lastname: String,
+        email: String,
+        password: String
+    ) {
+        doRetrofitCall(
+            repository.getUserLogin(mid, email),
+            disposables,
+            customResponse = object : CustomResponse {
+                override fun onSuccessRetrofit(result: JsonElement) {
+                    Log.d(TAG, "onSuccessRetrofit: " + result)
+                    if (JSONObject(result.toString()).getBoolean("success")) {
+                        if (JSONObject(result.toString()).getBoolean("is_present")) {
+                            if (JSONObject(result.toString()).getBoolean("is_changed")) {
+                                getLoginData(email, "pass@kwd")
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Email is blocked !",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } else {
+                            registeruseer(firstname, lastname, email, password)
+                        }
+
+                    }
+                }
+
+                override fun onErrorRetrofit(error: Throwable) {
+                    Log.d(TAG, "onErrorRetrofit: " + error.message)
+                }
+            },
+            context = context
+        )
+    }
+    private fun registeruseer(
+        firstname: String,
+        lastname: String,
+        email: String,
+        password: String
+    ) {
+        try {
+            doGraphQLMutateGraph(
+                repository,
+                MutationQuery.createaccount(firstname, lastname, email, password),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                        invokeRegister(result)
+                    }
+                },
+                context = context
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+    private fun invokeRegister(graphCallResult: GraphCallResult<Storefront.Mutation>): Unit {
+        if (graphCallResult is GraphCallResult.Success<*>) {
+            consumeResponseRegister(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
+        } else {
+            consumeResponseRegister(GraphQLResponse.error(graphCallResult as GraphCallResult.Failure))
+        }
+        return Unit
+    }
+    private fun consumeResponseRegister(reponse: GraphQLResponse) {
+        Constant.logCompleteRegistrationEvent("shopiy", context)
+        when (reponse.status) {
+            Status.SUCCESS -> {
+                val result = (reponse.data as GraphCallResult.Success<Storefront.Mutation>).response
+                if (result.hasErrors) {
+                    val errors = result.errors
+                    val iterator = errors.iterator()
+                    val errormessage = StringBuilder()
+                    var error: Error? = null
+                    while (iterator.hasNext()) {
+                        error = iterator.next()
+                        errormessage.append(error.message())
+                    }
+                    this.errormessage.setValue(errormessage.toString())
+                } else {
+                    val errors = result.data!!.customerCreate.customerUserErrors
+                    if (errors.size > 0) {
+                        val iterator = errors.iterator()
+                        var err = ""
+                        while (iterator.hasNext()) {
+                            val error = iterator.next() as Storefront.CustomerUserError
+                            err += error.message
+                        }
+                        errormessage.setValue(err)
+                    } else {
+                        response.setValue(result.data!!.customerCreate.customer)
+
+                        getLoginData(result.data!!.customerCreate.customer.email, "pass@kwd")
+                    }
+                }
+            }
+            Status.ERROR -> errormessage.setValue(reponse.error!!.error.message)
+            else -> {
+            }
+        }
     }
 }

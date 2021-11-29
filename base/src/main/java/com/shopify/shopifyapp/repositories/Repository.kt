@@ -383,4 +383,7 @@ class Repository {
         return apiCallInterface.getCollectionProductsbyTags(mid, handle,sort,page,tags)
 
     }
+    fun getUserLogin(mid: String, email: String): Single<JsonElement> {
+        return apiCallInterface.getuserLogin(mid, email)
+    }
 }

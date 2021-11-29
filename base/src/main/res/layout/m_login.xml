@@ -148,6 +148,7 @@
                     bind:texttype="whitetext" />
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
+                    android:id="@+id/signupbut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -157,6 +158,89 @@
                     bind:layout_constraintStart_toStartOf="parent"
                     bind:layout_constraintTop_toBottomOf="@id/forgotpassword"
                     bind:texttype="whitetext" />
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/orsection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    bind:layout_constraintTop_toTopOf="@+id/signupbut">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="0.5dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="#D7D7D7" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".5"
+                        android:gravity="center"
+                        android:text="@string/OR"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="0.5dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="#D7D7D7" />
+                </LinearLayout>
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/sociallogins"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    bind:layout_constraintTop_toBottomOf="@+id/orsection">
+
+                    <com.developer.gbuttons.GoogleSignInButton
+                        android:id="@+id/MageNative_social_login_google"
+                        android:onClick="@{handlers::GoogleLogin}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_centerInParent="true"
+                        android:text="@string/google_sign_up"
+                        bind:isDarkTheme="true" />
+
+                    <FrameLayout
+                        android:layout_below="@+id/MageNative_social_login_google"
+                        android:id="@+id/FrameLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_margin="10dp"
+                        android:layout_height="40dp">
+
+                        <com.facebook.login.widget.LoginButton
+                            android:visibility="invisible"
+                            android:id="@+id/fb_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+
+                        <Button
+                            android:background="#3B5998"
+                            android:onClick="@{handlers::FbLogin}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fb"
+                            android:textAllCaps="false"
+                            android:gravity="center"
+                            android:text="Sign up with Facebook"
+                            android:textSize="12sp"
+                            android:textColor="#ffffff" />
+                    </FrameLayout>
+
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

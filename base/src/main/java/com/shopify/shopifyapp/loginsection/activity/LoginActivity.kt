@@ -17,6 +17,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.facebook.*
+import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -30,14 +36,20 @@ import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.databinding.MLoginPageBinding
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MForgotbottomsheetBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
+import com.shopify.shopifyapp.loginsection.activity.LoginActivity_MembersInjector.create
 import com.shopify.shopifyapp.loginsection.viewmodels.LoginViewModel
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.Constant
+import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.utils.ViewModelFactory
+import kotlinx.android.synthetic.main.m_login.*
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
+import org.json.JSONException
+import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 
 import javax.inject.Inject
@@ -49,6 +61,10 @@ class LoginActivity : NewBaseActivity() {
     lateinit var factory: ViewModelFactory
     private var model: LoginViewModel? = null
     lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var mGoogleSignInClient: GoogleSignInClient? = null
+    private val RC_SIGN_IN = 7
+    private val TAG = "LoginActivity"
+    private var callbackManager: CallbackManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +97,53 @@ class LoginActivity : NewBaseActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        callbackManager = CallbackManager.Factory.create()
+        fb_button.setReadPermissions("public_profile email")
+        fb_button.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
+            override fun onCancel() {}
+            override fun onError(exception: FacebookException) {}
+            override fun onSuccess(result: LoginResult?) {
+                if (AccessToken.getCurrentAccessToken() != null) {
+                    RequestData()
+                }
+            }
+        })
+        if(SplashViewModel.featuresModel.socialloginEnable){
+            sociallogins.visibility = View.VISIBLE
+            orsection.visibility = View.VISIBLE
+        }
         binding!!.handlers = hand
+    }
+    private fun RequestData() {
+        val request = GraphRequest.newMeRequest(
+            AccessToken.getCurrentAccessToken(),
+            object : GraphRequest.GraphJSONObjectCallback {
+                override fun onCompleted(`object`: JSONObject?, response: GraphResponse?) {
+                    val json = response!!.getJSONObject()
+                    Log.i("qwertyy", "" + json)
+                    try {
+                        if (json != null) {
+                            model?.socialLogin(
+                                Urls((application as MyApplication))?.mid,
+                                json.getString("first_name"),
+                                json.getString("last_name"),
+                                json.getString("email"),
+                                "pass@kwd"
+                            )
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            })
+        val parameters = Bundle()
+        parameters.putString("fields", "id,name,link,email,picture,first_name,last_name")
+        request.parameters = parameters
+        request.executeAsync()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -126,6 +188,31 @@ class LoginActivity : NewBaseActivity() {
         text = datavalue2[0]
         return text
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager!!.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            if (result.isSuccess) {
+                val acct = result.signInAccount
+                model?.socialLogin(
+                    Urls((application as MyApplication))?.mid,
+                    acct.displayName,
+                    acct.familyName,
+                    acct.email,
+                    "pass@kwd"
+                )
+                Log.d(TAG, "onActivityResult: " + acct.displayName)
+                Log.d(TAG, "onActivityResult: " + acct.email)
+            } else {
+                Toast.makeText(
+                    this,
+                    "" + resources.getString(R.string.loginfailed),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
     inner class MyClickHandlers(private val context: Context) : BaseObservable() {
         @get:Bindable
         var image: String? = null
@@ -160,6 +247,13 @@ class LoginActivity : NewBaseActivity() {
             val signup_page = Intent(context, RegistrationActivity::class.java)
             startActivity(signup_page)
             Constant.activityTransition(context)
+        }
+        fun GoogleLogin(view: View) {
+            val signInIntent = mGoogleSignInClient!!.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
+        fun FbLogin(view: View) {
+            fb_button.performClick()
         }
 
         fun forgotPass(view: View) {
