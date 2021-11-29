@@ -42,7 +42,9 @@ import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
 import com.shopify.buy3.Storefront.Payment
 import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
 import com.shopify.buy3.Storefront.Checkout
+import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.network_transaction.doRetrofitCall
+import zendesk.chat.DeliveryStatus
 
 
 class CartListViewModel(private val repository: Repository) : ViewModel() {
@@ -51,10 +53,12 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
     private val giftcardRemove = MutableLiveData<Storefront.Mutation>()
     private val discount = MutableLiveData<Storefront.Mutation>()
     private val api = MutableLiveData<ApiResponse>()
+    private val dataAtt  = MutableLiveData<Storefront.Checkout>()
     private val youmayapi = MutableLiveData<ApiResponse>()
     private val disposables = CompositeDisposable()
     private val validate_delivery = MutableLiveData<ApiResponse>()
     private val local_delivery = MutableLiveData<ApiResponse>()
+    private val delivery_status = MutableLiveData<ApiResponse>()
     private val store_delivery = MutableLiveData<ApiResponse>()
     lateinit var context: Context
     private val TAG = "CartListViewModel"
@@ -165,6 +169,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
 
     fun getDiscount(): MutableLiveData<Storefront.Mutation> {
         return discount
+    }
+    fun ResponseAtt(): MutableLiveData<Storefront.Checkout> {
+        return dataAtt
     }
 
     fun getGiftCardRemove(): MutableLiveData<Storefront.Mutation> {
@@ -340,7 +347,46 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
-
+    private fun consumeResponseAtt(response: GraphQLResponse) {
+        try {
+            when (response.status) {
+                Status.SUCCESS -> {
+                    val result = (response.data as GraphCallResult.Success<Storefront.Mutation>).response
+                    if (result.hasErrors) {
+                        val errors = result.errors
+                        val iterator = errors.iterator()
+                        val errormessage = StringBuilder()
+                        var error: Error? = null
+                        while (iterator.hasNext()) {
+                            error = iterator.next()
+                            errormessage.append(error.message())
+                        }
+                        message.setValue(errormessage.toString())
+                    } else {
+                        val payload = result.data!!.checkoutCreate
+                        if (payload.checkoutUserErrors.size > 0) {
+                            val iterator = payload.checkoutUserErrors.iterator()
+                            var error: Storefront.CheckoutUserError? = null
+                            while (iterator.hasNext()) {
+                                error = iterator.next() as Storefront.CheckoutUserError
+                                message.setValue(error.message)
+                            }
+                        } else {
+                            val checkout = payload.checkout
+                            getRecommendations(checkout)
+                            getYouMayRecommendations(checkout)
+                            dataAtt.setValue(checkout)
+                        }
+                    }
+                }
+                Status.ERROR -> message.setValue(response.error!!.error.message)
+                else -> {
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
     private fun consumeResponse(response: GraphQLResponse) {
         try {
             when (response.status) {
@@ -671,6 +717,18 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
         return local_delivery
     }
 
+    fun DeliveryStatus(mid:String): MutableLiveData<ApiResponse> {
+        disposables.add(repository.DeliveryStatus(mid)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> delivery_status.setValue(ApiResponse.success(result)) },
+                { throwable -> delivery_status.setValue(ApiResponse.error(throwable)) }
+            ))
+        return delivery_status
+    }
+
+
 
 
 
@@ -819,12 +877,12 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "magenative.myshopify.com")
+        param.put("shop", Urls(MyApplication.context).shopdomain)
         param.put("type", "pickup")
         return param
     }
 
-    fun fillLocalDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
+    fun fillLocalDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>,zipcodes: EditText): HashMap<String, String> {
         var param = HashMap<String, String>()
         for (i in 0..edges.size - 1) {
             param.put("cart[$i][product_id]", String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
@@ -833,12 +891,12 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "magenative.myshopify.com")
+        param.put("shop", Urls(MyApplication.context).shopdomain)
         param.put("type", "delivery")
-//        param.put("zipcode", "95880")
+        param.put("zipcode",zipcodes.text.toString())
         return param
     }
-    fun fillStoreDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>): HashMap<String, String> {
+    fun fillStoreDeliveryParam(edges: List<Storefront.CheckoutLineItemEdge>,zipcodes: EditText): HashMap<String, String> {
         var param = HashMap<String, String>()
         for (i in 0..edges.size - 1) {
             param.put("cart[$i][product_id]", String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
@@ -847,9 +905,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "magenative.myshopify.com")
+        param.put("shop", Urls(MyApplication.context).shopdomain)
         param.put("type", "pickup")
-//        param.put("zipcode", "95880")
+        param.put("zipcode",zipcodes.text.toString())
         return param
     }
 
@@ -877,9 +935,9 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
 
                 private operator fun invoke(result: GraphCallResult<Storefront.Mutation>): Unit {
                     if (result is GraphCallResult.Success<*>) {
-                        consumeResponse(GraphQLResponse.success(result as GraphCallResult.Success<*>))
+                        consumeResponseAtt(GraphQLResponse.success(result as GraphCallResult.Success<*>))
                     } else {
-                        consumeResponse(GraphQLResponse.error(result as GraphCallResult.Failure))
+                        consumeResponseAtt(GraphQLResponse.error(result as GraphCallResult.Failure))
                     }
                     return Unit
                 }
