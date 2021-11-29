@@ -140,7 +140,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
         Thread(runnable).start()
     }
 
-    //***************************************************************NEW hompage changes*************************************************//
+    //********************************************NEW hompage changes*************************************************//
     internal fun connectFirebaseForHomePageData(context: HomePage, homepage: LinearLayoutCompat) {
         try {
             setPresentmentCurrencyForModel()
@@ -260,13 +260,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         ispersonalisedEnable = true
                     }
                 }
-
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     fun parseResponse(apiResponse: String, context: HomePage) {
@@ -315,7 +312,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                     }
                 }
             }
-
             if (names.length() == context.homepage.childCount) {
                 //   Toast.makeText(context, "complete", Toast.LENGTH_SHORT).show()
                 if (customLoader != null && customLoader?.isShowing == true) {
@@ -340,7 +336,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 null,
                 false
             )
-
             binding.root.setBackgroundColor(
                 Color.parseColor(
                     JSONObject(jsonObject.getString("panel_background_color")).getString(
@@ -408,7 +403,6 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         JSONObject(jsonObject.getString("icon_color")).getString("color")
                     )
                 }
-
                 when (jsonObject.getString("search_position")) {
                     "middle-width-search" -> {
                         GlobalScope.launch(Dispatchers.Main) {

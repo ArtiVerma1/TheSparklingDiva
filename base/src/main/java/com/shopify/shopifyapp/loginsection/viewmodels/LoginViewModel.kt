@@ -92,22 +92,17 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         while (hexString.length < 32) {
             hexString.insert(0, '0')
         }
-
         var encryption_key = hexString.toString().substring(0, 16)
         var signature_key = hexString.toString().substring(16, 32)
         val tz: TimeZone = TimeZone.getTimeZone("UTC")
         val df: DateFormat = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ssZ") // Quoted "Z" to indicate UTC, no timezone offset
-
         df.setTimeZone(tz)
         val created_at: String = df.format(Date())
         var customer_obj: JsonObject = JsonObject()
         customer_obj.addProperty("email", email)
         customer_obj.addProperty("created_at", created_at)
-
         /*val json = "{ \"email\": \"manoharsinghrawat@magenative.com\", \"created_at\": \"2021-01-20T12:38:52+0530\" }"*/
         Log.i("customer_jsonObject1", customer_obj.toString())
-
-
         val random = SecureRandom()
         val ivSize = 16
         val iv = ByteArray(ivSize)
@@ -116,7 +111,6 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         val skeySpec = SecretKeySpec(encryption_key.toByteArray(), "AES")
         val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivSpec)
-
 
         Log.d("encrypted - ivSize ", "" + iv.size)
         Log.d("encrypted - ivSize2 ", "" + cipher.doFinal(customer_obj.toString().toByteArray()).size)
@@ -397,6 +391,21 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                     Log.d(TAG, "onSuccessRetrofit: " + result)
                     if (JSONObject(result.toString()).getBoolean("success")) {
                         if (JSONObject(result.toString()).getBoolean("is_present")) {
+                            var present = JSONObject(result.toString()).getBoolean("is_present")
+                            Log.d(TAG, "PRESENTORNOT: " + present)
+                            /*if(present.equals("true")){
+                                showdialog(email)
+                            }else if(present.equals("false")){
+                                *//*if (JSONObject(result.toString()).getBoolean("is_changed")) {
+                                    getLoginData(email, "pass@kwd")
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Email is blocked !",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }*//*
+                            }*/
                             if (JSONObject(result.toString()).getBoolean("is_changed")) {
                                 getLoginData(email, "pass@kwd")
                             } else {
@@ -409,10 +418,8 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                         } else {
                             registeruseer(firstname, lastname, email, password)
                         }
-
                     }
                 }
-
                 override fun onErrorRetrofit(error: Throwable) {
                     Log.d(TAG, "onErrorRetrofit: " + error.message)
                 }
