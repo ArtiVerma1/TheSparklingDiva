@@ -36,7 +36,9 @@ fun ViewModel.doGraphQLMutateGraph(repository: Repository, query: Storefront.Mut
     var call = repository.graphClient.mutateGraph(query)
     call.enqueue { result: GraphCallResult<Storefront.Mutation> ->
         GlobalScope.launch(Dispatchers.Main) {
-            customLoader!!.dismiss()
+            if (!(context as Activity).isDestroyed) {
+                customLoader!!.dismiss()
+            }
             customResponse.onSuccessMutate(result)
 
         }
