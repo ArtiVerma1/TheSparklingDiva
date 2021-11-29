@@ -492,9 +492,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
 
             }
 
-        }
-        else
-        {
+        } else {
             showToast(resources.getString(R.string.noshipping))
         }
 
@@ -547,14 +545,9 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
         dpd.showYearPickerFirst(false)
         dpd.version = DatePickerDialog.Version.VERSION_2
         var new_calendar: Calendar? = null
-//        val weeks = 5
-//        var i = 0
         for (j in 0..disabled!!.size() - 1) {
             if (disabled.isJsonArray) {
                 if (disabled[j].toString().equals("2")) {
-//                    new_calendar = Calendar.getInstance()
-//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-//                    disabledates.add(new_calendar!!)
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
@@ -568,10 +561,6 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                     }
 
                 } else if (disabled[j].toString().equals("3")) {
-//                    new_calendar = Calendar.getInstance()
-//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-//                    disabledates.add(new_calendar!!)
-
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
@@ -584,10 +573,6 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         i = i + 7
                     }
                 } else if (disabled[j].toString().equals("4")) {
-//                    new_calendar = Calendar.getInstance()
-//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-//                    disabledates.add(new_calendar!!)
-
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
@@ -600,10 +585,6 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         i = i + 7
                     }
                 } else if (disabled[j].toString().equals("5")) {
-//                    new_calendar = Calendar.getInstance()
-//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-//                    disabledates.add(new_calendar!!)
-
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
@@ -616,10 +597,6 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         i = i + 7
                     }
                 } else if (disabled[j].toString().equals("6")) {
-//                    new_calendar = Calendar.getInstance()
-//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-//                    disabledates.add(new_calendar!!)
-
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
@@ -632,10 +609,6 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         i = i + 7
                     }
                 } else if (disabled[j].toString().equals("7")) {
-//                    new_calendar = Calendar.getInstance()
-//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-//                    disabledates.add(new_calendar!!)
-
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
@@ -648,10 +621,6 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                         i = i + 7
                     }
                 } else if (disabled[j].toString().equals("1")) {
-//                    new_calendar = Calendar.getInstance()
-//                    new_calendar?.add(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-//                    disabledates.add(new_calendar!!)
-
                     val weeks = 5
                     var i = 0
                     while (i < weeks * 7) {
@@ -660,9 +629,6 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
                             Calendar.DAY_OF_YEAR,
                             Calendar.SUNDAY - new_calendar.get(Calendar.DAY_OF_WEEK) + 7 + i
                         )
-                        // saturday = Calendar.getInstance();
-                        // saturday.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - saturday.get(Calendar.DAY_OF_WEEK) + i));
-                        // weekends.add(saturday);
                         disabledates?.add(new_calendar)
                         i = i + 7
                     }

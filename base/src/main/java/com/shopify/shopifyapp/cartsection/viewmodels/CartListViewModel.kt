@@ -42,6 +42,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
 import com.shopify.buy3.Storefront.Payment
 import com.jakewharton.retrofit2.adapter.rxjava2.Result.response
 import com.shopify.buy3.Storefront.Checkout
+import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.network_transaction.doRetrofitCall
 import zendesk.chat.DeliveryStatus
 
@@ -876,7 +877,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "magenative.myshopify.com")
+        param.put("shop", Urls(MyApplication.context).shopdomain)
         param.put("type", "pickup")
         return param
     }
@@ -890,7 +891,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "magenative.myshopify.com")
+        param.put("shop", Urls(MyApplication.context).shopdomain)
         param.put("type", "delivery")
         param.put("zipcode",zipcodes.text.toString())
         return param
@@ -904,7 +905,7 @@ class CartListViewModel(private val repository: Repository) : ViewModel() {
             Log.d(TAG, "product_id: " + String(Base64.decode(edges[i].node.id.toString(), Base64.DEFAULT)).replace("gid://shopify/CheckoutLineItem/", "").split("?")[0])
             Log.d(TAG, "variant_id: " + String(Base64.decode(edges[i].node.variant.id.toString(), Base64.DEFAULT)).replace("gid://shopify/ProductVariant/", ""))
         }
-        param.put("shop", "magenative.myshopify.com")
+        param.put("shop", Urls(MyApplication.context).shopdomain)
         param.put("type", "pickup")
         param.put("zipcode",zipcodes.text.toString())
         return param
