@@ -410,10 +410,10 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                             present  = JSONObject(result.toString()).getBoolean("is_present")
                             Log.d(TAG, "PRESENTORNOT: " + present)
                             if(present == true){
-                                Log.d(TAG, "PRESENTORNOTTT: " + present)
+                                Log.d(TAG, "PRESENT: " + present)
                                 showLoginDialog(email)
-                            }else if(present== false){
-                                Log.d(TAG, "PRESENTORNOTTTT: " + present)
+                            }else if(present == false){
+                                Log.d(TAG, "NOTPRESENT: " + present)
                                 if (JSONObject(result.toString()).getBoolean("is_changed")) {
                                     getLoginData(email, "pass@kwd")
                                 } else {
@@ -446,7 +446,11 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
             val passwordfield = dialog.findViewById(R.id.passwordfield) as MageNativeEditText
             val submitBtn = dialog.findViewById(R.id.submitbutton) as MageNativeButton
             submitBtn.setOnClickListener {
-                getLoginData(email, passwordfield.text.toString())
+                if(passwordfield.text.toString().equals("")){
+                    passwordfield.error = context.resources.getString(R.string.empty)
+                }else{
+                    getLoginData(email, passwordfield.text.toString())
+                }
             }
             dialog.show()
         } catch (e: java.lang.Exception) {
