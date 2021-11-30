@@ -8,10 +8,10 @@ apply plugin: 'com.google.firebase.crashlytics'
 android {
     signingConfigs {
         release {
-            storeFile file('newshopify.jks')
-            storePassword 'newshopify'
-            keyAlias 'newshopify'
-            keyPassword 'newshopify'
+            storeFile file('shopifyapp_1.jks')
+            storePassword 'shopifyapp'
+            keyAlias 'shopifyapp'
+            keyPassword 'shopifyapp'
         }
     }
     testOptions {
@@ -25,8 +25,8 @@ android {
         applicationId "com.shopify.shopifyapp"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 55
-        versionName "3.9"
+        versionCode 56
+        versionName "3.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

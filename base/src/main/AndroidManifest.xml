@@ -29,8 +29,8 @@
         tools:targetApi="m">
         <activity
             android:name=".maintenence_section.MaintenenceActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -142,28 +142,6 @@
                 <data
                     android:host="magenative.myshopify.com"
                     android:pathPrefix="/openapp"
-                    android:scheme="https" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp"
-                    android:scheme="http" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="magenative.myshopify.com"
-                    android:pathPrefix="/openapp"
                     android:scheme="http" />
             </intent-filter>
         </activity>
@@ -243,9 +221,11 @@
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".productsection.activities.WriteAReview"
+        <activity
+            android:name=".productsection.activities.WriteAReview"
             android:label="@string/app_name"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="fullSensor" />
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ica" />
