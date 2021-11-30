@@ -85,11 +85,16 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getLoginData(username: String, password: String) {
         try {
-            doGraphQLMutateGraph(repository, MutationQuery.getLoginDetails(username, password), customResponse = object : CustomResponse {
-                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                    invoke(result)
-                }
-            }, context = context)
+            doGraphQLMutateGraph(
+                repository,
+                MutationQuery.getLoginDetails(username, password),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                        invoke(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -110,8 +115,9 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         var encryption_key = hexString.toString().substring(0, 16)
         var signature_key = hexString.toString().substring(16, 32)
         val tz: TimeZone = TimeZone.getTimeZone("UTC")
-        val df: DateFormat = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ssZ") // Quoted "Z" to indicate UTC, no timezone offset
-        df.setTimeZone(tz)
+        val df: DateFormat =
+            SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ssZ") // Quoted "Z" to indicate UTC, no timezone offset
+        df.timeZone = tz
         val created_at: String = df.format(Date())
         var customer_obj: JsonObject = JsonObject()
         customer_obj.addProperty("email", email)
@@ -126,47 +132,50 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         val skeySpec = SecretKeySpec(encryption_key.toByteArray(), "AES")
         val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivSpec)
-
         Log.d("encrypted - ivSize ", "" + iv.size)
-        Log.d("encrypted - ivSize2 ", "" + cipher.doFinal(customer_obj.toString().toByteArray()).size)
-
-
-        val encrypted = ByteArray(ivSize + cipher.doFinal(customer_obj.toString().toByteArray()).size)
+        Log.d(
+            "encrypted - ivSize2 ",
+            "" + cipher.doFinal(customer_obj.toString().toByteArray()).size
+        )
+        val encrypted =
+            ByteArray(ivSize + cipher.doFinal(customer_obj.toString().toByteArray()).size)
         System.arraycopy(iv, 0, encrypted, 0, ivSize)
-        System.arraycopy(cipher.doFinal(customer_obj.toString().toByteArray()), 0, encrypted, ivSize, cipher.doFinal(customer_obj.toString().toByteArray()).size)
+        System.arraycopy(
+            cipher.doFinal(customer_obj.toString().toByteArray()),
+            0,
+            encrypted,
+            ivSize,
+            cipher.doFinal(customer_obj.toString().toByteArray()).size
+        )
         /*val encrypted: ByteArray = ArrayUtils.addAll(iv, cipher.doFinal(customer_obj.toString().toByteArray()))*/
-
         Log.d("encrypted", "" + encrypted.size)
-
         val sha256HMAC = Mac.getInstance("HmacSHA256")
         val secretKeySpec = SecretKeySpec(signature_key.toByteArray(), "HmacSHA256")
         sha256HMAC.init(secretKeySpec)
         val signature = sha256HMAC.doFinal(encrypted)
-
         Log.d("encrypted", "" + signature.size)
-
-
         val final = ByteArray(encrypted.size + signature.size)
         System.arraycopy(encrypted, 0, final, 0, encrypted.size)
         System.arraycopy(signature, 0, final, encrypted.size, signature.size)
-
         Log.d("encrypted - final ", "" + final.size)
-
-
-        var token = Base64.getUrlEncoder().encodeToString(final/*ArrayUtils.addAll(encrypted, signature)*/);
+        var token =
+            Base64.getUrlEncoder().encodeToString(final/*ArrayUtils.addAll(encrypted, signature)*/)
         token = token.replace('+', '-')  // Replace + with -
-                .replace('/', '_');
-
+            .replace('/', '_')
         Log.d("encrypted - token ", token)
-
         try {
-            doGraphQLMutateGraph(repository, MutationQuery.multipass(token), customResponse = object : CustomResponse {
-                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                    multipasstoken(result)
-                }
-            }, context = context)
+            doGraphQLMutateGraph(
+                repository,
+                MutationQuery.multipass(token),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                        multipasstoken(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: java.lang.Exception) {
-            e.printStackTrace();
+            e.printStackTrace()
         }
     }
 
@@ -180,14 +189,14 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         return Unit
     }
 
     private fun consumeResponsemulti(qlResponse: GraphQLResponse) {
         when (qlResponse.status) {
             Status.SUCCESS -> {
-                val result = (qlResponse.data as GraphCallResult.Success<Storefront.Mutation>).response
+                val result =
+                    (qlResponse.data as GraphCallResult.Success<Storefront.Mutation>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -199,7 +208,8 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                     }
                     this.errormessage.setValue(errormessage.toString())
                 } else {
-                    val errors = result.data!!.customerAccessTokenCreateWithMultipass.customerUserErrors
+                    val errors =
+                        result.data!!.customerAccessTokenCreateWithMultipass.customerUserErrors
                     if (errors.size > 0) {
                         val iterator = errors.iterator()
                         var err = ""
@@ -209,10 +219,10 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                         }
                         errormessage.setValue(err)
                     } else {
-
                         /*errormessage.setValue("Please Check Your Mail")*/
-                        var token = result.data!!.customerAccessTokenCreateWithMultipass.customerAccessToken.accessToken
-                        Log.i("multipass_token", token);
+                        var token =
+                            result.data!!.customerAccessTokenCreateWithMultipass.customerAccessToken.accessToken
+                        Log.i("multipass_token", token)
                     }
                 }
             }
@@ -269,16 +279,22 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun savetoken(token: Storefront.CustomerAccessToken) {
-        val customerTokenData = CustomerTokenData(token.accessToken, token.expiresAt.toLocalDateTime().toString())
+        val customerTokenData =
+            CustomerTokenData(token.accessToken, token.expiresAt.toLocalDateTime().toString())
         GlobalScope.launch(Dispatchers.IO) {
             repository.saveaccesstoken(customerTokenData)
         }
         try {
-            doGraphQLQueryGraph(repository, Query.getCustomerDetails(token.accessToken), customResponse = object : CustomResponse {
-                override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
-                    invokes(result)
-                }
-            }, context = context)
+            doGraphQLQueryGraph(
+                repository,
+                Query.getCustomerDetails(token.accessToken),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {
+                        invokes(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -297,7 +313,8 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     private fun MapLoginDetails(graphQLResponse: GraphQLResponse) {
         when (graphQLResponse.status) {
             Status.SUCCESS -> {
-                val result = (graphQLResponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
+                val result =
+                    (graphQLResponse.data as GraphCallResult.Success<Storefront.QueryRoot>).response
                 if (result.hasErrors) {
                     val errors = result.errors
                     val iterator = errors.iterator()
@@ -327,11 +344,16 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
 
     fun recoverCustomer(email: String) {
         try {
-            doGraphQLMutateGraph(repository, MutationQuery.recoverCustomer(email), customResponse = object : CustomResponse {
-                override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
-                    recoverCustomerinvoke(result)
-                }
-            }, context = context)
+            doGraphQLMutateGraph(
+                repository,
+                MutationQuery.recoverCustomer(email),
+                customResponse = object : CustomResponse {
+                    override fun onSuccessMutate(result: GraphCallResult<Storefront.Mutation>) {
+                        recoverCustomerinvoke(result)
+                    }
+                },
+                context = context
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -388,9 +410,13 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun isValidEmail(target: String): Boolean {
-        val emailPattern = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE)
+        val emailPattern = Pattern.compile(
+            "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+            Pattern.CASE_INSENSITIVE
+        )
         return emailPattern.matcher(target).matches()
     }
+
     fun socialLogin(
         mid: String,
         firstname: String,
@@ -407,12 +433,12 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                     if (JSONObject(result.toString()).getBoolean("success")) {
                         if (JSONObject(result.toString()).getBoolean("is_present")) {
                             var present: Boolean? = null
-                            present  = JSONObject(result.toString()).getBoolean("is_present")
+                            present = JSONObject(result.toString()).getBoolean("is_present")
                             Log.d(TAG, "PRESENTORNOT: " + present)
-                            if(present == true){
+                            if (present == true) {
                                 Log.d(TAG, "PRESENT: " + present)
                                 showLoginDialog(email)
-                            }else if(present == false){
+                            } else if (present == false) {
                                 Log.d(TAG, "NOTPRESENT: " + present)
                                 if (JSONObject(result.toString()).getBoolean("is_changed")) {
                                     getLoginData(email, "pass@kwd")
@@ -429,6 +455,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                         }
                     }
                 }
+
                 override fun onErrorRetrofit(error: Throwable) {
                     Log.d(TAG, "onErrorRetrofit: " + error.message)
                 }
@@ -446,9 +473,9 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
             val passwordfield = dialog.findViewById(R.id.passwordfield) as MageNativeEditText
             val submitBtn = dialog.findViewById(R.id.submitbutton) as MageNativeButton
             submitBtn.setOnClickListener {
-                if(passwordfield.text.toString().equals("")){
+                if (passwordfield.text.toString().equals("")) {
                     passwordfield.error = context.resources.getString(R.string.empty)
-                }else{
+                } else {
                     getLoginData(email, passwordfield.text.toString())
                 }
             }
@@ -480,6 +507,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
+
     private fun invokeRegister(graphCallResult: GraphCallResult<Storefront.Mutation>): Unit {
         if (graphCallResult is GraphCallResult.Success<*>) {
             consumeResponseRegister(GraphQLResponse.success(graphCallResult as GraphCallResult.Success<*>))
@@ -488,6 +516,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         }
         return Unit
     }
+
     private fun consumeResponseRegister(reponse: GraphQLResponse) {
         Constant.logCompleteRegistrationEvent("shopiy", context)
         when (reponse.status) {
@@ -514,7 +543,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                         }
                         errormessage.setValue(err)
                     } else {
-                        response.setValue(result.data!!.customerCreate.customer)
+                        response.value = result.data!!.customerCreate.customer
 
                         getLoginData(result.data!!.customerCreate.customer.email, "pass@kwd")
                     }

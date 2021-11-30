@@ -18,6 +18,7 @@ import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.facebook.*
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -45,6 +46,7 @@ import com.shopify.shopifyapp.utils.Urls
 import com.shopify.shopifyapp.utils.ViewModelFactory
 import kotlinx.android.synthetic.main.m_login.*
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
+import okhttp3.internal.platform.Platform
 import org.json.JSONException
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets

@@ -13,7 +13,7 @@ class FeaturesModel : BaseObservable() {
         }
 
     @Bindable
-    var socialloginEnable: Boolean = true
+    var socialloginEnable: Boolean = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.socialloginEnable)
