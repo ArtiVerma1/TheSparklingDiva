@@ -214,4 +214,7 @@
     <string name="pickupavailablenot">Pickup not available at..</string>
     <string name="OR">Or</string>
     <string name="loginfailed">Login failed</string>
+    <string name="dialogTitle">DIALOG TITLE</string>
+    <string name="dialogMessage">DIALOG MESSAGE</string>
+    <string name="alreadyhaveaccount">We noticed you already have an account with us.Please enter your password below and continue.</string>
 </resources>

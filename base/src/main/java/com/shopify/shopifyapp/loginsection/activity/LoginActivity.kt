@@ -23,8 +23,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.database.DataSnapshot
@@ -40,7 +38,6 @@ import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
 import com.shopify.shopifyapp.cartsection.activities.CartList
 import com.shopify.shopifyapp.databinding.MForgotbottomsheetBinding
 import com.shopify.shopifyapp.homesection.activities.HomePage
-import com.shopify.shopifyapp.loginsection.activity.LoginActivity_MembersInjector.create
 import com.shopify.shopifyapp.loginsection.viewmodels.LoginViewModel
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.utils.Constant
@@ -51,7 +48,6 @@ import kotlinx.android.synthetic.main.m_newbaseactivity.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
-
 import javax.inject.Inject
 
 class LoginActivity : NewBaseActivity() {

@@ -1,12 +1,22 @@
 package com.shopify.shopifyapp.loginsection.viewmodels
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
+import android.content.res.Resources
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.text.Html
 import android.util.Log
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +25,11 @@ import com.google.gson.JsonObject
 import com.shopify.buy3.GraphCallResult
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.Error
+import com.shopify.shopifyapp.R
+import com.shopify.shopifyapp.R2.attr.title
+import com.shopify.shopifyapp.customviews.MageNativeButton
+import com.shopify.shopifyapp.customviews.MageNativeEditText
+import com.shopify.shopifyapp.customviews.MageNativeTextView
 import com.shopify.shopifyapp.dbconnection.entities.CustomerTokenData
 import com.shopify.shopifyapp.dbconnection.entities.UserLocalData
 import com.shopify.shopifyapp.network_transaction.CustomResponse
@@ -391,12 +406,15 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                     Log.d(TAG, "onSuccessRetrofit: " + result)
                     if (JSONObject(result.toString()).getBoolean("success")) {
                         if (JSONObject(result.toString()).getBoolean("is_present")) {
-                            var present = JSONObject(result.toString()).getBoolean("is_present")
+                            var present: Boolean? = null
+                            present  = JSONObject(result.toString()).getBoolean("is_present")
                             Log.d(TAG, "PRESENTORNOT: " + present)
-                            /*if(present.equals("true")){
-                                showdialog(email)
-                            }else if(present.equals("false")){
-                                *//*if (JSONObject(result.toString()).getBoolean("is_changed")) {
+                            if(present == true){
+                                Log.d(TAG, "PRESENTORNOTTT: " + present)
+                                showLoginDialog(email)
+                            }else if(present== false){
+                                Log.d(TAG, "PRESENTORNOTTTT: " + present)
+                                if (JSONObject(result.toString()).getBoolean("is_changed")) {
                                     getLoginData(email, "pass@kwd")
                                 } else {
                                     Toast.makeText(
@@ -404,16 +422,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                                         "Email is blocked !",
                                         Toast.LENGTH_LONG
                                     ).show()
-                                }*//*
-                            }*/
-                            if (JSONObject(result.toString()).getBoolean("is_changed")) {
-                                getLoginData(email, "pass@kwd")
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Email is blocked !",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                }
                             }
                         } else {
                             registeruseer(firstname, lastname, email, password)
@@ -427,6 +436,24 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
             context = context
         )
     }
+
+    private fun showLoginDialog(email: String) {
+        try {
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(true)
+            dialog.setContentView(R.layout.login_custom_layout)
+            val passwordfield = dialog.findViewById(R.id.passwordfield) as MageNativeEditText
+            val submitBtn = dialog.findViewById(R.id.submitbutton) as MageNativeButton
+            submitBtn.setOnClickListener {
+                getLoginData(email, passwordfield.text.toString())
+            }
+            dialog.show()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun registeruseer(
         firstname: String,
         lastname: String,
