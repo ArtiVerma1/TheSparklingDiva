@@ -70,7 +70,6 @@ import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 
 class HomePage : NewBaseActivity() {
     private var binding: MHomepageModifiedBinding? = null
-
     @Inject
     lateinit var factory: ViewModelFactory
     private var homemodel: HomePageViewModel? = null
@@ -85,14 +84,12 @@ class HomePage : NewBaseActivity() {
     private var scrollYPosition: Int = -1
     private val MY_REQUEST_CODE = 105
     private var appUpdateManager: AppUpdateManager? = null
-
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
-
     private val TAG = "HomePage"
-
     @Inject
     lateinit var padapter: PersonalisedAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val group = findViewById<ViewGroup>(R.id.container)

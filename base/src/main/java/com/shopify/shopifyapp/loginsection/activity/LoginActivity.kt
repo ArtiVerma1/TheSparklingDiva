@@ -246,10 +246,12 @@ class LoginActivity : NewBaseActivity() {
             startActivity(signup_page)
             Constant.activityTransition(context)
         }
+
         fun GoogleLogin(view: View) {
             val signInIntent = mGoogleSignInClient!!.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
+
         fun FbLogin(view: View) {
             fb_button.performClick()
         }

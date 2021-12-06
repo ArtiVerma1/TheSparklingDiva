@@ -455,7 +455,6 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                         }
                     }
                 }
-
                 override fun onErrorRetrofit(error: Throwable) {
                     Log.d(TAG, "onErrorRetrofit: " + error.message)
                 }
@@ -480,7 +479,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
             dialog.show()
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
