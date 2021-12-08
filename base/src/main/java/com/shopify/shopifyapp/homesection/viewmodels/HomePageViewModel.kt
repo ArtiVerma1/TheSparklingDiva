@@ -87,6 +87,10 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     var getyotpoauthenticate = MutableLiveData<ApiResponse>()
     var notifyZendesk = MutableLiveData<Boolean>()
 
+    init {
+        notifyZendesk.value = false
+    }
+
     companion object {
         var count_color: String? = null
         var count_textcolor: String? = null

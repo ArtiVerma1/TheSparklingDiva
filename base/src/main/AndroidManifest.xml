@@ -248,6 +248,8 @@
             android:screenOrientation="fullSensor"/>
         <activity android:name=".productsection.activities.FilterActivity"
             android:screenOrientation="portrait"/>
+            android:screenOrientation="fullSensor" />
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ica" />

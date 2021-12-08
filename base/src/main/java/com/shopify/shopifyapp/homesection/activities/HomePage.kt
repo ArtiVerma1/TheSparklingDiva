@@ -185,6 +185,8 @@ class HomePage : NewBaseActivity() {
             )?.observe(this, Observer { this.showData(it) })
         }
 
+
+
         homemodel?.notifyZendesk?.observe(this, Observer {
             if (it) {
                 chat_but.visibility = View.VISIBLE
@@ -597,6 +599,8 @@ class HomePage : NewBaseActivity() {
         featuresModel.smileIO = false
         featuresModel.multi_currency = false
         featuresModel.multi_language = false
+        featuresModel.showBottomNavigation=false
+        featuresModel.reOrderEnabled = false
     }
 
     private fun leftmenuconsumeResponse(reponse: ApiResponse) {

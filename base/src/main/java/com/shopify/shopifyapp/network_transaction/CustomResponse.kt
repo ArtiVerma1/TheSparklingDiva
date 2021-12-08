@@ -11,6 +11,4 @@ interface CustomResponse {
     fun onSuccessQuery(result: GraphCallResult<Storefront.QueryRoot>) {}
     fun onSuccessRetrofit(result: JsonElement) {}
     fun onErrorRetrofit(error: Throwable) {}
-    /*fun onErrorMutate(abstractResponse: AbstractResponse<Any>) {}
-    fun onErrorQuery(abstractResponse: AbstractResponse<Any>) {}*/
 }

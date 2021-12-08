@@ -236,6 +236,8 @@
     <string name="order_note_hint">Please enter order note</string>
     <string name="withdrawal_day_and_time">Select a withdrawal day and time</string>
     <string name="note">NOTE</string>
+    <string name="ship">Shipping</string>
+    <string name="noshipping">Shipping not available</string>
     <string name="local_delivery">Local Delivery</string>
     <string name="chat">Chat With Us</string>
     <string name="smilereward">My Rewards</string>
@@ -253,4 +255,9 @@
     <string name="OR">Or</string>
     <string name="loginfailed">Login failed</string>
     <string name="alreadyhaveaccount">We noticed you already have an account with us.Please enter your password below and continue.</string>
+    <string name="loadings">Loading...Please Wait.</string>
+    <string name="delivery_true">Good news! We can deliver to you..</string>
+    <string name="noeligibility">This product is not eligible for delivery</string>
+    <string name="nodelivery">Sorry, delivery is not available in your area at the moment.</string>
+    <string name="delivery">SGood news! We can deliver to you..</string>
 </resources>

@@ -4,6 +4,7 @@ import android.util.Log
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.repositories.Repository
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
+import zendesk.chat.DeliveryStatus
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -49,6 +50,7 @@ class Urls {
         const val VALIDATE_DELIVERY: String = "shopifymobile/zapietstorepickupapi/validatedeliverynpickup"
         const val LOCAL_DELIVERY: String = "shopifymobile/zapietstorepickupapi/getdeliverynpickup"
         const val LOCAL_DELIVERYY: String = "shopifymobilenew/zapietstorepickupapi/getdeliverynpickup"
+        const val DeliveryStatus: String = "https://shopifymobileapp.cedcommerce.com/shopifymobile/zapietstorepickupapi/installedstatus?"
         var XGUID = "oyeoRDurwhul3WK-zN5ScA"
         var X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
         const val MENUCOLLECTION: String = "http://shopifymobileapp.cedcommerce.com/shopifymobile/shopifyapi/getcollectionproperties"

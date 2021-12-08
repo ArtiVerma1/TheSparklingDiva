@@ -27,6 +27,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
+import zendesk.chat.DeliveryStatus
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -370,6 +371,9 @@ class Repository {
 
     fun localDeliveryy(jsonObject: HashMap<String, String>): Single<JsonObject> {
         return apiCallInterface.localDeliveryy(jsonObject)
+    }
+    fun DeliveryStatus(mid: String): Single<JsonObject> {
+        return apiCallInterface.DeliveryStatus(mid)
     }
 
     fun storeDelivery(jsonObject: HashMap<String, String>): Single<JsonObject> {
