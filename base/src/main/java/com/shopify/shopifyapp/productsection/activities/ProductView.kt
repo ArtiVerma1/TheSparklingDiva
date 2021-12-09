@@ -38,6 +38,8 @@ import com.shopify.graphql.support.ID
 import com.shopify.shopifyapp.MyApplication
 import com.shopify.shopifyapp.R
 import com.shopify.shopifyapp.basesection.activities.NewBaseActivity
+import com.shopify.shopifyapp.basesection.activities.Splash
+import com.shopify.shopifyapp.basesection.activities.Weblink
 import com.shopify.shopifyapp.basesection.models.ListData
 import com.shopify.shopifyapp.basesection.viewmodels.LeftMenuViewModel
 import com.shopify.shopifyapp.basesection.viewmodels.SplashViewModel
@@ -94,7 +96,8 @@ class ProductView : NewBaseActivity() {
     private var personamodel: PersonalisedViewModel? = null
     private var inStock: Boolean = true
     private var totalVariant: Int? = null
-    private var variantValidation: JSONObject = JSONObject()
+    //private var variantValidation: JSONObject = JSONObject()
+    private var variantValidation: MutableMap<String, String> = mutableMapOf()
     var reviewModel: ReviewModel? = null
     private var external_id: String? = null
     private var judgeme_productid: String? = null
@@ -137,7 +140,7 @@ class ProductView : NewBaseActivity() {
             productID = model!!.id
         }
         Log.d(TAG, "onCreate: " + getBase64Decode(productID)!!)
-        Log.i("PID",""+productID)
+        Log.i("PID", "" + productID)
         if (featuresModel.productReview!!) {
             model?.getReviewBadges(
                 Urls(application as MyApplication).mid,
@@ -201,19 +204,19 @@ class ProductView : NewBaseActivity() {
             if (binding!!.yotpoName.text!!.toString().isEmpty()) {
                 binding!!.yotpoName.error = resources.getString(R.string.empty)
                 binding!!.yotpoName.requestFocus()
-            }else if(binding!!.yotpoEmail.text!!.toString().isEmpty()){
+            } else if (binding!!.yotpoEmail.text!!.toString().isEmpty()) {
                 binding!!.yotpoEmail.error = resources.getString(R.string.empty)
                 binding!!.yotpoEmail.requestFocus()
-            }else if(binding!!.yotpoReviewtitle.text!!.toString().isEmpty()){
+            } else if (binding!!.yotpoReviewtitle.text!!.toString().isEmpty()) {
                 binding!!.yotpoReviewtitle.error = resources.getString(R.string.empty)
                 binding!!.yotpoReviewtitle.requestFocus()
-            }else if(binding!!.yotpoReviewbody.text!!.toString().isEmpty()){
-               binding!!.yotpoReviewbody.error = resources.getString(R.string.empty)
+            } else if (binding!!.yotpoReviewbody.text!!.toString().isEmpty()) {
+                binding!!.yotpoReviewbody.error = resources.getString(R.string.empty)
                 binding!!.yotpoReviewbody.requestFocus()
-            }else{
-                if(leftmenu.isLoggedIn){
+            } else {
+                if (leftmenu.isLoggedIn) {
                     submityptporeview()
-                }else{
+                } else {
                     val alertDialog: AlertDialog = AlertDialog.Builder(this@ProductView).create()
                     alertDialog.setTitle("NOTE!")
                     alertDialog.setMessage("Please create an account in the app to leave a review.")
@@ -224,6 +227,7 @@ class ProductView : NewBaseActivity() {
             }
         }
     }
+
     private fun consumeAliReviews(response: ApiResponse?) {
         Log.d(TAG, "consumeAliReviews: " + response?.data)
         var responseData = JSONObject(response?.data.toString())
@@ -723,7 +727,7 @@ class ProductView : NewBaseActivity() {
             data!!.textdata = productedge.title
             productName = productedge.title
             productsku = productedge.variants.edges[0].node.sku
-            Log.i("ALLSHUUUUUUU",""+productsku)
+            Log.i("ALLSHUUUUUUU", "" + productsku)
             showTittle(productName!!)
             Log.i("here", productedge.descriptionHtml)
             if (MagePrefs.getLanguage() == "ar") {
@@ -830,7 +834,7 @@ class ProductView : NewBaseActivity() {
                     override fun clickVariant(variantName: String, optionName: String) {
                         variant_pair.put(optionName, variantName)
                         if (totalVariant == variant_pair.size) {
-                            variantFilter(variant_pair.values.toList(), edges,variant_pair)
+                            variantFilter(variant_pair.values.toList(), edges, variant_pair)
                         }
                         //variantValidation.put(variantName, options.get(j).id.toString())
                     }
@@ -843,7 +847,7 @@ class ProductView : NewBaseActivity() {
     private fun variantFilter(
         variantPair: List<String>,
         edges: MutableList<Storefront.ProductVariantEdge>,
-        variantList:MutableMap<String,String>
+        variantList: MutableMap<String, String>
     ) {
         val new_pair = StringBuilder()
         for (i in 0 until variantPair.size) {
@@ -1084,26 +1088,11 @@ class ProductView : NewBaseActivity() {
         }
 
         fun showSizeChart(view: View, data: ListData) {
-            var dialog = Dialog(this@ProductView, R.style.WideDialog)
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-            dialog.window?.setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT
-            )
-            var size_binding = DataBindingUtil.inflate<SizeChartLayoutBinding>(
-                layoutInflater,
-                R.layout.size_chart_layout,
-                null,
-                false
-            )
-            dialog.setContentView(size_binding.root)
-            size_binding.webview.settings.javaScriptEnabled = true
-            size_binding.webview.settings.useWideViewPort = true
-            size_binding.webview.loadUrl(sizeChartUrl)
-            size_binding.closeBut.setOnClickListener {
-                dialog.dismiss()
-            }
-            dialog.show()
+            val intent = Intent(this@ProductView, Weblink::class.java)
+            intent.putExtra("name",resources.getString(R.string.size_chart))
+            intent.putExtra("link",sizeChartUrl)
+            startActivity(intent)
+            Constant.activityTransition(this@ProductView)
         }
 
         fun addtoWish(view: View, data: ListData) {

@@ -170,8 +170,7 @@ constructor() : RecyclerView.Adapter<ProductRecyclerListAdapter.ProductRecyclerL
         if (this.products[position].node.images.edges.size > 0) {
             Glide.with(holder.binding.image.context)
                     .load(this.products[position].node.images.edges[0].node.transformedSrc)
-                    .thumbnail(0.5f)
-                    .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder))
                     .into(holder.binding.image)
         }
         holder.binding!!.listdata = data

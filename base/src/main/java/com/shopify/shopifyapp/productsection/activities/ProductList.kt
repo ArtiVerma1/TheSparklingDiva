@@ -130,6 +130,8 @@ class ProductList : NewBaseActivity() {
             productListModel!!.cursor = "nocursor"
             binding?.mainview?.productListContainer?.visibility = View.GONE
             productlist = setLayout(binding!!.root.findViewById(R.id.productlist), "grid")
+            binding?.mainview?.grid_but?.setImageResource(R.drawable.grid_icon_selected)
+            binding?.mainview?.list_but?.setImageResource(R.drawable.list_icon)
         }
         binding?.mainview?.list_but?.setOnClickListener {
             productlist?.layoutManager = LinearLayoutManager(this)
@@ -137,6 +139,8 @@ class ProductList : NewBaseActivity() {
             products = null
             binding?.mainview?.productListContainer?.visibility = View.GONE
             productListModel!!.cursor = "nocursor"
+            binding?.mainview?.grid_but?.setImageResource(R.drawable.grid_icon)
+            binding?.mainview?.list_but?.setImageResource(R.drawable.list_icon_selected)
         }
         filter_by?.setOnClickListener {
             productListModel?.collectionTags?.observe(this, Observer { this.consumeTags(it) })

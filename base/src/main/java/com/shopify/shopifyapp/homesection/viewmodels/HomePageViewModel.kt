@@ -214,6 +214,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
             val obj = JSONArray(apiResponse)
             for (i in 0 until obj.length()) {
                 val ids = obj.getJSONObject(i).getString("id")
+                val titles = obj.getJSONObject(i).getString("title")
                 when (ids) {
                     "I01" -> {
                         SplashViewModel.featuresModel.productReview = true
@@ -262,6 +263,36 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         notifyPersonalised.value = true
                         SplashViewModel.featuresModel.ai_product_reccomendaton = true
                         ispersonalisedEnable = true
+                    }
+                }
+                when (titles){
+                    "features" -> {
+                        SplashViewModel.featuresModel.whatsappChat = true
+                        SplashViewModel.featuresModel.fbMessenger = true
+                        if (obj.getJSONObject(i).has("inputs")) {
+                            if(obj.getJSONObject(i).getJSONObject("inputs").has("facebook-chat")){
+                                if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("facebook-chat").has("inputs")){
+                                    if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("facebook-chat").getJSONObject("inputs").has("user_id")){
+                                        Urls.fbusername =
+                                            obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("facebook-chat").getJSONObject("inputs").getString("user_id")
+                                            Log.i("USERID", "YES: "+Urls.fbusername)
+                                    }
+
+                                }
+                            }
+                        }
+                        if (obj.getJSONObject(i).has("inputs")) {
+                            if(obj.getJSONObject(i).getJSONObject("inputs").has("whatsapp")){
+                                if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("whatsapp").has("inputs")){
+                                    if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("whatsapp").getJSONObject("inputs").has("mobile_no")){
+                                        Urls.whatsappnumber =
+                                            obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("whatsapp").getJSONObject("inputs").getString("mobile_no")
+                                        Log.i("NUMBER", "YES: "+Urls.whatsappnumber)
+                                    }
+
+                                }
+                            }
+                        }
                     }
                 }
             }

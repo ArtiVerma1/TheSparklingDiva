@@ -1026,6 +1026,7 @@ class CartList : NewBaseActivity(), DatePickerDialog.OnDateSetListener, OnMapRea
             binding!!.pintext.visibility = View.GONE
             binding!!.shipnote.visibility = View.GONE
             binding!!.pintextrue.visibility = View.GONE
+            binding!!.proceedtocheck.visibility = View.VISIBLE
 
             var store_delivery_param =
                 model!!.fillStoreDeliveryParam(response_data.lineItems.edges, binding!!.zipcodes)

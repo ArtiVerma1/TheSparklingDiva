@@ -62,6 +62,8 @@ import com.shopify.shopifyapp.searchsection.activities.AutoSearch
 import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 import com.shopify.shopifyapp.userprofilesection.activities.UserProfile
 import com.shopify.shopifyapp.utils.*
+import com.shopify.shopifyapp.utils.Urls.Data.fbusername
+import com.shopify.shopifyapp.utils.Urls.Data.whatsappnumber
 import com.shopify.shopifyapp.wishlistsection.activities.WishList
 import info.androidhive.fontawesome.FontTextView
 import kotlinx.android.synthetic.main.m_newbaseactivity.*
@@ -296,7 +298,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
 
         whatsappchat.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse("http://api.whatsapp.com/send?phone=$toNumber")
+            intent.data = Uri.parse("http://api.whatsapp.com/send?phone=$whatsappnumber")
             startActivity(intent)
         }
 
@@ -304,7 +306,7 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             val intent = Intent()
             intent.action = Intent.ACTION_VIEW
             intent.setPackage("com.facebook.orca")
-            intent.data = Uri.parse("https://m.me/MageNative")
+            intent.data = Uri.parse(fbusername)
             startActivity(intent)
         }
 

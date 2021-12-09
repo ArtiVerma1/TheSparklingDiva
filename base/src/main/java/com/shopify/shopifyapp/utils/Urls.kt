@@ -53,6 +53,8 @@ class Urls {
         const val DeliveryStatus: String = "https://shopifymobileapp.cedcommerce.com/shopifymobile/zapietstorepickupapi/installedstatus?"
         var XGUID = "oyeoRDurwhul3WK-zN5ScA"
         var X_API_KEY = "FCCVWdq07tgQCkq8Bw8ctQtt"
+        var fbusername = "MageNative"
+        var whatsappnumber = "+916393417500"
         const val MENUCOLLECTION: String = "http://shopifymobileapp.cedcommerce.com/shopifymobile/shopifyapi/getcollectionproperties"
         const val FILTERTAGPRO: String ="https://shopifymobileapp.cedcommerce.com/shopifymobile/shopifyapi/getcollectionproductsbytags"
         /************************** Yotpo Rewards Integration ***************************/
