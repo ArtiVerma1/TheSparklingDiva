@@ -277,14 +277,18 @@ class ProductView : NewBaseActivity() {
         Log.d(TAG, "consumeAliReviewStatus: " + response?.data)
         try {
             var responseData = JSONObject(response?.data.toString())
-            if (responseData.getBoolean("status")) {
-                AliProductId = getBase64Decode(productID)!!
-                AliShopId = responseData.getJSONObject("result").getString("shop_id")
-                model?.getAliReviewProduct(
-                    responseData.getJSONObject("result").getString("shop_id"),
-                    getBase64Decode(productID)!!,
-                    1
-                )
+            if(responseData.get("status") is String && responseData.get("status").equals("error")){
+                Toast.makeText(this,responseData.getString("message"),Toast.LENGTH_SHORT).show()
+            }else{
+                if (responseData.getBoolean("status")) {
+                    AliProductId = getBase64Decode(productID)!!
+                    AliShopId = responseData.getJSONObject("result").getString("shop_id")
+                    model?.getAliReviewProduct(
+                        responseData.getJSONObject("result").getString("shop_id"),
+                        getBase64Decode(productID)!!,
+                        1
+                    )
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -663,9 +667,10 @@ class ProductView : NewBaseActivity() {
             val variant = productedge.variants.edges[0].node
 
             /******************************** Local delivery and pickup work **************************************/
-            val alledges = variant.storeAvailability.edges
-            Log.d(TAG, alledges.size.toString())
+
             if (featuresModel.localpickupEnable) {
+                val alledges = variant.storeAvailability.edges
+                Log.d(TAG, alledges.size.toString())
                 if (alledges.size > 1) {
                     binding?.checkstoretext?.visibility = View.VISIBLE
                 } else {

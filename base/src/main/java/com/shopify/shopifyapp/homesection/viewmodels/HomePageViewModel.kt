@@ -211,6 +211,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
 
     fun parseFeaturesResponse(apiResponse: String, context: HomePage) {
         try {
+            Log.d(TAG, "parseFeaturesResponse: "+apiResponse)
             val obj = JSONArray(apiResponse)
             for (i in 0 until obj.length()) {
                 val ids = obj.getJSONObject(i).getString("id")

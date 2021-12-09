@@ -97,27 +97,27 @@ object Query {
                                                         .priceV2({ price ->
                                                             price.amount().currencyCode()
                                                         })
-                                                        .storeAvailability({ args -> args.first(20) },
-                                                            { storeAvail ->
-                                                                storeAvail.edges({ storeAvailEdges ->
-                                                                    storeAvailEdges.node({
-                                                                        it.available()
-                                                                        it.pickUpTime()
-                                                                        it.location {
-                                                                            it.name()
-                                                                            it.address {
-                                                                                it.address1()
-                                                                                it.address2()
-                                                                                it.city()
-                                                                                it.country()
-                                                                                it.province()
-                                                                                it.zip()
-                                                                                it.phone()
-                                                                            }
-                                                                        }
-                                                                    })
-                                                                })
-                                                            })
+//                                                        .storeAvailability({ args -> args.first(20) },
+//                                                            { storeAvail ->
+//                                                                storeAvail.edges({ storeAvailEdges ->
+//                                                                    storeAvailEdges.node({
+//                                                                        it.available()
+//                                                                        it.pickUpTime()
+//                                                                        it.location {
+//                                                                            it.name()
+//                                                                            it.address {
+//                                                                                it.address1()
+//                                                                                it.address2()
+//                                                                                it.city()
+//                                                                                it.country()
+//                                                                                it.province()
+//                                                                                it.zip()
+//                                                                                it.phone()
+//                                                                            }
+//                                                                        }
+//                                                                    })
+//                                                                })
+//                                                            })
                                                         .price()
                                                         .title()
                                                         .quantityAvailable()
@@ -247,7 +247,7 @@ object Query {
                                 .node({ productVariantQuery ->
                                     productVariantQuery
                                         .title()
-                                        .storeAvailability({ args -> args.first(20) },
+                                  /*      .storeAvailability({ args -> args.first(20) },
                                             { storeAvail ->
                                                 storeAvail.edges({ storeAvailEdges ->
                                                     storeAvailEdges.node({
@@ -267,7 +267,7 @@ object Query {
                                                         }
                                                     })
                                                 })
-                                            })
+                                            })*/
                                         .priceV2({ p -> p.amount().currencyCode() })
                                         .quantityAvailable()
                                         .currentlyNotInStock()
@@ -472,27 +472,27 @@ object Query {
                                                     .quantityAvailable()
                                                     .currentlyNotInStock()
                                                     .title()
-                                                    .storeAvailability({ args -> args.first(20) },
-                                                        { storeAvail ->
-                                                            storeAvail.edges({ storeAvailEdges ->
-                                                                storeAvailEdges.node({
-                                                                    it.available()
-                                                                    it.pickUpTime()
-                                                                    it.location {
-                                                                        it.name()
-                                                                        it.address {
-                                                                            it.address1()
-                                                                            it.address2()
-                                                                            it.city()
-                                                                            it.country()
-                                                                            it.province()
-                                                                            it.zip()
-                                                                            it.phone()
-                                                                        }
-                                                                    }
-                                                                })
-                                                            })
-                                                        })
+//                                                    .storeAvailability({ args -> args.first(20) },
+//                                                        { storeAvail ->
+//                                                            storeAvail.edges({ storeAvailEdges ->
+//                                                                storeAvailEdges.node({
+//                                                                    it.available()
+//                                                                    it.pickUpTime()
+//                                                                    it.location {
+//                                                                        it.name()
+//                                                                        it.address {
+//                                                                            it.address1()
+//                                                                            it.address2()
+//                                                                            it.city()
+//                                                                            it.country()
+//                                                                            it.province()
+//                                                                            it.zip()
+//                                                                            it.phone()
+//                                                                        }
+//                                                                    }
+//                                                                })
+//                                                            })
+//                                                        })
                                                     .selectedOptions { select: SelectedOptionQuery ->
                                                         select.name().value()
                                                     }
