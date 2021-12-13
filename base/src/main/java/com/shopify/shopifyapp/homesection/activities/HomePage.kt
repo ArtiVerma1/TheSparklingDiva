@@ -70,6 +70,7 @@ import com.shopify.shopifyapp.sharedprefsection.MagePrefs
 
 class HomePage : NewBaseActivity() {
     private var binding: MHomepageModifiedBinding? = null
+
     @Inject
     lateinit var factory: ViewModelFactory
     private var homemodel: HomePageViewModel? = null
@@ -84,9 +85,11 @@ class HomePage : NewBaseActivity() {
     private var scrollYPosition: Int = -1
     private val MY_REQUEST_CODE = 105
     private var appUpdateManager: AppUpdateManager? = null
+
     @Inject
     lateinit var personalisedadapter: PersonalisedAdapter
     private val TAG = "HomePage"
+
     @Inject
     lateinit var padapter: PersonalisedAdapter
 
@@ -196,6 +199,21 @@ class HomePage : NewBaseActivity() {
 
             leftMenuViewModel!!.Response()
                 .observe(this, Observer<ApiResponse> { this.leftmenuconsumeResponse(it) })
+        })
+
+        homemodel?.notifyfeaturesModel?.observe(this, Observer {
+            if (it) {
+                if (featuresModel.whatsappChat) {
+                    whatsappchat.visibility = View.VISIBLE
+                } else {
+                    whatsappchat.visibility = View.GONE
+                }
+                if (featuresModel.fbMessenger) {
+                    messengerchat.visibility = View.VISIBLE
+                } else {
+                    messengerchat.visibility = View.GONE
+                }
+            }
         })
     }
 
@@ -599,7 +617,7 @@ class HomePage : NewBaseActivity() {
         featuresModel.smileIO = false
         featuresModel.multi_currency = false
         featuresModel.multi_language = false
-        featuresModel.showBottomNavigation=false
+        featuresModel.showBottomNavigation = false
         featuresModel.reOrderEnabled = false
     }
 

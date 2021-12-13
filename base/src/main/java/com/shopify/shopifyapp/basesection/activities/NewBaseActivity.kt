@@ -274,21 +274,6 @@ open class NewBaseActivity : AppCompatActivity(), BaseFragment.OnFragmentInterac
             chat_but.visibility = View.GONE
         }
 
-        if (featuresModel.whatsappChat) {
-            if (this@NewBaseActivity is HomePage) {
-                whatsappchat.visibility = View.VISIBLE
-            } else {
-                whatsappchat.visibility = View.GONE
-            }
-        }
-        if (featuresModel.fbMessenger) {
-            if (this@NewBaseActivity is HomePage) {
-                messengerchat.visibility = View.VISIBLE
-            } else {
-                messengerchat.visibility = View.GONE
-            }
-        }
-
         val chatEngine: Engine? = ChatEngine.engine()
         chat_but.setOnClickListener {
             MessagingActivity.builder()

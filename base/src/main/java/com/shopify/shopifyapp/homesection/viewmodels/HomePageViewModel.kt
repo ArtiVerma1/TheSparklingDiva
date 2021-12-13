@@ -86,6 +86,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
     val notifyPersonalised: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var getyotpoauthenticate = MutableLiveData<ApiResponse>()
     var notifyZendesk = MutableLiveData<Boolean>()
+    var notifyfeaturesModel = MutableLiveData<Boolean>()
 
     init {
         notifyZendesk.value = false
@@ -268,10 +269,9 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                 }
                 when (titles){
                     "features" -> {
-                        SplashViewModel.featuresModel.whatsappChat = true
-                        SplashViewModel.featuresModel.fbMessenger = true
                         if (obj.getJSONObject(i).has("inputs")) {
                             if(obj.getJSONObject(i).getJSONObject("inputs").has("facebook-chat")){
+                                SplashViewModel.featuresModel.fbMessenger = true
                                 if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("facebook-chat").has("inputs")){
                                     if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("facebook-chat").getJSONObject("inputs").has("user_id")){
                                         Urls.fbusername =
@@ -284,6 +284,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                         }
                         if (obj.getJSONObject(i).has("inputs")) {
                             if(obj.getJSONObject(i).getJSONObject("inputs").has("whatsapp")){
+                                SplashViewModel.featuresModel.whatsappChat = true
                                 if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("whatsapp").has("inputs")){
                                     if(obj.getJSONObject(i).getJSONObject("inputs").getJSONObject("whatsapp").getJSONObject("inputs").has("mobile_no")){
                                         Urls.whatsappnumber =
@@ -294,6 +295,7 @@ class HomePageViewModel(var repository: Repository) : ViewModel() {
                                 }
                             }
                         }
+                        notifyfeaturesModel.value=true
                     }
                 }
             }

@@ -232,6 +232,7 @@ class ProductView : NewBaseActivity() {
         Log.d(TAG, "consumeAliReviews: " + response?.data)
         var responseData = JSONObject(response?.data.toString())
         if (responseData.getBoolean("status")) {
+            binding?.aliReviewSection?.visibility=View.VISIBLE
             binding?.reviewCard?.visibility = View.VISIBLE
             binding?.ratingTxt?.text = responseData.getString("avg")
             binding?.totalReview?.text = responseData.getString("total_review")
@@ -270,6 +271,14 @@ class ProductView : NewBaseActivity() {
                 binding?.aliReviewIndecator?.visibility = View.GONE
                 binding?.aliViewAllBut?.visibility = View.GONE
             }
+        }else{
+            binding?.aliReviewSection?.visibility=View.GONE
+            binding?.reviewCard?.visibility = View.GONE
+            binding?.aliNoReviews?.visibility = View.GONE
+            binding?.aliReviewList?.visibility = View.GONE
+            binding?.aliRateProductBut?.visibility = View.GONE
+            binding?.aliReviewIndecator?.visibility = View.GONE
+            binding?.aliViewAllBut?.visibility = View.GONE
         }
     }
 
@@ -278,7 +287,8 @@ class ProductView : NewBaseActivity() {
         try {
             var responseData = JSONObject(response?.data.toString())
             if(responseData.get("status") is String && responseData.get("status").equals("error")){
-                Toast.makeText(this,responseData.getString("message"),Toast.LENGTH_SHORT).show()
+              //  Toast.makeText(this,responseData.getString("message"),Toast.LENGTH_SHORT).show()
+                binding?.aliReviewSection?.visibility=View.GONE
             }else{
                 if (responseData.getBoolean("status")) {
                     AliProductId = getBase64Decode(productID)!!

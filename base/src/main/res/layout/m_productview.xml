@@ -845,7 +845,6 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:padding="10dp"
-                android:visibility="@{features.aliReviews ? View.VISIBLE : View.GONE}"
                 bind:layout_constraintTop_toBottomOf="@+id/review_section">
 
                 <com.shopify.shopifyapp.customviews.MageNativeTextView
